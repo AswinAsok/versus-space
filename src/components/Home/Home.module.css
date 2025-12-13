@@ -846,3 +846,40 @@
     padding: 2rem 0;
   }
 }
+
+/* Height-based responsive: Ensure footer scrolls normally on small height devices */
+@media (max-height: 1200px) and (max-width: 768px) {
+  .homeContainer {
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .footer {
+    position: relative;
+    padding-bottom: 1.5rem;
+    margin-top: auto;
+  }
+
+  .footerBottom {
+    position: relative;
+  }
+
+  .footerMain {
+    padding-bottom: 2rem;
+  }
+}
+
+@media (max-height: 1200px) and (max-width: 480px) {
+  .footer {
+    padding: 1.5rem 0.75rem 1rem;
+  }
+
+  .footerMain {
+    padding-bottom: 1.5rem;
+    gap: 2rem;
+  }
+
+  .footerBottom {
+    padding: 1rem 0.5rem;
+  }
+}

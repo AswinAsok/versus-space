@@ -14,6 +14,7 @@ interface HeaderProps {
 
 export function Header({ user, onNavigate }: HeaderProps) {
   const [polls, setPolls] = useState<LeaderboardPoll[]>([]);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const fetchPolls = async () => {
@@ -28,15 +29,25 @@ export function Header({ user, onNavigate }: HeaderProps) {
     fetchPolls();
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleSignOut = async () => {
     await authService.signOut();
     onNavigate('/');
   };
 
   return (
-    <header className={styles.appHeader}>
-      <div className={styles.headerContent}>
-        <nav className={styles.headerNav}>
+    <div className={`${styles.headerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
+      <header className={styles.appHeader}>
+        <div className={styles.headerContent}>
+          <nav className={styles.headerNav}>
           <div className={styles.navLeft}>
             <button onClick={() => onNavigate('/')} className={styles.logoButton}>
               <span className={styles.logo}>
@@ -103,8 +114,9 @@ export function Header({ user, onNavigate }: HeaderProps) {
               </>
             )}
           </div>
-        </nav>
-      </div>
-    </header>
+          </nav>
+        </div>
+      </header>
+    </div>
   );
 }

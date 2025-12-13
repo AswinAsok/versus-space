@@ -18,6 +18,16 @@ export function PollView({ pollId }: PollViewProps) {
   const [keyError, setKeyError] = useState('');
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [showKey, setShowKey] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -133,29 +143,31 @@ export function PollView({ pollId }: PollViewProps) {
             </div>
           </div>
 
-          <footer className={styles.footer}>
-            <span>&copy; 2025 versus.space</span>
-            <div className={styles.footerRight}>
-              <a
-                href="https://neal.fun"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.footerLink}
-              >
-                inspiration from neal<span className={styles.footerDot}>.</span>fun
-              </a>
-              <span className={styles.footerDivider}>·</span>
-              <a
-                href="https://github.com/AswinAsok"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.footerLink}
-              >
-                <Code2 size={14} />
-                built by aswinasok<span className={styles.footerDot}>.</span>
-              </a>
-            </div>
-          </footer>
+          <div className={`${styles.footerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
+            <footer className={styles.footer}>
+              <span>&copy; 2025 versus.space</span>
+              <div className={styles.footerRight}>
+                <a
+                  href="https://neal.fun"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerLink}
+                >
+                  inspiration from neal<span className={styles.footerDot}>.</span>fun
+                </a>
+                <span className={styles.footerDivider}>·</span>
+                <a
+                  href="https://github.com/AswinAsok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerLink}
+                >
+                  <Code2 size={14} />
+                  built by aswinasok<span className={styles.footerDot}>.</span>
+                </a>
+              </div>
+            </footer>
+          </div>
         </div>
       </div>
     );
@@ -164,29 +176,31 @@ export function PollView({ pollId }: PollViewProps) {
   return (
     <div className={styles.pollViewContainer}>
       <VotingInterface pollId={poll.id} title={poll.title} options={poll.options} />
-      <footer className={styles.footer}>
-        <span>&copy; 2025 versus.space</span>
-        <div className={styles.footerRight}>
-          <a
-            href="https://neal.fun"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.footerLink}
-          >
-            inspiration from neal<span className={styles.footerDot}>.</span>fun
-          </a>
-          <span className={styles.footerDivider}>·</span>
-          <a
-            href="https://github.com/AswinAsok"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.footerLink}
-          >
-            <Code2 size={14} />
-            built by aswinasok<span className={styles.footerDot}>.</span>
-          </a>
-        </div>
-      </footer>
+      <div className={`${styles.footerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
+        <footer className={styles.footer}>
+          <span>&copy; 2025 versus.space</span>
+          <div className={styles.footerRight}>
+            <a
+              href="https://neal.fun"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.footerLink}
+            >
+              inspiration from neal<span className={styles.footerDot}>.</span>fun
+            </a>
+            <span className={styles.footerDivider}>·</span>
+            <a
+              href="https://github.com/AswinAsok"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.footerLink}
+            >
+              <Code2 size={14} />
+              built by aswinasok<span className={styles.footerDot}>.</span>
+            </a>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }

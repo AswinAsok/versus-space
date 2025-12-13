@@ -923,8 +923,12 @@
   }
 
   .speedometerBg {
-    transform: translate(-50%, -50%) scale(0.7);
-    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.5;
+  }
+
+  .voteCount::before {
+    display: none;
   }
 
   .rateNumber {
@@ -992,11 +996,6 @@
     top: -25px;
     right: 5px;
   }
-
-  .voteCount::before {
-    font-size: 10rem;
-    transform: translate(-50%, -150%);
-  }
 }
 
 /* Small mobile breakpoint */
@@ -1036,8 +1035,8 @@
   }
 
   .speedometerBg {
-    transform: translate(-50%, -50%) scale(0.55);
-    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.75);
+    opacity: 0.4;
   }
 
   .rateDisplay {
@@ -1086,12 +1085,43 @@
     top: -20px;
   }
 
-  .voteCount::before {
-    font-size: 8rem;
-    transform: translate(-50%, -140%);
-  }
-
   .heatGlow {
     opacity: 0.8;
+  }
+}
+
+/* Height-based responsive: Make voting interface scrollable on small height devices */
+@media (max-height: 1200px) and (max-width: 768px) {
+  .votingInterface {
+    overflow: visible;
+    min-height: auto;
+  }
+
+  .votingOption {
+    min-height: auto;
+    padding: 2rem 0;
+  }
+
+  .comboIndicator {
+    position: absolute;
+    top: 10px;
+  }
+
+  .confettiContainer {
+    position: absolute;
+  }
+}
+
+@media (max-height: 1200px) and (max-width: 480px) {
+  .votingOption {
+    padding: 1.5rem 0;
+  }
+
+  .comboIndicator {
+    top: 8px;
+  }
+
+  .voteCount {
+    margin-top: 4rem;
   }
 }
