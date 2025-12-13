@@ -150,7 +150,11 @@ export function Home({ onNavigate }: HomeProps) {
         <section className={styles.trustedSection}>
           <p className={styles.trustedLabel}>BUILT FOR HACKATHON AT</p>
           <div className={styles.trustedLogos}>
-            <a href="https://ente.io/?ref=versus.space" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://ente.io/?utm_source=versus.space"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img
                 src="/ente-branding-green.png"
                 alt="Ente"

@@ -380,7 +380,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                       <span className={styles.appLikeHeader}>app like</span>
                       <div className={styles.appLikeLogos}>
                         <a
-                          href="https://ente.io/?ref=versus.space"
+                          href="https://ente.io/?utm_source=versus.space"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -391,14 +391,14 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                           />
                         </a>
                         <a
-                          href="https://kagi.com/?ref=versus.space"
+                          href="https://kagi.com/?utm_source=versus.space"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <img src="/kagi.webp" alt="Kagi" />
                         </a>
                         <a
-                          href="https://notesnook.com/?ref=versus.space"
+                          href="https://notesnook.com/?utm_source=versus.space"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
