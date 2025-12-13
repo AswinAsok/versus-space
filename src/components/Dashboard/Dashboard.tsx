@@ -8,14 +8,11 @@ import {
   Plus,
   Globe,
   Lock,
-  TrendingUp,
-  Users,
   Activity,
   Calendar,
-  MoreVertical,
   Power,
   PowerOff,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 import type { Poll } from '../../types';
 import styles from './Dashboard.module.css';
@@ -60,16 +57,14 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
   const toggleStatus = async (pollId: string, isActive: boolean) => {
     try {
       await pollService.updatePollStatus(pollId, !isActive);
-      setPolls(
-        polls.map((p) => (p.id === pollId ? { ...p, is_active: !isActive } : p))
-      );
+      setPolls(polls.map((p) => (p.id === pollId ? { ...p, is_active: !isActive } : p)));
     } catch {
       alert('Failed to update poll status');
     }
   };
 
-  const activePolls = polls.filter(p => p.is_active).length;
-  const publicPolls = polls.filter(p => p.is_public).length;
+  const activePolls = polls.filter((p) => p.is_active).length;
+  const publicPolls = polls.filter((p) => p.is_public).length;
 
   if (loading) {
     return <div className={sharedStyles.loading}>Loading your polls...</div>;
@@ -85,11 +80,12 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
             Dashboard
           </span>
           <h1 className={styles.welcomeTitle}>Welcome back!</h1>
-          <p className={styles.welcomeSubtitle}>
-            Here's what's happening with your polls today.
-          </p>
+          <p className={styles.welcomeSubtitle}>Here's what's happening with your polls today.</p>
         </div>
-        <button onClick={() => onNavigate('/create')} className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}>
+        <button
+          onClick={() => onNavigate('/create')}
+          className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
+        >
           <Plus size={18} />
           Create New Poll
         </button>
@@ -98,7 +94,10 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
       {/* Stats Cards */}
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #196AFF, #0D47A1)' }}>
+          <div
+            className={styles.statIcon}
+            style={{ background: 'linear-gradient(135deg, #196AFF, #0D47A1)' }}
+          >
             <BarChart3 size={22} />
           </div>
           <div className={styles.statContent}>
@@ -107,7 +106,10 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
           </div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+          <div
+            className={styles.statIcon}
+            style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}
+          >
             <Activity size={22} />
           </div>
           <div className={styles.statContent}>
@@ -116,7 +118,10 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
           </div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)' }}>
+          <div
+            className={styles.statIcon}
+            style={{ background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)' }}
+          >
             <Globe size={22} />
           </div>
           <div className={styles.statContent}>
@@ -125,7 +130,10 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
           </div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
+          <div
+            className={styles.statIcon}
+            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
+          >
             <Lock size={22} />
           </div>
           <div className={styles.statContent}>
@@ -141,7 +149,9 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
       <div className={styles.pollsSection}>
         <div className={styles.pollsSectionHeader}>
           <h2 className={styles.pollsSectionTitle}>Your Polls</h2>
-          <span className={styles.pollsCount}>{polls.length} {polls.length === 1 ? 'poll' : 'polls'}</span>
+          <span className={styles.pollsCount}>
+            {polls.length} {polls.length === 1 ? 'poll' : 'polls'}
+          </span>
         </div>
 
         {polls.length === 0 ? (
@@ -175,7 +185,9 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                     >
                       {poll.is_active ? 'Active' : 'Inactive'}
                     </span>
-                    <span className={`${styles.visibilityBadge} ${poll.is_public ? styles.public : styles.private}`}>
+                    <span
+                      className={`${styles.visibilityBadge} ${poll.is_public ? styles.public : styles.private}`}
+                    >
                       {poll.is_public ? <Globe size={12} /> : <Lock size={12} />}
                       {poll.is_public ? 'Public' : 'Private'}
                     </span>
@@ -199,7 +211,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                     {new Date(poll.created_at).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
-                      year: 'numeric'
+                      year: 'numeric',
                     })}
                   </span>
                 </div>

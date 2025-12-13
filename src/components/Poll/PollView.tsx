@@ -78,6 +78,7 @@ export function PollView({ pollId }: PollViewProps) {
         setKeyError('Invalid access key');
       }
     } catch (err) {
+      console.log(err);
       setKeyError('Failed to validate key');
     }
   };
