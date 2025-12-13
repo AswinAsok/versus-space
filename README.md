@@ -21,5 +21,25 @@ live tug-of-war for opinions. create a poll with two options, drop a link, and w
 **requirements:** Node 18+, npm
 
 ```bash
+# clone and install
+git clone <repo-url>
+npm install
 
+# create .env with:
+# VITE_SUPABASE_URL=your_url
+# VITE_SUPABASE_ANON_KEY=your_key
+
+# run dev server
+npm run dev
+
+# build for production
+npm run build
+npm run preview
 ```
+
+## tech stack
+
+- **frontend:** React + Vite + TypeScript, CSS modules
+- **realtime + auth:** Supabase (email/password flow)
+- **structure:** polls in `src/components/Poll/`, auth in `src/components/Auth/`
+- **visuals:** custom CSS, `react-d3-speedometer` for gauges, CountUp for animationss
