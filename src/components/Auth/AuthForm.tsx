@@ -46,11 +46,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
       {/* Left Panel - Marketing */}
       <div className={styles.marketingPanel}>
         <div className={styles.marketingContent}>
-          <h1 className={styles.marketingTitle}>
-            Create engaging polls in seconds
-          </h1>
+          <h1 className={styles.marketingTitle}>Create engaging polls in seconds</h1>
           <p className={styles.marketingSubtitle}>
-            Join thousands of teams using versus.space to make better decisions with real-time voting.
+            Join thousands of teams using versus.space to make better decisions with real-time
+            voting.
           </p>
 
           <div className={styles.featuresList}>
@@ -66,7 +65,8 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
 
           <div className={styles.testimonial}>
             <p className={styles.testimonialText}>
-              "versus.space transformed how we make team decisions. The real-time updates make it feel magical."
+              "versus.space transformed how we make team decisions. The real-time updates make it
+              feel magical."
             </p>
             <div className={styles.testimonialAuthor}>
               <div className={styles.testimonialAvatar}>SK</div>
@@ -89,9 +89,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
       <div className={styles.formPanel}>
         <div className={styles.formWrapper}>
           <div className={styles.formHeader}>
-            <h2 className={styles.formTitle}>
-              {isLogin ? 'Welcome back' : 'Create your account'}
-            </h2>
+            <h2 className={styles.formTitle}>{isLogin ? 'Welcome back' : 'Create your account'}</h2>
             <p className={styles.formSubtitle}>
               {isLogin
                 ? 'Sign in to continue to your dashboard'
@@ -146,16 +144,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                 placeholder="Enter your password"
                 minLength={6}
               />
-              {!isLogin && (
-                <span className={styles.inputHint}>Must be at least 6 characters</span>
-              )}
+              {!isLogin && <span className={styles.inputHint}>Must be at least 6 characters</span>}
             </div>
 
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={loading}
-            >
+            <button type="submit" className={styles.submitButton} disabled={loading}>
               {loading ? (
                 <span className={styles.loadingSpinner}></span>
               ) : (
@@ -169,7 +161,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
 
           <div className={styles.formFooter}>
             <p>
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              {isLogin ? "Don't have an account? " : 'Already have an account? '}
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}

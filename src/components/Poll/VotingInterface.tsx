@@ -79,18 +79,11 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
 
             <div className={styles.optionContent}>
               <div className={styles.optionInfo}>
-                <h2
-                  className={`${styles.optionTitle} ${
-                    index === 4 ? styles.darkTitle : ''
-                  }`}
-                >
+                <h2 className={`${styles.optionTitle} ${index === 4 ? styles.darkTitle : ''}`}>
                   {option.title}
                 </h2>
 
-                <button
-                  onClick={() => handleVote(option.id)}
-                  className={styles.voteButton}
-                >
+                <button onClick={() => handleVote(option.id)} className={styles.voteButton}>
                   +1 {option.title}
                 </button>
 
@@ -100,14 +93,10 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
                     <span className={styles.countNumber}>{option.vote_count.toLocaleString()}</span>
                   </div>
 
-                  <div className={styles.voteRate}>
-                    {rate.toFixed(1)} points per second
-                  </div>
+                  <div className={styles.voteRate}>{rate.toFixed(1)} points per second</div>
 
                   {userVoteCount > 0 && (
-                    <div
-                      className={`${styles.userVotes} ${index === 4 ? styles.darkDivider : ''}`}
-                    >
+                    <div className={`${styles.userVotes} ${index === 4 ? styles.darkDivider : ''}`}>
                       You've scored {userVoteCount} points for {option.title}
                     </div>
                   )}

@@ -32,8 +32,28 @@ export default {
         purple: '#9333EA',
       },
       fontFamily: {
-        sans: ['Circular', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', 'sans-serif'],
-        mono: ['Source Code Pro', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'monospace'],
+        sans: [
+          'Circular',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Oxygen',
+          'Ubuntu',
+          'Cantarell',
+          'Open Sans',
+          'Helvetica Neue',
+          'sans-serif',
+        ],
+        mono: [
+          'Source Code Pro',
+          'SF Mono',
+          'Monaco',
+          'Inconsolata',
+          'Fira Mono',
+          'Droid Sans Mono',
+          'monospace',
+        ],
       },
       borderRadius: {
         sm: '6px',
@@ -44,7 +64,7 @@ export default {
       transitionTimingFunction: {
         'ease-out': 'cubic-bezier(0.16, 1, 0.3, 1)',
         'ease-in-out': 'cubic-bezier(0.65, 0, 0.35, 1)',
-        'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
       },
       transitionDuration: {
         fast: '150ms',

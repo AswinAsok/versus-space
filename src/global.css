@@ -6,28 +6,28 @@
 
 :root {
   /* Supabase Primary Brand Colors */
-  --color-primary: #3ECF8E;
-  --color-primary-dark: #34B27B;
-  --color-primary-darker: #24B47E;
+  --color-primary: #3ecf8e;
+  --color-primary-dark: #34b27b;
+  --color-primary-darker: #24b47e;
   --color-primary-light: rgba(62, 207, 142, 0.1);
 
   /* Background Colors (Dark Mode First) */
-  --color-bg: #11181C;
+  --color-bg: #11181c;
   --color-bg-alt: rgba(23, 23, 23, 0.8);
   --color-bg-elevated: rgba(28, 28, 28, 0.6);
   --color-bg-card: rgba(35, 35, 35, 0.5);
 
   /* Text Colors */
-  --color-text: #EDEDED;
-  --color-text-light: #A1A1A1;
-  --color-text-muted: #6B6B6B;
+  --color-text: #ededed;
+  --color-text-light: #a1a1a1;
+  --color-text-muted: #6b6b6b;
 
   /* Accent & Utility Colors */
   --color-secondary: #64748b;
-  --color-success: #3ECF8E;
-  --color-danger: #EF4444;
-  --color-warning: #F5A623;
-  --color-info: #3ECF8E;
+  --color-success: #3ecf8e;
+  --color-danger: #ef4444;
+  --color-warning: #f5a623;
+  --color-info: #3ecf8e;
 
   /* Glassmorphism */
   --glass-bg: rgba(28, 28, 28, 0.25);
@@ -36,7 +36,8 @@
   --glass-border-hover: rgba(255, 255, 255, 0.3);
   --glass-blur: blur(24px) saturate(180%);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 80px rgba(0, 0, 0, 0.1);
-  --glass-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  --glass-inner-highlight:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
 
   /* Border Colors */
   --color-border: rgba(255, 255, 255, 0.05);
@@ -84,18 +85,29 @@
 
 /* Light theme override */
 [data-theme='light'] {
-  --color-bg: #F8F9FA;
-  --color-bg-alt: #FFFFFF;
-  --color-bg-elevated: #FFFFFF;
-  --color-bg-card: #FFFFFF;
-  --color-text: #1C1C1C;
-  --color-text-light: #4A4A4A;
-  --color-text-muted: #6B6B6B;
+  --color-bg: #f8f9fa;
+  --color-bg-alt: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-text: #1c1c1c;
+  --color-text-light: #4a4a4a;
+  --color-text-muted: #6b6b6b;
   --color-border: rgba(0, 0, 0, 0.1);
 }
 
 body {
-  font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    'Circular',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-text);
@@ -107,8 +119,11 @@ body {
 }
 
 /* Code/Monospace font */
-code, pre, .mono {
-  font-family: 'Source Code Pro', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', monospace;
+code,
+pre,
+.mono {
+  font-family:
+    'Source Code Pro', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', monospace;
 }
 
 button {

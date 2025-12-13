@@ -31,19 +31,21 @@ export class AuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     return user;
   }
 
   // Subscribe to auth events and return a cleanup handler for consumers.
   onAuthStateChange(callback: (user: User | null) => void) {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        (async () => {
-          callback(session?.user ?? null);
-        })();
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      (async () => {
+        callback(session?.user ?? null);
+      })();
+    });
 
     return () => subscription.unsubscribe();
   }

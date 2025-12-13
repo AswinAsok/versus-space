@@ -78,19 +78,13 @@ export class PollService {
   }
 
   async updatePollStatus(pollId: string, isActive: boolean): Promise<void> {
-    const { error } = await supabase
-      .from('polls')
-      .update({ is_active: isActive })
-      .eq('id', pollId);
+    const { error } = await supabase.from('polls').update({ is_active: isActive }).eq('id', pollId);
 
     if (error) throw error;
   }
 
   async deletePoll(pollId: string): Promise<void> {
-    const { error } = await supabase
-      .from('polls')
-      .delete()
-      .eq('id', pollId);
+    const { error } = await supabase.from('polls').delete().eq('id', pollId);
 
     if (error) throw error;
   }
@@ -137,10 +131,7 @@ export class PollService {
   }
 
   async getLeaderboard(limit: number = 10): Promise<LeaderboardPoll[]> {
-    const { data, error } = await supabase
-      .from('public_poll_leaderboard')
-      .select('*')
-      .limit(limit);
+    const { data, error } = await supabase.from('public_poll_leaderboard').select('*').limit(limit);
 
     if (error) throw error;
     return data || [];

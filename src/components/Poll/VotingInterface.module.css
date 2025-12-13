@@ -16,32 +16,32 @@
 
 /* Supabase-inspired color variants with green as primary */
 .variant0 {
-  background: linear-gradient(135deg, #3ECF8E 0%, #24B47E 100%);
+  background: linear-gradient(135deg, #3ecf8e 0%, #24b47e 100%);
   color: #000000;
 }
 
 .variant1 {
-  background: linear-gradient(135deg, #9333EA 0%, #7C3AED 100%);
+  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
   color: white;
 }
 
 .variant2 {
-  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
 }
 
 .variant3 {
-  background: linear-gradient(135deg, #F5A623 0%, #D69E2E 100%);
+  background: linear-gradient(135deg, #f5a623 0%, #d69e2e 100%);
   color: #000000;
 }
 
 .variant4 {
-  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
 }
 
 .variant5 {
-  background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
   color: #000000;
 }
 

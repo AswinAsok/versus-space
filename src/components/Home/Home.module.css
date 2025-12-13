@@ -47,7 +47,7 @@
 }
 
 .gradientText {
-  background: linear-gradient(135deg, var(--color-primary) 0%, #34B27B 50%, #24B47E 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #34b27b 50%, #24b47e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -224,7 +224,10 @@
   border-color: var(--glass-border-hover);
   transform: translateY(-4px);
   background: var(--glass-bg-hover);
-  box-shadow: var(--glass-shadow), var(--glass-inner-highlight), 0 0 20px rgba(62, 207, 142, 0.1);
+  box-shadow:
+    var(--glass-shadow),
+    var(--glass-inner-highlight),
+    0 0 20px rgba(62, 207, 142, 0.1);
 }
 
 .stepNumber {
@@ -322,7 +325,7 @@
 }
 
 .ctaActions button:hover {
-  background: #1C1C1C;
+  background: #1c1c1c;
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }

@@ -29,10 +29,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   const [error, setError] = useState('');
 
   const addOption = () => {
-    setOptions([
-      ...options,
-      { id: Date.now().toString(), title: '', image_url: '' },
-    ]);
+    setOptions([...options, { id: Date.now().toString(), title: '', image_url: '' }]);
   };
 
   const removeOption = (id: string) => {
@@ -42,9 +39,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   };
 
   const updateOption = (id: string, field: 'title' | 'image_url', value: string) => {
-    setOptions(
-      options.map((opt) => (opt.id === id ? { ...opt, [field]: value } : opt))
-    );
+    setOptions(options.map((opt) => (opt.id === id ? { ...opt, [field]: value } : opt)));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -216,7 +211,10 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
         {!isPublic && (
           <div className={sharedStyles.formGroup} style={{ marginTop: '1rem' }}>
             <label htmlFor="accessKey">
-              <Key size={16} style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'middle' }} />
+              <Key
+                size={16}
+                style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'middle' }}
+              />
               Access Key
             </label>
             <input

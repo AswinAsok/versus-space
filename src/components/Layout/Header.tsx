@@ -40,7 +40,9 @@ export function Header({ user, onNavigate }: HeaderProps) {
           <div className={styles.navLeft}>
             <button onClick={() => onNavigate('/')} className={styles.logoButton}>
               <span className={styles.logo}>
-                <span className={styles.logoHighlight}>v</span>ersu<span className={styles.logoHighlight}>s</span><span className={styles.logoDot}>.</span>space
+                <span className={styles.logoHighlight}>v</span>ersu
+                <span className={styles.logoHighlight}>s</span>
+                <span className={styles.logoDot}>.</span>space
               </span>
             </button>
           </div>
@@ -49,15 +51,23 @@ export function Header({ user, onNavigate }: HeaderProps) {
           {polls.length > 0 && (
             <div className={styles.trendingWrapper}>
               <span className={styles.sparkle} style={{ top: '-4px', left: '10%' }}></span>
-              <span className={styles.sparkle} style={{ top: '50%', right: '-6px', animationDelay: '2s' }}></span>
-              <span className={styles.sparkle} style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}></span>
+              <span
+                className={styles.sparkle}
+                style={{ top: '50%', right: '-6px', animationDelay: '2s' }}
+              ></span>
+              <span
+                className={styles.sparkle}
+                style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}
+              ></span>
               <button
                 onClick={() => onNavigate(`/poll/${polls[0].id}`)}
                 className={styles.trendingItem}
               >
                 <TrendingUp size={14} />
                 <span className={styles.trendingTitle}>{polls[0].title}</span>
-                <span className={styles.trendingVotes}>{polls[0].total_votes.toLocaleString()} votes</span>
+                <span className={styles.trendingVotes}>
+                  {polls[0].total_votes.toLocaleString()} votes
+                </span>
               </button>
             </div>
           )}
@@ -73,14 +83,8 @@ export function Header({ user, onNavigate }: HeaderProps) {
                   <span>Create Poll</span>
                 </button>
                 <div className={styles.userSection}>
-                  <div className={styles.userAvatar}>
-                    {user.email?.charAt(0).toUpperCase()}
-                  </div>
-                  <button
-                    onClick={handleSignOut}
-                    className={styles.signOutButton}
-                    title="Sign out"
-                  >
+                  <div className={styles.userAvatar}>{user.email?.charAt(0).toUpperCase()}</div>
+                  <button onClick={handleSignOut} className={styles.signOutButton} title="Sign out">
                     <LogOut size={18} />
                   </button>
                 </div>
@@ -104,4 +108,3 @@ export function Header({ user, onNavigate }: HeaderProps) {
     </header>
   );
 }
-

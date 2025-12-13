@@ -20,7 +20,9 @@ function formatTimeAgo(dateString: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function getWinningInfo(options: { title: string; vote_count: number }[]): { winner: string; lead: number } | null {
+function getWinningInfo(
+  options: { title: string; vote_count: number }[]
+): { winner: string; lead: number } | null {
   if (!options || options.length < 2) return null;
 
   const sorted = [...options].sort((a, b) => b.vote_count - a.vote_count);
@@ -146,37 +148,36 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
               </div>
             </div>
             <div className={styles.pollActions}>
-              {poll.options && poll.options.length > 0 && (() => {
-                const winningInfo = getWinningInfo(poll.options);
-                if (winningInfo) {
-                  return (
-                    <span className={styles.winningInfo}>
-                      <TrendingUp size={12} />
-                      {winningInfo.winner} {winningInfo.lead > 0 ? `+${winningInfo.lead}` : ''}
-                    </span>
-                  );
-                }
-                return null;
-              })()}
-              <span className={styles.voteCount}>
-                {poll.total_votes.toLocaleString()} votes
-              </span>
+              {poll.options &&
+                poll.options.length > 0 &&
+                (() => {
+                  const winningInfo = getWinningInfo(poll.options);
+                  if (winningInfo) {
+                    return (
+                      <span className={styles.winningInfo}>
+                        <TrendingUp size={12} />
+                        {winningInfo.winner} {winningInfo.lead > 0 ? `+${winningInfo.lead}` : ''}
+                      </span>
+                    );
+                  }
+                  return null;
+                })()}
+              <span className={styles.voteCount}>{poll.total_votes.toLocaleString()} votes</span>
               <ChevronRight size={18} className={styles.chevron} />
             </div>
           </button>
         ))}
 
         {/* Create Poll Card */}
-        <button
-          className={styles.createPollCard}
-          onClick={() => onNavigate('/create')}
-        >
+        <button className={styles.createPollCard} onClick={() => onNavigate('/create')}>
           <div className={styles.createPollIcon}>
             <Plus size={20} />
           </div>
           <div className={styles.createPollInfo}>
             <h3 className={styles.createPollTitle}>Create Your Own Poll</h3>
-            <p className={styles.createPollSubtitle}>Start a new poll and see it climb the leaderboard</p>
+            <p className={styles.createPollSubtitle}>
+              Start a new poll and see it climb the leaderboard
+            </p>
           </div>
           <ChevronRight size={18} className={styles.chevron} />
         </button>

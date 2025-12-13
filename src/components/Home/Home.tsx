@@ -55,7 +55,8 @@ export function Home({ onNavigate }: HomeProps) {
             <span>Real-time voting made simple</span>
           </div>
           <h1 className={styles.heroTitle}>
-            Create Polls That <span className={styles.gradientText}>Engage</span> Your <span className={styles.gradientText}>Audience</span>
+            Create Polls That <span className={styles.gradientText}>Engage</span> Your{' '}
+            <span className={styles.gradientText}>Audience</span>
           </h1>
           <p className={styles.heroSubtitle}>
             Launch interactive polls in seconds and watch votes pour in real-time. Perfect for
