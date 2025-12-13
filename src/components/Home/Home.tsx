@@ -1,26 +1,42 @@
+import { useState, useEffect } from 'react';
 import {
-  Globe,
   Play,
   ArrowRight,
   Check,
   Sparkles,
-  MessageSquare,
-  Linkedin,
   ChevronRight,
   Vote,
   Share2,
   Eye,
+  Code2,
 } from 'lucide-react';
 import { Leaderboard } from './Leaderboard';
 import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
+import { pollService } from '../../services/pollService';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
 }
 
+function formatNumber(num: number): string {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M+';
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K+';
+  }
+  return num.toString();
+}
+
 export function Home({ onNavigate }: HomeProps) {
+  const [stats, setStats] = useState({ pollsCount: 0, votesCount: 0 });
+
+  useEffect(() => {
+    pollService.getPlatformStats().then(setStats).catch(console.error);
+  }, []);
+
   return (
     <div className={styles.homeContainer}>
       <div
@@ -76,19 +92,19 @@ export function Home({ onNavigate }: HomeProps) {
               <Play size={18} /> Watch Demo
             </button>
           </div>
-          <p className={styles.heroNote}>No credit card required • Free forever for basic use</p>
+          <p className={styles.heroNote}>Free to use • No limits for now</p>
         </section>
 
         {/* Stats Section */}
         <section className={styles.statsSection}>
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
-              <div className={styles.statNumber}>10K+</div>
+              <div className={styles.statNumber}>{formatNumber(stats.pollsCount)}</div>
               <div className={styles.statLabel}>Polls Created</div>
             </div>
             <div className={styles.statDivider}></div>
             <div className={styles.statItem}>
-              <div className={styles.statNumber}>500K+</div>
+              <div className={styles.statNumber}>{formatNumber(stats.votesCount)}</div>
               <div className={styles.statLabel}>Votes Cast</div>
             </div>
             <div className={styles.statDivider}></div>
@@ -104,15 +120,15 @@ export function Home({ onNavigate }: HomeProps) {
           </div>
         </section>
 
-        {/* Trusted By Section */}
+        {/* Built For Section */}
         <section className={styles.trustedSection}>
-          <p className={styles.trustedLabel}>Trusted by teams at</p>
+          <p className={styles.trustedLabel}>BUILT FOR HACKATHON AT</p>
           <div className={styles.trustedLogos}>
-            <span className={styles.trustedLogo}>Startup Inc</span>
-            <span className={styles.trustedLogo}>TechCorp</span>
-            <span className={styles.trustedLogo}>EduLearn</span>
-            <span className={styles.trustedLogo}>EventPro</span>
-            <span className={styles.trustedLogo}>MediaHub</span>
+            <img
+              src="/ente-branding-green.png"
+              alt="Ente"
+              style={{ height: '48px', width: 'auto' }}
+            />
           </div>
         </section>
 
@@ -188,10 +204,10 @@ export function Home({ onNavigate }: HomeProps) {
           </div>
           <div className={styles.ctaFeatures}>
             <span>
-              <Check size={16} /> Free forever
+              <Check size={16} /> Free to use
             </span>
             <span>
-              <Check size={16} /> No credit card
+              <Check size={16} /> No limits
             </span>
             <span>
               <Check size={16} /> Setup in 30 seconds
@@ -202,55 +218,26 @@ export function Home({ onNavigate }: HomeProps) {
 
       {/* Footer */}
       <footer className={styles.footer}>
-        <div className={styles.footerMain}>
-          <div className={styles.footerBrand}>
-            <h3 className={styles.footerLogo}>versus.space</h3>
-            <p className={styles.footerTagline}>Real-time voting for modern teams</p>
-            <div className={styles.footerSocial}>
-              <a href="#" className={styles.socialLink}>
-                <Globe size={20} />
-              </a>
-              <a href="#" className={styles.socialLink}>
-                <MessageSquare size={20} />
-              </a>
-              <a href="#" className={styles.socialLink}>
-                <Linkedin size={20} />
-              </a>
-            </div>
-          </div>
-          <div className={styles.footerLinks}>
-            <div className={styles.footerColumn}>
-              <h4>Product</h4>
-              <a href="#">Features</a>
-              <a href="#">Pricing</a>
-              <a href="#">Integrations</a>
-              <a href="#">API</a>
-            </div>
-            <div className={styles.footerColumn}>
-              <h4>Company</h4>
-              <a href="#">About</a>
-              <a href="#">Blog</a>
-              <a href="#">Careers</a>
-              <a href="#">Contact</a>
-            </div>
-            <div className={styles.footerColumn}>
-              <h4>Resources</h4>
-              <a href="#">Documentation</a>
-              <a href="#">Help Center</a>
-              <a href="#">Community</a>
-              <a href="#">Status</a>
-            </div>
-            <div className={styles.footerColumn}>
-              <h4>Legal</h4>
-              <a href="#">Privacy</a>
-              <a href="#">Terms</a>
-              <a href="#">Security</a>
-              <a href="#">Cookies</a>
-            </div>
-          </div>
-        </div>
-        <div className={styles.footerBottom}>
-          <p>&copy; 2025 versus.space. All rights reserved.</p>
+        <span>&copy; 2025 versus.space</span>
+        <div className={styles.footerRight}>
+          <a
+            href="https://neal.fun"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.footerLink}
+          >
+            inspiration from neal<span className={styles.footerDot}>.</span>fun
+          </a>
+          <span className={styles.footerDivider}>·</span>
+          <a
+            href="https://github.com/AswinAsok"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.footerLink}
+          >
+            <Code2 size={14} />
+            built by aswinasok<span className={styles.footerDot}>.</span>
+          </a>
         </div>
       </footer>
     </div>

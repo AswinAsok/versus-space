@@ -161,6 +161,21 @@ export class PollService {
       requiresKey: !data?.is_public && !!data?.access_key,
     };
   }
+
+  async getPlatformStats(): Promise<{ pollsCount: number; votesCount: number }> {
+    const [pollsResult, votesResult] = await Promise.all([
+      supabase.from('polls').select('*', { count: 'exact', head: true }),
+      supabase.from('votes').select('*', { count: 'exact', head: true }),
+    ]);
+
+    if (pollsResult.error) throw pollsResult.error;
+    if (votesResult.error) throw votesResult.error;
+
+    return {
+      pollsCount: pollsResult.count ?? 0,
+      votesCount: votesResult.count ?? 0,
+    };
+  }
 }
 
 export const pollService = new PollService();
