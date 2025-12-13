@@ -228,7 +228,7 @@ export function Home({ onNavigate }: HomeProps) {
             rel="noopener noreferrer"
             className={styles.footerLink}
           >
-            inspiration from neal<span className={styles.footerDot}>.</span>fun
+            inspired from neal<span className={styles.footerDot}>.</span>fun
           </a>
           <span className={styles.footerDivider}>·</span>
           <a

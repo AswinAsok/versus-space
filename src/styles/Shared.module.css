@@ -192,24 +192,31 @@
 /* Loading State */
 .loading {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
+  min-height: 100vh;
+  min-height: 100dvh;
   color: var(--color-text-light);
   font-size: 1.125rem;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-bg);
+  z-index: 1000;
+  gap: 1.5rem;
 }
 
 .loading::after {
   content: '';
-  position: absolute;
   width: 40px;
   height: 40px;
   border: 3px solid var(--color-bg-elevated);
   border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin-left: 1rem;
 }
 
 /* Error Container */
@@ -288,8 +295,8 @@
   }
 
   .loading {
-    min-height: 240px;
     font-size: 1rem;
+    gap: 1.25rem;
   }
 
   .loading::after {
@@ -350,8 +357,8 @@
   }
 
   .loading {
-    min-height: 200px;
     font-size: 0.9375rem;
+    gap: 1rem;
   }
 
   .loading::after {

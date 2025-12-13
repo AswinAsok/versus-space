@@ -877,7 +877,7 @@ module.exports = ui({
 - **Brand Assets**: [supabase.com/brand-assets](https://supabase.com/brand-assets)
 - **UI Library**: [supabase.com/ui](https://supabase.com/ui)
 - **GitHub UI Package**: [github.com/supabase/supabase/tree/master/packages/ui](https://github.com/supabase/supabase/tree/master/packages/ui)
-- **Design System**: Inspired by [Radix](https://www.radix-ui.com/), [shadcn/ui](https://ui.shadcn.com)
+- **Design System**: inspired from [Radix](https://www.radix-ui.com/), [shadcn/ui](https://ui.shadcn.com)
 
 ---
 

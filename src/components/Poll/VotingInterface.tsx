@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import ReactSpeedometer, { Transition } from 'react-d3-speedometer';
 import CountUp from '../ReactBits/CountUp/CountUp';
 import Counter from '../ReactBits/Counter/Counter';
@@ -200,6 +201,10 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
 
   return (
     <div className={`${styles.votingInterface} ${screenShake ? styles.shake : ''}`}>
+      <Helmet>
+        <title>{title} | Versus</title>
+      </Helmet>
+
       {/* Combo indicator */}
       {combo > 1 && (
         <div className={styles.comboIndicator}>
