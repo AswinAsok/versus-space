@@ -1,14 +1,9 @@
 import {
-  BarChart3,
-  Zap,
   Globe,
-  Users,
-  TrendingUp,
   Play,
   ArrowRight,
   Check,
   Sparkles,
-  Clock,
   MessageSquare,
   Linkedin,
   ChevronRight,
@@ -60,7 +55,7 @@ export function Home({ onNavigate }: HomeProps) {
             <span>Real-time voting made simple</span>
           </div>
           <h1 className={styles.heroTitle}>
-            Create polls that <span className={styles.gradientText}>engage</span> your audience
+            Create Polls That <span className={styles.gradientText}>Engage</span> Your <span className={styles.gradientText}>Audience</span>
           </h1>
           <p className={styles.heroSubtitle}>
             Launch interactive polls in seconds and watch votes pour in real-time. Perfect for
@@ -174,50 +169,6 @@ export function Home({ onNavigate }: HomeProps) {
           <Leaderboard onNavigate={onNavigate} />
         </section>
       </div>
-
-      {/* Combined Features & Use Cases Section */}
-      <section className={styles.combinedSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionBadge}>Features & Use Cases</span>
-          <h2 className={styles.sectionTitle}>Everything you need, built for every scenario</h2>
-          <p className={styles.sectionSubtitle}>
-            Powerful features and flexible use cases for teams of all sizes
-          </p>
-        </div>
-
-        <div className={styles.combinedGrid}>
-          <div className={styles.fullFeatureCard}>
-            <Users size={24} className={styles.fullFeatureIcon} />
-            <h4>Team Meetings</h4>
-            <p>Make decisions faster with instant team polls and anonymous voting</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
-            <MessageSquare size={24} className={styles.fullFeatureIcon} />
-            <h4>Live Events</h4>
-            <p>Engage your audience during conferences, webinars, and presentations</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
-            <TrendingUp size={24} className={styles.fullFeatureIcon} />
-            <h4>Market Research</h4>
-            <p>Gather quick feedback and validate ideas with your target audience</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
-            <BarChart3 size={24} className={styles.fullFeatureIcon} />
-            <h4>Classrooms</h4>
-            <p>Increase student participation with interactive quizzes and polls</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
-            <Zap size={24} className={styles.fullFeatureIcon} />
-            <h4>Lightning Fast</h4>
-            <p>50ms average response time with global edge network</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
-            <Clock size={24} className={styles.fullFeatureIcon} />
-            <h4>Real-time Updates</h4>
-            <p>WebSocket connections for instant vote synchronization</p>
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className={styles.ctaSection}>

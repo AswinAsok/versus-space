@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { authService } from '../../services/authService';
-import { LogOut, Plus, LayoutDashboard, Home } from 'lucide-react';
+import { pollService } from '../../services/pollService';
+import type { LeaderboardPoll } from '../../types';
+import { LogOut, Plus, LayoutDashboard, Home, TrendingUp } from 'lucide-react';
 import styles from './Header.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -10,6 +13,21 @@ interface HeaderProps {
 }
 
 export function Header({ user, onNavigate }: HeaderProps) {
+  const [polls, setPolls] = useState<LeaderboardPoll[]>([]);
+
+  useEffect(() => {
+    const fetchPolls = async () => {
+      try {
+        const data = await pollService.getLeaderboard(5);
+        setPolls(data);
+      } catch (err) {
+        console.error('Failed to fetch polls:', err);
+      }
+    };
+
+    fetchPolls();
+  }, []);
+
   const handleSignOut = async () => {
     await authService.signOut();
     onNavigate('/');
@@ -31,6 +49,24 @@ export function Header({ user, onNavigate }: HeaderProps) {
               </button>
             )}
           </div>
+
+          {/* Trending Poll - Center */}
+          {polls.length > 0 && (
+            <div className={styles.trendingWrapper}>
+              <span className={styles.sparkle} style={{ top: '-4px', left: '10%' }}></span>
+              <span className={styles.sparkle} style={{ top: '50%', right: '-6px', animationDelay: '2s' }}></span>
+              <span className={styles.sparkle} style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}></span>
+              <button
+                onClick={() => onNavigate(`/poll/${polls[0].id}`)}
+                className={styles.trendingItem}
+              >
+                <TrendingUp size={14} />
+                <span className={styles.trendingTitle}>{polls[0].title}</span>
+                <span className={styles.trendingVotes}>{polls[0].total_votes.toLocaleString()} votes</span>
+              </button>
+            </div>
+          )}
+
           <div className={styles.navRight}>
             {user ? (
               <>

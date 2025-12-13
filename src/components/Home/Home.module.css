@@ -200,7 +200,7 @@
 
 .stepsGrid {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: 1rem;
 }
@@ -278,71 +278,12 @@
 
 .stepConnector {
   color: var(--color-text-muted);
-  padding-top: 4rem;
 }
 
 /* Leaderboard Section */
 .leaderboardSection {
   padding: 4rem 0;
   animation: fadeInUp 0.5s var(--ease-out) 0.2s both;
-}
-
-/* Combined Features & Use Cases Section */
-.combinedSection {
-  padding: 4rem 2rem;
-  background: var(--color-bg-alt);
-  max-width: 100%;
-}
-
-.combinedSection .sectionHeader {
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.combinedGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.fullFeatureCard {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  text-align: center;
-  transition: all var(--transition-normal) var(--ease-out);
-  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
-}
-
-.fullFeatureCard:hover {
-  border-color: var(--glass-border-hover);
-  background: var(--glass-bg-hover);
-  transform: translateY(-4px);
-  box-shadow: var(--glass-shadow), var(--glass-inner-highlight), 0 0 20px rgba(62, 207, 142, 0.1);
-}
-
-.fullFeatureIcon {
-  color: var(--color-primary);
-  margin-bottom: 0.75rem;
-}
-
-.fullFeatureCard h4 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.5rem;
-}
-
-.fullFeatureCard p {
-  font-size: 0.875rem;
-  color: var(--color-text-light);
-  line-height: 1.5;
 }
 
 /* CTA Section */
@@ -543,12 +484,6 @@
 }
 
 /* Responsive Styles */
-@media (max-width: 900px) {
-  .combinedGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 1024px) {
   .footerMain {
     grid-template-columns: 1fr;
@@ -641,15 +576,6 @@
     font-size: 1.75rem;
   }
 
-  .combinedSection {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .combinedGrid {
-    grid-template-columns: 1fr;
-  }
-
   .ctaSection {
     padding-left: 1rem;
     padding-right: 1rem;
@@ -666,6 +592,7 @@
 
   .footer {
     padding: 3rem 1rem 0;
+    padding-bottom: 60px;
   }
 
   .footerLinks {
