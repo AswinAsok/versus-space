@@ -1,30 +1,25 @@
-# versus.space, quick explainer 🎉
+# versus.space
 
-Think “live tug-of-war for opinions.” You create a poll with two options, drop a link, and watch people mash the vote button. The bars grow and shrink in real time with a speedometer vibe, floating numbers, and the occasional crown for the leader.
+live tug-of-war for opinions. create a poll with two options, drop a link, and watch people vote in real time. bars grow and shrink with speedometer vibes, floating numbers, and the occasional crown for the leader.
 
-## What it’s great for
+## what it's for
 
-- Icebreakers, all-hands, quick debates, “this vs that” showdowns.
-- Seeing momentum, not just totals—rate and streaks keep the room excited.
-- Lightweight shareability: one link, no installs.
+- icebreakers, all-hands, quick debates, "this vs that" showdowns
+- seeing momentum, not just totals—rate and streaks keep it exciting
+- lightweight: one link, no installs
 
-## How to use
+## how it works
 
-- Open the app and sign up/in with email and password.
-- Create or open a poll; share the URL with your crowd.
-- Each click adds a point. The interface shows rate (pts/sec), total points, and playful effects for streaks.
-- Leaderboard feel: the wider bar wins; keep an eye on the animated gauges.
-- For presenters: mirror the UI on a big screen and let the audience tap away on their devices.
+- sign up with email and password
+- create a poll, share the URL
+- each click adds a point. shows rate (pts/sec), total points, playful streak effects
+- wider bar wins; animated gauges show the battle
+- for presenters: mirror on a big screen, let audience tap on their devices
 
-## Running it yourself (short version)
+## running locally
 
-- Requirements: Node 18+, npm.
-- Clone, `npm install`, create `.env` with `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, then `npm run dev`.
-- Build + preview: `npm run build` then `npm run preview`.
+**requirements:** Node 18+, npm
 
-## Tiny tech peek
+```bash
 
-- Frontend: React + Vite + TypeScript, styled with CSS modules.
-- Realtime + auth: Supabase client (`src/lib/supabaseClient.ts`); current flow is email/password.
-- UI neighborhoods: polls in `src/components/Poll/`, auth in `src/components/Auth/`.
-- Animations/visuals: custom CSS, `react-d3-speedometer` for gauges, CountUp/Counter bits for numbers.
+```
