@@ -49,8 +49,8 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     { id: number; particles: { x: number; y: number; color: string }[] }[]
   >([]);
   const [initialCountAnimationDone, setInitialCountAnimationDone] = useState(false);
-  const [wsStatus, setWsStatus] = useState<'connecting' | 'open' | 'closing' | 'closed'>(
-    () => supabase.realtime.connectionState()
+  const [wsStatus, setWsStatus] = useState<'connecting' | 'open' | 'closing' | 'closed'>(() =>
+    supabase.realtime.connectionState()
   );
   const [channelStatus, setChannelStatus] = useState<string>('not-subscribed');
 
@@ -224,11 +224,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
         ? styles.wsClosed
         : styles.wsConnecting;
   const statusLabel =
-    wsStatus === 'open'
-      ? 'Live'
-      : wsStatus === 'closed'
-        ? 'Disconnected'
-        : 'Connecting…';
+    wsStatus === 'open' ? 'Live' : wsStatus === 'closed' ? 'Disconnected' : 'Connecting…';
 
   return (
     <div className={`${styles.votingInterface} ${screenShake ? styles.shake : ''}`}>
