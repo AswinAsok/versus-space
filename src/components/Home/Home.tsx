@@ -85,14 +85,19 @@ export function Home({ onNavigate }: HomeProps) {
             >
               Start Free <ArrowRight size={18} />
             </button>
-            <button
-              onClick={() => onNavigate('/auth')}
+            <a
+              href="https://youtu.be/lC7ViK-1DhI"
+              target="_blank"
+              rel="noopener noreferrer"
               className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
             >
               <Play size={18} /> Watch Demo
-            </button>
+            </a>
           </div>
           <p className={styles.heroNote}>Free to use • No limits for now</p>
+          <p className={styles.demoNote}>
+            *Demo video was recorded in the last hour of submission. Demo v2 coming soon!
+          </p>
         </section>
 
         {/* Stats Section */}

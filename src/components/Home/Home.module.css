@@ -79,6 +79,15 @@
   animation: fadeInUp 0.6s var(--ease-out) 0.3s both;
 }
 
+.demoNote {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  font-style: italic;
+  animation: fadeInUp 0.6s var(--ease-out) 0.4s both;
+}
+
 /* Stats Section */
 .statsSection {
   padding: 3rem 0;
