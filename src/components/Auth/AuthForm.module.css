@@ -8,7 +8,6 @@
 .marketingPanel {
   flex: 1;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  color: white;
   padding: 3rem;
   display: flex;
   align-items: center;
@@ -21,22 +20,24 @@
   max-width: 480px;
   position: relative;
   z-index: 1;
-  animation: fadeInLeft 0.6s ease-out;
+  animation: fadeInLeft 0.6s var(--ease-out);
 }
 
 .marketingTitle {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 1rem;
   line-height: 1.2;
   letter-spacing: -0.02em;
+  color: #000000;
 }
 
 .marketingSubtitle {
   font-size: 1.125rem;
-  opacity: 0.9;
+  opacity: 0.8;
   margin-bottom: 2.5rem;
   line-height: 1.6;
+  color: #000000;
 }
 
 .featuresList {
@@ -51,25 +52,28 @@
   align-items: center;
   gap: 1rem;
   font-size: 1rem;
+  color: #000000;
 }
 
 .featureIcon {
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: #000000;
 }
 
 .testimonial {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .testimonialText {
@@ -77,6 +81,7 @@
   line-height: 1.6;
   margin-bottom: 1rem;
   font-style: italic;
+  color: #000000;
 }
 
 .testimonialAuthor {
@@ -88,23 +93,26 @@
 .testimonialAvatar {
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 0.875rem;
+  color: #000000;
 }
 
 .testimonialName {
   font-weight: 600;
   font-size: 0.9375rem;
+  color: #000000;
 }
 
 .testimonialRole {
   font-size: 0.8125rem;
-  opacity: 0.8;
+  opacity: 0.7;
+  color: #000000;
 }
 
 .bgDecoration {
@@ -119,7 +127,7 @@
   width: 400px;
   height: 400px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.05);
   top: -100px;
   right: -100px;
 }
@@ -129,7 +137,7 @@
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.05);
   bottom: -50px;
   left: -50px;
 }
@@ -137,7 +145,7 @@
 /* Right Form Panel */
 .formPanel {
   flex: 1;
-  background: white;
+  background: var(--color-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -147,7 +155,7 @@
 .formWrapper {
   width: 100%;
   max-width: 400px;
-  animation: fadeInRight 0.6s ease-out;
+  animation: fadeInRight 0.6s var(--ease-out);
 }
 
 .formHeader {
@@ -157,7 +165,7 @@
 
 .formTitle {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
   margin-bottom: 0.5rem;
 }
@@ -169,7 +177,7 @@
 
 .toggleContainer {
   display: flex;
-  background: var(--color-bg-alt);
+  background: var(--color-bg-elevated);
   padding: 4px;
   border-radius: var(--radius-md);
   margin-bottom: 1.5rem;
@@ -181,12 +189,12 @@
   padding: 0.75rem 1rem;
   border: none;
   background: transparent;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text-light);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all var(--transition-fast) ease-out;
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
 .toggleButton:hover:not(.toggleActive) {
@@ -194,7 +202,7 @@
 }
 
 .toggleActive {
-  background: white;
+  background: var(--color-bg-card);
   color: var(--color-primary);
   box-shadow: var(--shadow-sm);
 }
@@ -219,27 +227,33 @@
 
 .inputGroup input {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 10px 14px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  transition: all var(--transition-fast);
-  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  transition: all var(--transition-fast) var(--ease-out);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--color-text);
+}
+
+.inputGroup input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .inputGroup input:hover:not(:disabled) {
-  border-color: var(--color-text-muted);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .inputGroup input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: var(--focus-ring);
+  box-shadow: var(--shadow-glow);
 }
 
 .inputGroup input:disabled {
   background: var(--color-bg-alt);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .inputHint {
@@ -249,26 +263,25 @@
 
 .submitButton {
   width: 100%;
-  padding: 0.875rem 1.5rem;
+  padding: 10px 16px;
   background: var(--color-primary);
-  color: white;
+  color: #000000;
   border: none;
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-fast) var(--ease-out);
   margin-top: 0.5rem;
 }
 
 .submitButton:hover:not(:disabled) {
   background: var(--color-primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 8px 16px -4px rgba(25, 106, 255, 0.4);
 }
 
 .submitButton:disabled {
@@ -279,8 +292,8 @@
 .loadingSpinner {
   width: 20px;
   height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000000;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -301,9 +314,11 @@
   font-weight: 600;
   cursor: pointer;
   font-size: inherit;
+  transition: color var(--transition-fast) var(--ease-out);
 }
 
 .switchLink:hover {
+  color: var(--color-primary-dark);
   text-decoration: underline;
 }
 

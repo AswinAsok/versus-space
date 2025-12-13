@@ -15,10 +15,12 @@
   align-items: center;
   margin-bottom: 2rem;
   padding: 2rem;
-  background: linear-gradient(135deg, rgba(25, 106, 255, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--color-border);
-  animation: fadeInDown 0.5s ease-out;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  animation: fadeInDown 0.5s var(--ease-out);
 }
 
 .welcomeContent {
@@ -42,7 +44,7 @@
 
 .welcomeTitle {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
   margin-bottom: 0.25rem;
 }
@@ -61,15 +63,17 @@
 }
 
 .statCard {
-  background: white;
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: all var(--transition-fast);
-  animation: fadeInUp 0.4s ease-out backwards;
+  transition: all var(--transition-fast) var(--ease-out);
+  animation: fadeInUp 0.4s var(--ease-out) backwards;
 }
 
 .statCard:nth-child(1) { animation-delay: 0.1s; }
@@ -78,8 +82,8 @@
 .statCard:nth-child(4) { animation-delay: 0.25s; }
 
 .statCard:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-hover);
+  background: rgba(62, 207, 142, 0.08);
   transform: translateY(-2px);
 }
 
@@ -90,7 +94,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #000000;
   flex-shrink: 0;
 }
 
@@ -100,7 +104,7 @@
 
 .statValue {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
   line-height: 1;
   margin-bottom: 0.25rem;
@@ -113,11 +117,13 @@
 
 /* Polls Section */
 .pollsSection {
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
-  animation: fadeInUp 0.5s ease-out 0.3s backwards;
+  animation: fadeInUp 0.5s var(--ease-out) 0.3s backwards;
 }
 
 .pollsSectionHeader {
@@ -184,18 +190,19 @@
 }
 
 .pollCard {
-  background: var(--color-bg-alt);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
-  transition: all var(--transition-fast) ease-out;
-  animation: fadeInUp 0.4s ease-out backwards;
+  transition: all var(--transition-fast) var(--ease-out);
+  animation: fadeInUp 0.4s var(--ease-out) backwards;
 }
 
 .pollCard:hover {
-  background: white;
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-md);
+  background: rgba(62, 207, 142, 0.08);
+  border-color: var(--color-border-hover);
   transform: translateY(-2px);
 }
 
@@ -214,7 +221,7 @@
 
 .pollMenu {
   opacity: 0;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast) var(--ease-out);
 }
 
 .pollCard:hover .pollMenu {
@@ -228,11 +235,11 @@
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
 .menuButton:hover {
-  background: #fee2e2;
+  background: rgba(239, 68, 68, 0.1);
   color: var(--color-danger);
 }
 
@@ -268,22 +275,22 @@
 }
 
 .active {
-  background: #d1fae5;
-  color: #065f46;
+  background: rgba(62, 207, 142, 0.15);
+  color: var(--color-primary);
 }
 
 .active::before {
-  background: #10b981;
+  background: var(--color-primary);
   animation: pulse 2s ease-in-out infinite;
 }
 
 .inactive {
-  background: #f3f4f6;
-  color: #6b7280;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-muted);
 }
 
 .inactive::before {
-  background: #9ca3af;
+  background: var(--color-text-muted);
 }
 
 .visibilityBadge {
@@ -302,8 +309,8 @@
 }
 
 .private {
-  background: #fef3c7;
-  color: #92400e;
+  background: rgba(245, 166, 35, 0.15);
+  color: var(--color-warning);
 }
 
 .pollMeta {
@@ -329,20 +336,19 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.625rem 1rem;
+  padding: 10px 16px;
   background: var(--color-primary);
-  color: white;
+  color: #000000;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
 .viewButton:hover {
   background: var(--color-primary-dark);
-  box-shadow: var(--shadow-sm);
 }
 
 .toggleButton {
@@ -350,27 +356,27 @@
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
-  padding: 0.625rem 0.875rem;
+  padding: 10px 14px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  background: white;
+  transition: all var(--transition-fast) var(--ease-out);
+  background: transparent;
   color: var(--color-text-light);
 }
 
 .toggleActivate:hover {
-  background: #d1fae5;
-  border-color: #10b981;
-  color: #065f46;
+  background: rgba(62, 207, 142, 0.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .toggleDeactivate:hover {
-  background: #fee2e2;
-  border-color: #ef4444;
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
 }
 
 /* Animations */

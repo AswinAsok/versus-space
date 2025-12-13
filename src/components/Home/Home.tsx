@@ -1,16 +1,13 @@
 import {
   BarChart3,
   Zap,
-  Lock,
   Globe,
   Users,
   TrendingUp,
   Play,
   ArrowRight,
   Check,
-  Star,
   Sparkles,
-  Shield,
   Clock,
   MessageSquare,
   Linkedin,
@@ -22,6 +19,7 @@ import {
 import { Leaderboard } from './Leaderboard';
 import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
+import LightRays from '../ReactBits/LightRays';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
@@ -30,6 +28,30 @@ interface HomeProps {
 export function Home({ onNavigate }: HomeProps) {
   return (
     <div className={styles.homeContainer}>
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100vh',
+          zIndex: -1,
+          pointerEvents: 'none',
+        }}
+      >
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#a8e6cf"
+          raysSpeed={0.8}
+          lightSpread={1.2}
+          rayLength={1.5}
+          followMouse={true}
+          mouseInfluence={0.05}
+          noiseAmount={0.05}
+          distortion={0.02}
+          className="custom-rays"
+        />
+      </div>
       <div className={styles.homeInner}>
         {/* Hero Section */}
         <section className={styles.hero}>
@@ -147,335 +169,52 @@ export function Home({ onNavigate }: HomeProps) {
           </div>
         </section>
 
-        {/* Main Content - Leaderboard & Features */}
-        <section className={styles.mainContent}>
-          <div className={styles.leaderboardSection}>
-            <Leaderboard onNavigate={onNavigate} />
-          </div>
-
-          <div className={styles.featuresSection}>
-            <h2 className={styles.featuresTitle}>Why versus.space?</h2>
-            <div className={styles.features}>
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}>
-                  <Zap size={28} />
-                </div>
-                <h3 className={styles.featureTitle}>Real-time Voting</h3>
-                <p className={styles.featureDescription}>
-                  Watch votes update instantly with live WebSocket connections
-                </p>
-              </div>
-
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}>
-                  <BarChart3 size={28} />
-                </div>
-                <h3 className={styles.featureTitle}>Beautiful Visualizations</h3>
-                <p className={styles.featureDescription}>
-                  Split-screen interface with smooth animations and transitions
-                </p>
-              </div>
-
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}>
-                  <Globe size={28} />
-                </div>
-                <h3 className={styles.featureTitle}>Public & Private</h3>
-                <p className={styles.featureDescription}>
-                  Create public polls for the leaderboard or private ones with access keys
-                </p>
-              </div>
-
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}>
-                  <Lock size={28} />
-                </div>
-                <h3 className={styles.featureTitle}>Secure Access</h3>
-                <p className={styles.featureDescription}>
-                  Private polls require a key, ensuring only invited participants can vote
-                </p>
-              </div>
-            </div>
-          </div>
+        {/* Leaderboard Section */}
+        <section className={styles.leaderboardSection}>
+          <Leaderboard onNavigate={onNavigate} />
         </section>
       </div>
 
-      {/* Use Cases Section */}
-      <section className={styles.useCasesSection}>
+      {/* Combined Features & Use Cases Section */}
+      <section className={styles.combinedSection}>
         <div className={styles.sectionHeader}>
-          <span className={styles.sectionBadge}>Use Cases</span>
-          <h2 className={styles.sectionTitle}>Built for every scenario</h2>
+          <span className={styles.sectionBadge}>Features & Use Cases</span>
+          <h2 className={styles.sectionTitle}>Everything you need, built for every scenario</h2>
           <p className={styles.sectionSubtitle}>
-            From quick team decisions to large-scale audience engagement
+            Powerful features and flexible use cases for teams of all sizes
           </p>
         </div>
-        <div className={styles.useCasesGrid}>
-          <div className={styles.useCaseCard}>
-            <div
-              className={styles.useCaseIcon}
-              style={{ background: 'linear-gradient(135deg, #FF6B4A, #E91E63)' }}
-            >
-              <Users size={28} />
-            </div>
-            <h3>Team Meetings</h3>
-            <p>Make decisions faster with instant team polls and anonymous voting.</p>
-          </div>
-          <div className={styles.useCaseCard}>
-            <div
-              className={styles.useCaseIcon}
-              style={{ background: 'linear-gradient(135deg, #9C27B0, #673AB7)' }}
-            >
-              <MessageSquare size={28} />
-            </div>
-            <h3>Live Events</h3>
-            <p>Engage your audience during conferences, webinars, and presentations.</p>
-          </div>
-          <div className={styles.useCaseCard}>
-            <div
-              className={styles.useCaseIcon}
-              style={{ background: 'linear-gradient(135deg, #00BFA5, #00897B)' }}
-            >
-              <TrendingUp size={28} />
-            </div>
-            <h3>Market Research</h3>
-            <p>Gather quick feedback and validate ideas with your target audience.</p>
-          </div>
-          <div className={styles.useCaseCard}>
-            <div
-              className={styles.useCaseIcon}
-              style={{ background: 'linear-gradient(135deg, #196AFF, #0D47A1)' }}
-            >
-              <BarChart3 size={28} />
-            </div>
-            <h3>Classrooms</h3>
-            <p>Increase student participation with interactive quizzes and polls.</p>
-          </div>
-        </div>
-      </section>
 
-      {/* Testimonials Section */}
-      <section className={styles.testimonialsSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionBadge}>Testimonials</span>
-          <h2 className={styles.sectionTitle}>Loved by teams worldwide</h2>
-          <p className={styles.sectionSubtitle}>
-            See what our users have to say about versus.space
-          </p>
-        </div>
-        <div className={styles.testimonialsGrid}>
-          <div className={styles.testimonialCard}>
-            <div className={styles.testimonialStars}>
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={16} fill="#FFCA28" color="#FFCA28" />
-              ))}
-            </div>
-            <p className={styles.testimonialText}>
-              "versus.space transformed our team meetings. Decisions that used to take 30 minutes
-              now take 2. The real-time updates are magical!"
-            </p>
-            <div className={styles.testimonialAuthor}>
-              <div className={styles.testimonialAvatar}>SK</div>
-              <div className={styles.testimonialInfo}>
-                <div className={styles.testimonialName}>Sarah Kim</div>
-                <div className={styles.testimonialRole}>Product Lead at TechCorp</div>
-              </div>
-            </div>
+        <div className={styles.combinedGrid}>
+          <div className={styles.fullFeatureCard}>
+            <Users size={24} className={styles.fullFeatureIcon} />
+            <h4>Team Meetings</h4>
+            <p>Make decisions faster with instant team polls and anonymous voting</p>
           </div>
-          <div className={styles.testimonialCard}>
-            <div className={styles.testimonialStars}>
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={16} fill="#FFCA28" color="#FFCA28" />
-              ))}
-            </div>
-            <p className={styles.testimonialText}>
-              "I use this for every presentation now. The audience engagement went up 300% compared
-              to asking for a show of hands."
-            </p>
-            <div className={styles.testimonialAuthor}>
-              <div className={styles.testimonialAvatar}>MJ</div>
-              <div className={styles.testimonialInfo}>
-                <div className={styles.testimonialName}>Marcus Johnson</div>
-                <div className={styles.testimonialRole}>Conference Speaker</div>
-              </div>
-            </div>
+          <div className={styles.fullFeatureCard}>
+            <MessageSquare size={24} className={styles.fullFeatureIcon} />
+            <h4>Live Events</h4>
+            <p>Engage your audience during conferences, webinars, and presentations</p>
           </div>
-          <div className={styles.testimonialCard}>
-            <div className={styles.testimonialStars}>
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={16} fill="#FFCA28" color="#FFCA28" />
-              ))}
-            </div>
-            <p className={styles.testimonialText}>
-              "My students love it! The split-screen voting makes polls feel like a game.
-              Participation in my classes has never been higher."
-            </p>
-            <div className={styles.testimonialAuthor}>
-              <div className={styles.testimonialAvatar}>EP</div>
-              <div className={styles.testimonialInfo}>
-                <div className={styles.testimonialName}>Emily Parker</div>
-                <div className={styles.testimonialRole}>University Professor</div>
-              </div>
-            </div>
+          <div className={styles.fullFeatureCard}>
+            <TrendingUp size={24} className={styles.fullFeatureIcon} />
+            <h4>Market Research</h4>
+            <p>Gather quick feedback and validate ideas with your target audience</p>
           </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className={styles.pricingSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionBadge}>Pricing</span>
-          <h2 className={styles.sectionTitle}>Simple, transparent pricing</h2>
-          <p className={styles.sectionSubtitle}>Start free and upgrade when you need more power</p>
-        </div>
-        <div className={styles.pricingGrid}>
-          <div className={styles.pricingCard}>
-            <div className={styles.pricingHeader}>
-              <h3 className={styles.pricingName}>Free</h3>
-              <div className={styles.pricingPrice}>
-                <span className={styles.pricingAmount}>$0</span>
-                <span className={styles.pricingPeriod}>/month</span>
-              </div>
-              <p className={styles.pricingTagline}>Perfect for getting started</p>
-            </div>
-            <ul className={styles.pricingFeatures}>
-              <li>
-                <Check size={18} /> Up to 5 active polls
-              </li>
-              <li>
-                <Check size={18} /> 100 votes per poll
-              </li>
-              <li>
-                <Check size={18} /> Real-time results
-              </li>
-              <li>
-                <Check size={18} /> Public polls only
-              </li>
-              <li>
-                <Check size={18} /> Basic analytics
-              </li>
-            </ul>
-            <button
-              onClick={() => onNavigate('/auth')}
-              className={`${sharedStyles.btnSecondary} ${styles.pricingBtn}`}
-            >
-              Get Started Free
-            </button>
+          <div className={styles.fullFeatureCard}>
+            <BarChart3 size={24} className={styles.fullFeatureIcon} />
+            <h4>Classrooms</h4>
+            <p>Increase student participation with interactive quizzes and polls</p>
           </div>
-          <div className={`${styles.pricingCard} ${styles.pricingCardFeatured}`}>
-            <div className={styles.pricingPopular}>Most Popular</div>
-            <div className={styles.pricingHeader}>
-              <h3 className={styles.pricingName}>Pro</h3>
-              <div className={styles.pricingPrice}>
-                <span className={styles.pricingAmount}>$12</span>
-                <span className={styles.pricingPeriod}>/month</span>
-              </div>
-              <p className={styles.pricingTagline}>For professionals & teams</p>
-            </div>
-            <ul className={styles.pricingFeatures}>
-              <li>
-                <Check size={18} /> Unlimited polls
-              </li>
-              <li>
-                <Check size={18} /> Unlimited votes
-              </li>
-              <li>
-                <Check size={18} /> Real-time results
-              </li>
-              <li>
-                <Check size={18} /> Private polls with access keys
-              </li>
-              <li>
-                <Check size={18} /> Advanced analytics
-              </li>
-              <li>
-                <Check size={18} /> Priority support
-              </li>
-              <li>
-                <Check size={18} /> Custom branding
-              </li>
-            </ul>
-            <button
-              onClick={() => onNavigate('/auth')}
-              className={`${sharedStyles.btnPrimary} ${styles.pricingBtn}`}
-            >
-              Start Pro Trial
-            </button>
-          </div>
-          <div className={styles.pricingCard}>
-            <div className={styles.pricingHeader}>
-              <h3 className={styles.pricingName}>Enterprise</h3>
-              <div className={styles.pricingPrice}>
-                <span className={styles.pricingAmount}>Custom</span>
-              </div>
-              <p className={styles.pricingTagline}>For large organizations</p>
-            </div>
-            <ul className={styles.pricingFeatures}>
-              <li>
-                <Check size={18} /> Everything in Pro
-              </li>
-              <li>
-                <Check size={18} /> SSO & SAML
-              </li>
-              <li>
-                <Check size={18} /> Dedicated support
-              </li>
-              <li>
-                <Check size={18} /> SLA guarantee
-              </li>
-              <li>
-                <Check size={18} /> On-premise option
-              </li>
-              <li>
-                <Check size={18} /> API access
-              </li>
-            </ul>
-            <button
-              onClick={() => onNavigate('/auth')}
-              className={`${sharedStyles.btnSecondary} ${styles.pricingBtn}`}
-            >
-              Contact Sales
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid Section */}
-      <section className={styles.featuresGridSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionBadge}>Features</span>
-          <h2 className={styles.sectionTitle}>Everything you need</h2>
-          <p className={styles.sectionSubtitle}>Powerful features to make your polls stand out</p>
-        </div>
-        <div className={styles.fullFeaturesGrid}>
           <div className={styles.fullFeatureCard}>
             <Zap size={24} className={styles.fullFeatureIcon} />
             <h4>Lightning Fast</h4>
             <p>50ms average response time with global edge network</p>
           </div>
           <div className={styles.fullFeatureCard}>
-            <Shield size={24} className={styles.fullFeatureIcon} />
-            <h4>Secure by Default</h4>
-            <p>End-to-end encryption and SOC 2 compliant infrastructure</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
             <Clock size={24} className={styles.fullFeatureIcon} />
             <h4>Real-time Updates</h4>
             <p>WebSocket connections for instant vote synchronization</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
-            <Users size={24} className={styles.fullFeatureIcon} />
-            <h4>Unlimited Voters</h4>
-            <p>Scale to thousands of simultaneous participants</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
-            <BarChart3 size={24} className={styles.fullFeatureIcon} />
-            <h4>Rich Analytics</h4>
-            <p>Detailed insights into voting patterns and engagement</p>
-          </div>
-          <div className={styles.fullFeatureCard}>
-            <Globe size={24} className={styles.fullFeatureIcon} />
-            <h4>Global CDN</h4>
-            <p>Fast loading from anywhere in the world</p>
           </div>
         </div>
       </section>

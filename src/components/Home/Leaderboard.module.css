@@ -1,10 +1,12 @@
 .leaderboardContainer {
-  background: white;
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 2rem;
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.08);
-  animation: slideIn 0.5s ease-out;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+  animation: slideIn 0.5s var(--ease-out);
 }
 
 .leaderboardHeader {
@@ -19,18 +21,18 @@
 }
 
 .trophyIcon {
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 
 .leaderboardTitle {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
 }
 
 .leaderboardSubtitle {
   color: var(--color-text-light);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
 }
 
 .leaderboardList {
@@ -44,20 +46,23 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  background: var(--color-bg-alt);
-  border: 1px solid transparent;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all var(--transition-normal) var(--ease-out);
   text-align: left;
   width: 100%;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
 }
 
 .leaderboardItem:hover {
-  background: white;
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 12px -4px rgba(25, 106, 255, 0.2);
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
   transform: translateX(4px);
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight), 0 0 20px rgba(62, 207, 142, 0.15);
 }
 
 .rankBadge {
@@ -70,27 +75,27 @@
   font-weight: 700;
   font-size: 0.9375rem;
   flex-shrink: 0;
-  background: var(--color-bg);
+  background: var(--color-bg-elevated);
   color: var(--color-text-light);
   border: 2px solid var(--color-border);
 }
 
 .rankBadge[data-rank="1"] {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: white;
-  border-color: #f59e0b;
+  background: linear-gradient(135deg, #F5A623 0%, #D69E2E 100%);
+  color: #000000;
+  border-color: #D69E2E;
 }
 
 .rankBadge[data-rank="2"] {
-  background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
+  background: linear-gradient(135deg, #A1A1A1 0%, #6B6B6B 100%);
   color: white;
-  border-color: #9ca3af;
+  border-color: #6B6B6B;
 }
 
 .rankBadge[data-rank="3"] {
-  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+  background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%);
   color: white;
-  border-color: #b45309;
+  border-color: #A0522D;
 }
 
 .pollInfo {
@@ -121,7 +126,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  color: var(--color-success);
+  color: var(--color-primary);
   font-weight: 500;
 }
 
@@ -137,7 +142,7 @@
 }
 
 .optionTag {
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
 }
 
 .moreOptions {
@@ -146,9 +151,9 @@
 }
 
 .chevron {
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
   flex-shrink: 0;
-  transition: transform var(--transition-normal);
+  transition: transform var(--transition-normal) var(--ease-out);
 }
 
 .leaderboardItem:hover .chevron {
@@ -191,7 +196,7 @@
 }
 
 .emptyIcon {
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
   margin-bottom: 1rem;
   opacity: 0.5;
 }
@@ -204,7 +209,7 @@
 
 .emptyState span {
   color: var(--color-text-light);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
 }
 
 @keyframes slideIn {

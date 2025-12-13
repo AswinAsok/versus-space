@@ -10,7 +10,7 @@
 
 .pageHeader {
   margin-bottom: 2rem;
-  animation: fadeInDown 0.4s ease-out;
+  animation: fadeInDown 0.4s var(--ease-out);
 }
 
 .pageBadge {
@@ -30,7 +30,7 @@
 
 .pageTitle {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
   margin-bottom: 0.5rem;
 }
@@ -41,12 +41,13 @@
 }
 
 .createPollForm {
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   padding: 2rem;
-  box-shadow: var(--shadow-lg);
-  animation: fadeInUp 0.4s ease-out 0.1s backwards;
+  animation: fadeInUp 0.4s var(--ease-out) 0.1s backwards;
 }
 
 .sectionTitle {
@@ -70,18 +71,20 @@
 }
 
 .optionInput {
-  background: var(--color-bg-alt);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
   margin-bottom: 0.75rem;
-  transition: all var(--transition-fast) ease-out;
-  animation: fadeInUp 0.3s ease-out backwards;
+  transition: all var(--transition-fast) var(--ease-out);
+  animation: fadeInUp 0.3s var(--ease-out) backwards;
 }
 
 .optionInput:hover {
-  border-color: var(--color-primary);
-  background: white;
+  border-color: var(--color-border-hover);
+  background: rgba(62, 207, 142, 0.08);
 }
 
 .optionHeader {
@@ -106,7 +109,7 @@
   width: 24px;
   height: 24px;
   background: var(--color-primary);
-  color: white;
+  color: #000000;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -139,7 +142,7 @@
   display: block;
   font-weight: 500;
   margin-bottom: 0.75rem;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: var(--color-text);
 }
 
@@ -161,24 +164,24 @@
   color: var(--color-text-light);
   font-weight: 500;
   font-size: 0.9375rem;
-  transition: all var(--transition-normal);
+  transition: all var(--transition-normal) var(--ease-out);
   cursor: pointer;
 }
 
 .visibilityOption:hover:not(:disabled) {
-  border-color: var(--color-primary);
-  background: white;
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-card);
 }
 
 .visibilityIcon {
   width: 48px;
   height: 48px;
   border-radius: var(--radius-md);
-  background: var(--color-bg);
+  background: var(--color-bg-elevated);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
 .visibilityActive {
@@ -189,7 +192,7 @@
 
 .visibilityActive .visibilityIcon {
   background: var(--color-primary);
-  color: white;
+  color: #000000;
 }
 
 .visibilityHint {

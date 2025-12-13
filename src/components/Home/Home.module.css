@@ -30,16 +30,16 @@
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 1.5rem;
-  animation: fadeInDown 0.5s ease-out;
+  animation: fadeInDown 0.5s var(--ease-out);
 }
 
 .heroTitle {
   font-size: 3.5rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--color-text);
-  animation: fadeInDown 0.6s ease-out;
+  animation: fadeInDown 0.6s var(--ease-out);
   line-height: 1.1;
   max-width: 800px;
   margin-left: auto;
@@ -47,14 +47,14 @@
 }
 
 .gradientText {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-purple) 50%, var(--color-magenta) 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #34B27B 50%, #24B47E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .heroSubtitle {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   color: var(--color-text-light);
   margin-bottom: 2rem;
   font-weight: 400;
@@ -62,27 +62,27 @@
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
-  animation: fadeInUp 0.6s ease-out 0.1s both;
+  animation: fadeInUp 0.6s var(--ease-out) 0.1s both;
 }
 
 .heroActions {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  animation: fadeInUp 0.6s ease-out 0.2s both;
+  animation: fadeInUp 0.6s var(--ease-out) 0.2s both;
 }
 
 .heroNote {
   margin-top: 1.5rem;
   font-size: 0.875rem;
   color: var(--color-text-muted);
-  animation: fadeInUp 0.6s ease-out 0.3s both;
+  animation: fadeInUp 0.6s var(--ease-out) 0.3s both;
 }
 
 /* Stats Section */
 .statsSection {
   padding: 3rem 0;
-  animation: fadeInUp 0.6s ease-out 0.4s both;
+  animation: fadeInUp 0.6s var(--ease-out) 0.4s both;
 }
 
 .statsGrid {
@@ -90,11 +90,13 @@
   justify-content: center;
   align-items: center;
   gap: 3rem;
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   padding: 2rem 3rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
 }
 
 .statItem {
@@ -103,7 +105,7 @@
 
 .statNumber {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-primary);
   line-height: 1;
   margin-bottom: 0.5rem;
@@ -125,11 +127,11 @@
 .trustedSection {
   padding: 2rem 0 3rem;
   text-align: center;
-  animation: fadeInUp 0.6s ease-out 0.5s both;
+  animation: fadeInUp 0.6s var(--ease-out) 0.5s both;
 }
 
 .trustedLabel {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
   margin-bottom: 1.5rem;
   text-transform: uppercase;
@@ -149,8 +151,8 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text-muted);
-  opacity: 0.6;
-  transition: opacity var(--transition-fast);
+  opacity: 0.5;
+  transition: opacity var(--transition-fast) var(--ease-out);
 }
 
 .trustedLogo:hover {
@@ -169,7 +171,7 @@
   background: var(--color-primary-light);
   color: var(--color-primary);
   border-radius: var(--radius-full);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
   margin-bottom: 1rem;
   text-transform: uppercase;
@@ -178,7 +180,7 @@
 
 .sectionTitle {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
@@ -204,21 +206,25 @@
 }
 
 .stepCard {
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   padding: 2rem;
   text-align: center;
   flex: 1;
   max-width: 280px;
   position: relative;
-  transition: all var(--transition-normal);
+  transition: all var(--transition-normal) var(--ease-out);
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
 }
 
 .stepCard:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-lg);
+  border-color: var(--glass-border-hover);
   transform: translateY(-4px);
+  background: var(--glass-bg-hover);
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight), 0 0 20px rgba(62, 207, 142, 0.1);
 }
 
 .stepNumber {
@@ -229,7 +235,7 @@
   width: 28px;
   height: 28px;
   background: var(--color-primary);
-  color: white;
+  color: #000000;
   border-radius: 50%;
   font-size: 0.875rem;
   font-weight: 700;
@@ -248,12 +254,12 @@
   justify-content: center;
   margin: 0 auto 1.25rem;
   color: var(--color-primary);
-  transition: all var(--transition-fast);
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
 .stepCard:hover .stepIconWrapper {
   background: var(--color-primary);
-  color: white;
+  color: #000000;
   transform: scale(1.1);
 }
 
@@ -265,7 +271,7 @@
 }
 
 .stepDescription {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: var(--color-text-light);
   line-height: 1.5;
 }
@@ -275,362 +281,50 @@
   padding-top: 4rem;
 }
 
-/* Main Content */
-.mainContent {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: start;
-  padding: 4rem 0;
-}
-
+/* Leaderboard Section */
 .leaderboardSection {
-  animation: fadeInUp 0.5s ease-out 0.2s both;
+  padding: 4rem 0;
+  animation: fadeInUp 0.5s var(--ease-out) 0.2s both;
 }
 
-.featuresSection {
-  animation: fadeInUp 0.5s ease-out 0.3s both;
-}
-
-.featuresTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-}
-
-.features {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.featureCard {
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 1.25rem;
-  text-align: left;
-  transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-}
-
-.featureCard:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.featureIcon {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-primary-light);
-  border-radius: var(--radius-md);
-  color: var(--color-primary);
-  transition: all var(--transition-fast) ease-out;
-}
-
-.featureCard:hover .featureIcon {
-  background: var(--color-primary);
-  color: white;
-}
-
-.featureTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.375rem;
-}
-
-.featureDescription {
-  color: var(--color-text-light);
-  line-height: 1.5;
-  font-size: 0.875rem;
-}
-
-/* Use Cases Section */
-.useCasesSection {
+/* Combined Features & Use Cases Section */
+.combinedSection {
   padding: 4rem 2rem;
   background: var(--color-bg-alt);
+  max-width: 100%;
 }
 
-.useCasesSection .sectionHeader,
-.useCasesSection .useCasesGrid {
+.combinedSection .sectionHeader {
   max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
 }
 
-.useCasesGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-}
-
-.useCaseCard {
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: 2rem;
-  text-align: center;
-  transition: all var(--transition-normal);
-}
-
-.useCaseCard:hover {
-  border-color: transparent;
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
-}
-
-.useCaseIcon {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.25rem;
-  color: white;
-}
-
-.useCaseCard h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.75rem;
-}
-
-.useCaseCard p {
-  font-size: 0.9375rem;
-  color: var(--color-text-light);
-  line-height: 1.5;
-}
-
-/* Testimonials Section */
-.testimonialsSection {
-  padding: 4rem 2rem;
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.testimonialsGrid {
+.combinedGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-}
-
-.testimonialCard {
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: 2rem;
-  transition: all var(--transition-normal);
-}
-
-.testimonialCard:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-lg);
-}
-
-.testimonialStars {
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-.testimonialText {
-  font-size: 1rem;
-  color: var(--color-text);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  font-style: italic;
-}
-
-.testimonialAuthor {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.testimonialAvatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-purple));
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.testimonialInfo {
-  flex: 1;
-}
-
-.testimonialName {
-  font-weight: 600;
-  color: var(--color-text);
-  font-size: 0.9375rem;
-}
-
-.testimonialRole {
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-}
-
-/* Pricing Section */
-.pricingSection {
-  padding: 4rem 2rem;
-  background: var(--color-bg-alt);
-}
-
-.pricingSection .sectionHeader {
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.pricingGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.pricingCard {
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: 2rem;
-  position: relative;
-  transition: all var(--transition-normal);
-}
-
-.pricingCard:hover {
-  box-shadow: var(--shadow-lg);
-}
-
-.pricingCardFeatured {
-  border: 2px solid var(--color-primary);
-  transform: scale(1.05);
-  box-shadow: var(--shadow-lg);
-}
-
-.pricingCardFeatured:hover {
-  transform: scale(1.07);
-}
-
-.pricingPopular {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--color-primary);
-  color: white;
-  padding: 0.375rem 1rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.pricingHeader {
-  text-align: center;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: 1.5rem;
-}
-
-.pricingName {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.75rem;
-}
-
-.pricingPrice {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.pricingAmount {
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--color-text);
-  line-height: 1;
-}
-
-.pricingPeriod {
-  font-size: 1rem;
-  color: var(--color-text-muted);
-}
-
-.pricingTagline {
-  font-size: 0.875rem;
-  color: var(--color-text-light);
-}
-
-.pricingFeatures {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-}
-
-.pricingFeatures li {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 0;
-  font-size: 0.9375rem;
-  color: var(--color-text);
-}
-
-.pricingFeatures li svg {
-  color: var(--color-success);
-  flex-shrink: 0;
-}
-
-.pricingBtn {
-  width: 100%;
-}
-
-/* Features Grid Section */
-.featuresGridSection {
-  padding: 4rem 2rem;
   max-width: 1280px;
   margin: 0 auto;
-}
-
-.fullFeaturesGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
 }
 
 .fullFeatureCard {
-  background: white;
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   text-align: center;
-  transition: all var(--transition-normal);
+  transition: all var(--transition-normal) var(--ease-out);
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
 }
 
 .fullFeatureCard:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  border-color: var(--glass-border-hover);
+  background: var(--glass-bg-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight), 0 0 20px rgba(62, 207, 142, 0.1);
 }
 
 .fullFeatureIcon {
@@ -665,15 +359,15 @@
 
 .ctaTitle {
   font-size: 2.5rem;
-  font-weight: 700;
-  color: white;
+  font-weight: 600;
+  color: #000000;
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
 
 .ctaSubtitle {
   font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(0, 0, 0, 0.7);
   margin-bottom: 2rem;
 }
 
@@ -682,12 +376,12 @@
 }
 
 .ctaActions button {
-  background: white;
+  background: #000000;
   color: var(--color-primary);
 }
 
 .ctaActions button:hover {
-  background: var(--color-bg-alt);
+  background: #1C1C1C;
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
@@ -702,19 +396,19 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(0, 0, 0, 0.8);
   font-size: 0.875rem;
 }
 
 .ctaFeatures svg {
-  color: var(--color-success);
+  color: #000000;
 }
 
 /* Footer */
 .footer {
   padding: 4rem 2rem 0;
-  background: var(--color-text);
-  color: white;
+  background: var(--color-bg-alt);
+  border-top: 1px solid var(--color-border);
 }
 
 .footerMain {
@@ -724,7 +418,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding-bottom: 3rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .footerBrand {
@@ -733,13 +427,13 @@
 
 .footerLogo {
   font-size: 1.5rem;
-  font-weight: 700;
-  color: white;
+  font-weight: 600;
+  color: var(--color-text);
   margin-bottom: 0.75rem;
 }
 
 .footerTagline {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-muted);
   font-size: 0.9375rem;
   margin-bottom: 1.5rem;
 }
@@ -753,16 +447,19 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  transition: all var(--transition-fast);
+  color: var(--color-text-light);
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
 .socialLink:hover {
   background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #000000;
   transform: translateY(-2px);
 }
 
@@ -773,9 +470,9 @@
 }
 
 .footerColumn h4 {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text);
   margin-bottom: 1.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -783,21 +480,21 @@
 
 .footerColumn a {
   display: block;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
   padding: 0.375rem 0;
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast) var(--ease-out);
 }
 
 .footerColumn a:hover {
-  color: white;
+  color: var(--color-primary);
 }
 
 .footerBottom {
   text-align: center;
   padding: 1.5rem 2rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
   font-size: 0.875rem;
 }
 
@@ -846,29 +543,13 @@
 }
 
 /* Responsive Styles */
+@media (max-width: 900px) {
+  .combinedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 1024px) {
-  .useCasesGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pricingGrid {
-    grid-template-columns: 1fr;
-    max-width: 400px;
-  }
-
-  .pricingCardFeatured {
-    transform: none;
-    order: -1;
-  }
-
-  .pricingCardFeatured:hover {
-    transform: translateY(-4px);
-  }
-
-  .fullFeaturesGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .footerMain {
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -890,15 +571,6 @@
 }
 
 @media (max-width: 992px) {
-  .mainContent {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .testimonialsGrid {
-    grid-template-columns: 1fr;
-  }
-
   .stepsGrid {
     flex-direction: column;
     align-items: center;
@@ -969,21 +641,12 @@
     font-size: 1.75rem;
   }
 
-  .features {
-    grid-template-columns: 1fr;
-  }
-
-  .useCasesSection,
-  .pricingSection {
+  .combinedSection {
     padding-left: 1rem;
     padding-right: 1rem;
   }
 
-  .useCasesGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .fullFeaturesGrid {
+  .combinedGrid {
     grid-template-columns: 1fr;
   }
 

@@ -1,21 +1,25 @@
 .appHeader {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
-  position: sticky;
-  top: 0;
+  background: var(--color-bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  position: relative;
   z-index: 100;
-  transition: all var(--transition-fast) ease-out;
-  height: 64px;
+  transition: all var(--transition-fast) var(--ease-out);
+  height: 56px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 1rem auto;
+  border-radius: 999px;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
 }
 
 .headerContent {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1rem;
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
@@ -26,7 +30,7 @@
   padding: 0.5rem;
   margin: -0.5rem;
   border-radius: var(--radius-md);
-  transition: all var(--transition-fast) ease-out;
+  transition: all var(--transition-fast) var(--ease-out);
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -39,50 +43,74 @@
 .logoIcon {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-purple) 100%);
+  background: var(--color-primary);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #000000;
 }
 
 .logo {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
   letter-spacing: -0.02em;
 }
 
 .headerNav {
   display: flex;
-  gap: 0.5rem;
   align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .navLink {
-  background: none;
+  background: rgba(255, 255, 255, 0.03);
   border: none;
   color: var(--color-text-light);
   cursor: pointer;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast) ease-out;
+  padding: 0.625rem 1.25rem;
+  border-radius: 999px;
+  transition: all var(--transition-fast) var(--ease-out);
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .navLink:hover {
-  color: var(--color-primary);
-  background: var(--color-primary-light);
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .createButton {
-  padding: 0.5rem 1rem;
+  background: var(--color-primary);
+  color: #000000;
+  padding: 0.625rem 1.25rem;
   font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 999px;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.createButton:hover {
+  background: var(--color-primary-dark);
+  transform: scale(1.02);
 }
 
 .createButton span {
@@ -94,19 +122,17 @@
   align-items: center;
   gap: 0.5rem;
   margin-left: 0.5rem;
-  padding-left: 1rem;
-  border-left: 1px solid var(--color-border);
 }
 
 .userAvatar {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-purple) 100%);
+  background: var(--color-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #000000;
   font-weight: 600;
   font-size: 0.875rem;
 }
@@ -118,18 +144,24 @@
   border-radius: var(--radius-md);
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-fast) var(--ease-out);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .signOutButton:hover {
-  background: #fee2e2;
+  background: rgba(239, 68, 68, 0.1);
   color: var(--color-danger);
 }
 
 @media (max-width: 768px) {
+  .appHeader {
+    height: 50px;
+    margin: 0.75rem 1rem;
+    max-width: calc(100% - 2rem);
+  }
+
   .headerContent {
     padding: 0 1rem;
   }
