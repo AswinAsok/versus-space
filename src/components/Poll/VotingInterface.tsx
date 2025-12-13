@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import ReactSpeedometer from 'react-d3-speedometer';
+import ReactSpeedometer, { Transition } from 'react-d3-speedometer';
 import { voteService } from '../../services/voteService';
 import { getSessionId } from '../../utils/sessionId';
 import { RateCalculator } from '../../utils/rateCalculator';
@@ -305,7 +305,7 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
                   value={Math.min(rate, 20)}
                   needleColor="rgba(255,255,255,0.9)"
                   needleTransitionDuration={200}
-                  needleTransition="easeQuadIn"
+                  needleTransition={Transition.easeQuadIn}
                   segments={5}
                   segmentColors={[
                     'rgba(255,255,255,0.03)',
