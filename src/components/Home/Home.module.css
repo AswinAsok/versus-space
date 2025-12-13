@@ -29,6 +29,7 @@
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 500;
+  margin-top: 2rem;
   margin-bottom: 1.5rem;
   animation: fadeInDown 0.5s var(--ease-out);
 }
@@ -79,13 +80,29 @@
   animation: fadeInUp 0.6s var(--ease-out) 0.3s both;
 }
 
+.demoVideoWrapper {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInUp 0.6s var(--ease-out) 0.4s both;
+}
+
+.demoVideo {
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
 .demoNote {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   font-size: 0.75rem;
   color: var(--color-text-muted);
   opacity: 0.7;
   font-style: italic;
-  animation: fadeInUp 0.6s var(--ease-out) 0.4s both;
 }
 
 /* Stats Section */
@@ -507,6 +524,15 @@
     padding: 2rem 0;
   }
 
+  .demoVideoWrapper {
+    margin-top: 2rem;
+    padding: 0 1rem;
+  }
+
+  .demoVideo {
+    max-width: 100%;
+  }
+
   .heroTitle {
     font-size: 2.25rem;
   }
@@ -625,6 +651,17 @@
 
   .hero {
     padding: 1.5rem 0;
+  }
+
+  .demoVideoWrapper {
+    margin-top: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .demoNote {
+    font-size: 0.6875rem;
+    padding: 0 0.5rem;
+    text-align: center;
   }
 
   .heroTitle {
