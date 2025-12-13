@@ -17,7 +17,6 @@ import {
   Check,
   Share2,
   ChevronRight,
-  Rocket,
   Code2,
 } from 'lucide-react';
 import type { Poll } from '../../types';
@@ -211,16 +210,6 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
           </div>
           {polls.length === 0 ? (
             <div className={styles.emptyState}>
-              <div className={styles.emptyVisual}>
-                <div className={styles.emptyIconOuter}>
-                  <div className={styles.emptyIconInner}>
-                    <Rocket size={40} />
-                  </div>
-                </div>
-                <div className={styles.emptyOrbit}>
-                  <div className={styles.orbitDot}></div>
-                </div>
-              </div>
               <h2 className={styles.emptyTitle}>Ready to launch your first poll?</h2>
               <p className={styles.emptyDescription}>
                 Create engaging polls and start collecting real-time feedback from your audience in
