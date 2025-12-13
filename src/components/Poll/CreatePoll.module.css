@@ -1,10 +1,10 @@
 .createPollContainer {
   flex: 1;
-  max-width: 800px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 2rem;
   width: 100%;
-  animation: fadeInUp var(--transition-normal);
+  animation: fadeInUp 0.4s ease-out;
   position: relative;
   z-index: 1;
 }
@@ -12,28 +12,22 @@
 .createPollForm {
   background: white;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 2.5rem;
-  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.createPollForm::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-primary), #7c3aed);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+}
+
+.subtitle {
+  color: var(--color-text-light);
   margin-bottom: 2rem;
-  position: relative;
+  font-size: 0.9375rem;
 }
 
 .optionsSection {
@@ -50,16 +44,14 @@
   background: var(--color-bg-alt);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  transition: all var(--transition-normal);
-  position: relative;
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+  transition: all var(--transition-fast) ease-out;
 }
 
 .optionInput:hover {
-  border-color: rgba(37, 99, 235, 0.2);
-  box-shadow: 0 4px 8px -2px rgba(37, 99, 235, 0.1);
-  transform: translateX(4px);
+  border-color: var(--color-primary);
+  background: white;
 }
 
 .optionHeader {
@@ -89,6 +81,65 @@
   height: 200px;
   object-fit: cover;
   display: block;
+}
+
+.visibilitySection {
+  margin-bottom: 1.5rem;
+}
+
+.visibilityLabel {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--color-text);
+}
+
+.visibilityToggle {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--color-bg-alt);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.visibilityOption {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-light);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.visibilityOption:hover:not(:disabled) {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.visibilityActive {
+  background: white;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.visibilityActive:hover:not(:disabled) {
+  background: white;
+  color: var(--color-primary);
+}
+
+.visibilityHint {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-light);
 }
 
 @keyframes fadeInUp {

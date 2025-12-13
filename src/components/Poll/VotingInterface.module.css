@@ -14,29 +14,35 @@
   overflow: hidden;
 }
 
+/* Mentimeter-inspired vibrant color variants */
 .variant0 {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  background: linear-gradient(135deg, #196AFF 0%, #0D47A1 100%);
+  color: white;
 }
 
 .variant1 {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  background: linear-gradient(135deg, #FF6B4A 0%, #E53935 100%);
   color: white;
 }
 
 .variant2 {
-  background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+  background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+  color: white;
 }
 
 .variant3 {
-  background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
+  background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
+  color: white;
 }
 
 .variant4 {
-  background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
+  background: linear-gradient(135deg, #FFCA28 0%, #FFB300 100%);
+  color: #1A1A1A;
 }
 
 .variant5 {
-  background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%);
+  background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+  color: white;
 }
 
 .optionBackground {
@@ -75,47 +81,26 @@
 }
 
 .darkTitle {
-  color: white;
+  color: #1A1A1A;
 }
 
 .voteButton {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   color: var(--color-text);
-  padding: 1rem 2rem;
-  border-radius: var(--radius-lg);
+  padding: 1rem 2.5rem;
+  border-radius: var(--radius-md);
   font-size: 1.125rem;
   font-weight: 600;
   box-shadow: var(--shadow-lg);
   margin-bottom: 2rem;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease-out;
   cursor: pointer;
-  border: 2px solid rgba(37, 99, 235, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.voteButton::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(37, 99, 235, 0.1);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.voteButton:hover::before {
-  width: 300px;
-  height: 300px;
+  border: none;
 }
 
 .voteButton:hover {
   transform: scale(1.05) translateY(-2px);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2);
-  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 .voteButton:active {
@@ -162,7 +147,7 @@
 }
 
 .darkDivider {
-  border-top-color: rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(0, 0, 0, 0.15);
 }
 
 @keyframes fadeIn {

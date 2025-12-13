@@ -3,6 +3,8 @@ export interface Poll {
   title: string;
   creator_id: string;
   is_active: boolean;
+  is_public: boolean;
+  access_key: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -40,9 +42,27 @@ export interface PollWithOptions extends Poll {
 
 export interface CreatePollData {
   title: string;
+  is_public: boolean;
+  access_key?: string;
   options: {
     title: string;
     image_url: string | null;
+    position: number;
+  }[];
+}
+
+export interface LeaderboardPoll {
+  id: string;
+  title: string;
+  creator_id: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  total_votes: number;
+  options: {
+    id: string;
+    title: string;
+    vote_count: number;
     position: number;
   }[];
 }

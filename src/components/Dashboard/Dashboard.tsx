@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollService } from '../../services/pollService';
-import { Trash2, ExternalLink, BarChart3 } from 'lucide-react';
+import { Trash2, ExternalLink, BarChart3, Plus, Globe, Lock } from 'lucide-react';
 import type { Poll } from '../../types';
 import styles from './Dashboard.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -63,9 +63,13 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
   return (
     <div className={styles.dashboardContainer}>
       <div className={styles.dashboardHeader}>
-        <h1 className={styles.dashboardTitle}>Your Polls</h1>
+        <div>
+          <h1 className={styles.dashboardTitle}>Your Polls</h1>
+          <p className={styles.dashboardSubtitle}>Manage and track your polls</p>
+        </div>
         <button onClick={() => onNavigate('/create')} className={sharedStyles.btnPrimary}>
-          Create New Poll
+          <Plus size={18} />
+          Create Poll
         </button>
       </div>
 
@@ -73,11 +77,14 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
 
       {polls.length === 0 ? (
         <div className={styles.emptyState}>
-          <BarChart3 size={64} />
+          <div className={styles.emptyIcon}>
+            <BarChart3 size={48} />
+          </div>
           <h2 className={styles.emptyTitle}>No polls yet</h2>
-          <p className={styles.emptyDescription}>Create your first poll to get started</p>
+          <p className={styles.emptyDescription}>Create your first poll to start collecting votes</p>
           <button onClick={() => onNavigate('/create')} className={sharedStyles.btnPrimary}>
-            Create Poll
+            <Plus size={18} />
+            Create Your First Poll
           </button>
         </div>
       ) : (
@@ -85,18 +92,25 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
           {polls.map((poll) => (
             <div key={poll.id} className={styles.pollCard}>
               <div className={styles.pollCardHeader}>
-                <h3 className={styles.pollTitle}>{poll.title}</h3>
-                <span
-                  className={`${styles.statusBadge} ${
-                    poll.is_active ? styles.active : styles.inactive
-                  }`}
-                >
-                  {poll.is_active ? 'Active' : 'Inactive'}
-                </span>
+                <div className={styles.pollBadges}>
+                  <span
+                    className={`${styles.statusBadge} ${
+                      poll.is_active ? styles.active : styles.inactive
+                    }`}
+                  >
+                    {poll.is_active ? 'Active' : 'Inactive'}
+                  </span>
+                  <span className={`${styles.visibilityBadge} ${poll.is_public ? styles.public : styles.private}`}>
+                    {poll.is_public ? <Globe size={12} /> : <Lock size={12} />}
+                    {poll.is_public ? 'Public' : 'Private'}
+                  </span>
+                </div>
               </div>
 
+              <h3 className={styles.pollTitle}>{poll.title}</h3>
+
               <div className={styles.pollMeta}>
-                <span>Created {new Date(poll.created_at).toLocaleDateString()}</span>
+                Created {new Date(poll.created_at).toLocaleDateString()}
               </div>
 
               <div className={styles.pollActions}>
@@ -111,14 +125,15 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
 
                 <button
                   onClick={() => toggleStatus(poll.id, poll.is_active)}
-                  className={sharedStyles.btnSecondary}
+                  className={sharedStyles.btnIcon}
+                  title={poll.is_active ? 'Deactivate' : 'Activate'}
                 >
                   {poll.is_active ? 'Deactivate' : 'Activate'}
                 </button>
 
                 <button
                   onClick={() => handleDelete(poll.id)}
-                  className={sharedStyles.btnDanger}
+                  className={sharedStyles.btnIcon}
                   title="Delete poll"
                 >
                   <Trash2 size={16} />

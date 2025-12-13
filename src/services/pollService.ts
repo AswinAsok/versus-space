@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabaseClient';
-import type { Poll, PollOption, PollWithOptions, CreatePollData } from '../types';
+import type { Poll, PollOption, PollWithOptions, CreatePollData, LeaderboardPoll } from '../types';
 
 /**
  * Encapsulates all poll-related persistence logic to keep components focused on UI concerns.
@@ -12,6 +12,8 @@ export class PollService {
         title: data.title,
         creator_id: userId,
         is_active: true,
+        is_public: data.is_public,
+        access_key: data.is_public ? null : data.access_key || null,
       })
       .select()
       .single();
@@ -130,6 +132,41 @@ export class PollService {
 
     return () => {
       supabase.removeChannel(channel);
+    };
+  }
+
+  async getLeaderboard(limit: number = 10): Promise<LeaderboardPoll[]> {
+    const { data, error } = await supabase
+      .from('public_poll_leaderboard')
+      .select('*')
+      .limit(limit);
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  async validateAccessKey(pollId: string, accessKey: string): Promise<boolean> {
+    const { data, error } = await supabase
+      .from('polls')
+      .select('access_key')
+      .eq('id', pollId)
+      .single();
+
+    if (error) throw error;
+    return data?.access_key === accessKey;
+  }
+
+  async isPollPublic(pollId: string): Promise<{ isPublic: boolean; requiresKey: boolean }> {
+    const { data, error } = await supabase
+      .from('polls')
+      .select('is_public, access_key')
+      .eq('id', pollId)
+      .single();
+
+    if (error) throw error;
+    return {
+      isPublic: data?.is_public ?? true,
+      requiresKey: !data?.is_public && !!data?.access_key,
     };
   }
 }

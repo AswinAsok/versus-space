@@ -5,47 +5,107 @@
 }
 
 :root {
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
+  /* Mentimeter-inspired Primary Colors */
+  --color-primary: #196AFF;
+  --color-primary-dark: #0D47A1;
+  --color-primary-light: rgba(25, 106, 255, 0.1);
+
+  /* Secondary/Accent Colors (Vibrant Palette) */
+  --color-coral: #FF6B4A;
+  --color-magenta: #E91E63;
+  --color-purple: #9C27B0;
+  --color-teal: #00BFA5;
+  --color-yellow: #FFCA28;
+  --color-green: #4CAF50;
+
+  /* Neutral Colors */
+  --color-text: #1A1A1A;
+  --color-text-light: #4A4A4A;
+  --color-text-muted: #9E9E9E;
   --color-secondary: #64748b;
-  --color-success: #10b981;
+  --color-success: #00BFA5;
   --color-danger: #ef4444;
-  --color-bg: #ffffff;
-  --color-bg-alt: #f8fafc;
-  --color-border: #e2e8f0;
-  --color-text: #0f172a;
-  --color-text-light: #64748b;
-  --transition-fast: 150ms;
-  --transition-normal: 250ms;
+  --color-warning: #FFCA28;
+
+  /* Backgrounds */
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #FAFAFA;
+  --color-bg-subtle: #F5F5F5;
+
+  /* Borders */
+  --color-border: #E0E0E0;
+  --color-border-light: #F0F0F0;
+
+  /* Transitions (Mentimeter timing) */
+  --transition-micro: 150ms;
+  --transition-fast: 200ms;
+  --transition-normal: 300ms;
   --transition-slow: 400ms;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --transition-data: 600ms;
+
+  /* Shadows (Mentimeter shadow system) */
+  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.15);
+
+  /* Border Radius (Mentimeter system) */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+
+  /* Spacing (8px base unit) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+  --space-8: 96px;
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px rgba(25, 106, 255, 0.3);
 }
 
 body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+  font-family: 'Poppins', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-text);
   background: var(--color-bg);
-  line-height: 1.5;
+  line-height: 1.6;
   position: relative;
   overflow-x: hidden;
+  font-size: 16px;
 }
 
 button {
   font-family: inherit;
   cursor: pointer;
   border: none;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-fast) ease-out;
 }
 
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Selection styling */
+::selection {
+  background: var(--color-primary);
+  color: white;
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollService } from '../../services/pollService';
-import { X, Plus } from 'lucide-react';
+import { X, Plus, Globe, Lock, Key } from 'lucide-react';
 import type { CreatePollData } from '../../types';
 import styles from './CreatePoll.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -20,6 +20,8 @@ interface OptionInput {
 // Form responsible for orchestrating poll creation and validating user input.
 export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   const [title, setTitle] = useState('');
+  const [isPublic, setIsPublic] = useState(true);
+  const [accessKey, setAccessKey] = useState('');
   const [options, setOptions] = useState<OptionInput[]>([
     { id: '1', title: '', image_url: '' },
     { id: '2', title: '', image_url: '' },
@@ -62,12 +64,19 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
       return;
     }
 
+    if (!isPublic && !accessKey.trim()) {
+      setError('Private polls require an access key');
+      return;
+    }
+
     setLoading(true);
 
     try {
       // Normalize payload to the shape expected by pollService.
       const pollData: CreatePollData = {
         title,
+        is_public: isPublic,
+        access_key: isPublic ? undefined : accessKey,
         options: options.map((opt, index) => ({
           title: opt.title,
           image_url: opt.image_url || null,
@@ -93,7 +102,6 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
 
         <div className={sharedStyles.formGroup}>
           <label htmlFor="title">Poll Title</label>
-          {/* Title is the only required field before options */}
           <input
             id="title"
             type="text"
@@ -105,6 +113,53 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
             maxLength={100}
           />
         </div>
+
+        <div className={styles.visibilitySection}>
+          <label className={styles.visibilityLabel}>Poll Visibility</label>
+          <div className={styles.visibilityToggle}>
+            <button
+              type="button"
+              className={`${styles.visibilityOption} ${isPublic ? styles.visibilityActive : ''}`}
+              onClick={() => setIsPublic(true)}
+              disabled={loading}
+            >
+              <Globe size={18} />
+              <span>Public</span>
+            </button>
+            <button
+              type="button"
+              className={`${styles.visibilityOption} ${!isPublic ? styles.visibilityActive : ''}`}
+              onClick={() => setIsPublic(false)}
+              disabled={loading}
+            >
+              <Lock size={18} />
+              <span>Private</span>
+            </button>
+          </div>
+          <p className={styles.visibilityHint}>
+            {isPublic
+              ? 'Public polls appear on the leaderboard and anyone can vote.'
+              : 'Private polls require an access key to vote.'}
+          </p>
+        </div>
+
+        {!isPublic && (
+          <div className={sharedStyles.formGroup}>
+            <label htmlFor="accessKey">
+              <Key size={16} style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'middle' }} />
+              Access Key
+            </label>
+            <input
+              id="accessKey"
+              type="text"
+              value={accessKey}
+              onChange={(e) => setAccessKey(e.target.value)}
+              placeholder="Enter a secret key for participants"
+              disabled={loading}
+              maxLength={50}
+            />
+          </div>
+        )}
 
         <div className={styles.optionsSection}>
           <h3 className={styles.optionsTitle}>Options</h3>

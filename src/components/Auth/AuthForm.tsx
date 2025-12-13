@@ -38,13 +38,34 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <h2 className={styles.title}>{isLogin ? 'Sign In' : 'Sign Up'}</h2>
+        <h2 className={styles.title}>Welcome</h2>
+        <p className={styles.subtitle}>
+          {isLogin ? 'Sign in to continue' : 'Create your account'}
+        </p>
+
+        <div className={styles.toggleContainer}>
+          <button
+            type="button"
+            className={`${styles.toggleButton} ${isLogin ? styles.toggleActive : ''}`}
+            onClick={() => setIsLogin(true)}
+            disabled={loading}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            className={`${styles.toggleButton} ${!isLogin ? styles.toggleActive : ''}`}
+            onClick={() => setIsLogin(false)}
+            disabled={loading}
+          >
+            Sign Up
+          </button>
+        </div>
 
         {error && <div className={sharedStyles.errorMessage}>{error}</div>}
 
         <div className={sharedStyles.formGroup}>
           <label htmlFor="email">Email</label>
-          {/* Capture the user's email; browser validation covers format */}
           <input
             id="email"
             type="email"
@@ -58,7 +79,6 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
 
         <div className={sharedStyles.formGroup}>
           <label htmlFor="password">Password</label>
-          {/* Basic length requirement to align with Supabase defaults */}
           <input
             id="password"
             type="password"
@@ -71,17 +91,13 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
           />
         </div>
 
-        <button type="submit" className={sharedStyles.btnPrimary} disabled={loading}>
-          {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Sign Up'}
-        </button>
-
         <button
-          type="button"
-          className={sharedStyles.btnLink}
-          onClick={() => setIsLogin(!isLogin)}
+          type="submit"
+          className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
           disabled={loading}
+          style={{ width: '100%' }}
         >
-          {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
+          {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Create Account'}
         </button>
       </form>
     </div>

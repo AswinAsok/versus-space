@@ -81,7 +81,7 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
               <div className={styles.optionInfo}>
                 <h2
                   className={`${styles.optionTitle} ${
-                    index === 1 ? styles.darkTitle : ''
+                    index === 4 ? styles.darkTitle : ''
                   }`}
                 >
                   {option.title}
@@ -106,7 +106,7 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
 
                   {userVoteCount > 0 && (
                     <div
-                      className={`${styles.userVotes} ${index === 1 ? styles.darkDivider : ''}`}
+                      className={`${styles.userVotes} ${index === 4 ? styles.darkDivider : ''}`}
                     >
                       You've scored {userVoteCount} points for {option.title}
                     </div>

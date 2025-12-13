@@ -1,16 +1,18 @@
 .btnPrimary {
   background: var(--color-primary);
   color: white;
-  padding: 0.625rem 1.25rem;
+  padding: 12px 24px;
   border-radius: var(--radius-md);
-  font-weight: 500;
-  font-size: 0.9375rem;
+  font-weight: 600;
+  font-size: 1rem;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   box-shadow: var(--shadow-sm);
   position: relative;
   overflow: hidden;
+  transition: all var(--transition-fast) ease-out;
 }
 
 .btnPrimary::before {
@@ -30,8 +32,8 @@
 
 .btnPrimary:hover:not(:disabled) {
   background: var(--color-primary-dark);
-  box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.4);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(25, 106, 255, 0.4);
+  transform: translateY(-1px);
 }
 
 .btnPrimary:active:not(:disabled) {
@@ -40,41 +42,27 @@
 }
 
 .btnSecondary {
-  background: white;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  padding: 0.625rem 1.25rem;
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  padding: 10px 22px;
   border-radius: var(--radius-md);
-  font-weight: 500;
-  font-size: 0.9375rem;
+  font-weight: 600;
+  font-size: 1rem;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   position: relative;
   overflow: hidden;
-}
-
-.btnSecondary::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(124, 58, 237, 0.05));
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-}
-
-.btnSecondary:hover::after {
-  opacity: 1;
+  transition: all var(--transition-fast) ease-out;
 }
 
 .btnSecondary:hover:not(:disabled) {
-  background: var(--color-bg-alt);
-  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: white;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px -2px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 4px 12px -2px rgba(25, 106, 255, 0.3);
 }
 
 .btnDanger {
@@ -173,24 +161,23 @@
 
 .formGroup input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.875rem 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   font-size: 1rem;
-  transition: all var(--transition-normal);
+  transition: all var(--transition-fast) ease-out;
   font-family: inherit;
   background: var(--color-bg);
 }
 
 .formGroup input:hover:not(:disabled) {
-  border-color: var(--color-secondary);
+  border-color: var(--color-text-muted);
 }
 
 .formGroup input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-  transform: translateY(-1px);
+  box-shadow: var(--focus-ring);
 }
 
 .formGroup input:disabled {
