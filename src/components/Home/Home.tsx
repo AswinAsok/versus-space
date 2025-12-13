@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, Check, Sparkles, ChevronRight, Vote, Share2, Eye, Code2, Star } from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  Sparkles,
+  ChevronRight,
+  Vote,
+  Share2,
+  Eye,
+  Code2,
+  Star,
+} from 'lucide-react';
 import { Leaderboard } from './Leaderboard';
 import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';

@@ -8,7 +8,7 @@ live tug-of-war for opinions. create a poll with two options, drop a link, and w
 
 [![Watch the demo](https://img.youtube.com/vi/lC7ViK-1DhI/maxresdefault.jpg)](https://youtu.be/lC7ViK-1DhI)
 
-*Demo video was recorded in the last hour of submission. Demo v2 coming soon!*
+_Demo video was recorded in the last hour of submission. Demo v2 coming soon!_
 
 ## what it's for
 
