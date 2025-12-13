@@ -377,7 +377,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
 
                   {pollId === '70427c7e-9405-4b76-b062-087790c6f5ef' && index === 0 && (
                     <div className={styles.appLikePill}>
-                      <span className={styles.appLikeHeader}>app like</span>
+                      <span className={styles.appLikeHeader}>apps like</span>
                       <div className={styles.appLikeLogos}>
                         <a
                           href="https://ente.io/?utm_source=versus.space"
