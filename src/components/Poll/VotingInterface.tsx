@@ -6,8 +6,6 @@ import { voteService } from '../../services/voteService';
 import { getSessionId } from '../../utils/sessionId';
 import { RateCalculator } from '../../utils/rateCalculator';
 import sharedStyles from '../../styles/Shared.module.css';
-import { supabase } from '../../lib/supabaseClient';
-import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { PollOption } from '../../types';
 import styles from './VotingInterface.module.css';
 
@@ -49,10 +47,6 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     { id: number; particles: { x: number; y: number; color: string }[] }[]
   >([]);
   const [initialCountAnimationDone, setInitialCountAnimationDone] = useState(false);
-  const [wsStatus, setWsStatus] = useState<'connecting' | 'open' | 'closing' | 'closed'>(() =>
-    supabase.realtime.connectionState()
-  );
-  const [channelStatus, setChannelStatus] = useState<string>('not-subscribed');
 
   const floatingIdRef = useRef(0);
   const confettiIdRef = useRef(0);
@@ -87,20 +81,6 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
 
     return () => clearInterval(interval);
   }, [options]);
-
-  useEffect(() => {
-    // Poll the realtime client so we can show connection status across devices.
-    const updateStatus = () => {
-      setWsStatus(supabase.realtime.connectionState());
-      const channel: RealtimeChannel | undefined = supabase
-        .getChannels()
-        .find((c) => c.topic === `poll_options:${pollId}`);
-      setChannelStatus(channel?.state ?? 'not-subscribed');
-    };
-    const interval = setInterval(updateStatus, 1500);
-    updateStatus();
-    return () => clearInterval(interval);
-  }, [pollId]);
 
   const spawnConfetti = useCallback((x: number, y: number) => {
     const id = confettiIdRef.current++;
@@ -217,25 +197,9 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
   };
 
   const firstOptionPercentage = getClampedPercentage(options[0].vote_count);
-  const statusClass =
-    wsStatus === 'open'
-      ? styles.wsConnected
-      : wsStatus === 'closed'
-        ? styles.wsClosed
-        : styles.wsConnecting;
-  const statusLabel =
-    wsStatus === 'open' ? 'Live' : wsStatus === 'closed' ? 'Disconnected' : 'Connecting…';
 
   return (
     <div className={`${styles.votingInterface} ${screenShake ? styles.shake : ''}`}>
-      <div className={`${styles.wsStatus} ${statusClass}`}>
-        <span className={`${styles.wsDot} ${statusClass}`} />
-        <span>
-          {statusLabel}
-          {channelStatus && channelStatus !== 'not-subscribed' ? ` · ${channelStatus}` : ''}
-        </span>
-      </div>
-
       {/* Combo indicator */}
       {combo > 1 && (
         <div className={styles.comboIndicator}>
@@ -318,6 +282,33 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
               ))}
 
             <div className={styles.optionContent}>
+              {pollId === '70427c7e-9405-4b76-b062-087790c6f5ef' && index === 0 && (
+                <div className={styles.appLikeOverlay}>
+                  <div className={styles.appLikePill}>
+                    <span className={styles.appLikeHeader}>app like</span>
+                    <div className={styles.appLikeLogos}>
+                      <a
+                        href="https://ente.io/?ref=versus.space"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img src="/ente-branding-green.png" alt="Ente" className={styles.enteLogo} />
+                      </a>
+                      <a href="https://kagi.com/?ref=versus.space" target="_blank" rel="noopener noreferrer">
+                        <img src="/kagi.webp" alt="Kagi" />
+                      </a>
+                      <a
+                        href="https://notesnook.com/?ref=versus.space"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img src="/notesnook.webp" alt="Notesnook" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Giant speedometer as background */}
               <div className={styles.speedometerBg}>
                 <ReactSpeedometer
@@ -409,27 +400,6 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                   {userVoteCount > 0 && (
                     <div className={styles.userVotes}>
                       You've scored <strong>{userVoteCount}</strong> for {option.title}
-                    </div>
-                  )}
-
-                  {pollId === '70427c7e-9405-4b76-b062-087790c6f5ef' && index === 0 && (
-                    <div className={styles.appLikePill}>
-                      <span className={styles.appLikeHeader}>app like</span>
-                      <div className={styles.appLikeLogos}>
-                        <a
-                          href="https://ente.io/?ref=versus.space"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            src="/ente-branding-green.png"
-                            alt="Ente"
-                            className={styles.enteLogo}
-                          />
-                        </a>
-                        <img src="/kagi.webp" alt="Kagi" />
-                        <img src="/notesnook.webp" alt="Notesnook" />
-                      </div>
                     </div>
                   )}
                 </div>

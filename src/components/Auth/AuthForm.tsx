@@ -3,7 +3,6 @@ import { authService } from '../../services/authService';
 import { Zap, BarChart3, Users, Lock, Check, ArrowRight } from 'lucide-react';
 import styles from './AuthForm.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
-import googleLogo from '../../styles/google-logo.svg';
 
 interface AuthFormProps {
   onSuccess: () => void;
@@ -15,7 +14,6 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [socialLoading, setSocialLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,18 +31,6 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setError('');
-    setSocialLoading(true);
-
-    try {
-      await authService.signInWithGoogle();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to start Google sign-in');
-      setSocialLoading(false);
     }
   };
 
@@ -114,20 +100,6 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
             >
               Sign Up
             </button>
-          </div>
-
-          <button
-            type="button"
-            className={styles.socialButton}
-            onClick={handleGoogleSignIn}
-            disabled={loading || socialLoading}
-          >
-            <img src={googleLogo} alt="Google logo" className={styles.socialIcon} />
-            {socialLoading ? 'Redirecting to Google...' : 'Continue with Google'}
-          </button>
-
-          <div className={styles.divider}>
-            <span>or continue with email</span>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.form}>
