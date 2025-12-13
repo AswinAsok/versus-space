@@ -95,11 +95,7 @@ export function Header({ user, onNavigate }: HeaderProps) {
               {user ? (
                 <div className={styles.userSection}>
                   <div className={styles.userAvatar}>{user.email?.charAt(0).toUpperCase()}</div>
-                  <button
-                    onClick={handleSignOut}
-                    className={styles.signOutButton}
-                    title="Sign out"
-                  >
+                  <button onClick={handleSignOut} className={styles.signOutButton} title="Sign out">
                     <LogOut size={18} />
                   </button>
                 </div>
