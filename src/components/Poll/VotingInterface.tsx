@@ -287,33 +287,6 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
               ))}
 
             <div className={styles.optionContent}>
-              {pollId === '70427c7e-9405-4b76-b062-087790c6f5ef' && index === 0 && (
-                <div className={styles.appLikeOverlay}>
-                  <div className={styles.appLikePill}>
-                    <span className={styles.appLikeHeader}>app like</span>
-                    <div className={styles.appLikeLogos}>
-                      <a
-                        href="https://ente.io/?ref=versus.space"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img src="/ente-branding-green.png" alt="Ente" className={styles.enteLogo} />
-                      </a>
-                      <a href="https://kagi.com/?ref=versus.space" target="_blank" rel="noopener noreferrer">
-                        <img src="/kagi.webp" alt="Kagi" />
-                      </a>
-                      <a
-                        href="https://notesnook.com/?ref=versus.space"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img src="/notesnook.webp" alt="Notesnook" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* Giant speedometer as background */}
               <div className={styles.speedometerBg}>
                 <ReactSpeedometer
@@ -401,6 +374,39 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                     )}
                     <span className={styles.countLabel}>points</span>
                   </div>
+
+                  {pollId === '70427c7e-9405-4b76-b062-087790c6f5ef' && index === 0 && (
+                    <div className={styles.appLikePill}>
+                      <span className={styles.appLikeHeader}>app like</span>
+                      <div className={styles.appLikeLogos}>
+                        <a
+                          href="https://ente.io/?ref=versus.space"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src="/ente-branding-green.png"
+                            alt="Ente"
+                            className={styles.enteLogo}
+                          />
+                        </a>
+                        <a
+                          href="https://kagi.com/?ref=versus.space"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img src="/kagi.webp" alt="Kagi" />
+                        </a>
+                        <a
+                          href="https://notesnook.com/?ref=versus.space"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img src="/notesnook.webp" alt="Notesnook" />
+                        </a>
+                      </div>
+                    </div>
+                  )}
 
                   {userVoteCount > 0 && (
                     <div className={styles.userVotes}>

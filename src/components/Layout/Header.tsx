@@ -3,7 +3,7 @@ import { User } from '@supabase/supabase-js';
 import { authService } from '../../services/authService';
 import { pollService } from '../../services/pollService';
 import type { LeaderboardPoll } from '../../types';
-import { LogOut, Plus, TrendingUp } from 'lucide-react';
+import { LogOut, TrendingUp } from 'lucide-react';
 import styles from './Header.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -93,25 +93,16 @@ export function Header({ user, onNavigate }: HeaderProps) {
 
             <div className={styles.navRight}>
               {user ? (
-                <>
+                <div className={styles.userSection}>
+                  <div className={styles.userAvatar}>{user.email?.charAt(0).toUpperCase()}</div>
                   <button
-                    onClick={() => onNavigate('/create')}
-                    className={`${sharedStyles.btnPrimary} ${styles.createButton}`}
+                    onClick={handleSignOut}
+                    className={styles.signOutButton}
+                    title="Sign out"
                   >
-                    <Plus size={18} />
-                    <span>Create Poll</span>
+                    <LogOut size={18} />
                   </button>
-                  <div className={styles.userSection}>
-                    <div className={styles.userAvatar}>{user.email?.charAt(0).toUpperCase()}</div>
-                    <button
-                      onClick={handleSignOut}
-                      className={styles.signOutButton}
-                      title="Sign out"
-                    >
-                      <LogOut size={18} />
-                    </button>
-                  </div>
-                </>
+                </div>
               ) : (
                 <>
                   <button onClick={() => onNavigate('/auth')} className={styles.navLink}>
