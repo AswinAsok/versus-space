@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { usePoll } from '../../hooks/usePoll';
 import { pollService } from '../../services/pollService';
 import { VotingInterface } from './VotingInterface';
-import { Lock, Key, Code2 } from 'lucide-react';
+import { Lock, Key, Code2, Eye, EyeOff } from 'lucide-react';
 import styles from './PollView.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -17,6 +17,7 @@ export function PollView({ pollId }: PollViewProps) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [keyError, setKeyError] = useState('');
   const [checkingAccess, setCheckingAccess] = useState(true);
+  const [showKey, setShowKey] = useState(false);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -82,30 +83,76 @@ export function PollView({ pollId }: PollViewProps) {
   if (!poll.is_public && !isUnlocked) {
     return (
       <div className={styles.pollViewContainer}>
-        <div className={styles.accessKeyContainer}>
-          <div className={styles.lockIcon}>
-            <Lock size={48} />
-          </div>
-          <h2 className={styles.accessKeyTitle}>Private Poll</h2>
-          <p className={styles.accessKeyDescription}>
-            This poll is private. Enter the access key to participate.
-          </p>
-          <form onSubmit={handleUnlock} className={styles.accessKeyForm}>
-            {keyError && <div className={sharedStyles.errorMessage}>{keyError}</div>}
-            <div className={styles.accessKeyInputWrapper}>
-              <Key size={18} className={styles.keyIcon} />
-              <input
-                type="text"
-                value={accessKey}
-                onChange={(e) => setAccessKey(e.target.value)}
-                placeholder="Enter access key"
-                className={styles.accessKeyInput}
-              />
+        <div className={styles.pollViewInner}>
+          <div className={styles.accessKeyCard}>
+            <div className={styles.accessKeyContainer}>
+              <div className={styles.lockIconWrapper}>
+                <div className={styles.lockIconOuter}>
+                  <div className={styles.lockIconInner}>
+                    <Lock size={40} />
+                  </div>
+                  <div className={styles.lockOrbit}>
+                    <div className={styles.orbitDot}></div>
+                  </div>
+                </div>
+              </div>
+              <h2 className={styles.accessKeyTitle}>Private Poll</h2>
+              <p className={styles.accessKeyDescription}>
+                This poll is private. Enter the access key to participate.
+              </p>
+              <form onSubmit={handleUnlock} className={styles.accessKeyForm}>
+                <div className={styles.accessKeyInputWrapper}>
+                  <Key size={18} className={styles.keyIcon} />
+                  <input
+                    type={showKey ? 'text' : 'password'}
+                    value={accessKey}
+                    onChange={(e) => {
+                      setAccessKey(e.target.value);
+                      if (keyError) setKeyError('');
+                    }}
+                    placeholder="Enter access key"
+                    className={`${styles.accessKeyInput} ${keyError ? styles.inputError : ''}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowKey(!showKey)}
+                    className={styles.eyeButton}
+                    aria-label={showKey ? 'Hide access key' : 'Show access key'}
+                  >
+                    {showKey ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {keyError && <span className={styles.keyErrorText}>{keyError}</span>}
+                <button type="submit" className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge} ${styles.unlockButton}`}>
+                  Unlock Poll
+                </button>
+              </form>
             </div>
-            <button type="submit" className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}>
-              Unlock Poll
-            </button>
-          </form>
+          </div>
+
+          <footer className={styles.footer}>
+            <span>&copy; 2025 versus.space</span>
+            <div className={styles.footerRight}>
+              <a
+                href="https://neal.fun"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                inspiration from neal<span className={styles.footerDot}>.</span>fun
+              </a>
+              <span className={styles.footerDivider}>·</span>
+              <a
+                href="https://github.com/AswinAsok"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                <Code2 size={14} />
+                built by aswinasok<span className={styles.footerDot}>.</span>
+              </a>
+            </div>
+          </footer>
         </div>
       </div>
     );
@@ -113,7 +160,7 @@ export function PollView({ pollId }: PollViewProps) {
 
   return (
     <div className={styles.pollViewContainer}>
-      <VotingInterface pollId={poll.id} options={poll.options} />
+      <VotingInterface pollId={poll.id} title={poll.title} options={poll.options} />
       <footer className={styles.footer}>
         <span>&copy; 2025 versus.space</span>
         <div className={styles.footerRight}>

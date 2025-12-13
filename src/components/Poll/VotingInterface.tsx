@@ -11,6 +11,7 @@ import styles from './VotingInterface.module.css';
 
 interface VotingInterfaceProps {
   pollId: string;
+  title: string;
   options: PollOption[];
 }
 
@@ -31,7 +32,7 @@ const getPlacesForValue = (value: number): number[] => {
 };
 
 // Presents poll options, tracks vote velocity, and delegates vote persistence.
-export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
+export function VotingInterface({ pollId, title, options }: VotingInterfaceProps) {
   const [userVotes, setUserVotes] = useState<Map<string, number>>(new Map());
   const [votingRates, setVotingRates] = useState<Map<string, number>>(new Map());
   const rateCalculatorRef = useRef(new RateCalculator());
@@ -189,6 +190,15 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
   const totalVotes = options.reduce((sum, opt) => sum + opt.vote_count, 0);
   const leadingOption = options.reduce((a, b) => (a.vote_count > b.vote_count ? a : b));
 
+  // Cap percentages between 10% and 90% to prevent UI breaking
+  const getClampedPercentage = (voteCount: number) => {
+    if (totalVotes === 0) return 50;
+    const rawPercentage = (voteCount / totalVotes) * 100;
+    return Math.min(90, Math.max(10, rawPercentage));
+  };
+
+  const firstOptionPercentage = getClampedPercentage(options[0].vote_count);
+
   return (
     <div className={`${styles.votingInterface} ${screenShake ? styles.shake : ''}`}>
       {/* Combo indicator */}
@@ -217,12 +227,22 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
         </div>
       ))}
 
+      {/* Poll Title */}
+      <div
+        className={styles.pollTitleContainer}
+        style={{ left: `${firstOptionPercentage}%` }}
+      >
+        <h1 className={styles.pollTitle}>{title}</h1>
+      </div>
+
       {options.map((option, index) => {
-        const percentage = totalVotes > 0 ? (option.vote_count / totalVotes) * 100 : 50;
+        const percentage = getClampedPercentage(option.vote_count);
         const userVoteCount = userVotes.get(option.id) || 0;
         const rate = votingRates.get(option.id) || 0;
         const heat = heatLevels.get(option.id) || 0;
         const variantClass = styles[`variant${index}` as keyof typeof styles] || styles.variant0;
+        // Scale content based on container width (0.5 at 10%, 1.0 at 50%+)
+        const contentScale = Math.min(1, Math.max(0.5, percentage / 50));
         const isLeading = option.id === leadingOption.id && totalVotes > 0;
 
         return (
@@ -233,6 +253,7 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
               {
                 width: `${percentage}%`,
                 '--heat-intensity': heat / 10,
+                '--content-scale': contentScale,
               } as React.CSSProperties
             }
           >
