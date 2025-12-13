@@ -258,6 +258,14 @@
   color: #000000;
   font-weight: 600;
   font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.userAvatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(62, 207, 142, 0.4);
 }
 
 .signOutButton {

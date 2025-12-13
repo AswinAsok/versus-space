@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { usePoll } from '../../hooks/usePoll';
 import { pollService } from '../../services/pollService';
 import { VotingInterface } from './VotingInterface';
-import { Lock, Key, Code2, Eye, EyeOff } from 'lucide-react';
+import { Lock, Key, Code2, Eye, EyeOff, XCircle } from 'lucide-react';
 import styles from './PollView.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -87,6 +87,57 @@ export function PollView({ pollId }: PollViewProps) {
 
   if (error || !poll) {
     return <div className={sharedStyles.errorContainer}>Poll not found</div>;
+  }
+
+  // Show message for deactivated polls
+  if (!poll.is_active) {
+    return (
+      <div className={styles.pollViewContainer}>
+        <div className={styles.pollViewInner}>
+          <div className={styles.accessKeyCard}>
+            <div className={styles.accessKeyContainer}>
+              <div className={styles.lockIconWrapper}>
+                <div className={styles.lockIconOuter}>
+                  <div className={styles.lockIconInner}>
+                    <XCircle size={40} />
+                  </div>
+                </div>
+              </div>
+              <h2 className={styles.accessKeyTitle}>Poll Closed</h2>
+              <p className={styles.accessKeyDescription}>
+                This poll is no longer active. The creator has closed voting.
+              </p>
+            </div>
+          </div>
+
+          <div className={`${styles.footerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
+            <footer className={styles.footer}>
+              <span>&copy; 2025 versus.space</span>
+              <div className={styles.footerRight}>
+                <a
+                  href="https://neal.fun"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerLink}
+                >
+                  inspired from neal<span className={styles.footerDot}>.</span>fun
+                </a>
+                <span className={styles.footerDivider}>·</span>
+                <a
+                  href="https://github.com/AswinAsok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerLink}
+                >
+                  <Code2 size={14} />
+                  built by aswinasok<span className={styles.footerDot}>.</span>
+                </a>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Show access key form for private polls that haven't been unlocked
