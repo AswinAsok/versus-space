@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, Check, Sparkles, ChevronRight, Vote, Share2, Eye, Code2 } from 'lucide-react';
+import { ArrowRight, Check, Sparkles, ChevronRight, Vote, Share2, Eye, Code2, Star } from 'lucide-react';
 import { Leaderboard } from './Leaderboard';
 import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -22,9 +22,20 @@ function formatNumber(num: number): string {
 
 export function Home({ onNavigate }: HomeProps) {
   const [stats, setStats] = useState({ pollsCount: 0, votesCount: 0 });
+  const [githubStars, setGithubStars] = useState<number | null>(null);
 
   useEffect(() => {
     pollService.getPlatformStats().then(setStats).catch(console.error);
+
+    // Fetch GitHub stars
+    fetch('https://api.github.com/repos/AswinAsok/versus-space')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.stargazers_count !== undefined) {
+          setGithubStars(data.stargazers_count);
+        }
+      })
+      .catch(console.error);
   }, []);
 
   return (
@@ -75,6 +86,14 @@ export function Home({ onNavigate }: HomeProps) {
             >
               Start Free <ArrowRight size={18} />
             </button>
+            <a
+              href="https://github.com/AswinAsok/versus-space"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
+            >
+              <Star size={18} /> Star{githubStars !== null && ` (${githubStars})`}
+            </a>
           </div>
           <p className={styles.heroNote}>Free to use • No limits for now</p>
 
