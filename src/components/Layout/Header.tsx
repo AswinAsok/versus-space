@@ -3,7 +3,7 @@ import { User } from '@supabase/supabase-js';
 import { authService } from '../../services/authService';
 import { pollService } from '../../services/pollService';
 import type { LeaderboardPoll } from '../../types';
-import { LogOut, Plus, LayoutDashboard, Home, TrendingUp } from 'lucide-react';
+import { LogOut, Plus, TrendingUp } from 'lucide-react';
 import styles from './Header.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -38,16 +38,11 @@ export function Header({ user, onNavigate }: HeaderProps) {
       <div className={styles.headerContent}>
         <nav className={styles.headerNav}>
           <div className={styles.navLeft}>
-            <button onClick={() => onNavigate('/')} className={styles.navLink}>
-              <Home size={18} />
-              <span>Home</span>
+            <button onClick={() => onNavigate('/')} className={styles.logoButton}>
+              <span className={styles.logo}>
+                <span className={styles.logoHighlight}>v</span>ersu<span className={styles.logoHighlight}>s</span><span className={styles.logoDot}>.</span>space
+              </span>
             </button>
-            {user && (
-              <button onClick={() => onNavigate('/dashboard')} className={styles.navLink}>
-                <LayoutDashboard size={18} />
-                <span>Dashboard</span>
-              </button>
-            )}
           </div>
 
           {/* Trending Poll - Center */}
