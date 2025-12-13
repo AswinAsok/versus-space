@@ -416,7 +416,17 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                     <div className={styles.appLikePill}>
                       <span className={styles.appLikeHeader}>app like</span>
                       <div className={styles.appLikeLogos}>
-                        <a href="https://ente.io/?ref=versus.space" target="_blank" rel="noopener noreferrer"><img src="/ente-branding-green.png" alt="Ente" className={styles.enteLogo} /></a>
+                        <a
+                          href="https://ente.io/?ref=versus.space"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src="/ente-branding-green.png"
+                            alt="Ente"
+                            className={styles.enteLogo}
+                          />
+                        </a>
                         <img src="/kagi.webp" alt="Kagi" />
                         <img src="/notesnook.webp" alt="Notesnook" />
                       </div>
