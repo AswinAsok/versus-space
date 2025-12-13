@@ -1,6 +1,9 @@
 import { supabase } from '../lib/supabaseClient';
 import type { User } from '@supabase/supabase-js';
 
+/**
+ * Handles authentication flows and keeps Supabase-specific logic out of UI layers.
+ */
 export class AuthService {
   async signUp(email: string, password: string) {
     const { data, error } = await supabase.auth.signUp({
@@ -32,6 +35,7 @@ export class AuthService {
     return user;
   }
 
+  // Subscribe to auth events and return a cleanup handler for consumers.
   onAuthStateChange(callback: (user: User | null) => void) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {

@@ -1,5 +1,8 @@
 import { supabase } from '../lib/supabaseClient';
 
+/**
+ * Persists votes and user-session metadata, keeping Supabase RPC details contained.
+ */
 export class VoteService {
   async castVote(pollId: string, optionId: string, userId: string | null): Promise<void> {
     const { error } = await supabase.from('votes').insert({

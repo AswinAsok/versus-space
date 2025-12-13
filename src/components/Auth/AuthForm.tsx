@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { authService } from '../../services/authService';
+import styles from './AuthForm.module.css';
+import sharedStyles from '../../styles/Shared.module.css';
 
 interface AuthFormProps {
   onSuccess: () => void;
 }
 
+// Handles both sign-up and sign-in flows while isolating auth side-effects.
 export function AuthForm({ onSuccess }: AuthFormProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -18,6 +21,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
     setLoading(true);
 
     try {
+      // Dispatch to the correct auth pathway based on the current mode.
       if (isLogin) {
         await authService.signIn(email, password);
       } else {
@@ -32,14 +36,15 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
   };
 
   return (
-    <div className="auth-form-container">
-      <form onSubmit={handleSubmit} className="auth-form">
-        <h2>{isLogin ? 'Sign In' : 'Sign Up'}</h2>
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2 className={styles.title}>{isLogin ? 'Sign In' : 'Sign Up'}</h2>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className={sharedStyles.errorMessage}>{error}</div>}
 
-        <div className="form-group">
+        <div className={sharedStyles.formGroup}>
           <label htmlFor="email">Email</label>
+          {/* Capture the user's email; browser validation covers format */}
           <input
             id="email"
             type="email"
@@ -51,8 +56,9 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
           />
         </div>
 
-        <div className="form-group">
+        <div className={sharedStyles.formGroup}>
           <label htmlFor="password">Password</label>
+          {/* Basic length requirement to align with Supabase defaults */}
           <input
             id="password"
             type="password"
@@ -65,13 +71,13 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
           />
         </div>
 
-        <button type="submit" className="btn-primary" disabled={loading}>
+        <button type="submit" className={sharedStyles.btnPrimary} disabled={loading}>
           {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Sign Up'}
         </button>
 
         <button
           type="button"
-          className="btn-link"
+          className={sharedStyles.btnLink}
           onClick={() => setIsLogin(!isLogin)}
           disabled={loading}
         >

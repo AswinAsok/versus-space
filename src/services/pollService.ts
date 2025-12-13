@@ -1,6 +1,9 @@
 import { supabase } from '../lib/supabaseClient';
 import type { Poll, PollOption, PollWithOptions, CreatePollData } from '../types';
 
+/**
+ * Encapsulates all poll-related persistence logic to keep components focused on UI concerns.
+ */
 export class PollService {
   async createPoll(data: CreatePollData, userId: string): Promise<PollWithOptions> {
     const { data: poll, error: pollError } = await supabase
@@ -89,6 +92,7 @@ export class PollService {
     if (error) throw error;
   }
 
+  // Maintain a realtime subscription so consumers can react to option updates.
   subscribeToPollOptions(
     pollId: string,
     callback: (options: PollOption[]) => void

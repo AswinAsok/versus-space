@@ -3,6 +3,8 @@ import { User } from '@supabase/supabase-js';
 import { pollService } from '../../services/pollService';
 import { X, Plus } from 'lucide-react';
 import type { CreatePollData } from '../../types';
+import styles from './CreatePoll.module.css';
+import sharedStyles from '../../styles/Shared.module.css';
 
 interface CreatePollProps {
   user: User;
@@ -15,6 +17,7 @@ interface OptionInput {
   image_url: string;
 }
 
+// Form responsible for orchestrating poll creation and validating user input.
 export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   const [title, setTitle] = useState('');
   const [options, setOptions] = useState<OptionInput[]>([
@@ -25,6 +28,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   const [error, setError] = useState('');
 
   const addOption = () => {
+    // Generate a stable id so React can track the dynamic option inputs.
     setOptions([
       ...options,
       { id: Date.now().toString(), title: '', image_url: '' },
@@ -47,6 +51,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
     e.preventDefault();
     setError('');
 
+    // Guard clauses keep invalid payloads from reaching the backend.
     if (options.length < 2) {
       setError('Please add at least 2 options');
       return;
@@ -60,6 +65,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
     setLoading(true);
 
     try {
+      // Normalize payload to the shape expected by pollService.
       const pollData: CreatePollData = {
         title,
         options: options.map((opt, index) => ({
@@ -79,14 +85,15 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   };
 
   return (
-    <div className="create-poll-container">
-      <form onSubmit={handleSubmit} className="create-poll-form">
-        <h2>Create New Poll</h2>
+    <div className={styles.createPollContainer}>
+      <form onSubmit={handleSubmit} className={styles.createPollForm}>
+        <h2 className={styles.title}>Create New Poll</h2>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className={sharedStyles.errorMessage}>{error}</div>}
 
-        <div className="form-group">
+        <div className={sharedStyles.formGroup}>
           <label htmlFor="title">Poll Title</label>
+          {/* Title is the only required field before options */}
           <input
             id="title"
             type="text"
@@ -99,17 +106,17 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
           />
         </div>
 
-        <div className="options-section">
-          <h3>Options</h3>
+        <div className={styles.optionsSection}>
+          <h3 className={styles.optionsTitle}>Options</h3>
           {options.map((option, index) => (
-            <div key={option.id} className="option-input">
-              <div className="option-header">
-                <span className="option-number">Option {index + 1}</span>
+            <div key={option.id} className={styles.optionInput}>
+              <div className={styles.optionHeader}>
+                <span className={styles.optionNumber}>Option {index + 1}</span>
                 {options.length > 2 && (
                   <button
                     type="button"
                     onClick={() => removeOption(option.id)}
-                    className="btn-icon-small"
+                    className={sharedStyles.btnIconSmall}
                     disabled={loading}
                     aria-label="Remove option"
                   >
@@ -118,7 +125,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
                 )}
               </div>
 
-              <div className="form-group">
+              <div className={sharedStyles.formGroup}>
                 <input
                   type="text"
                   value={option.title}
@@ -130,7 +137,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
                 />
               </div>
 
-              <div className="form-group">
+              <div className={sharedStyles.formGroup}>
                 <input
                   type="url"
                   value={option.image_url}
@@ -141,7 +148,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
               </div>
 
               {option.image_url && (
-                <div className="image-preview">
+                <div className={styles.imagePreview}>
                   <img src={option.image_url} alt={option.title} />
                 </div>
               )}
@@ -152,7 +159,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
             <button
               type="button"
               onClick={addOption}
-              className="btn-secondary"
+              className={sharedStyles.btnSecondary}
               disabled={loading}
             >
               <Plus size={18} />
@@ -161,7 +168,11 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
           )}
         </div>
 
-        <button type="submit" className="btn-primary btn-large" disabled={loading}>
+        <button
+          type="submit"
+          className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
+          disabled={loading}
+        >
           {loading ? 'Creating...' : 'Create Poll'}
         </button>
       </form>

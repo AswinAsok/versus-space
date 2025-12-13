@@ -2,6 +2,7 @@ export class RateCalculator {
   private voteCounts: Map<string, number[]> = new Map();
   private readonly windowSize = 5000;
 
+  // Register a vote timestamp and prune old entries to maintain a sliding window.
   addVote(optionId: string): void {
     const now = Date.now();
     const votes = this.voteCounts.get(optionId) || [];
@@ -11,6 +12,7 @@ export class RateCalculator {
     this.voteCounts.set(optionId, recentVotes);
   }
 
+  // Compute votes-per-second over the configured window.
   getRate(optionId: string): number {
     const votes = this.voteCounts.get(optionId) || [];
     const now = Date.now();

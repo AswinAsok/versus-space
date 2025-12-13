@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { pollService } from '../services/pollService';
 import type { PollWithOptions, PollOption } from '../types';
 
+/**
+ * Retrieves a poll, keeps it updated via realtime subscription, and exposes status flags.
+ * This hook isolates data-fetching concerns from the rendering layer.
+ */
 export function usePoll(pollId: string | undefined) {
   const [poll, setPoll] = useState<PollWithOptions | null>(null);
   const [loading, setLoading] = useState(true);

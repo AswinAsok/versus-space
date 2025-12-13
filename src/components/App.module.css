@@ -1,0 +1,100 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.appMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.decorativeBg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.geometricShape {
+  position: absolute;
+  border: 2px solid rgba(37, 99, 235, 0.08);
+  border-radius: 50%;
+  animation: float 20s ease-in-out infinite;
+}
+
+.square {
+  border-radius: 20px;
+  animation: floatRotate 25s ease-in-out infinite;
+}
+
+.geometricShape:nth-child(1) {
+  width: 400px;
+  height: 400px;
+  top: -200px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.geometricShape:nth-child(2) {
+  width: 300px;
+  height: 300px;
+  top: 50%;
+  right: -150px;
+  animation-delay: -5s;
+}
+
+.geometricShape:nth-child(3) {
+  width: 250px;
+  height: 250px;
+  bottom: 10%;
+  left: 10%;
+  animation-delay: -10s;
+}
+
+.geometricShape:nth-child(4) {
+  width: 200px;
+  height: 200px;
+  top: 20%;
+  right: 20%;
+  animation-delay: -15s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-10px);
+  }
+  75% {
+    transform: translateY(-30px) translateX(5px);
+  }
+}
+
+@keyframes floatRotate {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-15px) translateX(15px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-25px) translateX(-15px) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-20px) translateX(10px) rotate(3deg);
+  }
+}

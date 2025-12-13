@@ -1,41 +1,52 @@
 import { User } from '@supabase/supabase-js';
 import { authService } from '../../services/authService';
 import { LogOut, Plus } from 'lucide-react';
+import headerStyles from './Header.module.css';
+import sharedStyles from '../../styles/Shared.module.css';
 
 interface HeaderProps {
   user: User | null;
   onNavigate: (path: string) => void;
 }
 
+// Top-level navigation bar that adapts to auth state.
 export function Header({ user, onNavigate }: HeaderProps) {
   const handleSignOut = async () => {
+    // Ensure the session is cleared before redirecting.
     await authService.signOut();
     onNavigate('/');
   };
 
   return (
-    <header className="app-header">
-      <div className="header-content">
-        <button onClick={() => onNavigate('/')} className="logo-button">
-          <h1 className="logo">versus.space</h1>
+    <header className={headerStyles.appHeader}>
+      <div className={headerStyles.headerContent}>
+        <button onClick={() => onNavigate('/')} className={headerStyles.logoButton}>
+          <h1 className={headerStyles.logo}>versus.space</h1>
         </button>
 
-        <nav className="header-nav">
+        <nav className={headerStyles.headerNav}>
           {user ? (
             <>
-              <button onClick={() => onNavigate('/dashboard')} className="nav-link">
+              <button onClick={() => onNavigate('/dashboard')} className={headerStyles.navLink}>
                 Dashboard
               </button>
-              <button onClick={() => onNavigate('/create')} className="btn-primary">
+              <button
+                onClick={() => onNavigate('/create')}
+                className={sharedStyles.btnPrimary}
+              >
                 <Plus size={18} />
                 Create Poll
               </button>
-              <button onClick={handleSignOut} className="btn-icon" title="Sign out">
+              <button
+                onClick={handleSignOut}
+                className={sharedStyles.btnIcon}
+                title="Sign out"
+              >
                 <LogOut size={20} />
               </button>
             </>
           ) : (
-            <button onClick={() => onNavigate('/auth')} className="btn-primary">
+            <button onClick={() => onNavigate('/auth')} className={sharedStyles.btnPrimary}>
               Sign In
             </button>
           )}
