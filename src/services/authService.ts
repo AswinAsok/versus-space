@@ -30,6 +30,19 @@ export class AuthService {
     if (error) throw error;
   }
 
+  async signInWithGoogle() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+        scopes: 'email profile',
+      },
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
   async getCurrentUser(): Promise<User | null> {
     const {
       data: { user },
