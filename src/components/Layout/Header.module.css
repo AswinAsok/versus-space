@@ -17,6 +17,7 @@
 .headerContent {
   margin: 0 auto;
   padding: 0 1rem;
+  padding-left: 0.5rem;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -63,7 +64,6 @@
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  padding: 0 0.5rem;
 }
 
 .navLeft {
@@ -113,7 +113,9 @@
 }
 
 @keyframes sparkle-shine {
-  0%, 85%, 100% {
+  0%,
+  85%,
+  100% {
     opacity: 0;
     transform: scale(0);
   }

@@ -19,6 +19,7 @@ export class PollService {
       .single();
 
     if (pollError) throw pollError;
+    if (!poll) throw new Error('Failed to create poll');
 
     const optionsToInsert = data.options.map((option) => ({
       poll_id: poll.id,
@@ -61,7 +62,7 @@ export class PollService {
 
     return {
       ...poll,
-      options: options || [],
+      options: options ?? [],
     };
   }
 

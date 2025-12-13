@@ -1,68 +1,19 @@
-export interface Poll {
-  id: string;
-  title: string;
-  creator_id: string;
-  is_active: boolean;
-  is_public: boolean;
-  access_key: string | null;
-  created_at: string;
-  updated_at: string;
-}
+import type { Database } from './database';
 
-export interface PollOption {
-  id: string;
-  poll_id: string;
-  title: string;
-  image_url: string | null;
-  vote_count: number;
-  position: number;
-  created_at: string;
-}
-
-export interface Vote {
-  id: string;
-  poll_id: string;
-  option_id: string;
-  user_id: string | null;
-  created_at: string;
-}
-
-export interface UserSession {
-  id: string;
-  user_id: string;
-  poll_id: string;
-  total_votes: number;
-  last_vote_at: string;
-  created_at: string;
-}
+export type Poll = Database['public']['Tables']['polls']['Row'];
+export type PollOption = Database['public']['Tables']['poll_options']['Row'];
+export type Vote = Database['public']['Tables']['votes']['Row'];
+export type UserSession = Database['public']['Tables']['user_sessions']['Row'];
 
 export interface PollWithOptions extends Poll {
   options: PollOption[];
 }
 
 export interface CreatePollData {
-  title: string;
-  is_public: boolean;
-  access_key?: string;
-  options: {
-    title: string;
-    image_url: string | null;
-    position: number;
-  }[];
+  title: Poll['title'];
+  is_public: Poll['is_public'];
+  access_key?: Poll['access_key'];
+  options: Array<Pick<PollOption, 'title' | 'image_url' | 'position'>>;
 }
 
-export interface LeaderboardPoll {
-  id: string;
-  title: string;
-  creator_id: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  total_votes: number;
-  options: {
-    id: string;
-    title: string;
-    vote_count: number;
-    position: number;
-  }[];
-}
+export type LeaderboardPoll = Database['public']['Views']['public_poll_leaderboard']['Row'];

@@ -38,7 +38,7 @@ export class AuthService {
   // Subscribe to auth events and return a cleanup handler for consumers.
   onAuthStateChange(callback: (user: User | null) => void) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (_event, session) => {
         (async () => {
           callback(session?.user ?? null);
         })();

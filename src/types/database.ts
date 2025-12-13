@@ -7,6 +7,8 @@ export interface Database {
           title: string;
           creator_id: string;
           is_active: boolean;
+          is_public: boolean;
+          access_key: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -14,6 +16,8 @@ export interface Database {
           id?: string;
           title: string;
           creator_id: string;
+          is_public: boolean;
+          access_key?: string | null;
           is_active?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -22,10 +26,13 @@ export interface Database {
           id?: string;
           title?: string;
           creator_id?: string;
+          is_public?: boolean;
+          access_key?: string | null;
           is_active?: boolean;
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       poll_options: {
         Row: {
@@ -55,6 +62,7 @@ export interface Database {
           position?: number;
           created_at?: string;
         };
+        Relationships: [];
       };
       votes: {
         Row: {
@@ -78,6 +86,7 @@ export interface Database {
           user_id?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       user_sessions: {
         Row: {
@@ -104,7 +113,43 @@ export interface Database {
           last_vote_at?: string;
           created_at?: string;
         };
+        Relationships: [];
       };
     };
+    Views: {
+      public_poll_leaderboard: {
+        Row: {
+          id: string;
+          title: string;
+          creator_id: string;
+          is_active: boolean;
+          is_public: boolean;
+          access_key: string | null;
+          created_at: string;
+          updated_at: string;
+          total_votes: number;
+          options: {
+            id: string;
+            title: string;
+            vote_count: number;
+            position: number;
+          }[];
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+    };
+    Functions: {
+      increment_user_session_votes: {
+        Args: {
+          p_user_id: string;
+          p_poll_id: string;
+        };
+        Returns: unknown;
+      };
+    };
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }
