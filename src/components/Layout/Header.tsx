@@ -7,6 +7,8 @@ import { LogOut, Plus, TrendingUp } from 'lucide-react';
 import styles from './Header.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
+const TRENDING_POLL_ID = '70427c7e-9405-4b76-b062-087790c6f5ef';
+
 interface HeaderProps {
   user: User | null;
   onNavigate: (path: string) => void;
@@ -20,7 +22,13 @@ export function Header({ user, onNavigate }: HeaderProps) {
     const fetchPolls = async () => {
       try {
         const data = await pollService.getLeaderboard(5);
-        setPolls(data);
+        // Prioritize the trending poll to be first
+        const sortedData = [...data].sort((a, b) => {
+          if (a.id === TRENDING_POLL_ID) return -1;
+          if (b.id === TRENDING_POLL_ID) return 1;
+          return 0;
+        });
+        setPolls(sortedData);
       } catch (err) {
         console.error('Failed to fetch polls:', err);
       }

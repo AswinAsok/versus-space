@@ -124,11 +124,13 @@ export function Home({ onNavigate }: HomeProps) {
         <section className={styles.trustedSection}>
           <p className={styles.trustedLabel}>BUILT FOR HACKATHON AT</p>
           <div className={styles.trustedLogos}>
-            <img
-              src="/ente-branding-green.png"
-              alt="Ente"
-              style={{ height: '48px', width: 'auto' }}
-            />
+            <a href="https://ente.io/?ref=versus.space" target="_blank" rel="noopener noreferrer">
+              <img
+                src="/ente-branding-green.png"
+                alt="Ente"
+                style={{ height: '48px', width: 'auto' }}
+              />
+            </a>
           </div>
         </section>
 

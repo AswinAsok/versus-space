@@ -4,6 +4,8 @@ import { pollService } from '../../services/pollService';
 import type { LeaderboardPoll } from '../../types';
 import styles from './Leaderboard.module.css';
 
+const TRENDING_POLL_ID = '70427c7e-9405-4b76-b062-087790c6f5ef';
+
 interface LeaderboardProps {
   onNavigate: (path: string) => void;
 }
@@ -44,7 +46,13 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
     const fetchLeaderboard = async () => {
       try {
         const data = await pollService.getLeaderboard(5);
-        setPolls(data);
+        // Prioritize the trending poll to be first
+        const sortedData = [...data].sort((a, b) => {
+          if (a.id === TRENDING_POLL_ID) return -1;
+          if (b.id === TRENDING_POLL_ID) return 1;
+          return 0;
+        });
+        setPolls(sortedData);
       } catch (err) {
         setError('Failed to load leaderboard');
         console.error(err);
