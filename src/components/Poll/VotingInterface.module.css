@@ -576,6 +576,43 @@
   text-transform: uppercase;
 }
 
+.wsStatus {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1200;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.wsDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px currentColor;
+}
+
+.wsConnected {
+  color: #22c55e;
+}
+
+.wsConnecting {
+  color: #f59e0b;
+}
+
+.wsClosed {
+  color: #ef4444;
+}
+
 /* CONFETTI */
 .confettiContainer {
   position: fixed;

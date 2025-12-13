@@ -6,6 +6,7 @@ import { voteService } from '../../services/voteService';
 import { getSessionId } from '../../utils/sessionId';
 import { RateCalculator } from '../../utils/rateCalculator';
 import sharedStyles from '../../styles/Shared.module.css';
+import { supabase } from '../../lib/supabaseClient';
 import type { PollOption } from '../../types';
 import styles from './VotingInterface.module.css';
 
@@ -47,6 +48,10 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     { id: number; particles: { x: number; y: number; color: string }[] }[]
   >([]);
   const [initialCountAnimationDone, setInitialCountAnimationDone] = useState(false);
+  const [wsStatus, setWsStatus] = useState<'connecting' | 'open' | 'closing' | 'closed'>(
+    () => supabase.realtime.connectionState()
+  );
+  const [channelStatus, setChannelStatus] = useState<string>('not-subscribed');
 
   const floatingIdRef = useRef(0);
   const confettiIdRef = useRef(0);
@@ -81,6 +86,18 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
 
     return () => clearInterval(interval);
   }, [options]);
+
+  useEffect(() => {
+    // Poll the realtime client so we can show connection status across devices.
+    const updateStatus = () => {
+      setWsStatus(supabase.realtime.connectionState());
+      const channel = supabase.getChannels().find((c) => (c as any).topic === `poll_options:${pollId}`);
+      setChannelStatus((channel as any)?.state ?? 'not-subscribed');
+    };
+    const interval = setInterval(updateStatus, 1500);
+    updateStatus();
+    return () => clearInterval(interval);
+  }, [pollId]);
 
   const spawnConfetti = useCallback((x: number, y: number) => {
     const id = confettiIdRef.current++;
@@ -197,9 +214,29 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
   };
 
   const firstOptionPercentage = getClampedPercentage(options[0].vote_count);
+  const statusClass =
+    wsStatus === 'open'
+      ? styles.wsConnected
+      : wsStatus === 'closed'
+        ? styles.wsClosed
+        : styles.wsConnecting;
+  const statusLabel =
+    wsStatus === 'open'
+      ? 'Live'
+      : wsStatus === 'closed'
+        ? 'Disconnected'
+        : 'Connecting…';
 
   return (
     <div className={`${styles.votingInterface} ${screenShake ? styles.shake : ''}`}>
+      <div className={`${styles.wsStatus} ${statusClass}`}>
+        <span className={`${styles.wsDot} ${statusClass}`} />
+        <span>
+          {statusLabel}
+          {channelStatus && channelStatus !== 'not-subscribed' ? ` · ${channelStatus}` : ''}
+        </span>
+      </div>
+
       {/* Combo indicator */}
       {combo > 1 && (
         <div className={styles.comboIndicator}>
