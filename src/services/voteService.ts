@@ -15,46 +15,12 @@ export class VoteService {
   }
 
   async updateUserSession(userId: string, pollId: string): Promise<void> {
-    const { error } = await supabase
-      .from('user_sessions')
-      .upsert(
-        {
-          user_id: userId,
-          poll_id: pollId,
-          total_votes: 1,
-          last_vote_at: new Date().toISOString(),
-        },
-        {
-          onConflict: 'user_id,poll_id',
-          ignoreDuplicates: false,
-        }
-      );
+    const { error } = await supabase.rpc('increment_user_session_votes', {
+      p_user_id: userId,
+      p_poll_id: pollId,
+    });
 
-    if (!error) {
-      const { error: updateError } = await supabase.rpc('increment', {
-        row_id: `${userId}_${pollId}`,
-      });
-
-      if (updateError) {
-        const { data: session } = await supabase
-          .from('user_sessions')
-          .select('total_votes')
-          .eq('user_id', userId)
-          .eq('poll_id', pollId)
-          .maybeSingle();
-
-        if (session) {
-          await supabase
-            .from('user_sessions')
-            .update({
-              total_votes: session.total_votes + 1,
-              last_vote_at: new Date().toISOString(),
-            })
-            .eq('user_id', userId)
-            .eq('poll_id', pollId);
-        }
-      }
-    }
+    if (error) throw error;
   }
 
   async getUserSession(userId: string, pollId: string) {

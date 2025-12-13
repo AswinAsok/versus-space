@@ -95,28 +95,35 @@ export class PollService {
   // Maintain a realtime subscription so consumers can react to option updates.
   subscribeToPollOptions(
     pollId: string,
-    callback: (options: PollOption[]) => void
+    applyOptions: (updater: (prev: PollOption[]) => PollOption[]) => void
   ) {
     const channel = supabase
       .channel(`poll_options:${pollId}`)
       .on(
         'postgres_changes',
         {
-          event: 'UPDATE',
+          event: '*',
           schema: 'public',
           table: 'poll_options',
           filter: `poll_id=eq.${pollId}`,
         },
-        async () => {
-          const { data } = await supabase
-            .from('poll_options')
-            .select('*')
-            .eq('poll_id', pollId)
-            .order('position');
+        (payload) => {
+          applyOptions((prev) => {
+            const next = [...prev];
+            const newRow = payload.new as PollOption | null;
+            const oldRow = payload.old as PollOption | null;
 
-          if (data) {
-            callback(data);
-          }
+            if (payload.eventType === 'INSERT' && newRow) {
+              next.push(newRow);
+            } else if (payload.eventType === 'UPDATE' && newRow) {
+              const idx = next.findIndex((opt) => opt.id === newRow.id);
+              if (idx >= 0) next[idx] = newRow;
+            } else if (payload.eventType === 'DELETE' && oldRow) {
+              return next.filter((opt) => opt.id !== oldRow.id);
+            }
+
+            return next.sort((a, b) => a.position - b.position);
+          });
         }
       )
       .subscribe();

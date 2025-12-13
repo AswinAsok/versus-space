@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { pollService } from '../services/pollService';
-import type { PollWithOptions, PollOption } from '../types';
+import type { PollWithOptions } from '../types';
 
 /**
  * Retrieves a poll, keeps it updated via realtime subscription, and exposes status flags.
@@ -28,12 +28,15 @@ export function usePoll(pollId: string | undefined) {
         setLoading(false);
       });
 
-    const unsubscribe = pollService.subscribeToPollOptions(
-      pollId,
-      (options: PollOption[]) => {
-        setPoll((prev) => (prev ? { ...prev, options } : null));
-      }
-    );
+    const unsubscribe = pollService.subscribeToPollOptions(pollId, (update) => {
+      setPoll((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          options: update(prev.options),
+        };
+      });
+    });
 
     return () => unsubscribe();
   }, [pollId]);
