@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollService } from '../../services/pollService';
-import { X, Plus, Globe, Lock, Key, Sparkles, ListPlus, Info } from 'lucide-react';
+import { X, Plus, Globe, Lock, Key, Code2, Crown } from 'lucide-react';
 import type { CreatePollData } from '../../types';
 import styles from './CreatePoll.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -86,22 +86,19 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
 
   return (
     <div className={styles.createPollContainer}>
-      <div className={styles.pageHeader}>
-        <span className={styles.pageBadge}>
-          <Sparkles size={14} />
-          New Poll
-        </span>
-        <h1 className={styles.pageTitle}>Create a New Poll</h1>
-        <p className={styles.pageSubtitle}>
-          Set up your question and options to start collecting votes
-        </p>
-      </div>
+      <div className={styles.createPollInner}>
+        <div className={styles.pageHeader}>
+          <h1 className={styles.pageTitle}>Create a new poll</h1>
+          <p className={styles.pageSubtitle}>Set up your question and options to start collecting votes</p>
+        </div>
 
-      <form onSubmit={handleSubmit} className={styles.createPollForm}>
+        <form onSubmit={handleSubmit} className={styles.createPollForm}>
         {error && <div className={sharedStyles.errorMessage}>{error}</div>}
 
-        <div className={sharedStyles.formGroup}>
-          <label htmlFor="title">Poll Question</label>
+        {/* Poll Question Card */}
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>Poll Question</h3>
+          <p className={styles.cardDescription}>What would you like to ask?</p>
           <input
             id="title"
             type="text"
@@ -111,71 +108,74 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
             required
             disabled={loading}
             maxLength={100}
+            className={styles.pollQuestionInput}
           />
         </div>
 
-        <div className={styles.optionsSection}>
-          <h3 className={styles.sectionTitle}>
-            <ListPlus size={20} />
-            Answer Options
-          </h3>
-          {options.map((option, index) => (
-            <div
-              key={option.id}
-              className={styles.optionInput}
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              <div className={styles.optionHeader}>
-                <span className={styles.optionNumber}>
-                  <span className={styles.optionBadge}>{index + 1}</span>
-                  Option
-                </span>
-                {options.length > 2 && (
-                  <button
-                    type="button"
-                    onClick={() => removeOption(option.id)}
-                    className={sharedStyles.btnIconSmall}
-                    disabled={loading}
-                    aria-label="Remove option"
-                  >
-                    <X size={16} />
-                  </button>
-                )}
-              </div>
-
-              <div className={sharedStyles.formGroup}>
-                <input
-                  type="text"
-                  value={option.title}
-                  onChange={(e) => updateOption(option.id, 'title', e.target.value)}
-                  placeholder="Enter option title"
-                  required
-                  disabled={loading}
-                  maxLength={50}
-                />
-              </div>
-
-              <div className={sharedStyles.formGroup}>
-                <input
-                  type="url"
-                  value={option.image_url}
-                  onChange={(e) => updateOption(option.id, 'image_url', e.target.value)}
-                  placeholder="Image URL (optional)"
-                  disabled={loading}
-                />
-              </div>
-
-              {option.image_url && (
-                <div className={styles.imagePreview}>
-                  <img src={option.image_url} alt={option.title} />
-                </div>
-              )}
+        {/* Answer Options Card */}
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <div>
+              <h3 className={styles.cardTitle}>Answer Options</h3>
+              <p className={styles.cardDescription}>Add the choices people can vote for</p>
             </div>
-          ))}
+            {options.length < 6 && (
+              <button
+                type="button"
+                className={styles.addOptionButton}
+                disabled
+              >
+                <Plus size={16} />
+                Add
+                <span className={styles.proBadge}>
+                  <Crown size={10} />
+                  Pro
+                </span>
+              </button>
+            )}
+          </div>
+          <div className={styles.optionsList}>
+            {options.map((option, index) => (
+              <div
+                key={option.id}
+                className={styles.optionInput}
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div className={styles.optionHeader}>
+                  <span className={styles.optionNumber}>
+                    <span className={styles.optionBadge}>{index + 1}</span>
+                  </span>
+                  <input
+                    type="text"
+                    value={option.title}
+                    onChange={(e) => updateOption(option.id, 'title', e.target.value)}
+                    placeholder="Option title"
+                    required
+                    disabled={loading}
+                    maxLength={50}
+                    className={styles.optionTitleInput}
+                  />
+                  {options.length > 2 && (
+                    <button
+                      type="button"
+                      onClick={() => removeOption(option.id)}
+                      className={styles.removeOptionButton}
+                      disabled={loading}
+                      aria-label="Remove option"
+                    >
+                      <X size={16} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className={styles.visibilitySection}>
-          <label className={styles.visibilityLabel}>Poll Visibility</label>
+        {/* Visibility Card */}
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>Visibility</h3>
+          <p className={styles.cardDescription}>Choose who can see and vote on your poll</p>
           <div className={styles.visibilityToggle}>
             <button
               type="button"
@@ -184,9 +184,12 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
               disabled={loading}
             >
               <div className={styles.visibilityIcon}>
-                <Globe size={24} />
+                <Globe size={18} />
               </div>
-              <span>Public</span>
+              <div className={styles.visibilityText}>
+                <span className={styles.visibilityName}>Public</span>
+                <span className={styles.visibilityDesc}>Anyone can vote</span>
+              </div>
             </button>
             <button
               type="button"
@@ -195,61 +198,70 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
               disabled={loading}
             >
               <div className={styles.visibilityIcon}>
-                <Lock size={24} />
+                <Lock size={18} />
               </div>
-              <span>Private</span>
+              <div className={styles.visibilityText}>
+                <span className={styles.visibilityName}>Private</span>
+                <span className={styles.visibilityDesc}>Requires access key</span>
+              </div>
             </button>
           </div>
-          <div className={styles.visibilityHint}>
-            <Info size={16} />
-            {isPublic
-              ? 'Public polls appear on the leaderboard and anyone can vote.'
-              : 'Private polls require an access key to vote.'}
-          </div>
-        </div>
 
-        {!isPublic && (
-          <div className={sharedStyles.formGroup} style={{ marginTop: '1rem' }}>
-            <label htmlFor="accessKey">
-              <Key
-                size={16}
-                style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'middle' }}
+          {!isPublic && (
+            <div className={styles.accessKeySection}>
+              <label htmlFor="accessKey" className={styles.accessKeyLabel}>
+                <Key size={14} />
+                Access Key
+              </label>
+              <input
+                id="accessKey"
+                type="text"
+                value={accessKey}
+                onChange={(e) => setAccessKey(e.target.value)}
+                placeholder="Enter a secret key for participants"
+                disabled={loading}
+                maxLength={50}
+                className={styles.accessKeyInput}
               />
-              Access Key
-            </label>
-            <input
-              id="accessKey"
-              type="text"
-              value={accessKey}
-              onChange={(e) => setAccessKey(e.target.value)}
-              placeholder="Enter a secret key for participants"
-              disabled={loading}
-              maxLength={50}
-            />
-          </div>
-        )}
-
-        <div className={styles.formActions}>
-          {options.length < 6 && (
-            <button
-              type="button"
-              onClick={addOption}
-              className={sharedStyles.btnSecondary}
-              disabled={loading}
-            >
-              <Plus size={18} />
-              Add Option
-            </button>
+            </div>
           )}
-          <button
-            type="submit"
-            className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
-            disabled={loading}
-          >
-            {loading ? 'Creating...' : 'Create Poll'}
-          </button>
         </div>
-      </form>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className={styles.submitButton}
+          disabled={loading}
+        >
+          {loading ? 'Creating...' : 'Create Poll'}
+        </button>
+        </form>
+
+        {/* Footer */}
+        <footer className={styles.footer}>
+          <span>&copy; 2025 versus.space</span>
+          <div className={styles.footerRight}>
+            <a
+              href="https://neal.fun"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.footerLink}
+            >
+              inspiration from neal<span className={styles.footerDot}>.</span>fun
+            </a>
+            <span className={styles.footerDivider}>·</span>
+            <a
+              href="https://github.com/AswinAsok"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.footerLink}
+            >
+              <Code2 size={14} />
+              built by aswinasok<span className={styles.footerDot}>.</span>
+            </a>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }
