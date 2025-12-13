@@ -48,72 +48,76 @@ export function Header({ user, onNavigate }: HeaderProps) {
       <header className={styles.appHeader}>
         <div className={styles.headerContent}>
           <nav className={styles.headerNav}>
-          <div className={styles.navLeft}>
-            <button onClick={() => onNavigate('/')} className={styles.logoButton}>
-              <span className={styles.logo}>
-                <span className={styles.logoHighlight}>v</span>ersu
-                <span className={styles.logoHighlight}>s</span>
-                <span className={styles.logoDot}>.</span>space
-              </span>
-            </button>
-          </div>
-
-          {/* Trending Poll - Center */}
-          {polls.length > 0 && (
-            <div className={styles.trendingWrapper}>
-              <span className={styles.sparkle} style={{ top: '-4px', left: '10%' }}></span>
-              <span
-                className={styles.sparkle}
-                style={{ top: '50%', right: '-6px', animationDelay: '2s' }}
-              ></span>
-              <span
-                className={styles.sparkle}
-                style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}
-              ></span>
-              <button
-                onClick={() => onNavigate(`/poll/${polls[0].id}`)}
-                className={styles.trendingItem}
-              >
-                <TrendingUp size={14} />
-                <span className={styles.trendingTitle}>{polls[0].title}</span>
-                <span className={styles.trendingVotes}>
-                  {polls[0].total_votes.toLocaleString()} votes
+            <div className={styles.navLeft}>
+              <button onClick={() => onNavigate('/')} className={styles.logoButton}>
+                <span className={styles.logo}>
+                  <span className={styles.logoHighlight}>v</span>ersu
+                  <span className={styles.logoHighlight}>s</span>
+                  <span className={styles.logoDot}>.</span>space
                 </span>
               </button>
             </div>
-          )}
 
-          <div className={styles.navRight}>
-            {user ? (
-              <>
+            {/* Trending Poll - Center */}
+            {polls.length > 0 && (
+              <div className={styles.trendingWrapper}>
+                <span className={styles.sparkle} style={{ top: '-4px', left: '10%' }}></span>
+                <span
+                  className={styles.sparkle}
+                  style={{ top: '50%', right: '-6px', animationDelay: '2s' }}
+                ></span>
+                <span
+                  className={styles.sparkle}
+                  style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}
+                ></span>
                 <button
-                  onClick={() => onNavigate('/create')}
-                  className={`${sharedStyles.btnPrimary} ${styles.createButton}`}
+                  onClick={() => onNavigate(`/poll/${polls[0].id}`)}
+                  className={styles.trendingItem}
                 >
-                  <Plus size={18} />
-                  <span>Create Poll</span>
+                  <TrendingUp size={14} />
+                  <span className={styles.trendingTitle}>{polls[0].title}</span>
+                  <span className={styles.trendingVotes}>
+                    {polls[0].total_votes.toLocaleString()} votes
+                  </span>
                 </button>
-                <div className={styles.userSection}>
-                  <div className={styles.userAvatar}>{user.email?.charAt(0).toUpperCase()}</div>
-                  <button onClick={handleSignOut} className={styles.signOutButton} title="Sign out">
-                    <LogOut size={18} />
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <button onClick={() => onNavigate('/auth')} className={styles.navLink}>
-                  Sign In
-                </button>
-                <button
-                  onClick={() => onNavigate('/auth')}
-                  className={`${sharedStyles.btnPrimary} ${styles.createButton}`}
-                >
-                  Get Started Free
-                </button>
-              </>
+              </div>
             )}
-          </div>
+
+            <div className={styles.navRight}>
+              {user ? (
+                <>
+                  <button
+                    onClick={() => onNavigate('/create')}
+                    className={`${sharedStyles.btnPrimary} ${styles.createButton}`}
+                  >
+                    <Plus size={18} />
+                    <span>Create Poll</span>
+                  </button>
+                  <div className={styles.userSection}>
+                    <div className={styles.userAvatar}>{user.email?.charAt(0).toUpperCase()}</div>
+                    <button
+                      onClick={handleSignOut}
+                      className={styles.signOutButton}
+                      title="Sign out"
+                    >
+                      <LogOut size={18} />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => onNavigate('/auth')} className={styles.navLink}>
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => onNavigate('/auth')}
+                    className={`${sharedStyles.btnPrimary} ${styles.createButton}`}
+                  >
+                    Get Started Free
+                  </button>
+                </>
+              )}
+            </div>
           </nav>
         </div>
       </header>
