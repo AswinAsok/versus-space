@@ -190,11 +190,11 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
   const totalVotes = options.reduce((sum, opt) => sum + opt.vote_count, 0);
   const leadingOption = options.reduce((a, b) => (a.vote_count > b.vote_count ? a : b));
 
-  // Cap percentages between 10% and 90% to prevent UI breaking
+  // Cap percentages between 30% and 70% to prevent UI breaking
   const getClampedPercentage = (voteCount: number) => {
     if (totalVotes === 0) return 50;
     const rawPercentage = (voteCount / totalVotes) * 100;
-    return Math.min(90, Math.max(10, rawPercentage));
+    return Math.min(70, Math.max(30, rawPercentage));
   };
 
   const firstOptionPercentage = getClampedPercentage(options[0].vote_count);
@@ -232,7 +232,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
       ))}
 
       {/* Poll Title */}
-      <div className={styles.pollTitleContainer} style={{ left: `${firstOptionPercentage}%` }}>
+      <div className={styles.pollTitleContainer} style={{ left: `${firstOptionPercentage}vw` }}>
         <h1 className={styles.pollTitle}>{title}</h1>
       </div>
 
@@ -252,7 +252,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
             className={`${styles.votingOption} ${variantClass} ${heat > 5 ? styles.onFire : ''} ${isLeading ? styles.leading : ''}`}
             style={
               {
-                width: `${percentage}%`,
+                width: `${percentage}vw`,
                 '--heat-intensity': heat / 10,
                 '--content-scale': contentScale,
               } as React.CSSProperties
