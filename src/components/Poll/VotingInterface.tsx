@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import ReactSpeedometer, { Transition } from 'react-d3-speedometer';
+import CountUp from '../ReactBits/CountUp/CountUp';
+import Counter from '../ReactBits/Counter/Counter';
 import { voteService } from '../../services/voteService';
 import { getSessionId } from '../../utils/sessionId';
 import { RateCalculator } from '../../utils/rateCalculator';
@@ -20,19 +22,12 @@ interface FloatingNumber {
   optionId: string;
 }
 
-interface Achievement {
-  id: number;
-  text: string;
-  emoji: string;
-}
 
-const ACHIEVEMENTS = {
-  firstVote: { text: 'First Blood!', emoji: '🩸' },
-  tenVotes: { text: 'Getting Warmed Up', emoji: '🔥' },
-  fiftyVotes: { text: 'Click Warrior', emoji: '⚔️' },
-  hundredVotes: { text: 'Legendary Clicker', emoji: '👑' },
-  speedDemon: { text: 'Speed Demon!', emoji: '⚡' },
-  comboMaster: { text: 'Combo Master', emoji: '💥' },
+// Generate places array based on the number of digits in the value
+const getPlacesForValue = (value: number): number[] => {
+  if (value === 0) return [1];
+  const digits = Math.floor(Math.log10(Math.abs(value))) + 1;
+  return Array.from({ length: digits }, (_, i) => Math.pow(10, digits - 1 - i));
 };
 
 // Presents poll options, tracks vote velocity, and delegates vote persistence.
@@ -46,18 +41,17 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
   const [combo, setCombo] = useState(0);
   const [comboTimer, setComboTimer] = useState<NodeJS.Timeout | null>(null);
   const [floatingNumbers, setFloatingNumbers] = useState<FloatingNumber[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [heatLevels, setHeatLevels] = useState<Map<string, number>>(new Map());
   const [screenShake, setScreenShake] = useState(false);
   const [confetti, setConfetti] = useState<
     { id: number; particles: { x: number; y: number; color: string }[] }[]
   >([]);
+  const [initialCountAnimationDone, setInitialCountAnimationDone] = useState(false);
 
   const floatingIdRef = useRef(0);
-  const achievementIdRef = useRef(0);
   const confettiIdRef = useRef(0);
   const totalUserVotesRef = useRef(0);
-  const earnedAchievementsRef = useRef<Set<string>>(new Set());
+  const initialCountAnimationDoneRef = useRef(false);
 
   // Cool down heat levels over time
   useEffect(() => {
@@ -88,19 +82,6 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
     return () => clearInterval(interval);
   }, [options]);
 
-  const showAchievement = useCallback((key: keyof typeof ACHIEVEMENTS) => {
-    if (earnedAchievementsRef.current.has(key)) return;
-    earnedAchievementsRef.current.add(key);
-
-    const achievement = ACHIEVEMENTS[key];
-    const id = achievementIdRef.current++;
-    setAchievements((prev) => [...prev, { id, ...achievement }]);
-
-    setTimeout(() => {
-      setAchievements((prev) => prev.filter((a) => a.id !== id));
-    }, 3000);
-  }, []);
-
   const spawnConfetti = useCallback((x: number, y: number) => {
     const id = confettiIdRef.current++;
     const colors = ['#ff0', '#f0f', '#0ff', '#0f0', '#f00', '#00f'];
@@ -119,6 +100,12 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
   const triggerScreenShake = useCallback(() => {
     setScreenShake(true);
     setTimeout(() => setScreenShake(false), 150);
+  }, []);
+
+  const markInitialAnimationDone = useCallback(() => {
+    if (initialCountAnimationDoneRef.current) return;
+    initialCountAnimationDoneRef.current = true;
+    setInitialCountAnimationDone(true);
   }, []);
 
   const handleVote = async (optionId: string, event: React.MouseEvent) => {
@@ -156,26 +143,16 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
       setFloatingNumbers((prev) => prev.filter((f) => f.id !== floatId));
     }, 1000);
 
-    // Check achievements
+    // Track total votes for effects
     totalUserVotesRef.current += voteValue;
     const totalVotes = totalUserVotesRef.current;
 
-    if (totalVotes === 1) showAchievement('firstVote');
-    if (totalVotes === 10) showAchievement('tenVotes');
     if (totalVotes === 50) {
-      showAchievement('fiftyVotes');
       spawnConfetti(event.clientX, event.clientY);
     }
     if (totalVotes === 100) {
-      showAchievement('hundredVotes');
       spawnConfetti(event.clientX, event.clientY);
       triggerScreenShake();
-    }
-    if (combo >= 10 && !earnedAchievementsRef.current.has('speedDemon')) {
-      showAchievement('speedDemon');
-    }
-    if (combo >= 25 && !earnedAchievementsRef.current.has('comboMaster')) {
-      showAchievement('comboMaster');
     }
 
     // Screen shake on high combos
@@ -221,16 +198,6 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
           <span className={styles.comboLabel}>COMBO</span>
         </div>
       )}
-
-      {/* Achievement toasts */}
-      <div className={styles.achievementContainer}>
-        {achievements.map((achievement) => (
-          <div key={achievement.id} className={styles.achievementToast}>
-            <span className={styles.achievementEmoji}>{achievement.emoji}</span>
-            <span className={styles.achievementText}>{achievement.text}</span>
-          </div>
-        ))}
-      </div>
 
       {/* Confetti */}
       {confetti.map((c) => (
@@ -347,21 +314,47 @@ export function VotingInterface({ pollId, options }: VotingInterfaceProps) {
                 </button>
 
                 <div className={styles.voteStats}>
-                  <div className={styles.voteCount}>
-                    <span className={styles.countLabel}>points</span>
-                    <span className={styles.countNumber}>{option.vote_count.toLocaleString()}</span>
+                  <div className={styles.rateDisplay}>
+                    <CountUp
+                      to={parseFloat(rate.toFixed(1))}
+                      from={initialCountAnimationDone ? rate : 0}
+                      duration={0.8}
+                      className={`${styles.rateNumber} ${rate > 5 ? styles.hotRate : ''}`}
+                      startWhen={!initialCountAnimationDone}
+                      onEnd={markInitialAnimationDone}
+                    />
+                    <span className={styles.rateLabel}>pts/sec</span>
                   </div>
 
-                  <div className={styles.rateDisplay}>
-                    <span className={`${styles.rateNumber} ${rate > 5 ? styles.hotRate : ''}`}>
-                      {rate.toFixed(1)}
-                    </span>
-                    <span className={styles.rateLabel}>pts/sec</span>
+                  <div className={styles.voteCount} data-count={option.vote_count.toLocaleString()}>
+                    {!initialCountAnimationDone ? (
+                      <CountUp
+                        to={option.vote_count}
+                        from={0}
+                        duration={1.2}
+                        separator=","
+                        className={styles.countNumber}
+                        startWhen={true}
+                        onEnd={markInitialAnimationDone}
+                      />
+                    ) : (
+                      <Counter
+                        value={option.vote_count}
+                        fontSize={104}
+                        places={getPlacesForValue(option.vote_count)}
+                        gap={4}
+                        textColor={index === 0 ? '#3ecf8e' : '#a855f7'}
+                        fontWeight={700}
+                        gradientFrom="transparent"
+                        gradientTo="transparent"
+                        gradientHeight={0}
+                      />
+                    )}
+                    <span className={styles.countLabel}>points</span>
                   </div>
 
                   {userVoteCount > 0 && (
                     <div className={styles.userVotes}>
-                      <span className={styles.userVoteEmoji}>⚡</span>
                       You've scored <strong>{userVoteCount}</strong> for {option.title}
                     </div>
                   )}

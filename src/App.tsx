@@ -35,16 +35,14 @@ function RoutedApp() {
   return (
     <div className={appStyles.app}>
       {!isPollView && (
-        <>
-          <div className={appStyles.decorativeBg}>
-            <div className={appStyles.geometricShape}></div>
-            <div className={`${appStyles.geometricShape} ${appStyles.square}`}></div>
-            <div className={appStyles.geometricShape}></div>
-            <div className={`${appStyles.geometricShape} ${appStyles.square}`}></div>
-          </div>
-          <Header user={user} onNavigate={navigate} />
-        </>
+        <div className={appStyles.decorativeBg}>
+          <div className={appStyles.geometricShape}></div>
+          <div className={`${appStyles.geometricShape} ${appStyles.square}`}></div>
+          <div className={appStyles.geometricShape}></div>
+          <div className={`${appStyles.geometricShape} ${appStyles.square}`}></div>
+        </div>
       )}
+      <Header user={user} onNavigate={navigate} />
 
       <main className={appStyles.appMain}>
         <Routes>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { usePoll } from '../../hooks/usePoll';
 import { pollService } from '../../services/pollService';
 import { VotingInterface } from './VotingInterface';
-import { Share2, Lock, Key } from 'lucide-react';
+import { Lock, Key, Code2 } from 'lucide-react';
 import styles from './PollView.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -46,19 +46,6 @@ export function PollView({ pollId }: PollViewProps) {
 
     checkAccess();
   }, [poll, pollId]);
-
-  const handleShare = () => {
-    const url = window.location.href;
-    if (navigator.share) {
-      navigator.share({
-        title: poll?.title,
-        url: url,
-      });
-    } else {
-      navigator.clipboard.writeText(url);
-      alert('Link copied to clipboard!');
-    }
-  };
 
   const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,22 +113,30 @@ export function PollView({ pollId }: PollViewProps) {
 
   return (
     <div className={styles.pollViewContainer}>
-      <div className={styles.pollHeader}>
-        <h1 className={styles.pollTitle}>{poll.title}</h1>
-        <div className={styles.pollHeaderActions}>
-          {!poll.is_public && (
-            <span className={styles.privateBadge}>
-              <Lock size={14} />
-              Private
-            </span>
-          )}
-          <button onClick={handleShare} className={sharedStyles.btnShare} title="Share poll">
-            <Share2 size={20} />
-          </button>
-        </div>
-      </div>
-
       <VotingInterface pollId={poll.id} options={poll.options} />
+      <footer className={styles.footer}>
+        <span>&copy; 2025 versus.space</span>
+        <div className={styles.footerRight}>
+          <a
+            href="https://neal.fun"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.footerLink}
+          >
+            inspiration from neal<span className={styles.footerDot}>.</span>fun
+          </a>
+          <span className={styles.footerDivider}>·</span>
+          <a
+            href="https://github.com/AswinAsok"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.footerLink}
+          >
+            <Code2 size={14} />
+            built by aswinasok<span className={styles.footerDot}>.</span>
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
