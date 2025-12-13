@@ -27,11 +27,6 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   ]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const addOption = () => {
-    setOptions([...options, { id: Date.now().toString(), title: '', image_url: '' }]);
-  };
-
   const removeOption = (id: string) => {
     if (options.length > 2) {
       setOptions(options.filter((opt) => opt.id !== id));
@@ -89,152 +84,146 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
       <div className={styles.createPollInner}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Create a new poll</h1>
-          <p className={styles.pageSubtitle}>Set up your question and options to start collecting votes</p>
+          <p className={styles.pageSubtitle}>
+            Set up your question and options to start collecting votes
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.createPollForm}>
-        {error && <div className={sharedStyles.errorMessage}>{error}</div>}
+          {error && <div className={sharedStyles.errorMessage}>{error}</div>}
 
-        {/* Poll Question Card */}
-        <div className={styles.card}>
-          <h3 className={styles.cardTitle}>Poll Question</h3>
-          <p className={styles.cardDescription}>What would you like to ask?</p>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="What should people vote on?"
-            required
-            disabled={loading}
-            maxLength={100}
-            className={styles.pollQuestionInput}
-          />
-        </div>
+          {/* Poll Question Card */}
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Poll Question</h3>
+            <p className={styles.cardDescription}>What would you like to ask?</p>
+            <input
+              id="title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="What should people vote on?"
+              required
+              disabled={loading}
+              maxLength={100}
+              className={styles.pollQuestionInput}
+            />
+          </div>
 
-        {/* Answer Options Card */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <div>
-              <h3 className={styles.cardTitle}>Answer Options</h3>
-              <p className={styles.cardDescription}>Add the choices people can vote for</p>
+          {/* Answer Options Card */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div>
+                <h3 className={styles.cardTitle}>Answer Options</h3>
+                <p className={styles.cardDescription}>Add the choices people can vote for</p>
+              </div>
+              {options.length < 6 && (
+                <button type="button" className={styles.addOptionButton} disabled>
+                  <Plus size={16} />
+                  Add
+                  <span className={styles.proBadge}>
+                    <Crown size={10} />
+                    Pro
+                  </span>
+                </button>
+              )}
             </div>
-            {options.length < 6 && (
+            <div className={styles.optionsList}>
+              {options.map((option, index) => (
+                <div
+                  key={option.id}
+                  className={styles.optionInput}
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <div className={styles.optionHeader}>
+                    <span className={styles.optionNumber}>
+                      <span className={styles.optionBadge}>{index + 1}</span>
+                    </span>
+                    <input
+                      type="text"
+                      value={option.title}
+                      onChange={(e) => updateOption(option.id, 'title', e.target.value)}
+                      placeholder="Option title"
+                      required
+                      disabled={loading}
+                      maxLength={50}
+                      className={styles.optionTitleInput}
+                    />
+                    {options.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => removeOption(option.id)}
+                        className={styles.removeOptionButton}
+                        disabled={loading}
+                        aria-label="Remove option"
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Visibility Card */}
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Visibility</h3>
+            <p className={styles.cardDescription}>Choose who can see and vote on your poll</p>
+            <div className={styles.visibilityToggle}>
               <button
                 type="button"
-                className={styles.addOptionButton}
-                disabled
+                className={`${styles.visibilityOption} ${isPublic ? styles.visibilityActive : ''}`}
+                onClick={() => setIsPublic(true)}
+                disabled={loading}
               >
-                <Plus size={16} />
-                Add
-                <span className={styles.proBadge}>
-                  <Crown size={10} />
-                  Pro
-                </span>
+                <div className={styles.visibilityIcon}>
+                  <Globe size={18} />
+                </div>
+                <div className={styles.visibilityText}>
+                  <span className={styles.visibilityName}>Public</span>
+                  <span className={styles.visibilityDesc}>Anyone can vote</span>
+                </div>
               </button>
+              <button
+                type="button"
+                className={`${styles.visibilityOption} ${!isPublic ? styles.visibilityActive : ''}`}
+                onClick={() => setIsPublic(false)}
+                disabled={loading}
+              >
+                <div className={styles.visibilityIcon}>
+                  <Lock size={18} />
+                </div>
+                <div className={styles.visibilityText}>
+                  <span className={styles.visibilityName}>Private</span>
+                  <span className={styles.visibilityDesc}>Requires access key</span>
+                </div>
+              </button>
+            </div>
+
+            {!isPublic && (
+              <div className={styles.accessKeySection}>
+                <label htmlFor="accessKey" className={styles.accessKeyLabel}>
+                  <Key size={14} />
+                  Access Key
+                </label>
+                <input
+                  id="accessKey"
+                  type="text"
+                  value={accessKey}
+                  onChange={(e) => setAccessKey(e.target.value)}
+                  placeholder="Enter a secret key for participants"
+                  disabled={loading}
+                  maxLength={50}
+                  className={styles.accessKeyInput}
+                />
+              </div>
             )}
           </div>
-          <div className={styles.optionsList}>
-            {options.map((option, index) => (
-              <div
-                key={option.id}
-                className={styles.optionInput}
-                style={{ animationDelay: `${index * 0.05}s` }}
-              >
-                <div className={styles.optionHeader}>
-                  <span className={styles.optionNumber}>
-                    <span className={styles.optionBadge}>{index + 1}</span>
-                  </span>
-                  <input
-                    type="text"
-                    value={option.title}
-                    onChange={(e) => updateOption(option.id, 'title', e.target.value)}
-                    placeholder="Option title"
-                    required
-                    disabled={loading}
-                    maxLength={50}
-                    className={styles.optionTitleInput}
-                  />
-                  {options.length > 2 && (
-                    <button
-                      type="button"
-                      onClick={() => removeOption(option.id)}
-                      className={styles.removeOptionButton}
-                      disabled={loading}
-                      aria-label="Remove option"
-                    >
-                      <X size={16} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Visibility Card */}
-        <div className={styles.card}>
-          <h3 className={styles.cardTitle}>Visibility</h3>
-          <p className={styles.cardDescription}>Choose who can see and vote on your poll</p>
-          <div className={styles.visibilityToggle}>
-            <button
-              type="button"
-              className={`${styles.visibilityOption} ${isPublic ? styles.visibilityActive : ''}`}
-              onClick={() => setIsPublic(true)}
-              disabled={loading}
-            >
-              <div className={styles.visibilityIcon}>
-                <Globe size={18} />
-              </div>
-              <div className={styles.visibilityText}>
-                <span className={styles.visibilityName}>Public</span>
-                <span className={styles.visibilityDesc}>Anyone can vote</span>
-              </div>
-            </button>
-            <button
-              type="button"
-              className={`${styles.visibilityOption} ${!isPublic ? styles.visibilityActive : ''}`}
-              onClick={() => setIsPublic(false)}
-              disabled={loading}
-            >
-              <div className={styles.visibilityIcon}>
-                <Lock size={18} />
-              </div>
-              <div className={styles.visibilityText}>
-                <span className={styles.visibilityName}>Private</span>
-                <span className={styles.visibilityDesc}>Requires access key</span>
-              </div>
-            </button>
-          </div>
-
-          {!isPublic && (
-            <div className={styles.accessKeySection}>
-              <label htmlFor="accessKey" className={styles.accessKeyLabel}>
-                <Key size={14} />
-                Access Key
-              </label>
-              <input
-                id="accessKey"
-                type="text"
-                value={accessKey}
-                onChange={(e) => setAccessKey(e.target.value)}
-                placeholder="Enter a secret key for participants"
-                disabled={loading}
-                maxLength={50}
-                className={styles.accessKeyInput}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className={styles.submitButton}
-          disabled={loading}
-        >
-          {loading ? 'Creating...' : 'Create Poll'}
-        </button>
+          {/* Submit Button */}
+          <button type="submit" className={styles.submitButton} disabled={loading}>
+            {loading ? 'Creating...' : 'Create Poll'}
+          </button>
         </form>
 
         {/* Footer */}
