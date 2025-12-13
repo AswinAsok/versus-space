@@ -5,7 +5,6 @@ import { pollService } from '../../services/pollService';
 import type { LeaderboardPoll } from '../../types';
 import { LogOut, TrendingUp } from 'lucide-react';
 import styles from './Header.module.css';
-import sharedStyles from '../../styles/Shared.module.css';
 
 const TRENDING_POLL_ID = '70427c7e-9405-4b76-b062-087790c6f5ef';
 
@@ -106,17 +105,9 @@ export function Header({ user, onNavigate }: HeaderProps) {
                   </button>
                 </div>
               ) : (
-                <>
-                  <button onClick={() => onNavigate('/auth')} className={styles.navLink}>
-                    Sign In
-                  </button>
-                  <button
-                    onClick={() => onNavigate('/auth')}
-                    className={`${sharedStyles.btnPrimary} ${styles.createButton}`}
-                  >
-                    Get Started Free
-                  </button>
-                </>
+                <button onClick={() => onNavigate('/auth')} className={styles.navLink}>
+                  Sign In
+                </button>
               )}
             </div>
           </nav>

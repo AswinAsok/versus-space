@@ -94,7 +94,7 @@ export function Home({ onNavigate }: HomeProps) {
               onClick={() => onNavigate('/auth')}
               className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
             >
-              Start Free <ArrowRight size={18} />
+              Start a War <ArrowRight size={18} />
             </button>
             <a
               href="https://github.com/AswinAsok/versus-space"
@@ -102,7 +102,7 @@ export function Home({ onNavigate }: HomeProps) {
               rel="noopener noreferrer"
               className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
             >
-              <Star size={18} /> Star{githubStars !== null && ` (${githubStars})`}
+              <Star size={18} /> {githubStars !== null ? `${githubStars} Stars` : 'Star'}
             </a>
           </div>
           <p className={styles.heroNote}>Free to use • No limits for now</p>

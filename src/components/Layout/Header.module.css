@@ -224,8 +224,8 @@
 .createButton {
   background: var(--color-primary);
   color: #000000;
-  padding: 0.625rem 1.25rem;
-  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   border-radius: 999px;
   transition: all var(--transition-fast) var(--ease-out);
@@ -304,8 +304,7 @@
   }
 
   .createButton {
-    padding: 0.5rem 1rem;
-    font-size: 0.8125rem;
+    display: none;
   }
 }
 
@@ -337,7 +336,7 @@
   }
 
   .navLink {
-    padding: 0.5rem;
+    padding: 0.625rem 0.875rem;
     min-width: 40px;
     min-height: 40px;
     justify-content: center;
@@ -395,7 +394,7 @@
   }
 
   .navLink {
-    padding: 0.375rem;
+    padding: 0.5rem 0.75rem;
     min-width: 36px;
     min-height: 36px;
   }
