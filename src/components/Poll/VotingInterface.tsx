@@ -23,7 +23,6 @@ interface FloatingNumber {
   optionId: string;
 }
 
-
 // Generate places array based on the number of digits in the value
 const getPlacesForValue = (value: number): number[] => {
   if (value === 0) return [1];
@@ -228,10 +227,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
       ))}
 
       {/* Poll Title */}
-      <div
-        className={styles.pollTitleContainer}
-        style={{ left: `${firstOptionPercentage}%` }}
-      >
+      <div className={styles.pollTitleContainer} style={{ left: `${firstOptionPercentage}%` }}>
         <h1 className={styles.pollTitle}>{title}</h1>
       </div>
 

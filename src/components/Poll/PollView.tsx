@@ -123,7 +123,10 @@ export function PollView({ pollId }: PollViewProps) {
                   </button>
                 </div>
                 {keyError && <span className={styles.keyErrorText}>{keyError}</span>}
-                <button type="submit" className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge} ${styles.unlockButton}`}>
+                <button
+                  type="submit"
+                  className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge} ${styles.unlockButton}`}
+                >
                   Unlock Poll
                 </button>
               </form>
