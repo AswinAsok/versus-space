@@ -239,3 +239,130 @@
     transform: rotate(360deg);
   }
 }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .btnPrimary,
+  .btnSecondary,
+  .btnDanger {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
+    min-height: 44px;
+  }
+
+  .btnLarge {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .btnIcon {
+    padding: 0.625rem;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .btnShare {
+    padding: 0.875rem;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .formGroup {
+    margin-bottom: 1.25rem;
+  }
+
+  .formGroup label {
+    font-size: 0.8125rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .formGroup input {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    min-height: 44px;
+  }
+
+  .errorMessage {
+    padding: 0.625rem;
+    font-size: 0.8125rem;
+  }
+
+  .loading {
+    min-height: 240px;
+    font-size: 1rem;
+  }
+
+  .loading::after {
+    width: 32px;
+    height: 32px;
+  }
+
+  .errorContainer,
+  .noOptions {
+    min-height: 240px;
+    font-size: 1rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btnPrimary,
+  .btnSecondary,
+  .btnDanger {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    min-height: 40px;
+  }
+
+  .btnLarge {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  .btnIcon {
+    padding: 0.5rem;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .btnIconSmall {
+    padding: 0.375rem;
+  }
+
+  .formGroup {
+    margin-bottom: 1rem;
+  }
+
+  .formGroup label {
+    font-size: 0.75rem;
+  }
+
+  .formGroup input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9375rem;
+    min-height: 40px;
+  }
+
+  .errorMessage {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .loading {
+    min-height: 200px;
+    font-size: 0.9375rem;
+  }
+
+  .loading::after {
+    width: 28px;
+    height: 28px;
+  }
+
+  .errorContainer,
+  .noOptions {
+    min-height: 200px;
+    font-size: 0.9375rem;
+    padding: 1rem;
+  }
+}

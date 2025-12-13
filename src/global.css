@@ -181,3 +181,62 @@ a:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Improve tap targets for touch devices */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+
+  /* Remove hover states on touch devices to prevent sticky hover */
+  button:hover,
+  a:hover {
+    transform: none;
+  }
+}
+
+/* Responsive typography and spacing */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  .app {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Improve text rendering on small screens */
+@media (max-width: 480px) {
+  * {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}

@@ -488,6 +488,10 @@
 
 /* Responsive Styles */
 @media (max-width: 1024px) {
+  .homeInner {
+    padding: 1.5rem 1.5rem 0;
+  }
+
   .footerMain {
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -506,6 +510,18 @@
     grid-template-columns: repeat(2, 1fr);
     text-align: center;
   }
+
+  .heroTitle {
+    font-size: 3rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.25rem;
+  }
+
+  .ctaTitle {
+    font-size: 2.25rem;
+  }
 }
 
 @media (max-width: 992px) {
@@ -523,10 +539,18 @@
     transform: rotate(90deg);
     padding: 0;
   }
+
+  .heroTitle {
+    font-size: 2.75rem;
+  }
 }
 
 @media (max-width: 768px) {
   .homeContainer {
+    padding: 1rem 1rem 0;
+  }
+
+  .homeInner {
     padding: 1rem 1rem 0;
   }
 
@@ -540,16 +564,29 @@
 
   .heroSubtitle {
     font-size: 1rem;
+    padding: 0 0.5rem;
   }
 
   .heroActions {
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    padding: 0 1rem;
   }
 
   .heroActions button {
     width: 100%;
-    max-width: 280px;
+    max-width: 320px;
+    padding: 0.875rem 1.5rem;
+  }
+
+  .heroBadge {
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.75rem;
+  }
+
+  .statsSection {
+    padding: 2rem 0;
   }
 
   .statsGrid {
@@ -579,13 +616,34 @@
     font-size: 1.75rem;
   }
 
+  .sectionSubtitle {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .howItWorksSection {
+    padding: 3rem 0;
+  }
+
+  .stepCard {
+    padding: 1.5rem;
+  }
+
+  .stepIconWrapper {
+    width: 56px;
+    height: 56px;
+  }
+
   .ctaSection {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding: 3rem 1rem;
   }
 
   .ctaTitle {
     font-size: 1.75rem;
+  }
+
+  .ctaSubtitle {
+    font-size: 1rem;
   }
 
   .ctaFeatures {
@@ -601,5 +659,190 @@
   .footerLinks {
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
+  }
+
+  .footerBottom {
+    padding: 1.25rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .leaderboardSection {
+    padding: 3rem 0;
+  }
+}
+
+/* Small mobile breakpoint */
+@media (max-width: 480px) {
+  .homeInner {
+    padding: 0.75rem 0.75rem 0;
+  }
+
+  .hero {
+    padding: 1.5rem 0;
+  }
+
+  .heroTitle {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .heroSubtitle {
+    font-size: 0.9375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .heroBadge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    margin-bottom: 1rem;
+  }
+
+  .heroActions {
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .heroActions button {
+    font-size: 0.9375rem;
+    padding: 0.75rem 1.25rem;
+  }
+
+  .heroNote {
+    font-size: 0.8125rem;
+  }
+
+  .statsSection {
+    padding: 1.5rem 0;
+  }
+
+  .statsGrid {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .statNumber {
+    font-size: 1.75rem;
+  }
+
+  .statLabel {
+    font-size: 0.8125rem;
+  }
+
+  .trustedSection {
+    padding: 1.5rem 0 2rem;
+  }
+
+  .trustedLogos {
+    gap: 1rem;
+  }
+
+  .trustedLogo {
+    font-size: 0.875rem;
+  }
+
+  .sectionHeader {
+    margin-bottom: 2rem;
+  }
+
+  .sectionBadge {
+    font-size: 0.6875rem;
+    padding: 0.25rem 0.625rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 0.9375rem;
+  }
+
+  .howItWorksSection {
+    padding: 2rem 0;
+  }
+
+  .stepCard {
+    padding: 1.25rem;
+  }
+
+  .stepNumber {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+    top: -10px;
+  }
+
+  .stepIconWrapper {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+  }
+
+  .stepTitle {
+    font-size: 1rem;
+  }
+
+  .stepDescription {
+    font-size: 0.8125rem;
+  }
+
+  .ctaSection {
+    padding: 2rem 0.75rem;
+  }
+
+  .ctaTitle {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .ctaSubtitle {
+    font-size: 0.9375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .ctaFeatures span {
+    font-size: 0.8125rem;
+  }
+
+  .footer {
+    padding: 2rem 0.75rem 0;
+    padding-bottom: 50px;
+  }
+
+  .footerLogo {
+    font-size: 1.25rem;
+  }
+
+  .footerTagline {
+    font-size: 0.875rem;
+  }
+
+  .socialLink {
+    width: 36px;
+    height: 36px;
+  }
+
+  .footerLinks {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .footerColumn h4 {
+    font-size: 0.6875rem;
+    margin-bottom: 1rem;
+  }
+
+  .footerColumn a {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0;
+  }
+
+  .footerBottom {
+    padding: 1rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .leaderboardSection {
+    padding: 2rem 0;
   }
 }
