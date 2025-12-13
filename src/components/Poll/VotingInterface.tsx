@@ -7,6 +7,7 @@ import { getSessionId } from '../../utils/sessionId';
 import { RateCalculator } from '../../utils/rateCalculator';
 import sharedStyles from '../../styles/Shared.module.css';
 import { supabase } from '../../lib/supabaseClient';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { PollOption } from '../../types';
 import styles from './VotingInterface.module.css';
 
@@ -91,8 +92,10 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     // Poll the realtime client so we can show connection status across devices.
     const updateStatus = () => {
       setWsStatus(supabase.realtime.connectionState());
-      const channel = supabase.getChannels().find((c) => (c as any).topic === `poll_options:${pollId}`);
-      setChannelStatus((channel as any)?.state ?? 'not-subscribed');
+      const channel: RealtimeChannel | undefined = supabase
+        .getChannels()
+        .find((c) => c.topic === `poll_options:${pollId}`);
+      setChannelStatus(channel?.state ?? 'not-subscribed');
     };
     const interval = setInterval(updateStatus, 1500);
     updateStatus();
