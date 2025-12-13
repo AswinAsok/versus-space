@@ -611,6 +611,52 @@
   color: #e05555;
 }
 
+/* Activate Button - Primary CTA for inactive polls */
+.activateButton {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 12px 18px;
+  background: var(--color-primary);
+  color: #000000;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.activateButton:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+/* View Button Secondary - For inactive polls */
+.viewButtonSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+  background: transparent;
+  color: var(--color-text-light);
+}
+
+.viewButtonSecondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-text-muted);
+  color: var(--color-text);
+}
+
 /* Tips Section */
 .tipsSection {
   margin-bottom: 2rem;
@@ -862,7 +908,9 @@
     flex-direction: column;
   }
 
-  .toggleButton {
+  .toggleButton,
+  .activateButton,
+  .viewButtonSecondary {
     width: 100%;
   }
 

@@ -312,22 +312,43 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                   </div>
 
                   <div className={styles.pollActions}>
-                    <button
-                      onClick={() => onNavigate(`/poll/${poll.id}`)}
-                      className={styles.viewButton}
-                    >
-                      <ExternalLink size={16} />
-                      View Poll
-                    </button>
-
-                    <button
-                      onClick={() => toggleStatus(poll.id, poll.is_active)}
-                      className={`${styles.toggleButton} ${poll.is_active ? styles.toggleDeactivate : styles.toggleActivate}`}
-                      title={poll.is_active ? 'Deactivate' : 'Activate'}
-                    >
-                      {poll.is_active ? <PowerOff size={16} /> : <Power size={16} />}
-                      {poll.is_active ? 'Deactivate' : 'Activate'}
-                    </button>
+                    {poll.is_active ? (
+                      <>
+                        <button
+                          onClick={() => onNavigate(`/poll/${poll.id}`)}
+                          className={styles.viewButton}
+                        >
+                          <ExternalLink size={16} />
+                          View Poll
+                        </button>
+                        <button
+                          onClick={() => toggleStatus(poll.id, poll.is_active)}
+                          className={`${styles.toggleButton} ${styles.toggleDeactivate}`}
+                          title="Deactivate"
+                        >
+                          <PowerOff size={16} />
+                          Deactivate
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => toggleStatus(poll.id, poll.is_active)}
+                          className={styles.activateButton}
+                        >
+                          <Power size={16} />
+                          Activate Poll
+                        </button>
+                        <button
+                          onClick={() => onNavigate(`/poll/${poll.id}`)}
+                          className={styles.viewButtonSecondary}
+                          title="View Poll"
+                        >
+                          <ExternalLink size={16} />
+                          View
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
