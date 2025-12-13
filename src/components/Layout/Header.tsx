@@ -1,7 +1,7 @@
 import { User } from '@supabase/supabase-js';
 import { authService } from '../../services/authService';
-import { LogOut, Plus } from 'lucide-react';
-import headerStyles from './Header.module.css';
+import { LogOut, Plus, LayoutDashboard, Zap } from 'lucide-react';
+import styles from './Header.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
 interface HeaderProps {
@@ -9,46 +9,61 @@ interface HeaderProps {
   onNavigate: (path: string) => void;
 }
 
-// Top-level navigation bar that adapts to auth state.
 export function Header({ user, onNavigate }: HeaderProps) {
   const handleSignOut = async () => {
-    // Ensure the session is cleared before redirecting.
     await authService.signOut();
     onNavigate('/');
   };
 
   return (
-    <header className={headerStyles.appHeader}>
-      <div className={headerStyles.headerContent}>
-        <button onClick={() => onNavigate('/')} className={headerStyles.logoButton}>
-          <h1 className={headerStyles.logo}>versus.space</h1>
+    <header className={styles.appHeader}>
+      <div className={styles.headerContent}>
+        <button onClick={() => onNavigate('/')} className={styles.logoButton}>
+          <div className={styles.logoIcon}>
+            <Zap size={18} />
+          </div>
+          <span className={styles.logo}>versus.space</span>
         </button>
 
-        <nav className={headerStyles.headerNav}>
+        <nav className={styles.headerNav}>
           {user ? (
             <>
-              <button onClick={() => onNavigate('/dashboard')} className={headerStyles.navLink}>
-                Dashboard
+              <button onClick={() => onNavigate('/dashboard')} className={styles.navLink}>
+                <LayoutDashboard size={18} />
+                <span>Dashboard</span>
               </button>
               <button
                 onClick={() => onNavigate('/create')}
-                className={sharedStyles.btnPrimary}
+                className={`${sharedStyles.btnPrimary} ${styles.createButton}`}
               >
                 <Plus size={18} />
-                Create Poll
+                <span>Create Poll</span>
               </button>
-              <button
-                onClick={handleSignOut}
-                className={sharedStyles.btnIcon}
-                title="Sign out"
-              >
-                <LogOut size={20} />
-              </button>
+              <div className={styles.userSection}>
+                <div className={styles.userAvatar}>
+                  {user.email?.charAt(0).toUpperCase()}
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className={styles.signOutButton}
+                  title="Sign out"
+                >
+                  <LogOut size={18} />
+                </button>
+              </div>
             </>
           ) : (
-            <button onClick={() => onNavigate('/auth')} className={sharedStyles.btnPrimary}>
-              Sign In
-            </button>
+            <>
+              <button onClick={() => onNavigate('/auth')} className={styles.navLink}>
+                Sign In
+              </button>
+              <button
+                onClick={() => onNavigate('/auth')}
+                className={`${sharedStyles.btnPrimary} ${styles.createButton}`}
+              >
+                Get Started Free
+              </button>
+            </>
           )}
         </nav>
       </div>

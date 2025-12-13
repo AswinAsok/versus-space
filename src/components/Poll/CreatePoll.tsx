@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollService } from '../../services/pollService';
-import { X, Plus, Globe, Lock, Key } from 'lucide-react';
+import { X, Plus, Globe, Lock, Key, Sparkles, ListPlus, Info } from 'lucide-react';
 import type { CreatePollData } from '../../types';
 import styles from './CreatePoll.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -17,7 +17,6 @@ interface OptionInput {
   image_url: string;
 }
 
-// Form responsible for orchestrating poll creation and validating user input.
 export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   const [title, setTitle] = useState('');
   const [isPublic, setIsPublic] = useState(true);
@@ -30,7 +29,6 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   const [error, setError] = useState('');
 
   const addOption = () => {
-    // Generate a stable id so React can track the dynamic option inputs.
     setOptions([
       ...options,
       { id: Date.now().toString(), title: '', image_url: '' },
@@ -53,7 +51,6 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
     e.preventDefault();
     setError('');
 
-    // Guard clauses keep invalid payloads from reaching the backend.
     if (options.length < 2) {
       setError('Please add at least 2 options');
       return;
@@ -72,7 +69,6 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
     setLoading(true);
 
     try {
-      // Normalize payload to the shape expected by pollService.
       const pollData: CreatePollData = {
         title,
         is_public: isPublic,
@@ -95,13 +91,22 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
 
   return (
     <div className={styles.createPollContainer}>
-      <form onSubmit={handleSubmit} className={styles.createPollForm}>
-        <h2 className={styles.title}>Create New Poll</h2>
+      <div className={styles.pageHeader}>
+        <span className={styles.pageBadge}>
+          <Sparkles size={14} />
+          New Poll
+        </span>
+        <h1 className={styles.pageTitle}>Create a New Poll</h1>
+        <p className={styles.pageSubtitle}>
+          Set up your question and options to start collecting votes
+        </p>
+      </div>
 
+      <form onSubmit={handleSubmit} className={styles.createPollForm}>
         {error && <div className={sharedStyles.errorMessage}>{error}</div>}
 
         <div className={sharedStyles.formGroup}>
-          <label htmlFor="title">Poll Title</label>
+          <label htmlFor="title">Poll Question</label>
           <input
             id="title"
             type="text"
@@ -114,59 +119,22 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
           />
         </div>
 
-        <div className={styles.visibilitySection}>
-          <label className={styles.visibilityLabel}>Poll Visibility</label>
-          <div className={styles.visibilityToggle}>
-            <button
-              type="button"
-              className={`${styles.visibilityOption} ${isPublic ? styles.visibilityActive : ''}`}
-              onClick={() => setIsPublic(true)}
-              disabled={loading}
-            >
-              <Globe size={18} />
-              <span>Public</span>
-            </button>
-            <button
-              type="button"
-              className={`${styles.visibilityOption} ${!isPublic ? styles.visibilityActive : ''}`}
-              onClick={() => setIsPublic(false)}
-              disabled={loading}
-            >
-              <Lock size={18} />
-              <span>Private</span>
-            </button>
-          </div>
-          <p className={styles.visibilityHint}>
-            {isPublic
-              ? 'Public polls appear on the leaderboard and anyone can vote.'
-              : 'Private polls require an access key to vote.'}
-          </p>
-        </div>
-
-        {!isPublic && (
-          <div className={sharedStyles.formGroup}>
-            <label htmlFor="accessKey">
-              <Key size={16} style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'middle' }} />
-              Access Key
-            </label>
-            <input
-              id="accessKey"
-              type="text"
-              value={accessKey}
-              onChange={(e) => setAccessKey(e.target.value)}
-              placeholder="Enter a secret key for participants"
-              disabled={loading}
-              maxLength={50}
-            />
-          </div>
-        )}
-
         <div className={styles.optionsSection}>
-          <h3 className={styles.optionsTitle}>Options</h3>
+          <h3 className={styles.sectionTitle}>
+            <ListPlus size={20} />
+            Answer Options
+          </h3>
           {options.map((option, index) => (
-            <div key={option.id} className={styles.optionInput}>
+            <div
+              key={option.id}
+              className={styles.optionInput}
+              style={{ animationDelay: `${index * 0.05}s` }}
+            >
               <div className={styles.optionHeader}>
-                <span className={styles.optionNumber}>Option {index + 1}</span>
+                <span className={styles.optionNumber}>
+                  <span className={styles.optionBadge}>{index + 1}</span>
+                  Option
+                </span>
                 {options.length > 2 && (
                   <button
                     type="button"
@@ -185,7 +153,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
                   type="text"
                   value={option.title}
                   onChange={(e) => updateOption(option.id, 'title', e.target.value)}
-                  placeholder="Option title"
+                  placeholder="Enter option title"
                   required
                   disabled={loading}
                   maxLength={50}
@@ -209,7 +177,61 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
               )}
             </div>
           ))}
+        </div>
 
+        <div className={styles.visibilitySection}>
+          <label className={styles.visibilityLabel}>Poll Visibility</label>
+          <div className={styles.visibilityToggle}>
+            <button
+              type="button"
+              className={`${styles.visibilityOption} ${isPublic ? styles.visibilityActive : ''}`}
+              onClick={() => setIsPublic(true)}
+              disabled={loading}
+            >
+              <div className={styles.visibilityIcon}>
+                <Globe size={24} />
+              </div>
+              <span>Public</span>
+            </button>
+            <button
+              type="button"
+              className={`${styles.visibilityOption} ${!isPublic ? styles.visibilityActive : ''}`}
+              onClick={() => setIsPublic(false)}
+              disabled={loading}
+            >
+              <div className={styles.visibilityIcon}>
+                <Lock size={24} />
+              </div>
+              <span>Private</span>
+            </button>
+          </div>
+          <div className={styles.visibilityHint}>
+            <Info size={16} />
+            {isPublic
+              ? 'Public polls appear on the leaderboard and anyone can vote.'
+              : 'Private polls require an access key to vote.'}
+          </div>
+        </div>
+
+        {!isPublic && (
+          <div className={sharedStyles.formGroup} style={{ marginTop: '1rem' }}>
+            <label htmlFor="accessKey">
+              <Key size={16} style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'middle' }} />
+              Access Key
+            </label>
+            <input
+              id="accessKey"
+              type="text"
+              value={accessKey}
+              onChange={(e) => setAccessKey(e.target.value)}
+              placeholder="Enter a secret key for participants"
+              disabled={loading}
+              maxLength={50}
+            />
+          </div>
+        )}
+
+        <div className={styles.formActions}>
           {options.length < 6 && (
             <button
               type="button"
@@ -221,15 +243,14 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
               Add Option
             </button>
           )}
+          <button
+            type="submit"
+            className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
+            disabled={loading}
+          >
+            {loading ? 'Creating...' : 'Create Poll'}
+          </button>
         </div>
-
-        <button
-          type="submit"
-          className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
-          disabled={loading}
-        >
-          {loading ? 'Creating...' : 'Create Poll'}
-        </button>
       </form>
     </div>
   );

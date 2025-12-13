@@ -2,39 +2,151 @@
   flex: 1;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 2rem;
   width: 100%;
-  animation: fadeIn var(--transition-normal);
   position: relative;
   z-index: 1;
 }
 
-.dashboardHeader {
+/* Welcome Section */
+.welcomeSection {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 3rem;
-  animation: slideIn var(--transition-normal);
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(25, 106, 255, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  animation: fadeInDown 0.5s ease-out;
 }
 
-.dashboardTitle {
+.welcomeContent {
+  flex: 1;
+}
+
+.welcomeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.welcomeTitle {
   font-size: 2rem;
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: 0.25rem;
 }
 
-.dashboardSubtitle {
+.welcomeSubtitle {
   color: var(--color-text-light);
-  font-size: 0.9375rem;
+  font-size: 1rem;
 }
 
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all var(--transition-fast);
+  animation: fadeInUp 0.4s ease-out backwards;
+}
+
+.statCard:nth-child(1) { animation-delay: 0.1s; }
+.statCard:nth-child(2) { animation-delay: 0.15s; }
+.statCard:nth-child(3) { animation-delay: 0.2s; }
+.statCard:nth-child(4) { animation-delay: 0.25s; }
+
+.statCard:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.statIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.statContent {
+  flex: 1;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+}
+
+/* Polls Section */
+.pollsSection {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  animation: fadeInUp 0.5s ease-out 0.3s backwards;
+}
+
+.pollsSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pollsSectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.pollsCount {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  background: var(--color-bg-alt);
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+/* Empty State */
 .emptyState {
   text-align: center;
   padding: 4rem 2rem;
-  background: var(--color-bg-alt);
-  border-radius: var(--radius-xl);
-  border: 1px dashed var(--color-border);
 }
 
 .emptyIcon {
@@ -44,10 +156,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: var(--color-primary-light);
   border-radius: 50%;
-  color: var(--color-text-muted);
-  box-shadow: var(--shadow-sm);
+  color: var(--color-primary);
 }
 
 .emptyTitle {
@@ -58,31 +169,40 @@
 }
 
 .emptyDescription {
+  color: var(--color-text-light);
   margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* Polls Grid */
 .pollsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .pollCard {
-  background: white;
+  background: var(--color-bg-alt);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  padding: 1.25rem;
   transition: all var(--transition-fast) ease-out;
-  animation: fadeInUp 0.4s ease-out;
+  animation: fadeInUp 0.4s ease-out backwards;
 }
 
 .pollCard:hover {
+  background: white;
   border-color: var(--color-primary);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
 .pollCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 0.75rem;
 }
 
@@ -92,26 +212,52 @@
   flex-wrap: wrap;
 }
 
+.pollMenu {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.pollCard:hover .pollMenu {
+  opacity: 1;
+}
+
+.menuButton {
+  background: transparent;
+  border: none;
+  padding: 0.375rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.menuButton:hover {
+  background: #fee2e2;
+  color: var(--color-danger);
+}
+
 .pollTitle {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 0.5rem;
   line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .statusBadge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  transition: all var(--transition-normal);
 }
 
 .statusBadge::before {
@@ -119,7 +265,6 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  display: inline-block;
 }
 
 .active {
@@ -143,7 +288,7 @@
 
 .visibilityBadge {
   padding: 0.25rem 0.625rem;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   font-size: 0.6875rem;
   font-weight: 500;
   display: inline-flex;
@@ -162,23 +307,81 @@
 }
 
 .pollMeta {
-  color: var(--color-text-light);
-  font-size: 0.875rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.pollDate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
 }
 
 .pollActions {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
-@keyframes fadeIn {
+.viewButton {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.viewButton:hover {
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: white;
+  color: var(--color-text-light);
+}
+
+.toggleActivate:hover {
+  background: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.toggleDeactivate:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+/* Animations */
+@keyframes fadeInDown {
   from {
     opacity: 0;
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -193,37 +396,65 @@
   }
 }
 
-@keyframes slideIn {
-  from {
-    transform: translateX(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
+@keyframes pulse {
+  0%, 100% {
     opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.2;
+/* Responsive */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .dashboardHeader {
+  .dashboardContainer {
+    padding: 1rem;
+  }
+
+  .welcomeSection {
     flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .welcomeTitle {
+    font-size: 1.5rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    align-items: flex-start;
+  }
+
+  .statCard {
+    padding: 1rem;
+  }
+
+  .statIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
   }
 
   .pollsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pollActions {
     flex-direction: column;
+  }
+
+  .toggleButton {
+    width: 100%;
   }
 }
