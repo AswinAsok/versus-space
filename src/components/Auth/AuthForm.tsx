@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { authService } from '../../services/authService';
-import { Zap, BarChart3, Users, Lock, Check, ArrowRight } from 'lucide-react';
+import { Zap, BarChart3, Users, Lock, Check, ArrowRight, MailCheck } from 'lucide-react';
 import styles from './AuthForm.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -14,6 +14,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,10 +24,11 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
     try {
       if (isLogin) {
         await authService.signIn(email, password);
+        onSuccess();
       } else {
         await authService.signUp(email, password);
+        setShowVerificationModal(true);
       }
-      onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -177,6 +179,33 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
           )}
         </div>
       </div>
+
+      {showVerificationModal && (
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+          <div className={styles.modal}>
+            <div className={styles.modalIcon}>
+              <MailCheck size={32} />
+            </div>
+            <h3 className={styles.modalTitle}>Confirm your email</h3>
+            <p className={styles.modalText}>
+              We sent a verification link to {email || 'your inbox'}. Please confirm your email to
+              finish setting up your account.
+            </p>
+            <div className={styles.modalActions}>
+              <button
+                type="button"
+                className={styles.modalButton}
+                onClick={() => {
+                  setShowVerificationModal(false);
+                  setIsLogin(true);
+                }}
+              >
+                Back to sign in
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

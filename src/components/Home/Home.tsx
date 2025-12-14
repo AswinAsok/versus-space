@@ -75,7 +75,7 @@ export function Home({ onNavigate }: HomeProps) {
             <span className={styles.gradientText}>Audience</span>
           </h1>
           <p className={styles.heroSubtitle}>
-            Launch interactive polls in seconds and watch votes pour in real-time. Perfect for
+            Launch interactive polls in seconds and watch clicks pour in real-time. Perfect for
             presentations, events, classrooms, and team decisions.
           </p>
           <div className={styles.heroActions}>
@@ -120,7 +120,7 @@ export function Home({ onNavigate }: HomeProps) {
             <div className={styles.statDivider}></div>
             <div className={styles.statItem}>
               <div className={styles.statNumber}>{formatNumber(stats.votesCount)}</div>
-              <div className={styles.statLabel}>Votes Cast</div>
+              <div className={styles.statLabel}>Clicks Cast</div>
             </div>
             <div className={styles.statDivider}></div>
             <div className={styles.statItem}>
@@ -196,7 +196,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <h3 className={styles.stepTitle}>Watch Live Results</h3>
               <p className={styles.stepDescription}>
-                See votes stream in real-time with beautiful split-screen visualizations.
+                See clicks stream in real-time with beautiful split-screen visualizations.
               </p>
             </div>
           </div>
