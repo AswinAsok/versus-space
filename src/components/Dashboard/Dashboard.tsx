@@ -15,7 +15,6 @@ import {
   TrendingUp,
   Copy,
   Check,
-  Share2,
   ChevronRight,
   Code2,
 } from 'lucide-react';
@@ -184,16 +183,6 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
               <div className={styles.actionContent}>
                 <h3>Explore Polls</h3>
                 <p>Discover trending public polls</p>
-              </div>
-              <ChevronRight size={20} className={styles.actionArrow} />
-            </button>
-            <button onClick={() => {}} className={styles.actionCard}>
-              <div className={styles.actionIconWrapper}>
-                <Share2 size={24} />
-              </div>
-              <div className={styles.actionContent}>
-                <h3>Share Results</h3>
-                <p>Export and share your data</p>
               </div>
               <ChevronRight size={20} className={styles.actionArrow} />
             </button>

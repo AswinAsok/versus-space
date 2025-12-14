@@ -58,6 +58,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
   const initialCountAnimationDoneRef = useRef(false);
   const lineNudgeTimeoutsRef = useRef<Map<string, NodeJS.Timeout[]>>(new Map());
   const previousVoteCountsRef = useRef<Map<string, number>>(new Map());
+  const [isMobile, setIsMobile] = useState(false);
 
   const persistUserVotes = useCallback(
     (votes: Map<string, number>) => {
@@ -183,6 +184,15 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     return () => {
       lineNudgeTimeoutsRef.current.forEach((timeouts) => timeouts.forEach((t) => clearTimeout(t)));
     };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+    updateIsMobile();
+    mediaQuery.addEventListener('change', updateIsMobile);
+    return () => mediaQuery.removeEventListener('change', updateIsMobile);
   }, []);
 
   const spawnConfetti = useCallback((x: number, y: number) => {
@@ -477,9 +487,9 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                     ) : (
                       <Counter
                         value={option.vote_count}
-                        fontSize={104}
+                        fontSize={isMobile ? 72 : 104}
                         places={getPlacesForValue(option.vote_count)}
-                        gap={4}
+                        gap={isMobile ? 2 : 3}
                         textColor={index === 0 ? '#3ecf8e' : '#a855f7'}
                         fontWeight={700}
                         gradientFrom="transparent"
