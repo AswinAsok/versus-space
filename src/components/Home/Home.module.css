@@ -149,6 +149,31 @@
   background: var(--color-border);
 }
 
+.statButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  background: var(--color-primary);
+  color: #000000;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal) var(--ease-out);
+  box-shadow: 0 4px 14px rgba(62, 207, 142, 0.4);
+}
+
+.statButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(62, 207, 142, 0.5);
+}
+
+.statButton:active {
+  transform: translateY(0) scale(0.98);
+}
+
 /* Trusted By Section */
 .trustedSection {
   padding: 2rem 0 3rem;

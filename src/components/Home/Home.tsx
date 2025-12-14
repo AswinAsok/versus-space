@@ -20,16 +20,6 @@ interface HomeProps {
   onNavigate: (path: string) => void;
 }
 
-function formatNumber(num: number): string {
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M+';
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K+';
-  }
-  return num.toString();
-}
-
 export function Home({ onNavigate }: HomeProps) {
   const [stats, setStats] = useState({ pollsCount: 0, votesCount: 0 });
 
@@ -45,7 +35,7 @@ export function Home({ onNavigate }: HomeProps) {
           top: 0,
           left: 0,
           width: '100%',
-          height: '100vh',
+          height: '100%',
           zIndex: -1,
           pointerEvents: 'none',
         }}
@@ -114,25 +104,29 @@ export function Home({ onNavigate }: HomeProps) {
         <section className={styles.statsSection}>
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
-              <div className={styles.statNumber}>{formatNumber(stats.pollsCount)}</div>
+              <div className={styles.statNumber}>{stats.pollsCount.toLocaleString()}</div>
               <div className={styles.statLabel}>Polls Created</div>
             </div>
             <div className={styles.statDivider}></div>
             <div className={styles.statItem}>
-              <div className={styles.statNumber}>{formatNumber(stats.votesCount)}</div>
+              <div className={styles.statNumber}>{stats.votesCount.toLocaleString()}</div>
               <div className={styles.statLabel}>Clicks Cast</div>
             </div>
             <div className={styles.statDivider}></div>
             <div className={styles.statItem}>
-              <div className={styles.statNumber}>50ms</div>
-              <div className={styles.statLabel}>Avg Response</div>
-            </div>
-            <div className={styles.statDivider}></div>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>99.9%</div>
-              <div className={styles.statLabel}>Uptime</div>
+              <button
+                onClick={() => onNavigate('/auth')}
+                className={styles.statButton}
+              >
+                Create Poll <ArrowRight size={20} />
+              </button>
             </div>
           </div>
+        </section>
+
+        {/* Leaderboard Section */}
+        <section className={styles.leaderboardSection}>
+          <Leaderboard onNavigate={onNavigate} />
         </section>
 
         {/* Built For Section */}
@@ -200,11 +194,6 @@ export function Home({ onNavigate }: HomeProps) {
               </p>
             </div>
           </div>
-        </section>
-
-        {/* Leaderboard Section */}
-        <section className={styles.leaderboardSection}>
-          <Leaderboard onNavigate={onNavigate} />
         </section>
       </div>
 
