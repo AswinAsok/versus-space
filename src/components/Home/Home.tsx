@@ -102,7 +102,7 @@ export function Home({ onNavigate }: HomeProps) {
               rel="noopener noreferrer"
               className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
             >
-              <Star size={18} /> {githubStars !== null ? `${githubStars} Stars` : 'Star'}
+              <Star size={18} /> {'Give a Star'}
             </a>
           </div>
           <p className={styles.heroNote}>Free to use • No limits for now</p>
