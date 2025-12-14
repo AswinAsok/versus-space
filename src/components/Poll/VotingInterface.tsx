@@ -48,11 +48,13 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     { id: number; particles: { x: number; y: number; color: string }[] }[]
   >([]);
   const [initialCountAnimationDone, setInitialCountAnimationDone] = useState(false);
+  const [lineNudges, setLineNudges] = useState<Map<string, number>>(new Map());
 
   const floatingIdRef = useRef(0);
   const confettiIdRef = useRef(0);
   const totalUserVotesRef = useRef(0);
   const initialCountAnimationDoneRef = useRef(false);
+  const lineNudgeTimeoutsRef = useRef<Map<string, NodeJS.Timeout[]>>(new Map());
 
   // Cool down heat levels over time
   useEffect(() => {
@@ -83,6 +85,51 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     return () => clearInterval(interval);
   }, [options]);
 
+  // Briefly push the dividing line when a side is clamped by min-width.
+  const nudgeBoundaryLine = useCallback((boundaryOptionId: string, delta: number) => {
+    // Clear any in-flight bounce for this boundary to restart a fresh one.
+    const existingTimeouts = lineNudgeTimeoutsRef.current.get(boundaryOptionId);
+    existingTimeouts?.forEach((timeoutId) => clearTimeout(timeoutId));
+
+    setLineNudges((prev) => {
+      const next = new Map(prev);
+      next.set(boundaryOptionId, delta);
+      return next;
+    });
+
+    const timeouts: NodeJS.Timeout[] = [];
+
+    // Quick recoil to simulate pushback from the opposing side.
+    timeouts.push(
+      setTimeout(() => {
+        setLineNudges((prev) => {
+          const next = new Map(prev);
+          next.set(boundaryOptionId, -Math.sign(delta) * Math.max(4, Math.abs(delta) * 0.45));
+          return next;
+        });
+      }, 120)
+    );
+
+    // Settle back to center.
+    timeouts.push(
+      setTimeout(() => {
+        setLineNudges((prev) => {
+          const next = new Map(prev);
+          next.set(boundaryOptionId, 0);
+          return next;
+        });
+      }, 260)
+    );
+
+    lineNudgeTimeoutsRef.current.set(boundaryOptionId, timeouts);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      lineNudgeTimeoutsRef.current.forEach((timeouts) => timeouts.forEach((t) => clearTimeout(t)));
+    };
+  }, []);
+
   const spawnConfetti = useCallback((x: number, y: number) => {
     const id = confettiIdRef.current++;
     const colors = ['#ff0', '#f0f', '#0ff', '#0f0', '#f00', '#00f'];
@@ -109,7 +156,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     setInitialCountAnimationDone(true);
   }, []);
 
-  const handleVote = async (optionId: string, event: React.MouseEvent) => {
+  const handleVote = async (optionId: string, optionIndex: number, event: React.MouseEvent) => {
     const button = event.currentTarget as HTMLButtonElement;
     const buttonRect = button.getBoundingClientRect();
     const parentRect = button.closest(`.${styles.votingOption}`)?.getBoundingClientRect();
@@ -147,6 +194,13 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     // Track total votes for effects
     totalUserVotesRef.current += voteValue;
     const totalVotes = totalUserVotesRef.current;
+
+    // Shift the dividing line a bit even when we're pinned by min-width.
+    if (options.length > 1) {
+      const boundaryOptionId = optionIndex === 0 ? options[0].id : options[optionIndex - 1].id;
+      const direction = optionIndex === 0 ? 1 : -1;
+      nudgeBoundaryLine(boundaryOptionId, 14 * direction);
+    }
 
     if (totalVotes === 50) {
       spawnConfetti(event.clientX, event.clientY);
@@ -245,6 +299,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
         // Scale content based on container width (0.5 at 10%, 1.0 at 50%+)
         const contentScale = Math.min(1, Math.max(0.5, percentage / 50));
         const isLeading = option.id === leadingOption.id && totalVotes > 0;
+        const lineNudge = lineNudges.get(option.id) || 0;
 
         return (
           <div
@@ -255,6 +310,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                 width: `${percentage}vw`,
                 '--heat-intensity': heat / 10,
                 '--content-scale': contentScale,
+                '--line-nudge': `${lineNudge}px`,
               } as React.CSSProperties
             }
           >
@@ -327,7 +383,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                 <h2 className={styles.optionTitle}>{option.title}</h2>
 
                 <button
-                  onClick={(e) => handleVote(option.id, e)}
+                  onClick={(e) => handleVote(option.id, index, e)}
                   className={`${styles.voteButton} ${heat > 7 ? styles.buttonOnFire : ''}`}
                 >
                   <span className={styles.buttonPulse} />
