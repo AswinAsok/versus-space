@@ -24,6 +24,8 @@ interface FloatingNumber {
   optionId: string;
 }
 
+const USER_SCORES_STORAGE_KEY = 'versus_user_scores';
+
 // Generate places array based on the number of digits in the value
 const getPlacesForValue = (value: number): number[] => {
   if (value === 0) return [1];
@@ -55,6 +57,39 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
   const totalUserVotesRef = useRef(0);
   const initialCountAnimationDoneRef = useRef(false);
   const lineNudgeTimeoutsRef = useRef<Map<string, NodeJS.Timeout[]>>(new Map());
+  const previousVoteCountsRef = useRef<Map<string, number>>(new Map());
+
+  const persistUserVotes = useCallback(
+    (votes: Map<string, number>) => {
+      try {
+        const raw = localStorage.getItem(USER_SCORES_STORAGE_KEY);
+        const parsed = raw ? (JSON.parse(raw) as Record<string, Record<string, number>>) : {};
+        parsed[pollId] = {};
+        votes.forEach((value, key) => {
+          parsed[pollId][key] = value;
+        });
+        localStorage.setItem(USER_SCORES_STORAGE_KEY, JSON.stringify(parsed));
+      } catch (error) {
+        console.error('Failed to persist user scores', error);
+      }
+    },
+    [pollId]
+  );
+
+  const loadUserVotes = useCallback(() => {
+    try {
+      const raw = localStorage.getItem(USER_SCORES_STORAGE_KEY);
+      if (!raw) return new Map<string, number>();
+      const parsed = JSON.parse(raw) as Record<string, Record<string, number>>;
+      const pollVotes = parsed[pollId] || {};
+      return new Map<string, number>(
+        Object.entries(pollVotes).map(([key, value]) => [key, Number(value) || 0])
+      );
+    } catch (error) {
+      console.error('Failed to load user scores', error);
+      return new Map<string, number>();
+    }
+  }, [pollId]);
 
   // Cool down heat levels over time
   useEffect(() => {
@@ -84,6 +119,26 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
 
     return () => clearInterval(interval);
   }, [options]);
+
+  // Track incoming tally changes (e.g., other users) to feed the speedometer.
+  useEffect(() => {
+    options.forEach((option) => {
+      const previousCount = previousVoteCountsRef.current.get(option.id);
+      if (previousCount !== undefined) {
+        const delta = option.vote_count - previousCount;
+        if (delta > 0) {
+          rateCalculatorRef.current.addVotes(option.id, delta);
+        }
+      }
+
+      previousVoteCountsRef.current.set(option.id, option.vote_count);
+    });
+  }, [options]);
+
+  // Restore any stored scores for this poll on mount.
+  useEffect(() => {
+    setUserVotes(loadUserVotes());
+  }, [loadUserVotes]);
 
   // Briefly push the dividing line when a side is clamped by min-width.
   const nudgeBoundaryLine = useCallback((boundaryOptionId: string, delta: number) => {
@@ -223,11 +278,16 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
 
       // Maintain a local sliding window rate to avoid extra network traffic.
       rateCalculatorRef.current.addVote(optionId);
+      const currentOptionCount = options[optionIndex]?.vote_count ?? 0;
+      const optimisticBase =
+        previousVoteCountsRef.current.get(optionId) ?? currentOptionCount;
+      previousVoteCountsRef.current.set(optionId, optimisticBase + voteValue);
 
       // Track what the current user has contributed for contextual feedback.
       setUserVotes((prev) => {
         const newMap = new Map(prev);
         newMap.set(optionId, (newMap.get(optionId) || 0) + voteValue);
+        persistUserVotes(newMap);
         return newMap;
       });
 
