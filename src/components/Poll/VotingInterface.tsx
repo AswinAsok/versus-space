@@ -279,8 +279,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
       // Maintain a local sliding window rate to avoid extra network traffic.
       rateCalculatorRef.current.addVote(optionId);
       const currentOptionCount = options[optionIndex]?.vote_count ?? 0;
-      const optimisticBase =
-        previousVoteCountsRef.current.get(optionId) ?? currentOptionCount;
+      const optimisticBase = previousVoteCountsRef.current.get(optionId) ?? currentOptionCount;
       previousVoteCountsRef.current.set(optionId, optimisticBase + voteValue);
 
       // Track what the current user has contributed for contextual feedback.

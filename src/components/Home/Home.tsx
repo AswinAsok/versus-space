@@ -114,10 +114,7 @@ export function Home({ onNavigate }: HomeProps) {
             </div>
             <div className={styles.statDivider}></div>
             <div className={styles.statItem}>
-              <button
-                onClick={() => onNavigate('/auth')}
-                className={styles.statButton}
-              >
+              <button onClick={() => onNavigate('/auth')} className={styles.statButton}>
                 Create Poll <ArrowRight size={20} />
               </button>
             </div>
