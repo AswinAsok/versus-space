@@ -1,6 +1,6 @@
 # versus.space
 
-![versus.space preview](public/meta-preview.png)
+![versus.space preview](public/meta-preview-1.png)
 
 live tug-of-war for opinions. create a poll with two options, drop a link, and watch people vote in real time. bars grow and shrink with speedometer vibes, floating numbers, and the occasional crown for the leader.
 

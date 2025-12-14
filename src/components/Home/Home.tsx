@@ -32,20 +32,9 @@ function formatNumber(num: number): string {
 
 export function Home({ onNavigate }: HomeProps) {
   const [stats, setStats] = useState({ pollsCount: 0, votesCount: 0 });
-  const [githubStars, setGithubStars] = useState<number | null>(null);
 
   useEffect(() => {
     pollService.getPlatformStats().then(setStats).catch(console.error);
-
-    // Fetch GitHub stars
-    fetch('https://api.github.com/repos/AswinAsok/versus-space')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.stargazers_count !== undefined) {
-          setGithubStars(data.stargazers_count);
-        }
-      })
-      .catch(console.error);
   }, []);
 
   return (
