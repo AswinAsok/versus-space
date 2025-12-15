@@ -46,8 +46,8 @@ const blogContent: Record<string, React.ReactNode> = {
       <h3>2. Real-Time Polls During Virtual Meetings</h3>
       <p>
         For synchronous meetings, use live polls to quickly gather opinions and break decision
-        deadlocks. The visual split-screen results create engagement and transparency that text-based
-        voting lacks.
+        deadlocks. The visual split-screen results create engagement and transparency that
+        text-based voting lacks.
       </p>
 
       <h3>3. Anonymous Voting for Honest Feedback</h3>
@@ -88,7 +88,8 @@ const blogContent: Record<string, React.ReactNode> = {
       <h3>Board and Shareholder Voting</h3>
       <p>
         Formal votes on company direction, executive decisions, and governance matters. These
-        require audit trails, proxy capabilities, and often weighted voting based on share ownership.
+        require audit trails, proxy capabilities, and often weighted voting based on share
+        ownership.
       </p>
 
       <h3>Employee Polls and Surveys</h3>
@@ -327,8 +328,8 @@ const blogContent: Record<string, React.ReactNode> = {
 
       <h3>4. Set Clear Timelines</h3>
       <p>
-        Open-ended polls lose urgency. Set deadlines for voting and communicate when and how
-        results will be shared.
+        Open-ended polls lose urgency. Set deadlines for voting and communicate when and how results
+        will be shared.
       </p>
 
       <h2>After the Vote</h2>
@@ -366,8 +367,8 @@ const blogContent: Record<string, React.ReactNode> = {
 
       <h3>Post-Event Polling</h3>
       <p>
-        Capture feedback while experiences are fresh. Post-session and post-event polls provide
-        data for improving future events and demonstrating value to stakeholders and sponsors.
+        Capture feedback while experiences are fresh. Post-session and post-event polls provide data
+        for improving future events and demonstrating value to stakeholders and sponsors.
       </p>
 
       <h2>High-Impact Event Polling Strategies</h2>

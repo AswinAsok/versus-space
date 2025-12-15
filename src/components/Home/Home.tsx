@@ -440,10 +440,7 @@ export function Home({ onNavigate }: HomeProps) {
               </h2>
               <p className={styles.ctaSubtitle}>Free forever. No signup required.</p>
             </div>
-            <button
-              onClick={() => onNavigate('/create')}
-              className={styles.ctaButton}
-            >
+            <button onClick={() => onNavigate('/create')} className={styles.ctaButton}>
               Create Free Poll <ArrowRight size={16} />
             </button>
           </div>

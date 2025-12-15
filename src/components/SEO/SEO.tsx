@@ -59,7 +59,8 @@ export function SEO({
   const seoKeywords = keywords || defaults.keywords;
   const seoCanonical = canonicalUrl || defaults.baseUrl;
   const seoOgImage = ogImage || defaults.ogImage;
-  const seoOgImageAlt = ogImageAlt || 'Versus Space - Real-time polling platform for business teams';
+  const seoOgImageAlt =
+    ogImageAlt || 'Versus Space - Real-time polling platform for business teams';
 
   // Prepare structured data as JSON string
   const structuredDataString = structuredData
@@ -125,9 +126,7 @@ export function SEO({
       <meta name="twitter:image:alt" content={seoOgImageAlt} />
 
       {/* Structured Data */}
-      {structuredDataString && (
-        <script type="application/ld+json">{structuredDataString}</script>
-      )}
+      {structuredDataString && <script type="application/ld+json">{structuredDataString}</script>}
     </Helmet>
   );
 }
