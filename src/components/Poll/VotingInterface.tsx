@@ -224,7 +224,6 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
 
   const handleVote = async (optionId: string, optionIndex: number, event: React.MouseEvent) => {
     const target = event.currentTarget as HTMLElement;
-    const targetRect = target.getBoundingClientRect();
 
     // Get the voting option container
     const votingOption = target.closest(`.${styles.votingOption}`) || target;
