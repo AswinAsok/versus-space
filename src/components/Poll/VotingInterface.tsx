@@ -509,7 +509,9 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                           href="https://ente.io/?utm_source=versus.space"
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={() => track('ente_link_click', { location: 'voting_interface_apps_like' })}
+                          onClick={() =>
+                            track('ente_link_click', { location: 'voting_interface_apps_like' })
+                          }
                         >
                           <img
                             src="/ente-branding-green.png"
