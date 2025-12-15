@@ -368,7 +368,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
             track('ente_link_click', { location: 'voting_interface_hackathon_badge' });
           }}
         >
-          <span className={styles.hackathonText}>built for hackathon at</span>
+          <span className={styles.hackathonText}>built at</span>
           <img src="/ente-branding-green.png" alt="Ente" className={styles.hackathonLogo} />
           <div className={styles.cursorTrail}>
             <svg className={styles.cursor} viewBox="0 0 24 24" fill="currentColor">

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Homepage - Highest Priority -->
+  <url>
+    <loc>https://versus.space/</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://versus.space/"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://versus.space/"/>
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://versus.space/"/>
+    <xhtml:link rel="alternate" hreflang="en-AU" href="https://versus.space/"/>
+    <xhtml:link rel="alternate" hreflang="en-CA" href="https://versus.space/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://versus.space/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://versus.space/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://versus.space/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://versus.space/"/>
+    <image:image>
+      <image:loc>https://versus.space/meta-preview-1.png</image:loc>
+      <image:title>Versus Space - Real-Time Polling Platform for Business</image:title>
+      <image:caption>Create engaging real-time polls for team decisions, presentations, and corporate events</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Create Poll Page - High Priority for Conversion -->
+  <url>
+    <loc>https://versus.space/create</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Features Section (Hash Fragment for Reference) -->
+  <url>
+    <loc>https://versus.space/#features</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- How It Works Section -->
+  <url>
+    <loc>https://versus.space/#how-it-works</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Use Cases Section - Important for Long-tail Keywords -->
+  <url>
+    <loc>https://versus.space/#use-cases</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- FAQ Section - Targets PAA Snippets -->
+  <url>
+    <loc>https://versus.space/#faq</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog Section - Content SEO Hub -->
+  <url>
+    <loc>https://versus.space/blog</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog Posts for SEO Content -->
+  <url>
+    <loc>https://versus.space/blog/real-time-polling-for-remote-teams</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://versus.space/blog/best-practices-corporate-voting</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://versus.space/blog/anonymous-polling-workplace-decisions</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Use Case Landing Pages -->
+  <url>
+    <loc>https://versus.space/use-cases/team-decisions</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://versus.space/use-cases/live-presentations</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://versus.space/use-cases/corporate-events</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://versus.space/use-cases/employee-feedback</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

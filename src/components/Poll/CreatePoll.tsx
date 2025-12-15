@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollService } from '../../services/pollService';
+import { CreatePollSEO } from '../SEO/SEO';
 import { X, Plus, Globe, Lock, Key, Code2, Crown } from 'lucide-react';
 import type { CreatePollData } from '../../types';
 import styles from './CreatePoll.module.css';
@@ -81,6 +82,8 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
 
   return (
     <div className={styles.createPollContainer}>
+      {/* SEO meta tags for create poll page */}
+      <CreatePollSEO />
       <div className={styles.createPollInner}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Create a new poll</h1>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { authService } from '../../services/authService';
+import { AuthSEO } from '../SEO/SEO';
 import { Zap, BarChart3, Users, Lock, Check, ArrowRight, MailCheck } from 'lucide-react';
 import styles from './AuthForm.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -45,6 +46,8 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
 
   return (
     <div className={styles.authPage}>
+      {/* SEO - noindex for auth pages */}
+      <AuthSEO />
       {/* Left Panel - Marketing */}
       <div className={styles.marketingPanel}>
         <div className={styles.marketingContent}>

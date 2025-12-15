@@ -14,6 +14,8 @@ import { AuthForm } from './components/Auth/AuthForm';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { CreatePoll } from './components/Poll/CreatePoll';
 import { PollView } from './components/Poll/PollView';
+import { Blog } from './components/Blog/Blog';
+import { BlogPostPage } from './components/Blog/BlogPost';
 import appStyles from './components/App.module.css';
 import sharedStyles from './styles/Shared.module.css';
 
@@ -78,6 +80,9 @@ function RoutedApp() {
             }
           />
           <Route path="/poll/:pollId" element={<PollRoute />} />
+          {/* Blog routes for SEO content */}
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

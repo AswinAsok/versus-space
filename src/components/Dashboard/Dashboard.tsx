@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollService } from '../../services/pollService';
+import { DashboardSEO } from '../SEO/SEO';
 import {
   Trash2,
   ExternalLink,
@@ -101,6 +102,8 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
 
   return (
     <div className={styles.dashboardContainer}>
+      {/* SEO - noindex for authenticated dashboard */}
+      <DashboardSEO />
       <div className={styles.dashboardInner}>
         {/* Welcome Header */}
         <div className={styles.welcomeHeader}>

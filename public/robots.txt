@@ -1,0 +1,55 @@
+# robots.txt for versus.space
+# Real-time polling platform for business and enterprise teams
+
+# Allow all major search engines
+User-agent: *
+Allow: /
+
+# Allow Google crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+# Allow Bing
+User-agent: Bingbot
+Allow: /
+
+# Allow Yahoo
+User-agent: Slurp
+Allow: /
+
+# Allow DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Allow social media crawlers for link previews
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Disallow access to private/authenticated areas
+Disallow: /dashboard
+Disallow: /auth
+Disallow: /api/
+
+# Disallow query strings that create duplicate content
+Disallow: /*?*
+
+# Crawl-delay to be respectful of server resources
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://versus.space/sitemap.xml
+
+# Host directive for search engines that support it
+Host: https://versus.space

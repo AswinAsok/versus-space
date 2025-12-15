@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Check,
   ChevronRight,
   Vote,
   Share2,
@@ -14,10 +14,12 @@ import {
   GraduationCap,
   Calendar,
   MessageSquare,
+  BookOpen,
 } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import { Leaderboard } from './Leaderboard';
 import { HomeSchema } from './HomeSchema';
+import { HomeSEO } from '../SEO/SEO';
 import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
@@ -37,6 +39,8 @@ export function Home({ onNavigate }: HomeProps) {
 
   return (
     <>
+      {/* Dynamic SEO meta tags */}
+      <HomeSEO />
       {/* JSON-LD Schema Markup for SEO */}
       <HomeSchema pollsCount={stats.pollsCount} votesCount={stats.votesCount} />
 
@@ -112,7 +116,7 @@ export function Home({ onNavigate }: HomeProps) {
                   <CountUp
                     to={stats.pollsCount}
                     from={0}
-                    duration={20}
+                    duration={2}
                     separator=","
                     className={styles.countUp}
                   />
@@ -430,56 +434,65 @@ export function Home({ onNavigate }: HomeProps) {
         {/* CTA Section */}
         <section id="cta" className={styles.ctaSection} aria-labelledby="cta-title">
           <div className={styles.ctaContent}>
-            <h2 id="cta-title" className={styles.ctaTitle}>
-              Ready to Create Your First Real-Time Poll?
-            </h2>
-            <p className={styles.ctaSubtitle}>
-              Join teams worldwide making better decisions with instant audience feedback.
-            </p>
-            <div className={styles.ctaActions}>
-              <button
-                onClick={() => onNavigate('/create')}
-                className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
-              >
-                Create Free Poll <ArrowRight size={18} />
-              </button>
+            <div className={styles.ctaText}>
+              <h2 id="cta-title" className={styles.ctaTitle}>
+                Ready to create your first poll?
+              </h2>
+              <p className={styles.ctaSubtitle}>Free forever. No signup required.</p>
             </div>
-            <div className={styles.ctaFeatures}>
-              <span>
-                <Check size={16} /> Free forever
-              </span>
-              <span>
-                <Check size={16} /> No signup to vote
-              </span>
-              <span>
-                <Check size={16} /> Setup in 30 seconds
-              </span>
-            </div>
+            <button
+              onClick={() => onNavigate('/create')}
+              className={styles.ctaButton}
+            >
+              Create Free Poll <ArrowRight size={16} />
+            </button>
           </div>
         </section>
 
-        {/* Footer */}
+        {/* Footer with SEO Internal Links */}
         <footer className={styles.footer}>
-          <span>&copy; 2025 versus.space</span>
-          <div className={styles.footerRight}>
-            <a
-              href="https://neal.fun"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              inspired from neal<span className={styles.footerDot}>.</span>fun
-            </a>
-            <span className={styles.footerDivider}>·</span>
-            <a
-              href="https://github.com/AswinAsok"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              <Code2 size={14} />
-              built by aswinasok<span className={styles.footerDot}>.</span>
-            </a>
+          <div className={styles.footerTop}>
+            <nav className={styles.footerNav} aria-label="Footer navigation">
+              <Link to="/create" className={styles.footerNavLink}>
+                Create Poll
+              </Link>
+              <Link to="/blog" className={styles.footerNavLink}>
+                <BookOpen size={14} />
+                Blog
+              </Link>
+              <a href="#features" className={styles.footerNavLink}>
+                Features
+              </a>
+              <a href="#use-cases" className={styles.footerNavLink}>
+                Use Cases
+              </a>
+              <a href="#faq" className={styles.footerNavLink}>
+                FAQ
+              </a>
+            </nav>
+          </div>
+          <div className={styles.footerBottom}>
+            <span>&copy; 2025 versus.space - Real-time polling for teams worldwide</span>
+            <div className={styles.footerRight}>
+              <a
+                href="https://neal.fun"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                inspired from neal<span className={styles.footerDot}>.</span>fun
+              </a>
+              <span className={styles.footerDivider}>|</span>
+              <a
+                href="https://github.com/AswinAsok"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                <Code2 size={14} />
+                built by aswinasok<span className={styles.footerDot}>.</span>
+              </a>
+            </div>
           </div>
         </footer>
       </div>

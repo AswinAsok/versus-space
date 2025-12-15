@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { usePoll } from '../../hooks/usePoll';
 import { pollService } from '../../services/pollService';
 import { VotingInterface } from './VotingInterface';
+import { PollSEO } from '../SEO/SEO';
 import { Lock, Key, Code2, Eye, EyeOff, XCircle } from 'lucide-react';
 import styles from './PollView.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -224,8 +225,19 @@ export function PollView({ pollId }: PollViewProps) {
     );
   }
 
+  // Calculate total votes for SEO
+  const totalVotes = poll.options.reduce((sum, opt) => sum + (opt.vote_count || 0), 0);
+
   return (
     <div className={styles.pollViewContainer}>
+      {/* Dynamic SEO for individual poll pages */}
+      <PollSEO
+        pollId={poll.id}
+        pollTitle={poll.title}
+        totalVotes={totalVotes}
+        optionCount={poll.options.length}
+        createdAt={poll.created_at}
+      />
       <VotingInterface pollId={poll.id} title={poll.title} options={poll.options} />
       <div className={`${styles.footerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
         <footer className={styles.footer}>
