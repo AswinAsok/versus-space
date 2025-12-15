@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import ReactSpeedometer, { Transition } from 'react-d3-speedometer';
+import { track } from '@vercel/analytics';
 import CountUp from '../ReactBits/CountUp/CountUp';
 import Counter from '../ReactBits/Counter/Counter';
 import { voteService } from '../../services/voteService';
@@ -508,6 +509,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                           href="https://ente.io/?utm_source=versus.space"
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={() => track('ente_link_click', { location: 'voting_interface_apps_like' })}
                         >
                           <img
                             src="/ente-branding-green.png"

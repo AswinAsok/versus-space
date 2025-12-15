@@ -10,6 +10,7 @@ import {
   Code2,
   Star,
 } from 'lucide-react';
+import { track } from '@vercel/analytics';
 import { Leaderboard } from './Leaderboard';
 import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -134,6 +135,7 @@ export function Home({ onNavigate }: HomeProps) {
               href="https://ente.io/?utm_source=versus.space"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track('ente_link_click', { location: 'home_built_for' })}
             >
               <img
                 src="/ente-branding-green.png"
