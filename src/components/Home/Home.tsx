@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
   Check,
-  Sparkles,
   ChevronRight,
   Vote,
   Share2,
@@ -32,14 +31,30 @@ import { pollService } from '../../services/pollService';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
+  onBackedByVisibilityChange?: (isVisible: boolean) => void;
 }
 
-export function Home({ onNavigate }: HomeProps) {
+export function Home({ onNavigate, onBackedByVisibilityChange }: HomeProps) {
   const [stats, setStats] = useState({ pollsCount: 0, votesCount: 0 });
+  const backedByRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     pollService.getPlatformStats().then(setStats).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (!backedByRef.current || !onBackedByVisibilityChange) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        onBackedByVisibilityChange(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(backedByRef.current);
+    return () => observer.disconnect();
+  }, [onBackedByVisibilityChange]);
 
   return (
     <>
@@ -81,56 +96,72 @@ export function Home({ onNavigate }: HomeProps) {
         <main id="main-content" className={styles.homeInner}>
           {/* Hero Section */}
           <section id="hero" className={styles.hero} aria-labelledby="hero-title">
-            <div className={styles.heroBadge}>
-              <Sparkles size={14} aria-hidden="true" />
-              <span>
-                Free Real-Time Polling Platform
-                <span className={styles.srOnly}> - Create instant polls with live vote visualization</span>
+            <div ref={backedByRef} className={styles.backedByWrapper}>
+              <a
+                href="https://ente.io/?utm_source=versus.space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.backedByBadge}
+                onClick={() => track('ente_link_click', { location: 'hero_backed_by' })}
+              >
+                <span className={styles.backedByText}>backed by</span>
+                <img src="/ente-branding-green.png" alt="Ente" className={styles.backedByLogo} />
+                <span className={styles.backedByAsterisk}>*</span>
+                <div className={styles.cursorTrail}>
+                  <svg className={styles.cursor} viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L6.35 2.85a.5.5 0 0 0-.85.36Z" />
+                  </svg>
+                </div>
+              </a>
+              <span className={styles.backedByTooltip}>
+                *I work at ente, so this project is indirectly backed by ente 😉
               </span>
             </div>
+
             <h1 id="hero-title" className={styles.heroTitle}>
               Create <span className={styles.gradientText}>Real-Time Polls</span> That{' '}
               <span className={styles.gradientText}>Engage</span> Instantly
             </h1>
-          <p className={styles.heroSubtitle}>
-            Launch free online polls in under 30 seconds. Watch votes stream in live with
-            split-screen visualizations. Perfect for presentations, classrooms, events, and team
-            decisions.
-          </p>
-          <div className={styles.heroActions}>
-            <button
-              onClick={() => onNavigate('/create')}
-              className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
-            >
-              Create Free Poll <ArrowRight size={18} />
-            </button>
-            <a
-              href="https://github.com/AswinAsok/versus-space"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
-            >
-              <Star size={18} /> {'Give a Star'}
-            </a>
-          </div>
-          <p className={styles.heroNote}>Free to use • No signup required • Unlimited polls</p>
-
-          <div className={styles.demoVideoWrapper}>
-            <iframe
-              className={styles.demoVideo}
-              src="https://www.youtube.com/embed/lC7ViK-1DhI"
-              title="Versus Space Demo - See how real-time polling works"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-            <p className={styles.demoNote}>
-              *Demo video was recorded in the last hour of submission. Demo v2 coming soon!
+            <p className={styles.heroSubtitle}>
+              Launch free online polls in under 30 seconds. Watch votes stream in live with
+              split-screen visualizations. Perfect for presentations, classrooms, events, and team
+              decisions.
             </p>
-          </div>
-        </section>
+            <div className={styles.heroActions}>
+              <button
+                onClick={() => onNavigate('/create')}
+                className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
+              >
+                Create Free Poll <ArrowRight size={18} />
+              </button>
+              <a
+                href="https://github.com/AswinAsok/versus-space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
+              >
+                <Star size={18} /> {'Give a Star'}
+              </a>
+            </div>
+            <p className={styles.heroNote}>Free to use • No signup required • Unlimited polls</p>
+
+            <div className={styles.demoVideoWrapper}>
+              <iframe
+                className={styles.demoVideo}
+                src="https://www.youtube.com/embed/lC7ViK-1DhI"
+                title="Versus Space Demo - See how real-time polling works"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </section>
 
           {/* Features Overview - Optimized for List Snippets */}
-          <section id="features" className={styles.featuresSection} aria-labelledby="features-title">
+          <section
+            id="features"
+            className={styles.featuresSection}
+            aria-labelledby="features-title"
+          >
             <h2 id="features-title" className={styles.srOnly}>
               Key Features of Versus Space
             </h2>
@@ -169,14 +200,20 @@ export function Home({ onNavigate }: HomeProps) {
             </h2>
             <div className={styles.statsGrid} aria-live="polite" aria-atomic="true">
               <div className={styles.statItem}>
-                <div className={styles.statNumber} aria-label={`${stats.pollsCount.toLocaleString()} polls created`}>
+                <div
+                  className={styles.statNumber}
+                  aria-label={`${stats.pollsCount.toLocaleString()} polls created`}
+                >
                   {stats.pollsCount.toLocaleString()}
                 </div>
                 <div className={styles.statLabel}>Polls Created</div>
               </div>
               <div className={styles.statDivider} aria-hidden="true"></div>
               <div className={styles.statItem}>
-                <div className={styles.statNumber} aria-label={`${stats.votesCount.toLocaleString()} votes cast`}>
+                <div
+                  className={styles.statNumber}
+                  aria-label={`${stats.votesCount.toLocaleString()} votes cast`}
+                >
                   {stats.votesCount.toLocaleString()}
                 </div>
                 <div className={styles.statLabel}>Clicks Cast</div>
@@ -191,7 +228,11 @@ export function Home({ onNavigate }: HomeProps) {
           </section>
 
           {/* Leaderboard Section */}
-          <section id="leaderboard" className={styles.leaderboardSection} aria-labelledby="leaderboard-title">
+          <section
+            id="leaderboard"
+            className={styles.leaderboardSection}
+            aria-labelledby="leaderboard-title"
+          >
             <h2 id="leaderboard-title" className={styles.srOnly}>
               Top Polls Leaderboard
             </h2>
@@ -199,7 +240,11 @@ export function Home({ onNavigate }: HomeProps) {
           </section>
 
           {/* Built For Section */}
-          <section id="built-for" className={styles.trustedSection} aria-labelledby="built-for-title">
+          <section
+            id="built-for"
+            className={styles.trustedSection}
+            aria-labelledby="built-for-title"
+          >
             <h2 id="built-for-title" className={styles.srOnly}>
               Built For
             </h2>
@@ -210,140 +255,161 @@ export function Home({ onNavigate }: HomeProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track('ente_link_click', { location: 'home_built_for' })}
+                className={styles.enteLogoWrapper}
               >
                 <img
                   src="/ente-branding-green.png"
                   alt="Ente - Photo storage and sharing platform"
-                  style={{ height: '48px', width: 'auto' }}
+                  className={styles.enteLogo}
                 />
+                <div className={styles.cursorTrail}>
+                  <svg className={styles.cursor} viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L6.35 2.85a.5.5 0 0 0-.85.36Z" />
+                  </svg>
+                </div>
               </a>
             </div>
           </section>
 
           {/* How It Works Section - Optimized for HowTo Schema */}
-          <section id="how-it-works" className={styles.howItWorksSection} aria-labelledby="how-it-works-title">
+          <section
+            id="how-it-works"
+            className={styles.howItWorksSection}
+            aria-labelledby="how-it-works-title"
+          >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionBadge}>
                 Simple Process
                 <span className={styles.srOnly}> - Step-by-step guide to create polls</span>
               </span>
-              <h2 id="how-it-works-title" className={styles.sectionTitle}>How to Create a Real-Time Poll</h2>
-            <p className={styles.sectionSubtitle}>
-              Create an interactive online poll in under 30 seconds. No signup or technical skills
-              required.
-            </p>
-          </div>
-          <div className={styles.stepsGrid}>
-            <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>1</div>
-              <div className={styles.stepIconWrapper}>
-                <Vote size={32} />
-              </div>
-              <h3 className={styles.stepTitle}>Create Your Poll</h3>
-              <p className={styles.stepDescription}>
-                Enter your question and add voting options. Customize with images and set visibility
-                to public or private.
+              <h2 id="how-it-works-title" className={styles.sectionTitle}>
+                How to Create a Real-Time Poll
+              </h2>
+              <p className={styles.sectionSubtitle}>
+                Create an interactive online poll in under 30 seconds. No signup or technical skills
+                required.
               </p>
             </div>
-            <div className={styles.stepConnector}>
-              <ChevronRight size={24} />
-            </div>
-            <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>2</div>
-              <div className={styles.stepIconWrapper}>
-                <Share2 size={32} />
+            <div className={styles.stepsGrid}>
+              <div className={styles.stepCard}>
+                <div className={styles.stepNumber}>1</div>
+                <div className={styles.stepIconWrapper}>
+                  <Vote size={32} />
+                </div>
+                <h3 className={styles.stepTitle}>Create Your Poll</h3>
+                <p className={styles.stepDescription}>
+                  Enter your question and add voting options. Customize with images and set
+                  visibility to public or private.
+                </p>
               </div>
-              <h3 className={styles.stepTitle}>Share the Link</h3>
-              <p className={styles.stepDescription}>
-                Copy your unique poll URL and distribute via email, chat, social media, or display
-                on screen during presentations.
-              </p>
-            </div>
-            <div className={styles.stepConnector}>
-              <ChevronRight size={24} />
-            </div>
-            <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>3</div>
-              <div className={styles.stepIconWrapper}>
-                <Eye size={32} />
+              <div className={styles.stepConnector}>
+                <ChevronRight size={24} />
               </div>
-              <h3 className={styles.stepTitle}>Watch Live Results</h3>
-              <p className={styles.stepDescription}>
-                View real-time vote counts with split-screen visualizations as your audience
-                responds instantly.
-              </p>
-            </div>
+              <div className={styles.stepCard}>
+                <div className={styles.stepNumber}>2</div>
+                <div className={styles.stepIconWrapper}>
+                  <Share2 size={32} />
+                </div>
+                <h3 className={styles.stepTitle}>Share the Link</h3>
+                <p className={styles.stepDescription}>
+                  Copy your unique poll URL and distribute via email, chat, social media, or display
+                  on screen during presentations.
+                </p>
+              </div>
+              <div className={styles.stepConnector}>
+                <ChevronRight size={24} />
+              </div>
+              <div className={styles.stepCard}>
+                <div className={styles.stepNumber}>3</div>
+                <div className={styles.stepIconWrapper}>
+                  <Eye size={32} />
+                </div>
+                <h3 className={styles.stepTitle}>Watch Live Results</h3>
+                <p className={styles.stepDescription}>
+                  View real-time vote counts with split-screen visualizations as your audience
+                  responds instantly.
+                </p>
+              </div>
             </div>
           </section>
 
           {/* Use Cases Section - Optimized for List Snippets */}
-          <section id="use-cases" className={styles.useCasesSection} aria-labelledby="use-cases-title">
+          <section
+            id="use-cases"
+            className={styles.useCasesSection}
+            aria-labelledby="use-cases-title"
+          >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionBadge}>
                 Use Cases
-                <span className={styles.srOnly}> - Real-world applications for real-time polling</span>
+                <span className={styles.srOnly}>
+                  {' '}
+                  - Real-world applications for real-time polling
+                </span>
               </span>
-              <h2 id="use-cases-title" className={styles.sectionTitle}>Best Uses for Real-Time Polling</h2>
-            <p className={styles.sectionSubtitle}>
-              Real-time polling is perfect for any situation where you need instant audience
-              feedback.
-            </p>
-          </div>
-          <div className={styles.useCasesGrid}>
-            <div className={styles.useCaseCard}>
-              <div className={styles.useCaseIcon}>
-                <Presentation size={24} />
-              </div>
-              <h3 className={styles.useCaseTitle}>Live Presentations</h3>
-              <p className={styles.useCaseDescription}>
-                Engage audiences and gather instant feedback during talks and meetings.
+              <h2 id="use-cases-title" className={styles.sectionTitle}>
+                Best Uses for Real-Time Polling
+              </h2>
+              <p className={styles.sectionSubtitle}>
+                Real-time polling is perfect for any situation where you need instant audience
+                feedback.
               </p>
             </div>
-            <div className={styles.useCaseCard}>
-              <div className={styles.useCaseIcon}>
-                <GraduationCap size={24} />
+            <div className={styles.useCasesGrid}>
+              <div className={styles.useCaseCard}>
+                <div className={styles.useCaseIcon}>
+                  <Presentation size={24} />
+                </div>
+                <h3 className={styles.useCaseTitle}>Live Presentations</h3>
+                <p className={styles.useCaseDescription}>
+                  Engage audiences and gather instant feedback during talks and meetings.
+                </p>
               </div>
-              <h3 className={styles.useCaseTitle}>Classroom Activities</h3>
-              <p className={styles.useCaseDescription}>
-                Increase student participation and check understanding in real-time.
-              </p>
-            </div>
-            <div className={styles.useCaseCard}>
-              <div className={styles.useCaseIcon}>
-                <Users size={24} />
+              <div className={styles.useCaseCard}>
+                <div className={styles.useCaseIcon}>
+                  <GraduationCap size={24} />
+                </div>
+                <h3 className={styles.useCaseTitle}>Classroom Activities</h3>
+                <p className={styles.useCaseDescription}>
+                  Increase student participation and check understanding in real-time.
+                </p>
               </div>
-              <h3 className={styles.useCaseTitle}>Team Decisions</h3>
-              <p className={styles.useCaseDescription}>
-                Make group choices quickly with transparent voting and instant results.
-              </p>
-            </div>
-            <div className={styles.useCaseCard}>
-              <div className={styles.useCaseIcon}>
-                <Calendar size={24} />
+              <div className={styles.useCaseCard}>
+                <div className={styles.useCaseIcon}>
+                  <Users size={24} />
+                </div>
+                <h3 className={styles.useCaseTitle}>Team Decisions</h3>
+                <p className={styles.useCaseDescription}>
+                  Make group choices quickly with transparent voting and instant results.
+                </p>
               </div>
-              <h3 className={styles.useCaseTitle}>Events & Conferences</h3>
-              <p className={styles.useCaseDescription}>
-                Run interactive Q&A sessions and audience polls at any scale.
-              </p>
-            </div>
-            <div className={styles.useCaseCard}>
-              <div className={styles.useCaseIcon}>
-                <MessageSquare size={24} />
+              <div className={styles.useCaseCard}>
+                <div className={styles.useCaseIcon}>
+                  <Calendar size={24} />
+                </div>
+                <h3 className={styles.useCaseTitle}>Events & Conferences</h3>
+                <p className={styles.useCaseDescription}>
+                  Run interactive Q&A sessions and audience polls at any scale.
+                </p>
               </div>
-              <h3 className={styles.useCaseTitle}>Social Engagement</h3>
-              <p className={styles.useCaseDescription}>
-                Create shareable "this vs that" content that drives interaction.
-              </p>
-            </div>
-            <div className={styles.useCaseCard}>
-              <div className={styles.useCaseIcon}>
-                <Vote size={24} />
+              <div className={styles.useCaseCard}>
+                <div className={styles.useCaseIcon}>
+                  <MessageSquare size={24} />
+                </div>
+                <h3 className={styles.useCaseTitle}>Social Engagement</h3>
+                <p className={styles.useCaseDescription}>
+                  Create shareable "this vs that" content that drives interaction.
+                </p>
               </div>
-              <h3 className={styles.useCaseTitle}>Quick Feedback</h3>
-              <p className={styles.useCaseDescription}>
-                Gauge preferences and opinions instantly without lengthy surveys.
-              </p>
-            </div>
+              <div className={styles.useCaseCard}>
+                <div className={styles.useCaseIcon}>
+                  <Vote size={24} />
+                </div>
+                <h3 className={styles.useCaseTitle}>Quick Feedback</h3>
+                <p className={styles.useCaseDescription}>
+                  Gauge preferences and opinions instantly without lengthy surveys.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -352,80 +418,94 @@ export function Home({ onNavigate }: HomeProps) {
             <div className={styles.sectionHeader}>
               <span className={styles.sectionBadge}>
                 FAQ
-                <span className={styles.srOnly}> - Frequently asked questions about Versus Space</span>
+                <span className={styles.srOnly}>
+                  {' '}
+                  - Frequently asked questions about Versus Space
+                </span>
               </span>
-              <h2 id="faq-title" className={styles.sectionTitle}>Frequently Asked Questions</h2>
-            <p className={styles.sectionSubtitle}>
-              Everything you need to know about real-time polling with Versus Space.
-            </p>
-          </div>
-          <div className={styles.faqGrid}>
-            <div className={styles.faqItem}>
-              <div className={styles.faqQuestion}>
-                <HelpCircle size={20} aria-hidden="true" />
-                <h3>What is Versus Space?</h3>
-              </div>
-              <p className={styles.faqAnswer}>
-                Versus Space is a free real-time polling platform that allows you to create
-                interactive polls in seconds and watch votes stream in live with split-screen
-                visualizations. It's perfect for{' '}
-                <a href="#use-cases" className={styles.faqLink}>presentations, events, classrooms, and team decisions</a>.
+              <h2 id="faq-title" className={styles.sectionTitle}>
+                Frequently Asked Questions
+              </h2>
+              <p className={styles.sectionSubtitle}>
+                Everything you need to know about real-time polling with Versus Space.
               </p>
             </div>
-            <div className={styles.faqItem}>
-              <div className={styles.faqQuestion}>
-                <HelpCircle size={20} aria-hidden="true" />
-                <h3>Is Versus Space free to use?</h3>
+            <div className={styles.faqGrid}>
+              <div className={styles.faqItem}>
+                <div className={styles.faqQuestion}>
+                  <HelpCircle size={20} aria-hidden="true" />
+                  <h3>What is Versus Space?</h3>
+                </div>
+                <p className={styles.faqAnswer}>
+                  Versus Space is a free real-time polling platform that allows you to create
+                  interactive polls in seconds and watch votes stream in live with split-screen
+                  visualizations. It's perfect for{' '}
+                  <a href="#use-cases" className={styles.faqLink}>
+                    presentations, events, classrooms, and team decisions
+                  </a>
+                  .
+                </p>
               </div>
-              <p className={styles.faqAnswer}>
-                Yes, Versus Space is completely free to use with no limits on the number of polls
-                you can create or votes you can receive. No credit card required.{' '}
-                <a href="#features" className={styles.faqLink}>See all features</a>.
-              </p>
-            </div>
-            <div className={styles.faqItem}>
-              <div className={styles.faqQuestion}>
-                <HelpCircle size={20} aria-hidden="true" />
-                <h3>Do participants need an account to vote?</h3>
+              <div className={styles.faqItem}>
+                <div className={styles.faqQuestion}>
+                  <HelpCircle size={20} aria-hidden="true" />
+                  <h3>Is Versus Space free to use?</h3>
+                </div>
+                <p className={styles.faqAnswer}>
+                  Yes, Versus Space is completely free to use with no limits on the number of polls
+                  you can create or votes you can receive. No credit card required.{' '}
+                  <a href="#features" className={styles.faqLink}>
+                    See all features
+                  </a>
+                  .
+                </p>
               </div>
-              <p className={styles.faqAnswer}>
-                No, participants can vote instantly by clicking your shared link. No signup or
-                account creation is required to participate in polls.
-              </p>
-            </div>
-            <div className={styles.faqItem}>
-              <div className={styles.faqQuestion}>
-                <HelpCircle size={20} aria-hidden="true" />
-                <h3>Can I see poll results in real-time?</h3>
+              <div className={styles.faqItem}>
+                <div className={styles.faqQuestion}>
+                  <HelpCircle size={20} aria-hidden="true" />
+                  <h3>Do participants need an account to vote?</h3>
+                </div>
+                <p className={styles.faqAnswer}>
+                  No, participants can vote instantly by clicking your shared link. No signup or
+                  account creation is required to participate in polls.
+                </p>
               </div>
-              <p className={styles.faqAnswer}>
-                Yes, Versus Space shows poll results updating in real-time as participants vote.
-                Results display through split-screen visualizations that animate live, making it
-                ideal for presentations and events.
-              </p>
-            </div>
-            <div className={styles.faqItem}>
-              <div className={styles.faqQuestion}>
-                <HelpCircle size={20} aria-hidden="true" />
-                <h3>Are online polls anonymous?</h3>
+              <div className={styles.faqItem}>
+                <div className={styles.faqQuestion}>
+                  <HelpCircle size={20} aria-hidden="true" />
+                  <h3>Can I see poll results in real-time?</h3>
+                </div>
+                <p className={styles.faqAnswer}>
+                  Yes, Versus Space shows poll results updating in real-time as participants vote.
+                  Results display through split-screen visualizations that animate live, making it
+                  ideal for presentations and events.
+                </p>
               </div>
-              <p className={styles.faqAnswer}>
-                Yes, Versus Space polls are anonymous by default. Participants can vote without
-                providing personal information. Poll creators see aggregate results but not
-                individual voter identities.
-              </p>
-            </div>
-            <div className={styles.faqItem}>
-              <div className={styles.faqQuestion}>
-                <HelpCircle size={20} aria-hidden="true" />
-                <h3>How do I share a poll with my audience?</h3>
+              <div className={styles.faqItem}>
+                <div className={styles.faqQuestion}>
+                  <HelpCircle size={20} aria-hidden="true" />
+                  <h3>Are online polls anonymous?</h3>
+                </div>
+                <p className={styles.faqAnswer}>
+                  Yes, Versus Space polls are anonymous by default. Participants can vote without
+                  providing personal information. Poll creators see aggregate results but not
+                  individual voter identities.
+                </p>
               </div>
-              <p className={styles.faqAnswer}>
-                Share your poll by copying the unique URL to send via email or chat, displaying the
-                link on screen during presentations, or posting directly to social media.{' '}
-                <a href="#how-it-works" className={styles.faqLink}>See how it works</a>.
-              </p>
-            </div>
+              <div className={styles.faqItem}>
+                <div className={styles.faqQuestion}>
+                  <HelpCircle size={20} aria-hidden="true" />
+                  <h3>How do I share a poll with my audience?</h3>
+                </div>
+                <p className={styles.faqAnswer}>
+                  Share your poll by copying the unique URL to send via email or chat, displaying
+                  the link on screen during presentations, or posting directly to social media.{' '}
+                  <a href="#how-it-works" className={styles.faqLink}>
+                    See how it works
+                  </a>
+                  .
+                </p>
+              </div>
             </div>
           </section>
         </main>
@@ -433,7 +513,9 @@ export function Home({ onNavigate }: HomeProps) {
         {/* CTA Section */}
         <section id="cta" className={styles.ctaSection} aria-labelledby="cta-title">
           <div className={styles.ctaContent}>
-            <h2 id="cta-title" className={styles.ctaTitle}>Ready to Create Your First Real-Time Poll?</h2>
+            <h2 id="cta-title" className={styles.ctaTitle}>
+              Ready to Create Your First Real-Time Poll?
+            </h2>
             <p className={styles.ctaSubtitle}>
               Join teams worldwide making better decisions with instant audience feedback.
             </p>

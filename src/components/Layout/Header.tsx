@@ -4,6 +4,7 @@ import { authService } from '../../services/authService';
 import { pollService } from '../../services/pollService';
 import type { LeaderboardPoll } from '../../types';
 import { LogOut, TrendingUp } from 'lucide-react';
+import { track } from '@vercel/analytics';
 import styles from './Header.module.css';
 
 const TRENDING_POLL_ID = '70427c7e-9405-4b76-b062-087790c6f5ef';
@@ -11,9 +12,10 @@ const TRENDING_POLL_ID = '70427c7e-9405-4b76-b062-087790c6f5ef';
 interface HeaderProps {
   user: User | null;
   onNavigate: (path: string) => void;
+  showBackedBy?: boolean;
 }
 
-export function Header({ user, onNavigate }: HeaderProps) {
+export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) {
   const [polls, setPolls] = useState<LeaderboardPoll[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -65,8 +67,20 @@ export function Header({ user, onNavigate }: HeaderProps) {
               </button>
             </div>
 
-            {/* Trending Poll - Center */}
-            {polls.length > 0 && (
+            {/* Trending Poll or Backed By - Center */}
+            {showBackedBy ? (
+              <a
+                href="https://ente.io/?utm_source=versus.space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.backedByPill}
+                onClick={() => track('ente_link_click', { location: 'header_backed_by' })}
+              >
+                <span className={styles.backedByText}>backed by</span>
+                <img src="/ente-branding-green.png" alt="Ente" className={styles.backedByLogo} />
+                <span className={styles.backedByAsterisk}>*</span>
+              </a>
+            ) : polls.length > 0 && (
               <div className={styles.trendingWrapper}>
                 <span className={styles.sparkle} style={{ top: '-4px', left: '10%' }}></span>
                 <span
