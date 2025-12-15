@@ -1,3 +1,35 @@
+/* Skip Link for Accessibility */
+.skipLink {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: #000000;
+  padding: 0.5rem 1rem;
+  z-index: 100;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 var(--radius-md) 0;
+  transition: top var(--transition-fast) var(--ease-out);
+}
+
+.skipLink:focus {
+  top: 0;
+}
+
+/* Screen Reader Only - Visually hidden but accessible */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .homeContainer {
   flex: 1;
   width: 100%;
@@ -334,6 +366,169 @@
   color: var(--color-text-muted);
 }
 
+/* Features Overview Section */
+.featuresSection {
+  padding: 2rem 0;
+}
+
+.featuresGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.featureItem:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.featureItem svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* Use Cases Section */
+.useCasesSection {
+  padding: 4rem 0;
+}
+
+.useCasesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.useCaseCard {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all var(--transition-normal) var(--ease-out);
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+}
+
+.useCaseCard:hover {
+  border-color: var(--glass-border-hover);
+  transform: translateY(-4px);
+  background: var(--glass-bg-hover);
+  box-shadow:
+    var(--glass-shadow),
+    var(--glass-inner-highlight),
+    0 0 20px rgba(62, 207, 142, 0.1);
+}
+
+.useCaseIcon {
+  width: 48px;
+  height: 48px;
+  background: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.useCaseCard:hover .useCaseIcon {
+  background: var(--color-primary);
+  color: #000000;
+  transform: scale(1.1);
+}
+
+.useCaseTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.useCaseDescription {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  line-height: 1.5;
+}
+
+/* FAQ Section */
+.faqSection {
+  padding: 4rem 0;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.faqItem {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all var(--transition-normal) var(--ease-out);
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+}
+
+.faqItem:hover {
+  border-color: var(--glass-border-hover);
+  background: var(--glass-bg-hover);
+}
+
+.faqQuestion {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-primary);
+}
+
+.faqQuestion h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.faqAnswer {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.faqLink {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.faqLink:hover {
+  text-decoration: underline;
+  color: var(--color-primary-dark);
+}
+
 /* Leaderboard Section */
 .leaderboardSection {
   padding: 4rem 0;
@@ -634,6 +829,53 @@
     height: 56px;
   }
 
+  /* Features responsive */
+  .featuresSection {
+    padding: 1.5rem 0;
+  }
+
+  .featuresGrid {
+    gap: 0.75rem;
+  }
+
+  .featureItem {
+    font-size: 0.8125rem;
+    padding: 0.5rem 0.875rem;
+  }
+
+  /* Use Cases responsive */
+  .useCasesSection {
+    padding: 3rem 0;
+  }
+
+  .useCasesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .useCaseCard {
+    padding: 1.25rem;
+  }
+
+  .useCaseIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* FAQ responsive */
+  .faqSection {
+    padding: 3rem 0;
+  }
+
+  .faqGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .faqItem {
+    padding: 1.25rem;
+  }
+
   .ctaSection {
     padding: 3rem 1rem;
   }
@@ -809,6 +1051,51 @@
   }
 
   .ctaFeatures span {
+    font-size: 0.8125rem;
+  }
+
+  /* Use Cases small mobile */
+  .useCasesSection {
+    padding: 2rem 0;
+  }
+
+  .useCasesGrid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .useCaseCard {
+    padding: 1rem;
+  }
+
+  .useCaseIcon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 0.75rem;
+  }
+
+  .useCaseTitle {
+    font-size: 0.9375rem;
+  }
+
+  .useCaseDescription {
+    font-size: 0.8125rem;
+  }
+
+  /* FAQ small mobile */
+  .faqSection {
+    padding: 2rem 0;
+  }
+
+  .faqItem {
+    padding: 1rem;
+  }
+
+  .faqQuestion h3 {
+    font-size: 0.9375rem;
+  }
+
+  .faqAnswer {
     font-size: 0.8125rem;
   }
 
