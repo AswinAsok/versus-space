@@ -37,6 +37,16 @@
   z-index: 1;
 }
 
+.lightRaysContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
 .homeInner {
   max-width: 1280px;
   margin: 0 auto;
@@ -46,7 +56,7 @@
 /* Hero Section */
 .hero {
   text-align: center;
-  padding: 4rem 0 3rem;
+  padding: 6rem 0 3rem;
   animation: fadeIn var(--transition-slow);
   position: relative;
 }
@@ -55,7 +65,6 @@
 .backedByWrapper {
   position: relative;
   display: inline-block;
-  margin-top: 2rem;
   margin-bottom: 1rem;
   animation: fadeInDown 0.4s var(--ease-out);
 }
@@ -64,7 +73,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
+  padding: 0.375rem 1.25rem;
   background: transparent;
   border: 1px solid var(--color-primary);
   border-radius: var(--radius-full);
@@ -74,16 +83,22 @@
   transition: all var(--transition-fast) var(--ease-out);
   position: relative;
   overflow: visible;
-  box-shadow: 0 0 8px rgba(62, 207, 142, 0.3), 0 0 16px rgba(62, 207, 142, 0.15);
+  box-shadow:
+    0 0 8px rgba(62, 207, 142, 0.3),
+    0 0 16px rgba(62, 207, 142, 0.15);
   animation: borderGlow 2s ease-in-out infinite alternate;
 }
 
 @keyframes borderGlow {
   0% {
-    box-shadow: 0 0 8px rgba(62, 207, 142, 0.3), 0 0 16px rgba(62, 207, 142, 0.15);
+    box-shadow:
+      0 0 8px rgba(62, 207, 142, 0.3),
+      0 0 16px rgba(62, 207, 142, 0.15);
   }
   100% {
-    box-shadow: 0 0 12px rgba(62, 207, 142, 0.5), 0 0 24px rgba(62, 207, 142, 0.25);
+    box-shadow:
+      0 0 12px rgba(62, 207, 142, 0.5),
+      0 0 24px rgba(62, 207, 142, 0.25);
   }
 }
 
@@ -91,7 +106,9 @@
   border-color: var(--color-primary);
   color: var(--color-text-light);
   background: var(--glass-bg);
-  box-shadow: 0 0 16px rgba(62, 207, 142, 0.6), 0 0 32px rgba(62, 207, 142, 0.3);
+  box-shadow:
+    0 0 16px rgba(62, 207, 142, 0.6),
+    0 0 32px rgba(62, 207, 142, 0.3);
 }
 
 .backedByText {
@@ -307,6 +324,7 @@
 
 .statItem {
   text-align: center;
+  min-width: 120px;
 }
 
 .statNumber {
@@ -315,6 +333,13 @@
   color: var(--color-primary);
   line-height: 1;
   margin-bottom: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.countUp {
+  font: inherit;
+  color: inherit;
+  font-variant-numeric: tabular-nums;
 }
 
 .statLabel {
@@ -390,7 +415,8 @@
 }
 
 @keyframes duckyBounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(-50%, -50%) rotate(0deg);
   }
   25% {
@@ -416,30 +442,79 @@
 }
 
 @keyframes logoFlicker {
-  0%, 100% { opacity: 1; }
-  3% { opacity: 0.4; }
-  6% { opacity: 1; }
-  7% { opacity: 0.6; }
-  9% { opacity: 1; }
-  12% { opacity: 0.8; }
-  20% { opacity: 1; }
-  25% { opacity: 0.3; }
-  26% { opacity: 1; }
-  30% { opacity: 0.7; }
-  32% { opacity: 1; }
-  45% { opacity: 1; }
-  47% { opacity: 0.5; }
-  48% { opacity: 0.8; }
-  50% { opacity: 0.3; }
-  52% { opacity: 1; }
-  65% { opacity: 1; }
-  68% { opacity: 0.6; }
-  70% { opacity: 1; }
-  82% { opacity: 1; }
-  84% { opacity: 0.4; }
-  85% { opacity: 0.8; }
-  86% { opacity: 0.3; }
-  88% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  3% {
+    opacity: 0.4;
+  }
+  6% {
+    opacity: 1;
+  }
+  7% {
+    opacity: 0.6;
+  }
+  9% {
+    opacity: 1;
+  }
+  12% {
+    opacity: 0.8;
+  }
+  20% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  26% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.7;
+  }
+  32% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 1;
+  }
+  47% {
+    opacity: 0.5;
+  }
+  48% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  52% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 1;
+  }
+  68% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  84% {
+    opacity: 0.4;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  86% {
+    opacity: 0.3;
+  }
+  88% {
+    opacity: 1;
+  }
 }
 
 .enteLogoWrapper:hover .enteLogo {
@@ -950,11 +1025,15 @@
 
 @media (max-width: 768px) {
   .homeContainer {
-    padding: 1rem 1rem 0;
+    padding: 1rem 1.5rem 0;
   }
 
   .homeInner {
-    padding: 1rem 1rem 0;
+    padding: 1rem 1.5rem 0;
+  }
+
+  .lightRaysContainer {
+    display: none;
   }
 
   .hero {
@@ -983,13 +1062,13 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 0 1rem;
+    padding: 0 1.5rem;
   }
 
   .heroActions button {
     width: 100%;
     max-width: 320px;
-    padding: 0.875rem 1.5rem;
+    padding: 0.75rem 1.25rem;
   }
 
   .heroBadge {
@@ -1188,7 +1267,7 @@
 
   .backedByBadge {
     font-size: 0.625rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.15rem 1rem;
   }
 
   .backedByLogo {

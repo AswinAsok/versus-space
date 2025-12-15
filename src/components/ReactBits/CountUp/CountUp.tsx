@@ -29,12 +29,13 @@ export default function CountUp({
   const ref = useRef<HTMLSpanElement>(null);
   const motionValue = useMotionValue(direction === 'down' ? to : from);
 
-  const damping = 20 + 40 * (1 / duration);
-  const stiffness = 100 * (1 / duration);
+  const damping = 40 + 20 * duration;
+  const stiffness = 20 * (1 / duration);
 
   const springValue = useSpring(motionValue, {
     damping,
     stiffness,
+    mass: 1.5,
   });
 
   const isInView = useInView(ref, { once: true, margin: '0px' });

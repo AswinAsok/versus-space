@@ -24,7 +24,6 @@ function RoutedApp() {
   const navigate = useNavigate();
   const location = useLocation();
   const isPollView = location.pathname.startsWith('/poll/');
-  const [isBackedByVisible, setIsBackedByVisible] = useState(true);
 
   if (loading) {
     return (
@@ -44,11 +43,11 @@ function RoutedApp() {
           <div className={`${appStyles.geometricShape} ${appStyles.square}`}></div>
         </div>
       )}
-      <Header user={user} onNavigate={navigate} showBackedBy={!isBackedByVisible && location.pathname === '/'} />
+      <Header user={user} onNavigate={navigate} />
 
       <main className={appStyles.appMain}>
         <Routes>
-          <Route path="/" element={<Home onNavigate={navigate} onBackedByVisibilityChange={setIsBackedByVisible} />} />
+          <Route path="/" element={<Home onNavigate={navigate} />} />
           <Route
             path="/auth"
             element={

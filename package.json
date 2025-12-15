@@ -17,6 +17,7 @@
     "@supabase/supabase-js": "^2.57.4",
     "@vercel/analytics": "^1.6.1",
     "lucide-react": "^0.344.0",
+    "matter-js": "^0.20.0",
     "motion": "^12.23.26",
     "ogl": "^1.0.11",
     "react": "^18.3.1",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@types/matter-js": "^0.20.2",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

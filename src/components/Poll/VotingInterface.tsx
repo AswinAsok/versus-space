@@ -223,15 +223,16 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
   }, []);
 
   const handleVote = async (optionId: string, optionIndex: number, event: React.MouseEvent) => {
-    const button = event.currentTarget as HTMLButtonElement;
-    const buttonRect = button.getBoundingClientRect();
-    const parentRect = button.closest(`.${styles.votingOption}`)?.getBoundingClientRect();
+    const target = event.currentTarget as HTMLElement;
+    const targetRect = target.getBoundingClientRect();
 
-    // Position from button's top center with slight random horizontal offset
-    const x = parentRect
-      ? buttonRect.left - parentRect.left + buttonRect.width / 2 + (Math.random() - 0.5) * 40
-      : buttonRect.width / 2;
-    const y = parentRect ? buttonRect.top - parentRect.top - 10 : 0;
+    // Get the voting option container
+    const votingOption = target.closest(`.${styles.votingOption}`) || target;
+    const parentRect = votingOption.getBoundingClientRect();
+
+    // Position floating number at click location relative to the voting option
+    const x = event.clientX - parentRect.left + (Math.random() - 0.5) * 40;
+    const y = event.clientY - parentRect.top - 20;
 
     const voteValue = 1;
 
@@ -358,6 +359,21 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
       {/* Poll Title */}
       <div className={styles.pollTitleContainer} style={{ left: `${firstOptionPercentage}vw` }}>
         <h1 className={styles.pollTitle}>{title}</h1>
+        <a
+          href="https://ente.io/?utm_source=versus.space"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.hackathonBadge}
+          onClick={(e) => { e.stopPropagation(); track('ente_link_click', { location: 'voting_interface_hackathon_badge' }); }}
+        >
+          <span className={styles.hackathonText}>built for hackathon at</span>
+          <img src="/ente-branding-green.png" alt="Ente" className={styles.hackathonLogo} />
+          <div className={styles.cursorTrail}>
+            <svg className={styles.cursor} viewBox="0 0 24 24" fill="currentColor">
+              <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L6.35 2.85a.5.5 0 0 0-.85.36Z" />
+            </svg>
+          </div>
+        </a>
       </div>
 
       {options.map((option, index) => {
@@ -381,8 +397,10 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                 '--heat-intensity': heat / 10,
                 '--content-scale': contentScale,
                 '--line-nudge': `${lineNudge}px`,
+                cursor: 'pointer',
               } as React.CSSProperties
             }
+            onClick={(e) => handleVote(option.id, index, e)}
           >
             {option.image_url && (
               <div className={styles.optionBackground}>
@@ -453,7 +471,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                 <h2 className={styles.optionTitle}>{option.title}</h2>
 
                 <button
-                  onClick={(e) => handleVote(option.id, index, e)}
+                  onClick={(e) => { e.stopPropagation(); handleVote(option.id, index, e); }}
                   className={`${styles.voteButton} ${heat > 7 ? styles.buttonOnFire : ''}`}
                 >
                   <span className={styles.buttonPulse} />
@@ -500,42 +518,6 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                     )}
                     <span className={styles.countLabel}>points</span>
                   </div>
-
-                  {pollId === '70427c7e-9405-4b76-b062-087790c6f5ef' && index === 0 && (
-                    <div className={styles.appLikePill}>
-                      <span className={styles.appLikeHeader}>apps like</span>
-                      <div className={styles.appLikeLogos}>
-                        <a
-                          href="https://ente.io/?utm_source=versus.space"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() =>
-                            track('ente_link_click', { location: 'voting_interface_apps_like' })
-                          }
-                        >
-                          <img
-                            src="/ente-branding-green.png"
-                            alt="Ente"
-                            className={styles.enteLogo}
-                          />
-                        </a>
-                        <a
-                          href="https://kagi.com/?utm_source=versus.space"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img src="/kagi.webp" alt="Kagi" />
-                        </a>
-                        <a
-                          href="https://notesnook.com/?utm_source=versus.space"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img src="/notesnook.webp" alt="Notesnook" />
-                        </a>
-                      </div>
-                    </div>
-                  )}
 
                   {userVoteCount > 0 && (
                     <div className={styles.userVotes}>

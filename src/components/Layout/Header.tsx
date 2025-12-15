@@ -3,11 +3,9 @@ import { User } from '@supabase/supabase-js';
 import { authService } from '../../services/authService';
 import { pollService } from '../../services/pollService';
 import type { LeaderboardPoll } from '../../types';
-import { LogOut, TrendingUp } from 'lucide-react';
+import { LogOut, Clock } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import styles from './Header.module.css';
-
-const TRENDING_POLL_ID = '70427c7e-9405-4b76-b062-087790c6f5ef';
 
 interface HeaderProps {
   user: User | null;
@@ -16,26 +14,20 @@ interface HeaderProps {
 }
 
 export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) {
-  const [polls, setPolls] = useState<LeaderboardPoll[]>([]);
+  const [recentPoll, setRecentPoll] = useState<LeaderboardPoll | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const fetchPolls = async () => {
+    const fetchRecentPoll = async () => {
       try {
-        const data = await pollService.getLeaderboard(5);
-        // Prioritize the trending poll to be first
-        const sortedData = [...data].sort((a, b) => {
-          if (a.id === TRENDING_POLL_ID) return -1;
-          if (b.id === TRENDING_POLL_ID) return 1;
-          return 0;
-        });
-        setPolls(sortedData);
+        const data = await pollService.getMostRecentPoll();
+        setRecentPoll(data);
       } catch (err) {
-        console.error('Failed to fetch polls:', err);
+        console.error('Failed to fetch recent poll:', err);
       }
     };
 
-    fetchPolls();
+    fetchRecentPoll();
   }, []);
 
   useEffect(() => {
@@ -67,7 +59,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
               </button>
             </div>
 
-            {/* Trending Poll or Backed By - Center */}
+            {/* Recent Poll or Backed By - Center */}
             {showBackedBy ? (
               <a
                 href="https://ente.io/?utm_source=versus.space"
@@ -80,7 +72,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
                 <img src="/ente-branding-green.png" alt="Ente" className={styles.backedByLogo} />
                 <span className={styles.backedByAsterisk}>*</span>
               </a>
-            ) : polls.length > 0 && (
+            ) : recentPoll && (
               <div className={styles.trendingWrapper}>
                 <span className={styles.sparkle} style={{ top: '-4px', left: '10%' }}></span>
                 <span
@@ -92,13 +84,13 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
                   style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}
                 ></span>
                 <button
-                  onClick={() => onNavigate(`/poll/${polls[0].id}`)}
+                  onClick={() => onNavigate(`/poll/${recentPoll.id}`)}
                   className={styles.trendingItem}
                 >
-                  <TrendingUp size={14} />
-                  <span className={styles.trendingTitle}>{polls[0].title}</span>
+                  <Clock size={14} />
+                  <span className={styles.trendingTitle}>{recentPoll.title}</span>
                   <span className={styles.trendingVotes}>
-                    {polls[0].total_votes.toLocaleString()} votes
+                    {recentPoll.total_votes.toLocaleString()} votes
                   </span>
                 </button>
               </div>
@@ -119,8 +111,8 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
                   </button>
                 </div>
               ) : (
-                <button onClick={() => onNavigate('/auth')} className={styles.navLink}>
-                  Sign In
+                <button onClick={() => onNavigate('/create')} className={styles.createButton}>
+                  Create Poll
                 </button>
               )}
             </div>

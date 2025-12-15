@@ -137,6 +137,18 @@ export class PollService {
     return data || [];
   }
 
+  async getMostRecentPoll(): Promise<LeaderboardPoll | null> {
+    const { data, error } = await supabase
+      .from('public_poll_leaderboard')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  }
+
   async validateAccessKey(pollId: string, accessKey: string): Promise<boolean> {
     const { data, error } = await supabase
       .from('polls')

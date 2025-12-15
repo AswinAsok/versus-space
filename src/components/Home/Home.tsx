@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ArrowRight,
   Check,
@@ -14,12 +14,6 @@ import {
   GraduationCap,
   Calendar,
   MessageSquare,
-  Zap,
-  UserX,
-  Infinity,
-  Link2,
-  Shield,
-  Smartphone,
 } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import { Leaderboard } from './Leaderboard';
@@ -27,57 +21,27 @@ import { HomeSchema } from './HomeSchema';
 import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
+import CountUp from '../ReactBits/CountUp/CountUp';
 import { pollService } from '../../services/pollService';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
-  onBackedByVisibilityChange?: (isVisible: boolean) => void;
 }
 
-export function Home({ onNavigate, onBackedByVisibilityChange }: HomeProps) {
+export function Home({ onNavigate }: HomeProps) {
   const [stats, setStats] = useState({ pollsCount: 0, votesCount: 0 });
-  const backedByRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     pollService.getPlatformStats().then(setStats).catch(console.error);
   }, []);
 
-  useEffect(() => {
-    if (!backedByRef.current || !onBackedByVisibilityChange) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        onBackedByVisibilityChange(entry.isIntersecting);
-      },
-      { threshold: 0 }
-    );
-
-    observer.observe(backedByRef.current);
-    return () => observer.disconnect();
-  }, [onBackedByVisibilityChange]);
-
   return (
     <>
-      {/* Skip to main content link for accessibility */}
-      <a href="#main-content" className={styles.skipLink}>
-        Skip to main content
-      </a>
-
       {/* JSON-LD Schema Markup for SEO */}
       <HomeSchema pollsCount={stats.pollsCount} votesCount={stats.votesCount} />
 
       <div className={styles.homeContainer}>
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: -1,
-            pointerEvents: 'none',
-          }}
-        >
+        <div className={styles.lightRaysContainer}>
           <LightRays
             raysOrigin="top-center"
             raysColor="#a8e6cf"
@@ -96,28 +60,6 @@ export function Home({ onNavigate, onBackedByVisibilityChange }: HomeProps) {
         <main id="main-content" className={styles.homeInner}>
           {/* Hero Section */}
           <section id="hero" className={styles.hero} aria-labelledby="hero-title">
-            <div ref={backedByRef} className={styles.backedByWrapper}>
-              <a
-                href="https://ente.io/?utm_source=versus.space"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.backedByBadge}
-                onClick={() => track('ente_link_click', { location: 'hero_backed_by' })}
-              >
-                <span className={styles.backedByText}>backed by</span>
-                <img src="/ente-branding-green.png" alt="Ente" className={styles.backedByLogo} />
-                <span className={styles.backedByAsterisk}>*</span>
-                <div className={styles.cursorTrail}>
-                  <svg className={styles.cursor} viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L6.35 2.85a.5.5 0 0 0-.85.36Z" />
-                  </svg>
-                </div>
-              </a>
-              <span className={styles.backedByTooltip}>
-                *I work at ente, so this project is indirectly backed by ente 😉
-              </span>
-            </div>
-
             <h1 id="hero-title" className={styles.heroTitle}>
               Create <span className={styles.gradientText}>Real-Time Polls</span> That{' '}
               <span className={styles.gradientText}>Engage</span> Instantly
@@ -156,43 +98,6 @@ export function Home({ onNavigate, onBackedByVisibilityChange }: HomeProps) {
             </div>
           </section>
 
-          {/* Features Overview - Optimized for List Snippets */}
-          <section
-            id="features"
-            className={styles.featuresSection}
-            aria-labelledby="features-title"
-          >
-            <h2 id="features-title" className={styles.srOnly}>
-              Key Features of Versus Space
-            </h2>
-            <div className={styles.featuresGrid}>
-              <div className={styles.featureItem}>
-                <Zap size={18} aria-hidden="true" />
-                <span>Real-time vote visualization</span>
-              </div>
-              <div className={styles.featureItem}>
-                <UserX size={18} aria-hidden="true" />
-                <span>No signup required to vote</span>
-              </div>
-              <div className={styles.featureItem}>
-                <Infinity size={18} aria-hidden="true" />
-                <span>Free unlimited polls</span>
-              </div>
-              <div className={styles.featureItem}>
-                <Link2 size={18} aria-hidden="true" />
-                <span>Shareable poll links</span>
-              </div>
-              <div className={styles.featureItem}>
-                <Shield size={18} aria-hidden="true" />
-                <span>Anonymous voting</span>
-              </div>
-              <div className={styles.featureItem}>
-                <Smartphone size={18} aria-hidden="true" />
-                <span>Mobile responsive</span>
-              </div>
-            </div>
-          </section>
-
           {/* Stats Section */}
           <section id="stats" className={styles.statsSection} aria-labelledby="stats-title">
             <h2 id="stats-title" className={styles.srOnly}>
@@ -204,7 +109,13 @@ export function Home({ onNavigate, onBackedByVisibilityChange }: HomeProps) {
                   className={styles.statNumber}
                   aria-label={`${stats.pollsCount.toLocaleString()} polls created`}
                 >
-                  {stats.pollsCount.toLocaleString()}
+                  <CountUp
+                    to={stats.pollsCount}
+                    from={0}
+                    duration={20}
+                    separator=","
+                    className={styles.countUp}
+                  />
                 </div>
                 <div className={styles.statLabel}>Polls Created</div>
               </div>
@@ -214,7 +125,13 @@ export function Home({ onNavigate, onBackedByVisibilityChange }: HomeProps) {
                   className={styles.statNumber}
                   aria-label={`${stats.votesCount.toLocaleString()} votes cast`}
                 >
-                  {stats.votesCount.toLocaleString()}
+                  <CountUp
+                    to={stats.votesCount}
+                    from={0}
+                    duration={2}
+                    separator=","
+                    className={styles.countUp}
+                  />
                 </div>
                 <div className={styles.statLabel}>Clicks Cast</div>
               </div>
