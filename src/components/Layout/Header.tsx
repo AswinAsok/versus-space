@@ -72,28 +72,30 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
                 <img src="/ente-branding-green.png" alt="Ente" className={styles.backedByLogo} />
                 <span className={styles.backedByAsterisk}>*</span>
               </a>
-            ) : recentPoll && (
-              <div className={styles.trendingWrapper}>
-                <span className={styles.sparkle} style={{ top: '-4px', left: '10%' }}></span>
-                <span
-                  className={styles.sparkle}
-                  style={{ top: '50%', right: '-6px', animationDelay: '2s' }}
-                ></span>
-                <span
-                  className={styles.sparkle}
-                  style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}
-                ></span>
-                <button
-                  onClick={() => onNavigate(`/poll/${recentPoll.id}`)}
-                  className={styles.trendingItem}
-                >
-                  <Clock size={14} />
-                  <span className={styles.trendingTitle}>{recentPoll.title}</span>
-                  <span className={styles.trendingVotes}>
-                    {recentPoll.total_votes.toLocaleString()} votes
-                  </span>
-                </button>
-              </div>
+            ) : (
+              recentPoll && (
+                <div className={styles.trendingWrapper}>
+                  <span className={styles.sparkle} style={{ top: '-4px', left: '10%' }}></span>
+                  <span
+                    className={styles.sparkle}
+                    style={{ top: '50%', right: '-6px', animationDelay: '2s' }}
+                  ></span>
+                  <span
+                    className={styles.sparkle}
+                    style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}
+                  ></span>
+                  <button
+                    onClick={() => onNavigate(`/poll/${recentPoll.id}`)}
+                    className={styles.trendingItem}
+                  >
+                    <Clock size={14} />
+                    <span className={styles.trendingTitle}>{recentPoll.title}</span>
+                    <span className={styles.trendingVotes}>
+                      {recentPoll.total_votes.toLocaleString()} votes
+                    </span>
+                  </button>
+                </div>
+              )
             )}
 
             <div className={styles.navRight}>

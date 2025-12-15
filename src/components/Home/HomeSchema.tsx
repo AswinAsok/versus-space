@@ -209,7 +209,8 @@ export function HomeSchema({ pollsCount, votesCount }: HomeSchemaProps) {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Best Uses for Real-Time Polling',
-    description: 'Real-time polling is perfect for any situation where you need instant audience feedback.',
+    description:
+      'Real-time polling is perfect for any situation where you need instant audience feedback.',
     itemListElement: [
       {
         '@type': 'ListItem',

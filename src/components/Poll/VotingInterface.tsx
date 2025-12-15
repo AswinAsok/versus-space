@@ -363,7 +363,10 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
           target="_blank"
           rel="noopener noreferrer"
           className={styles.hackathonBadge}
-          onClick={(e) => { e.stopPropagation(); track('ente_link_click', { location: 'voting_interface_hackathon_badge' }); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            track('ente_link_click', { location: 'voting_interface_hackathon_badge' });
+          }}
         >
           <span className={styles.hackathonText}>built for hackathon at</span>
           <img src="/ente-branding-green.png" alt="Ente" className={styles.hackathonLogo} />
@@ -470,7 +473,10 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
                 <h2 className={styles.optionTitle}>{option.title}</h2>
 
                 <button
-                  onClick={(e) => { e.stopPropagation(); handleVote(option.id, index, e); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleVote(option.id, index, e);
+                  }}
                   className={`${styles.voteButton} ${heat > 7 ? styles.buttonOnFire : ''}`}
                 >
                   <span className={styles.buttonPulse} />

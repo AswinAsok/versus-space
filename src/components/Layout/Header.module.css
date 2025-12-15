@@ -459,7 +459,6 @@
   }
 }
 
-
 /* Height-based responsive: Make navbar scrollable on small height devices */
 @media (max-height: 1200px) and (max-width: 768px) {
   .headerWrapper {
