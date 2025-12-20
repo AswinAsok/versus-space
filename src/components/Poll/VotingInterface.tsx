@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import ReactSpeedometer, { Transition } from 'react-d3-speedometer';
 import { track } from '@vercel/analytics';
+import { Copy, Check, X } from 'lucide-react';
 import CountUp from '../ReactBits/CountUp/CountUp';
 import Counter from '../ReactBits/Counter/Counter';
 import { voteService } from '../../services/voteService';
@@ -52,6 +53,8 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
   >([]);
   const [initialCountAnimationDone, setInitialCountAnimationDone] = useState(false);
   const [lineNudges, setLineNudges] = useState<Map<string, number>>(new Map());
+  const [shareFeedback, setShareFeedback] = useState('');
+  const [qrModalOpen, setQrModalOpen] = useState(false);
 
   const floatingIdRef = useRef(0);
   const confettiIdRef = useRef(0);
@@ -196,6 +199,18 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     return () => mediaQuery.removeEventListener('change', updateIsMobile);
   }, []);
 
+  const pollLink = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      return `${window.location.origin}/poll/${pollId}`;
+    }
+    return `/poll/${pollId}`;
+  }, [pollId]);
+
+  const qrImageUrl = useMemo(() => {
+    const encoded = encodeURIComponent(pollLink);
+    return `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encoded}`;
+  }, [pollLink]);
+
   const spawnConfetti = useCallback((x: number, y: number) => {
     const id = confettiIdRef.current++;
     const colors = ['#ff0', '#f0f', '#0ff', '#0f0', '#f00', '#00f'];
@@ -220,6 +235,43 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     if (initialCountAnimationDoneRef.current) return;
     initialCountAnimationDoneRef.current = true;
     setInitialCountAnimationDone(true);
+  }, []);
+
+  const handleShare = useCallback(
+    async (event: React.MouseEvent) => {
+      event.stopPropagation();
+      let copied = false;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(pollLink);
+          copied = true;
+        } else {
+          const tempInput = document.createElement('input');
+          tempInput.value = pollLink;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          copied = true;
+        }
+        setShareFeedback(copied ? 'Link copied' : 'Unable to copy');
+        setTimeout(() => setShareFeedback(''), 2200);
+      } catch (error) {
+        console.error('Failed to copy link', error);
+        setShareFeedback('Unable to copy');
+        setTimeout(() => setShareFeedback(''), 2200);
+      }
+    },
+    [pollLink]
+  );
+
+  const openQrModal = useCallback((event: React.MouseEvent) => {
+    event.stopPropagation();
+    setQrModalOpen(true);
+  }, []);
+
+  const closeQrModal = useCallback(() => {
+    setQrModalOpen(false);
   }, []);
 
   const handleVote = async (optionId: string, optionIndex: number, event: React.MouseEvent) => {
@@ -357,6 +409,9 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
 
       {/* Poll Title */}
       <div className={styles.pollTitleContainer} style={{ left: `${firstOptionPercentage}vw` }}>
+        <button className={styles.shareButton} onClick={openQrModal}>
+          Share Poll
+        </button>
         <h1 className={styles.pollTitle}>{title}</h1>
         <a
           href="https://ente.io/?utm_source=versus.space"
@@ -404,6 +459,9 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
             }
             onClick={(e) => handleVote(option.id, index, e)}
           >
+            {/* Background count number */}
+            <div className={styles.backgroundCount}>{option.vote_count.toLocaleString()}</div>
+
             {option.image_url && (
               <div className={styles.optionBackground}>
                 <img src={option.image_url} alt={option.title} />
@@ -535,6 +593,39 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
           </div>
         );
       })}
+
+      {qrModalOpen && (
+        <div
+          className={styles.qrModalOverlay}
+          role="dialog"
+          aria-modal="true"
+          onClick={closeQrModal}
+        >
+          <div className={styles.qrModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>Share poll</h3>
+              <button
+                className={styles.modalCloseButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  closeQrModal();
+                }}
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <img className={styles.qrImage} src={qrImageUrl} alt="Poll QR code" />
+              <p className={styles.pollLinkText}>{pollLink}</p>
+            </div>
+            <button className={styles.copyLinkButton} onClick={handleShare}>
+              {shareFeedback ? <Check size={16} /> : <Copy size={16} />}
+              {shareFeedback || 'Copy link'}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
