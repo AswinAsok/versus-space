@@ -11,6 +11,9 @@ export interface Database {
           access_key: string | null;
           created_at: string;
           updated_at: string;
+          ends_at: string | null;
+          max_votes_per_ip: number | null;
+          auto_vote_interval_seconds: number;
         };
         Insert: {
           id?: string;
@@ -21,6 +24,9 @@ export interface Database {
           is_active?: boolean;
           created_at?: string;
           updated_at?: string;
+          ends_at?: string | null;
+          max_votes_per_ip?: number | null;
+          auto_vote_interval_seconds?: number;
         };
         Update: {
           id?: string;
@@ -31,6 +37,9 @@ export interface Database {
           is_active?: boolean;
           created_at?: string;
           updated_at?: string;
+          ends_at?: string | null;
+          max_votes_per_ip?: number | null;
+          auto_vote_interval_seconds?: number;
         };
         Relationships: [];
       };
@@ -43,6 +52,9 @@ export interface Database {
           vote_count: number;
           position: number;
           created_at: string;
+          simulated_enabled: boolean;
+          simulated_target_votes: number | null;
+          simulated_votes_added: number;
         };
         Insert: {
           id?: string;
@@ -52,6 +64,9 @@ export interface Database {
           vote_count?: number;
           position: number;
           created_at?: string;
+          simulated_enabled?: boolean;
+          simulated_target_votes?: number | null;
+          simulated_votes_added?: number;
         };
         Update: {
           id?: string;
@@ -61,6 +76,9 @@ export interface Database {
           vote_count?: number;
           position?: number;
           created_at?: string;
+          simulated_enabled?: boolean;
+          simulated_target_votes?: number | null;
+          simulated_votes_added?: number;
         };
         Relationships: [];
       };
@@ -71,6 +89,8 @@ export interface Database {
           option_id: string;
           user_id: string | null;
           created_at: string;
+          ip_address: string | null;
+          is_simulated: boolean;
         };
         Insert: {
           id?: string;
@@ -78,6 +98,8 @@ export interface Database {
           option_id: string;
           user_id?: string | null;
           created_at?: string;
+          ip_address?: string | null;
+          is_simulated?: boolean;
         };
         Update: {
           id?: string;
@@ -85,6 +107,8 @@ export interface Database {
           option_id?: string;
           user_id?: string | null;
           created_at?: string;
+          ip_address?: string | null;
+          is_simulated?: boolean;
         };
         Relationships: [];
       };
@@ -147,6 +171,19 @@ export interface Database {
           p_poll_id: string;
         };
         Returns: unknown;
+      };
+      cast_vote_with_limits: {
+        Args: {
+          p_poll_id: string;
+          p_option_id: string;
+          p_user_id: string | null;
+          p_ip_address: string;
+        };
+        Returns: void;
+      };
+      perform_auto_votes: {
+        Args: Record<PropertyKey, never>;
+        Returns: void;
       };
     };
     Enums: Record<string, never>;

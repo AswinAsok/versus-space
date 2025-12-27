@@ -119,7 +119,7 @@ const blogListSchema = {
     name: 'Versus Space',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://versus.space/android-icon-192x192.png',
+      url: 'https://versus.space/meta/icons/android-icon-192x192.png',
     },
   },
   blogPost: blogPosts.map((post) => ({

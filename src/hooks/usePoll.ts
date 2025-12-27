@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { pollService } from '../services/pollService';
+import { pollFacade } from '../core/appServices';
 import type { PollWithOptions } from '../types';
 
 /**
@@ -17,7 +17,7 @@ export function usePoll(pollId: string | undefined) {
       return;
     }
 
-    pollService
+    pollFacade
       .getPoll(pollId)
       .then((data) => {
         setPoll(data);
@@ -28,7 +28,7 @@ export function usePoll(pollId: string | undefined) {
         setLoading(false);
       });
 
-    const unsubscribe = pollService.subscribeToPollOptions(pollId, (update) => {
+    const unsubscribe = pollFacade.subscribeToPollOptions(pollId, (update) => {
       setPoll((prev) => {
         if (!prev) return prev;
         return {

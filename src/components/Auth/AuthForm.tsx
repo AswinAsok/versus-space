@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { authService } from '../../services/authService';
+import { authFacade } from '../../core/appServices';
 import { AuthSEO } from '../SEO/SEO';
 import { Zap, BarChart3, Users, Lock, Check, ArrowRight, MailCheck } from 'lucide-react';
 import styles from './AuthForm.module.css';
@@ -24,10 +24,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
 
     try {
       if (isLogin) {
-        await authService.signIn(email, password);
+        await authFacade.signIn(email, password);
         onSuccess();
       } else {
-        await authService.signUp(email, password);
+        await authFacade.signUp(email, password);
         setShowVerificationModal(true);
       }
     } catch (err) {

@@ -1,6 +1,6 @@
 # versus.space
 
-![versus.space preview](public/meta-preview-1.png)
+![versus.space preview](public/meta/meta-preview-1.png)
 
 live tug-of-war for opinions. create a poll with two options, drop a link, and watch people vote in real time. bars grow and shrink with speedometer vibes, floating numbers, and the occasional crown for the leader.
 
@@ -51,3 +51,12 @@ npm run preview
 - **realtime + auth:** Supabase (email/password flow)
 - **structure:** polls in `src/components/Poll/`, auth in `src/components/Auth/`
 - **visuals:** custom CSS, `react-d3-speedometer` for gauges, CountUp for animationss
+
+## architecture
+
+- `src/core/domain`: contracts and entities for auth, polls, and votes (SOLID-friendly boundaries).
+- `src/core/application`: facades/use-cases that sit between UI and data sources.
+- `src/core/infrastructure/supabase`: adapters implementing the domain gateways.
+- `src/core/appServices.ts`: composition root wiring the facades to Supabase.
+- Legacy `services/*` now point at the facades to keep imports backward compatible.
+- Meta assets live under `public/meta` to keep the public root clean.

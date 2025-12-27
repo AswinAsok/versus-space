@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { usePoll } from '../../hooks/usePoll';
-import { pollService } from '../../services/pollService';
+import { pollFacade } from '../../core/appServices';
 import { VotingInterface } from './VotingInterface';
 import { PollSEO } from '../SEO/SEO';
 import { Lock, Key, Code2, Eye, EyeOff, XCircle } from 'lucide-react';
@@ -45,7 +45,7 @@ export function PollView({ pollId }: PollViewProps) {
       const storedKey = sessionStorage.getItem(`poll_key_${pollId}`);
       if (storedKey) {
         try {
-          const isValid = await pollService.validateAccessKey(pollId, storedKey);
+          const isValid = await pollFacade.validateAccessKey(pollId, storedKey);
           if (isValid) {
             setIsUnlocked(true);
           }
@@ -69,7 +69,7 @@ export function PollView({ pollId }: PollViewProps) {
     }
 
     try {
-      const isValid = await pollService.validateAccessKey(pollId, accessKey);
+      const isValid = await pollFacade.validateAccessKey(pollId, accessKey);
       if (isValid) {
         sessionStorage.setItem(`poll_key_${pollId}`, accessKey);
         setIsUnlocked(true);
@@ -91,7 +91,9 @@ export function PollView({ pollId }: PollViewProps) {
   }
 
   // Show message for deactivated polls
-  if (!poll.is_active) {
+  const isExpired = poll.ends_at ? new Date(poll.ends_at) <= new Date() : false;
+
+  if (!poll.is_active && !isExpired) {
     return (
       <div className={styles.pollViewContainer}>
         <div className={styles.pollViewInner}>
@@ -235,10 +237,17 @@ export function PollView({ pollId }: PollViewProps) {
         pollId={poll.id}
         pollTitle={poll.title}
         totalVotes={totalVotes}
-        optionCount={poll.options.length}
-        createdAt={poll.created_at}
+      optionCount={poll.options.length}
+      createdAt={poll.created_at}
+    />
+      <VotingInterface
+        pollId={poll.id}
+        title={poll.title}
+        options={poll.options}
+        isExpired={isExpired || !poll.is_active}
+        maxVotesPerIp={poll.max_votes_per_ip}
+        endsAt={poll.ends_at}
       />
-      <VotingInterface pollId={poll.id} title={poll.title} options={poll.options} />
       <div className={`${styles.footerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
         <footer className={styles.footer}>
           <span>&copy; 2025 versus.space</span>

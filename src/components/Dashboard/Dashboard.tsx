@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
-import { pollService } from '../../services/pollService';
+import { pollFacade } from '../../core/appServices';
 import { DashboardSEO } from '../SEO/SEO';
 import {
   Trash2,
@@ -36,7 +36,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
 
   const loadPolls = useCallback(async () => {
     try {
-      const data = await pollService.getUserPolls(user.id);
+      const data = await pollFacade.getUserPolls(user.id);
       setPolls(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load polls');
@@ -53,7 +53,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
     if (!confirm('Are you sure you want to delete this poll?')) return;
 
     try {
-      await pollService.deletePoll(pollId);
+      await pollFacade.deletePoll(pollId);
       setPolls(polls.filter((p) => p.id !== pollId));
     } catch {
       alert('Failed to delete poll');
@@ -62,7 +62,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
 
   const toggleStatus = async (pollId: string, isActive: boolean) => {
     try {
-      await pollService.updatePollStatus(pollId, !isActive);
+      await pollFacade.updatePollStatus(pollId, !isActive);
       setPolls(polls.map((p) => (p.id === pollId ? { ...p, is_active: !isActive } : p)));
     } catch {
       alert('Failed to update poll status');

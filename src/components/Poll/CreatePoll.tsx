@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { pollService } from '../../services/pollService';
+import { pollFacade } from '../../core/appServices';
 import { CreatePollSEO } from '../SEO/SEO';
 import { X, Plus, Globe, Lock, Key, Code2, Crown } from 'lucide-react';
 import type { CreatePollData } from '../../types';
@@ -16,6 +16,8 @@ interface OptionInput {
   id: string;
   title: string;
   image_url: string;
+  simulated_enabled: boolean;
+  simulated_target_votes: number | '';
 }
 
 export function CreatePoll({ user, onSuccess }: CreatePollProps) {
@@ -23,18 +25,25 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
   const [isPublic, setIsPublic] = useState(true);
   const [accessKey, setAccessKey] = useState('');
   const [options, setOptions] = useState<OptionInput[]>([
-    { id: '1', title: '', image_url: '' },
-    { id: '2', title: '', image_url: '' },
+    { id: '1', title: '', image_url: '', simulated_enabled: false, simulated_target_votes: '' },
+    { id: '2', title: '', image_url: '', simulated_enabled: false, simulated_target_votes: '' },
   ]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [durationMinutes, setDurationMinutes] = useState<number | ''>('');
+  const [maxVotesPerIp, setMaxVotesPerIp] = useState<number | ''>('');
+  const [autoVoteIntervalSeconds, setAutoVoteIntervalSeconds] = useState<number>(30);
   const removeOption = (id: string) => {
     if (options.length > 2) {
       setOptions(options.filter((opt) => opt.id !== id));
     }
   };
 
-  const updateOption = (id: string, field: 'title' | 'image_url', value: string) => {
+  const updateOption = (
+    id: string,
+    field: 'title' | 'image_url' | 'simulated_enabled' | 'simulated_target_votes',
+    value: string | number | boolean | ''
+  ) => {
     setOptions(options.map((opt) => (opt.id === id ? { ...opt, [field]: value } : opt)));
   };
 
@@ -57,21 +66,40 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
       return;
     }
 
+    if (durationMinutes !== '' && durationMinutes <= 0) {
+      setError('Timer must be greater than 0 minutes or left blank');
+      return;
+    }
+
+    if (maxVotesPerIp !== '' && maxVotesPerIp <= 0) {
+      setError('Max votes per IP must be greater than 0 or left blank');
+      return;
+    }
+
     setLoading(true);
 
     try {
+      const endsAt =
+        durationMinutes === '' ? undefined : new Date(Date.now() + durationMinutes * 60 * 1000);
+
       const pollData: CreatePollData = {
         title,
         is_public: isPublic,
         access_key: isPublic ? undefined : accessKey,
+        ends_at: endsAt ? endsAt.toISOString() : undefined,
+        max_votes_per_ip: maxVotesPerIp === '' ? undefined : maxVotesPerIp,
+        auto_vote_interval_seconds: autoVoteIntervalSeconds || 30,
         options: options.map((opt, index) => ({
           title: opt.title,
           image_url: opt.image_url || null,
           position: index,
+          simulated_enabled: Boolean(opt.simulated_enabled && opt.simulated_target_votes !== ''),
+          simulated_target_votes:
+            opt.simulated_target_votes === '' ? null : Number(opt.simulated_target_votes),
         })),
       };
 
-      const poll = await pollService.createPoll(pollData, user.id);
+      const poll = await pollFacade.createPoll(pollData, user.id);
       onSuccess(poll.id);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create poll');
@@ -163,8 +191,97 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
                       </button>
                     )}
                   </div>
+
+                  <div className={styles.optionAdvancedRow}>
+                    <label className={styles.smallLabel}>
+                      Target votes
+                      <input
+                        type="number"
+                        min={0}
+                        placeholder="e.g. 100"
+                        value={option.simulated_target_votes}
+                        onChange={(e) =>
+                          updateOption(
+                            option.id,
+                            'simulated_target_votes',
+                            e.target.value === '' ? '' : Number(e.target.value)
+                          )
+                        }
+                        className={styles.optionTitleInput}
+                        disabled={loading}
+                      />
+                    </label>
+                    <label className={styles.toggleLabel}>
+                      <input
+                        type="checkbox"
+                        checked={option.simulated_enabled}
+                        onChange={(e) =>
+                          updateOption(option.id, 'simulated_enabled', e.target.checked)
+                        }
+                        disabled={loading}
+                      />
+                      <span className={styles.toggleSwitch} />
+                      Auto votes
+                    </label>
+                  </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Poll Controls */}
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Poll Controls</h3>
+            <p className={styles.cardDescription}>
+              Control how long the poll runs and prevent spam by limiting votes per IP.
+            </p>
+            <div className={styles.controlsGrid}>
+              <div className={styles.controlItem}>
+                <label className={styles.controlLabel}>Auto-close timer (minutes)</label>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="Leave blank for no timer"
+                  value={durationMinutes}
+                  onChange={(e) =>
+                    setDurationMinutes(e.target.value === '' ? '' : Number(e.target.value))
+                  }
+                  className={styles.controlInput}
+                  disabled={loading}
+                />
+                <p className={styles.controlHint}>
+                  After this time, voting stops and results are shown in grayscale.
+                </p>
+              </div>
+              <div className={styles.controlItem}>
+                <label className={styles.controlLabel}>Max votes per IP</label>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="Leave blank for unlimited"
+                  value={maxVotesPerIp}
+                  onChange={(e) =>
+                    setMaxVotesPerIp(e.target.value === '' ? '' : Number(e.target.value))
+                  }
+                  className={styles.controlInput}
+                  disabled={loading}
+                />
+                <p className={styles.controlHint}>Stops automated scripts and heavy repeat voters.</p>
+              </div>
+              <div className={styles.controlItem}>
+                <label className={styles.controlLabel}>Auto-vote interval (seconds)</label>
+                <input
+                  type="number"
+                  min={5}
+                  value={autoVoteIntervalSeconds}
+                  onChange={(e) => setAutoVoteIntervalSeconds(Number(e.target.value) || 30)}
+                  className={styles.controlInput}
+                  disabled={loading}
+                />
+                <p className={styles.controlHint}>
+                  How often simulated votes are considered for options with a target.
+                </p>
+              </div>
             </div>
           </div>
 

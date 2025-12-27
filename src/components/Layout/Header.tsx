@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { authService } from '../../services/authService';
-import { pollService } from '../../services/pollService';
+import { authFacade, pollFacade } from '../../core/appServices';
 import type { LeaderboardPoll } from '../../types';
 import { LogOut, Clock } from 'lucide-react';
 import { track } from '@vercel/analytics';
@@ -20,7 +19,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
   useEffect(() => {
     const fetchRecentPoll = async () => {
       try {
-        const data = await pollService.getMostRecentPoll();
+        const data = await pollFacade.getMostRecentPoll();
         setRecentPoll(data);
       } catch (err) {
         console.error('Failed to fetch recent poll:', err);
@@ -40,7 +39,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
   }, []);
 
   const handleSignOut = async () => {
-    await authService.signOut();
+    await authFacade.signOut();
     onNavigate('/');
   };
 

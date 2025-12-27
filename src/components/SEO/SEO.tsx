@@ -34,7 +34,7 @@ const defaults = {
   keywords:
     'real-time polling software, online voting platform, team decision making tool, corporate polling software, live audience polling, enterprise survey tool, anonymous voting software, presentation polling, business voting app',
   baseUrl: 'https://versus.space',
-  ogImage: 'https://versus.space/meta-preview-1.png',
+  ogImage: 'https://versus.space/meta/meta-preview-1.png',
   twitterHandle: '@versusspace',
   locale: 'en_US',
 };
@@ -269,7 +269,7 @@ export function BlogPostSEO({
     '@type': 'Article',
     headline: title,
     description: description,
-    image: image || 'https://versus.space/meta-preview-1.png',
+    image: image || 'https://versus.space/meta/meta-preview-1.png',
     datePublished: publishedDate,
     dateModified: modifiedDate || publishedDate,
     author: {
@@ -281,7 +281,7 @@ export function BlogPostSEO({
       name: 'Versus Space',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://versus.space/android-icon-192x192.png',
+        url: 'https://versus.space/meta/icons/android-icon-192x192.png',
       },
     },
     mainEntityOfPage: {

@@ -21,7 +21,7 @@ export function HomeSchema({ pollsCount, votesCount }: HomeSchemaProps) {
     url: baseUrl,
     logo: {
       '@type': 'ImageObject',
-      url: `${baseUrl}/android-icon-192x192.png`,
+      url: `${baseUrl}/meta/icons/android-icon-192x192.png`,
       width: 192,
       height: 192,
     },
@@ -87,7 +87,7 @@ export function HomeSchema({ pollsCount, votesCount }: HomeSchemaProps) {
       'Mobile-responsive design',
       'Enterprise-ready security',
     ],
-    screenshot: `${baseUrl}/meta-preview-1.png`,
+    screenshot: `${baseUrl}/meta/meta-preview-1.png`,
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '4.9',

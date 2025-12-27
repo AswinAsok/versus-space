@@ -454,7 +454,7 @@ export function BlogPostPage() {
     '@type': 'Article',
     headline: post.title,
     description: post.description,
-    image: post.image || 'https://versus.space/meta-preview-1.png',
+    image: post.image || 'https://versus.space/meta/meta-preview-1.png',
     datePublished: post.publishedDate,
     dateModified: post.publishedDate,
     author: {
@@ -467,7 +467,7 @@ export function BlogPostPage() {
       name: 'Versus Space',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://versus.space/android-icon-192x192.png',
+        url: 'https://versus.space/meta/icons/android-icon-192x192.png',
       },
     },
     mainEntityOfPage: {
@@ -535,7 +535,7 @@ export function BlogPostPage() {
         <meta property="og:url" content={`https://versus.space/blog/${post.slug}`} />
         <meta
           property="og:image"
-          content={post.image || 'https://versus.space/meta-preview-1.png'}
+          content={post.image || 'https://versus.space/meta/meta-preview-1.png'}
         />
         <meta property="article:published_time" content={post.publishedDate} />
         <meta property="article:section" content={post.category} />

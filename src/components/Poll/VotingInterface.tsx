@@ -5,8 +5,9 @@ import { track } from '@vercel/analytics';
 import { Copy, Check, X } from 'lucide-react';
 import CountUp from '../ReactBits/CountUp/CountUp';
 import Counter from '../ReactBits/Counter/Counter';
-import { voteService } from '../../services/voteService';
+import { voteFacade } from '../../core/appServices';
 import { getSessionId } from '../../utils/sessionId';
+import { getClientIp } from '../../utils/ipAddress';
 import { RateCalculator } from '../../utils/rateCalculator';
 import sharedStyles from '../../styles/Shared.module.css';
 import type { PollOption } from '../../types';
@@ -16,6 +17,9 @@ interface VotingInterfaceProps {
   pollId: string;
   title: string;
   options: PollOption[];
+   isExpired: boolean;
+   maxVotesPerIp?: number | null;
+   endsAt?: string | null;
 }
 
 interface FloatingNumber {
@@ -36,11 +40,20 @@ const getPlacesForValue = (value: number): number[] => {
 };
 
 // Presents poll options, tracks vote velocity, and delegates vote persistence.
-export function VotingInterface({ pollId, title, options }: VotingInterfaceProps) {
+export function VotingInterface({
+  pollId,
+  title,
+  options,
+  isExpired,
+  maxVotesPerIp,
+  endsAt,
+}: VotingInterfaceProps) {
   const [userVotes, setUserVotes] = useState<Map<string, number>>(new Map());
   const [votingRates, setVotingRates] = useState<Map<string, number>>(new Map());
   const rateCalculatorRef = useRef(new RateCalculator());
   const sessionId = getSessionId();
+  const [ipAddress, setIpAddress] = useState<string>('unknown');
+  const [voteError, setVoteError] = useState<string>('');
 
   // Gamification state
   const [combo, setCombo] = useState(0);
@@ -199,6 +212,12 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     return () => mediaQuery.removeEventListener('change', updateIsMobile);
   }, []);
 
+  useEffect(() => {
+    getClientIp()
+      .then(setIpAddress)
+      .catch(() => setIpAddress('unknown'));
+  }, []);
+
   const pollLink = useMemo(() => {
     if (typeof window !== 'undefined') {
       return `${window.location.origin}/poll/${pollId}`;
@@ -275,6 +294,23 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
   }, []);
 
   const handleVote = async (optionId: string, optionIndex: number, event: React.MouseEvent) => {
+    if (isExpired) {
+      setVoteError('This poll has ended.');
+      return;
+    }
+
+    const totalForUser = Array.from(userVotes.values()).reduce((sum, val) => sum + val, 0);
+    if (maxVotesPerIp && totalForUser >= maxVotesPerIp) {
+      setVoteError(`Vote limit reached (${maxVotesPerIp} per IP).`);
+      return;
+    }
+
+    let ipToUse = ipAddress;
+    if (!ipToUse) {
+      ipToUse = await getClientIp();
+      setIpAddress(ipToUse);
+    }
+
     const target = event.currentTarget as HTMLElement;
 
     // Get the voting option container
@@ -336,7 +372,7 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
     try {
       // Cast multiple votes if crit
       for (let i = 0; i < voteValue; i++) {
-        await voteService.castVote(pollId, optionId, null);
+        await voteFacade.castVote(pollId, optionId, null, ipToUse || 'unknown');
       }
 
       // Maintain a local sliding window rate to avoid extra network traffic.
@@ -353,9 +389,21 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
         return newMap;
       });
 
-      await voteService.updateUserSession(sessionId, pollId);
+      await voteFacade.updateUserSession(sessionId, pollId);
+      setVoteError('');
     } catch (error) {
       console.error('Failed to cast vote:', error);
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : 'Unable to cast vote. Please try again.';
+      if (message.includes('vote_limit_reached')) {
+        setVoteError('Vote limit reached for this IP.');
+      } else if (message.includes('poll_expired') || message.includes('poll_closed')) {
+        setVoteError('This poll is closed.');
+      } else {
+        setVoteError(message);
+      }
     }
   };
 
@@ -380,6 +428,23 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
       <Helmet>
         <title>{title} | Versus</title>
       </Helmet>
+
+      {/* Status pill in bottom left corner */}
+      {(isExpired || maxVotesPerIp || voteError) && (
+        <div className={styles.statusPill}>
+          {voteError && (
+            <span className={styles.statusError}>{voteError}</span>
+          )}
+          {isExpired && (
+            <span className={styles.statusInfo}>Poll ended</span>
+          )}
+          {!isExpired && maxVotesPerIp && (
+            <span className={styles.statusInfo}>
+              {Array.from(userVotes.values()).reduce((sum, val) => sum + val, 0)}/{maxVotesPerIp} votes
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Combo indicator */}
       {combo > 1 && (
@@ -447,17 +512,22 @@ export function VotingInterface({ pollId, title, options }: VotingInterfaceProps
         return (
           <div
             key={option.id}
-            className={`${styles.votingOption} ${variantClass} ${heat > 5 ? styles.onFire : ''} ${isLeading ? styles.leading : ''}`}
+            className={`${styles.votingOption} ${variantClass} ${heat > 5 ? styles.onFire : ''} ${isLeading ? styles.leading : ''} ${isExpired ? styles.disabledOption : ''}`}
             style={
               {
                 width: `${percentage}vw`,
                 '--heat-intensity': heat / 10,
                 '--content-scale': contentScale,
                 '--line-nudge': `${lineNudge}px`,
-                cursor: 'pointer',
+                cursor: isExpired ? 'not-allowed' : 'pointer',
+                filter: isExpired ? 'grayscale(0.8)' : undefined,
               } as React.CSSProperties
             }
-            onClick={(e) => handleVote(option.id, index, e)}
+            onClick={(e) => {
+              if (isExpired) return;
+              handleVote(option.id, index, e);
+            }}
+            aria-disabled={isExpired}
           >
             {/* Background count number */}
             <div className={styles.backgroundCount}>{option.vote_count.toLocaleString()}</div>

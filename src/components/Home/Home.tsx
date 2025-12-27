@@ -24,7 +24,7 @@ import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
 import CountUp from '../ReactBits/CountUp/CountUp';
-import { pollService } from '../../services/pollService';
+import { pollFacade } from '../../core/appServices';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
@@ -34,7 +34,7 @@ export function Home({ onNavigate }: HomeProps) {
   const [stats, setStats] = useState({ pollsCount: 0, votesCount: 0 });
 
   useEffect(() => {
-    pollService.getPlatformStats().then(setStats).catch(console.error);
+    pollFacade.getPlatformStats().then(setStats).catch(console.error);
   }, []);
 
   return (

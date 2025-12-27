@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Trophy, Users, ChevronRight, Clock, Plus, TrendingUp } from 'lucide-react';
-import { pollService } from '../../services/pollService';
+import { pollFacade } from '../../core/appServices';
 import type { LeaderboardPoll } from '../../types';
 import styles from './Leaderboard.module.css';
 
@@ -45,7 +45,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const data = await pollService.getLeaderboard(5);
+        const data = await pollFacade.getLeaderboard(5);
         // Prioritize the trending poll to be first
         const sortedData = [...data].sort((a, b) => {
           if (a.id === TRENDING_POLL_ID) return -1;

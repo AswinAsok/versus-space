@@ -13,7 +13,12 @@ export interface CreatePollData {
   title: Poll['title'];
   is_public: Poll['is_public'];
   access_key?: Poll['access_key'];
-  options: Array<Pick<PollOption, 'title' | 'image_url' | 'position'>>;
+  ends_at?: Poll['ends_at'];
+  max_votes_per_ip?: Poll['max_votes_per_ip'];
+  auto_vote_interval_seconds?: Poll['auto_vote_interval_seconds'];
+  options: Array<
+    Pick<PollOption, 'title' | 'image_url' | 'position' | 'simulated_enabled' | 'simulated_target_votes'>
+  >;
 }
 
 export type LeaderboardPoll = Database['public']['Views']['public_poll_leaderboard']['Row'];

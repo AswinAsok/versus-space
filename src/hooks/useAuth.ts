@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { authService } from '../services/authService';
+import { authFacade } from '../core/appServices';
 import type { User } from '@supabase/supabase-js';
 
 /**
@@ -11,12 +11,12 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    authService.getCurrentUser().then((user) => {
+    authFacade.getCurrentUser().then((user) => {
       setUser(user);
       setLoading(false);
     });
 
-    const unsubscribe = authService.onAuthStateChange((user) => {
+    const unsubscribe = authFacade.onAuthStateChange((user) => {
       setUser(user);
       setLoading(false);
     });
