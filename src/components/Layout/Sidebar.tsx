@@ -25,7 +25,7 @@ interface SidebarProps {
 const mainNavItems = [
   { icon: Home04Icon, label: 'Dashboard', path: '/dashboard' },
   { icon: BarChartIcon, label: 'My Polls', path: '/dashboard/polls' },
-  { icon: Add01Icon, label: 'Create Poll', path: '/create' },
+  { icon: Add01Icon, label: 'Create Poll', path: '/dashboard/create' },
   { icon: CompassIcon, label: 'Explore', path: '/explore' },
   { icon: ChartLineData01Icon, label: 'Analytics', path: '/dashboard/analytics' },
 ];

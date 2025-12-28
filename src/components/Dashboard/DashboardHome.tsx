@@ -127,7 +127,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
               </div>
             </div>
           </div>
-          <button onClick={() => navigate('/create')} className={styles.createButton}>
+          <button onClick={() => navigate('/dashboard/create')} className={styles.createButton}>
             <HugeiconsIcon icon={Add01Icon} size={18} />
             Create Poll
           </button>
@@ -137,7 +137,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       {/* Quick Actions Section */}
       <section className={styles.quickActionsSection}>
         <div className={styles.actionsGrid}>
-          <button onClick={() => navigate('/create')} className={styles.actionCard}>
+          <button onClick={() => navigate('/dashboard/create')} className={styles.actionCard}>
             <div className={styles.actionIconWrapper}>
               <HugeiconsIcon icon={Add01Icon} size={24} />
             </div>
@@ -181,7 +181,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             <p className={styles.emptyDescription}>
               Create your first poll and start collecting feedback
             </p>
-            <button onClick={() => navigate('/create')} className={styles.emptyButton}>
+            <button onClick={() => navigate('/dashboard/create')} className={styles.emptyButton}>
               <HugeiconsIcon icon={Add01Icon} size={18} />
               Create Your First Poll
             </button>

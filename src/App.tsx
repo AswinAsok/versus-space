@@ -57,6 +57,7 @@ function RoutedApp() {
           >
             <Route index element={<DashboardHome user={user!} />} />
             <Route path="polls" element={<MyPolls user={user!} />} />
+            <Route path="create" element={<CreatePoll user={user!} onSuccess={(pollId) => navigate(`/poll/${pollId}`)} />} />
             <Route path="settings" element={<Settings user={user!} />} />
             <Route path="profile" element={<Profile user={user!} />} />
             <Route path="analytics" element={<Analytics user={user!} />} />
@@ -91,11 +92,12 @@ function RoutedApp() {
               )
             }
           />
+          {/* Redirect /create to dashboard/create */}
           <Route
             path="/create"
             element={
               user ? (
-                <CreatePoll user={user} onSuccess={(pollId) => navigate(`/poll/${pollId}`)} />
+                <Navigate to="/dashboard/create" replace />
               ) : (
                 <Navigate to="/auth" replace />
               )

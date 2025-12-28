@@ -14,6 +14,7 @@
 /* Page Header */
 .pageHeader {
   margin-bottom: 2rem;
+  animation: fadeInDown 0.5s var(--ease-out);
 }
 
 .pageTitle {
@@ -22,6 +23,7 @@
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
 }
 
 .pageSubtitle {
@@ -32,6 +34,19 @@
 /* Sections */
 .section {
   margin-bottom: 2rem;
+  animation: fadeInUp 0.5s var(--ease-out) both;
+}
+
+.section:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.section:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.section:nth-child(3) {
+  animation-delay: 0.3s;
 }
 
 .sectionTitle {
@@ -48,14 +63,51 @@
 
 /* Setting Cards */
 .settingCard {
-  background: rgba(28, 28, 28, 0.4);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+  position: relative;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+/* Subtle shimmer effect on hover */
+.settingCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+  pointer-events: none;
+  z-index: 10;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  transform: translateX(0);
+  transition:
+    opacity 0.3s var(--ease-out),
+    transform 0.8s var(--ease-out);
+}
+
+.settingCard:hover::before {
+  opacity: 1;
+  transform: translateX(220%);
+}
+
+.settingCard:hover {
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .dangerCard {
   border-color: rgba(239, 68, 68, 0.2);
+}
+
+.dangerCard:hover {
+  border-color: rgba(239, 68, 68, 0.25);
 }
 
 .settingItem {
@@ -63,27 +115,41 @@
   align-items: center;
   gap: 1rem;
   padding: 1.25rem;
+  transition: background var(--transition-fast) var(--ease-out);
 }
 
 .settingItem:not(:last-child) {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.settingItem:hover {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .settingIcon {
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-primary-light);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-light);
+  color: var(--color-primary);
   flex-shrink: 0;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.settingItem:hover .settingIcon {
+  background: rgba(62, 207, 142, 0.15);
 }
 
 .dangerIcon {
   background: rgba(239, 68, 68, 0.1);
   color: var(--color-danger);
+}
+
+.settingItem:hover .dangerIcon {
+  background: rgba(239, 68, 68, 0.15);
 }
 
 .googleIcon {
@@ -115,7 +181,7 @@
 
 .settingAction {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
   font-size: 0.8125rem;
@@ -127,8 +193,8 @@
 }
 
 .settingAction:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--color-border-hover);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .dangerButton {
@@ -145,8 +211,8 @@
 }
 
 .dangerButton:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.25);
 }
 
 /* Badges */
@@ -177,23 +243,48 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 200;
   padding: 1rem;
+  animation: fadeIn 0.2s var(--ease-out);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
-  background: rgba(28, 28, 28, 0.95);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-xl);
   padding: 2rem;
   max-width: 400px;
   width: 100%;
   text-align: center;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+  animation: modalSlideUp 0.3s var(--ease-out);
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modalIcon {
@@ -231,7 +322,7 @@
 .modalCancelButton {
   flex: 1;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
   font-size: 0.875rem;
@@ -243,6 +334,7 @@
 
 .modalCancelButton:hover {
   background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .modalDeleteButton {
@@ -256,10 +348,35 @@
   color: #ffffff;
   cursor: pointer;
   transition: all var(--transition-fast) var(--ease-out);
+  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.1);
 }
 
 .modalDeleteButton:hover {
   background: #dc2626;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive */

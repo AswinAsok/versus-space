@@ -91,7 +91,7 @@ export function MyPolls({ user }: MyPollsProps) {
             {polls.length} {polls.length === 1 ? 'poll' : 'polls'} in your collection
           </p>
         </div>
-        <button onClick={() => navigate('/create')} className={styles.createButton}>
+        <button onClick={() => navigate('/dashboard/create')} className={styles.createButton}>
           <HugeiconsIcon icon={Add01Icon} size={18} />
           Create Poll
         </button>
@@ -108,7 +108,7 @@ export function MyPolls({ user }: MyPollsProps) {
           </p>
           <div className={styles.emptyActions}>
             <button
-              onClick={() => navigate('/create')}
+              onClick={() => navigate('/dashboard/create')}
               className={styles.emptyButton}
             >
               <HugeiconsIcon icon={Add01Icon} size={18} />

@@ -14,6 +14,7 @@
 /* Page Header */
 .pageHeader {
   margin-bottom: 2rem;
+  animation: fadeInDown 0.5s var(--ease-out);
 }
 
 .pageTitle {
@@ -22,6 +23,7 @@
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
 }
 
 .pageSubtitle {
@@ -31,11 +33,46 @@
 
 /* Profile Card */
 .profileCard {
-  background: rgba(28, 28, 28, 0.4);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-xl);
   padding: 1.5rem;
   margin-bottom: 2rem;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.5s var(--ease-out) 0.1s both;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+/* Subtle shimmer effect on hover */
+.profileCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+  pointer-events: none;
+  z-index: 10;
+  border-radius: var(--radius-xl);
+  opacity: 0;
+  transform: translateX(0);
+  transition:
+    opacity 0.3s var(--ease-out),
+    transform 0.8s var(--ease-out);
+}
+
+.profileCard:hover::before {
+  opacity: 1;
+  transform: translateX(220%);
+}
+
+.profileCard:hover {
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .profileHeader {
@@ -43,14 +80,14 @@
   align-items: center;
   gap: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   margin-bottom: 1.5rem;
 }
 
 .avatarLarge {
   width: 80px;
   height: 80px;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #34b27b 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -60,6 +97,8 @@
   font-weight: 700;
   font-size: 2rem;
   flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(62, 207, 142, 0.12);
+  transition: all var(--transition-normal) var(--ease-out);
 }
 
 .profileInfo {
@@ -72,6 +111,7 @@
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
 }
 
 .memberBadge {
@@ -96,18 +136,28 @@
   padding: 1rem;
   background: rgba(255, 255, 255, 0.02);
   border-radius: var(--radius-md);
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.detailItem:hover {
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .detailIcon {
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-primary-light);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-light);
+  color: var(--color-primary);
   flex-shrink: 0;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.detailItem:hover .detailIcon {
+  background: rgba(62, 207, 142, 0.15);
 }
 
 .detailContent {
@@ -132,6 +182,7 @@
 /* Section */
 .section {
   margin-bottom: 2rem;
+  animation: fadeInUp 0.5s var(--ease-out) 0.2s both;
 }
 
 .sectionTitle {
@@ -140,6 +191,7 @@
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 1rem;
+  letter-spacing: -0.01em;
 }
 
 /* Stats Grid */
@@ -150,13 +202,48 @@
 }
 
 .statCard {
-  background: rgba(28, 28, 28, 0.4);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+/* Subtle shimmer effect on hover */
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+  pointer-events: none;
+  z-index: 10;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  transform: translateX(0);
+  transition:
+    opacity 0.3s var(--ease-out),
+    transform 0.8s var(--ease-out);
+}
+
+.statCard:hover::before {
+  opacity: 1;
+  transform: translateX(220%);
+}
+
+.statCard:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 .statIcon {
@@ -169,6 +256,11 @@
   justify-content: center;
   color: var(--color-primary);
   flex-shrink: 0;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.statCard:hover .statIcon {
+  background: rgba(62, 207, 142, 0.15);
 }
 
 .statContent {
@@ -183,11 +275,35 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .statLabel {
   font-size: 0.8125rem;
   color: var(--color-text-muted);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive */

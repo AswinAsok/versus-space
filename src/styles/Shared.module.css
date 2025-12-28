@@ -13,10 +13,10 @@
   position: relative;
   overflow: hidden;
   transition: all var(--transition-fast) var(--ease-out);
-  box-shadow: 0 2px 8px rgba(62, 207, 142, 0.3);
+  box-shadow: 0 1px 4px rgba(62, 207, 142, 0.15);
 }
 
-/* Glare/shine effect */
+/* Subtle glare/shine effect */
 .btnPrimary::before {
   content: '';
   position: absolute;
@@ -27,9 +27,9 @@
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255, 255, 255, 0.4),
-    rgba(255, 255, 255, 0.6),
-    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.2),
     transparent
   );
   transform: skewX(-20deg);
@@ -51,12 +51,12 @@
 
 .btnPrimary:hover:not(:disabled) {
   background: var(--color-primary);
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-1px);
 }
 
 .btnPrimary:active:not(:disabled) {
   transform: translateY(0) scale(0.98);
-  box-shadow: 0 2px 8px rgba(62, 207, 142, 0.3);
+  box-shadow: 0 1px 4px rgba(62, 207, 142, 0.15);
 }
 
 /* Supabase-styled Secondary Button */
