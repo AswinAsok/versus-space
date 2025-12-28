@@ -5,6 +5,7 @@ import type {
   PollWithOptions,
   CreatePollData,
   LeaderboardPoll,
+  PlatformStats,
 } from '../../../types';
 import type { Database } from '../../../types/database';
 import type { PollGateway } from '../../domain/polls';
@@ -191,6 +192,47 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
       return {
         pollsCount: pollsResult.count ?? 0,
         votesCount: votesResult.count ?? 0,
+      } satisfies PlatformStats;
+    },
+
+    subscribeToPlatformStats(applyStats, onNewVote) {
+      const channel = client
+        .channel('platform-stats')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'polls' },
+          (payload) => {
+            applyStats((prev) => {
+              if (payload.eventType === 'INSERT') {
+                return { ...prev, pollsCount: prev.pollsCount + 1 };
+              }
+              if (payload.eventType === 'DELETE') {
+                return { ...prev, pollsCount: Math.max(0, prev.pollsCount - 1) };
+              }
+              return prev;
+            });
+          }
+        )
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'votes' },
+          (payload) => {
+            applyStats((prev) => {
+              if (payload.eventType === 'INSERT') {
+                onNewVote?.();
+                return { ...prev, votesCount: prev.votesCount + 1 };
+              }
+              if (payload.eventType === 'DELETE') {
+                return { ...prev, votesCount: Math.max(0, prev.votesCount - 1) };
+              }
+              return prev;
+            });
+          }
+        )
+        .subscribe();
+
+      return () => {
+        client.removeChannel(channel);
       };
     },
   };

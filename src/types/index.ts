@@ -9,6 +9,11 @@ export interface PollWithOptions extends Poll {
   options: PollOption[];
 }
 
+export interface PlatformStats {
+  pollsCount: number;
+  votesCount: number;
+}
+
 export interface CreatePollData {
   title: Poll['title'];
   is_public: Poll['is_public'];

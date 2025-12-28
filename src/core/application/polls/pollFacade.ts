@@ -4,6 +4,7 @@ import type {
   PollWithOptions,
   CreatePollData,
   LeaderboardPoll,
+  PlatformStats,
 } from '../../../types';
 import type { PollGateway } from '../../domain/polls';
 
@@ -24,7 +25,11 @@ export interface PollFacade {
   getMostRecentPoll(): Promise<LeaderboardPoll | null>;
   validateAccessKey(pollId: string, accessKey: string): Promise<boolean>;
   isPollPublic(pollId: string): Promise<{ isPublic: boolean; requiresKey: boolean }>;
-  getPlatformStats(): Promise<{ pollsCount: number; votesCount: number }>;
+  getPlatformStats(): Promise<PlatformStats>;
+  subscribeToPlatformStats(
+    applyStats: (updater: (prev: PlatformStats) => PlatformStats) => void,
+    onNewVote?: () => void
+  ): () => void;
 }
 
 export function createPollFacade(gateway: PollGateway): PollFacade {
@@ -41,5 +46,7 @@ export function createPollFacade(gateway: PollGateway): PollFacade {
     validateAccessKey: (pollId, accessKey) => gateway.validateAccessKey(pollId, accessKey),
     isPollPublic: (pollId) => gateway.isPollPublic(pollId),
     getPlatformStats: () => gateway.getPlatformStats(),
+    subscribeToPlatformStats: (applyStats, onNewVote) =>
+      gateway.subscribeToPlatformStats(applyStats, onNewVote),
   };
 }

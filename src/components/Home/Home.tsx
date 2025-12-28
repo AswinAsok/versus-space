@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -25,17 +25,81 @@ import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
 import CurvedLoop from '../ReactBits/CurvedLoop/CurvedLoop';
 import { pollFacade } from '../../core/appServices';
+import type { PlatformStats } from '../../types';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
 }
 
 export function Home({ onNavigate }: HomeProps) {
-  const [stats, setStats] = useState({ pollsCount: 0, votesCount: 0 });
+  const [stats, setStats] = useState<PlatformStats>({ pollsCount: 0, votesCount: 0 });
+  const [clickBursts, setClickBursts] = useState<
+    Array<{ id: number; x: number; y: number; rotation: number; scale: number }>
+  >([]);
+  const clickBurstTimeouts = useRef<number[]>([]);
+  const initialStatsLoaded = useRef(false);
+  const pendingStatsDelta = useRef<PlatformStats>({ pollsCount: 0, votesCount: 0 });
+  const lastBurstTime = useRef(0);
+
+  const spawnClickBurst = useCallback(() => {
+    const now = Date.now();
+    if (now - lastBurstTime.current < 900) {
+      return; // throttle bursts so they stay occasional
+    }
+    lastBurstTime.current = now;
+
+    const id = Date.now() + Math.random();
+    const x = Math.random() * 100;
+    const y = 25 + Math.random() * 50; // keep within the curved band
+    const rotation = Math.random() * 24 - 12;
+    const scale = 0.9 + Math.random() * 0.25;
+
+    setClickBursts((prev) => [...prev, { id, x, y, rotation, scale }]);
+
+    const timeoutId = window.setTimeout(() => {
+      setClickBursts((prev) => prev.filter((burst) => burst.id !== id));
+    }, 1800);
+
+    clickBurstTimeouts.current.push(timeoutId);
+  }, []);
+
+  const applyRealtimeStats = useCallback((updater: (prev: PlatformStats) => PlatformStats) => {
+    setStats((prev) => {
+      const next = updater(prev);
+      if (!initialStatsLoaded.current) {
+        pendingStatsDelta.current = {
+          pollsCount: pendingStatsDelta.current.pollsCount + (next.pollsCount - prev.pollsCount),
+          votesCount: pendingStatsDelta.current.votesCount + (next.votesCount - prev.votesCount),
+        };
+      }
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
-    pollFacade.getPlatformStats().then(setStats).catch(console.error);
-  }, []);
+    pollFacade
+      .getPlatformStats()
+      .then((initialStats) => {
+        initialStatsLoaded.current = true;
+        setStats({
+          pollsCount: initialStats.pollsCount + pendingStatsDelta.current.pollsCount,
+          votesCount: initialStats.votesCount + pendingStatsDelta.current.votesCount,
+        });
+        pendingStatsDelta.current = { pollsCount: 0, votesCount: 0 };
+      })
+      .catch((error) => {
+        console.error(error);
+        initialStatsLoaded.current = true;
+      });
+
+    const unsubscribe = pollFacade.subscribeToPlatformStats(applyRealtimeStats, spawnClickBurst);
+
+    return () => {
+      unsubscribe();
+      clickBurstTimeouts.current.forEach((timeoutId) => clearTimeout(timeoutId));
+      clickBurstTimeouts.current = [];
+    };
+  }, [applyRealtimeStats, spawnClickBurst]);
 
   return (
     <>
@@ -113,18 +177,35 @@ export function Home({ onNavigate }: HomeProps) {
           <h2 id="stats-title" className={styles.srOnly}>
             Platform Statistics
           </h2>
-          <CurvedLoop
-            segments={[
-              { text: stats.pollsCount.toLocaleString(), isNumber: true },
-              { text: ' Polls Created ✦ ' },
-              { text: stats.votesCount.toLocaleString(), isNumber: true },
-              { text: ' Clicks Cast • ' },
-            ]}
-            speed={1.5}
-            curveAmount={250}
-            direction="left"
-            interactive={true}
-          />
+          <div className={styles.clickBurstLayer} aria-hidden="true">
+            {clickBursts.map((burst) => (
+              <span
+                key={burst.id}
+                className={styles.clickBurst}
+                style={{
+                  left: `${burst.x}%`,
+                  top: `${burst.y}%`,
+                  transform: `translate(-50%, -50%) rotate(${burst.rotation}deg) scale(${burst.scale})`,
+                }}
+              >
+                +1
+              </span>
+            ))}
+          </div>
+          <div className={styles.statsContent}>
+            <CurvedLoop
+              segments={[
+                { text: stats.pollsCount.toLocaleString(), isNumber: true },
+                { text: ' Polls Created ✦ ' },
+                { text: stats.votesCount.toLocaleString(), isNumber: true },
+                { text: ' Clicks Cast ✦ ' },
+              ]}
+              speed={1.5}
+              curveAmount={250}
+              direction="left"
+              interactive={true}
+            />
+          </div>
         </section>
 
         <div className={styles.homeInner}>
