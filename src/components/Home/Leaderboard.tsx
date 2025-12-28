@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Trophy, Users, ChevronRight, Clock, Plus, TrendingUp } from 'lucide-react';
+import { Trophy, Users, ChevronRight, Plus, TrendingUp, Pin } from 'lucide-react';
 import { pollFacade } from '../../core/appServices';
 import type { LeaderboardPoll } from '../../types';
 import styles from './Leaderboard.module.css';
@@ -10,17 +10,6 @@ interface LeaderboardProps {
   onNavigate: (path: string) => void;
 }
 
-function formatTimeAgo(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-  if (seconds < 60) return 'Just now';
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-  if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 function getWinningInfo(
   options: { title: string; vote_count: number }[]
@@ -133,6 +122,11 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
             className={styles.leaderboardItem}
             onClick={() => onNavigate(`/poll/${poll.id}`)}
           >
+            {index === 0 && (
+              <span className={styles.pinnedBadge}>
+                <Pin size={28} />
+              </span>
+            )}
             <div className={styles.rankBadge} data-rank={index + 1}>
               {index + 1}
             </div>
@@ -149,11 +143,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
                     ))}
                   </span>
                 )}
-                <span className={styles.createdTime}>
-                  <Clock size={12} />
-                  {formatTimeAgo(poll.created_at)}
-                </span>
-              </div>
+                              </div>
             </div>
             <div className={styles.pollActions}>
               {poll.options &&
