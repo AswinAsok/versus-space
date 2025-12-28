@@ -2,7 +2,15 @@ import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollFacade } from '../../core/appServices';
 import { CreatePollSEO } from '../SEO/SEO';
-import { X, Plus, Globe, Lock, Key, Code2, Crown } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import {
+  Cancel01Icon,
+  Add01Icon,
+  GlobeIcon,
+  LockIcon,
+  Key01Icon,
+  ChampionIcon,
+} from '@hugeicons/core-free-icons';
 import type { CreatePollData } from '../../types';
 import styles from './CreatePoll.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -149,10 +157,10 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
               </div>
               {options.length < 6 && (
                 <button type="button" className={styles.addOptionButton} disabled>
-                  <Plus size={16} />
+                  <HugeiconsIcon icon={Add01Icon} size={16} />
                   Add
                   <span className={styles.proBadge}>
-                    <Crown size={10} />
+                    <HugeiconsIcon icon={ChampionIcon} size={10} />
                     Pro
                   </span>
                 </button>
@@ -187,7 +195,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
                         disabled={loading}
                         aria-label="Remove option"
                       >
-                        <X size={16} />
+                        <HugeiconsIcon icon={Cancel01Icon} size={16} />
                       </button>
                     )}
                   </div>
@@ -297,7 +305,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
                 disabled={loading}
               >
                 <div className={styles.visibilityIcon}>
-                  <Globe size={18} />
+                  <HugeiconsIcon icon={GlobeIcon} size={18} />
                 </div>
                 <div className={styles.visibilityText}>
                   <span className={styles.visibilityName}>Public</span>
@@ -311,7 +319,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
                 disabled={loading}
               >
                 <div className={styles.visibilityIcon}>
-                  <Lock size={18} />
+                  <HugeiconsIcon icon={LockIcon} size={18} />
                 </div>
                 <div className={styles.visibilityText}>
                   <span className={styles.visibilityName}>Private</span>
@@ -323,7 +331,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
             {!isPublic && (
               <div className={styles.accessKeySection}>
                 <label htmlFor="accessKey" className={styles.accessKeyLabel}>
-                  <Key size={14} />
+                  <HugeiconsIcon icon={Key01Icon} size={14} />
                   Access Key
                 </label>
                 <input
@@ -345,31 +353,6 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
             {loading ? 'Creating...' : 'Create Poll'}
           </button>
         </form>
-
-        {/* Footer */}
-        <footer className={styles.footer}>
-          <span>&copy; 2025 versus.space</span>
-          <div className={styles.footerRight}>
-            <a
-              href="https://neal.fun"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              inspired from neal<span className={styles.footerDot}>.</span>fun
-            </a>
-            <span className={styles.footerDivider}>·</span>
-            <a
-              href="https://github.com/AswinAsok"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              <Code2 size={14} />
-              built by aswinasok<span className={styles.footerDot}>.</span>
-            </a>
-          </div>
-        </footer>
       </div>
     </div>
   );
