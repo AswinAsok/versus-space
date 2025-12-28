@@ -6,7 +6,8 @@
  */
 
 import { Link } from 'react-router-dom';
-import { Code2, Github, BookOpen, Vote, Users, HelpCircle } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { CodeIcon, GithubIcon, BookOpen01Icon, Tap01Icon, UserGroupIcon, HelpCircleIcon } from '@hugeicons/core-free-icons';
 import styles from './Footer.module.css';
 
 interface FooterProps {
@@ -36,7 +37,7 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
             rel="noopener noreferrer"
             className={styles.footerLink}
           >
-            <Code2 size={14} />
+            <HugeiconsIcon icon={CodeIcon} size={14} />
             built by aswinasok<span className={styles.footerDot}>.</span>
           </a>
         </div>
@@ -67,7 +68,7 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
                 rel="noopener noreferrer"
                 aria-label="Versus Space on GitHub"
               >
-                <Github size={20} />
+                <HugeiconsIcon icon={GithubIcon} size={20} />
               </a>
             </div>
           </div>
@@ -78,7 +79,7 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
             <ul>
               <li>
                 <Link to="/create">
-                  <Vote size={14} />
+                  <HugeiconsIcon icon={Tap01Icon} size={14} />
                   Create Poll
                 </Link>
               </li>
@@ -100,13 +101,13 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
             <ul>
               <li>
                 <Link to="/blog">
-                  <BookOpen size={14} />
+                  <HugeiconsIcon icon={BookOpen01Icon} size={14} />
                   Blog
                 </Link>
               </li>
               <li>
                 <Link to="/#faq">
-                  <HelpCircle size={14} />
+                  <HugeiconsIcon icon={HelpCircleIcon} size={14} />
                   FAQ
                 </Link>
               </li>
@@ -116,7 +117,7 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Github size={14} />
+                  <HugeiconsIcon icon={GithubIcon} size={14} />
                   GitHub
                 </a>
               </li>
@@ -129,7 +130,7 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
             <ul>
               <li>
                 <Link to="/#use-cases">
-                  <Users size={14} />
+                  <HugeiconsIcon icon={UserGroupIcon} size={14} />
                   Team Decisions
                 </Link>
               </li>
@@ -167,7 +168,7 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
               rel="noopener noreferrer"
               className={styles.footerLink}
             >
-              <Code2 size={14} />
+              <HugeiconsIcon icon={CodeIcon} size={14} />
               built by aswinasok
             </a>
           </p>

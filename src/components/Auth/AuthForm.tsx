@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { authFacade } from '../../core/appServices';
 import { AuthSEO } from '../SEO/SEO';
-import { ArrowRight, MailCheck } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRight01Icon, MailValidation01Icon } from '@hugeicons/core-free-icons';
 import styles from './AuthForm.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -110,7 +111,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
               ) : (
                 <>
                   {isLogin ? 'Sign In' : 'Create Account'}
-                  <ArrowRight size={18} />
+                  <HugeiconsIcon icon={ArrowRight01Icon} size={18} />
                 </>
               )}
             </button>
@@ -136,7 +137,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
         <div className={styles.modalOverlay} role="dialog" aria-modal="true">
           <div className={styles.modal}>
             <div className={styles.modalIcon}>
-              <MailCheck size={32} />
+              <HugeiconsIcon icon={MailValidation01Icon} size={32} />
             </div>
             <h3 className={styles.modalTitle}>Confirm your email</h3>
             <p className={styles.modalText}>

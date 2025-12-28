@@ -2,23 +2,24 @@ import { useState, useEffect, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollFacade } from '../../core/appServices';
 import { DashboardSEO } from '../SEO/SEO';
+import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  Trash2,
-  ExternalLink,
-  BarChart3,
-  Plus,
-  Globe,
-  Lock,
-  Activity,
-  Calendar,
-  Power,
-  PowerOff,
-  TrendingUp,
-  Copy,
-  Check,
-  ChevronRight,
-  Code2,
-} from 'lucide-react';
+  Delete01Icon,
+  SquareArrowUpRightIcon,
+  BarChartIcon,
+  Add01Icon,
+  GlobeIcon,
+  LockIcon,
+  Activity01Icon,
+  Calendar01Icon,
+  ToggleOnIcon,
+  ToggleOffIcon,
+  ChartIncreaseIcon,
+  Copy01Icon,
+  Tick01Icon,
+  ArrowRight01Icon,
+  CodeIcon,
+} from '@hugeicons/core-free-icons';
 import type { Poll } from '../../types';
 import styles from './Dashboard.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -119,7 +120,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
                 <div className={styles.statIcon}>
-                  <BarChart3 size={18} />
+                  <HugeiconsIcon icon={BarChartIcon} size={18} />
                 </div>
                 <div className={styles.statContent}>
                   <div className={styles.statValue}>{polls.length}</div>
@@ -129,7 +130,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
               <div className={styles.statDivider}></div>
               <div className={styles.statCard}>
                 <div className={styles.statIcon}>
-                  <Activity size={18} />
+                  <HugeiconsIcon icon={Activity01Icon} size={18} />
                 </div>
                 <div className={styles.statContent}>
                   <div className={styles.statValue}>{activePolls}</div>
@@ -139,7 +140,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
               <div className={styles.statDivider}></div>
               <div className={styles.statCard}>
                 <div className={styles.statIcon}>
-                  <Globe size={18} />
+                  <HugeiconsIcon icon={GlobeIcon} size={18} />
                 </div>
                 <div className={styles.statContent}>
                   <div className={styles.statValue}>{publicPolls}</div>
@@ -149,7 +150,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
               <div className={styles.statDivider}></div>
               <div className={styles.statCard}>
                 <div className={styles.statIcon}>
-                  <Lock size={18} />
+                  <HugeiconsIcon icon={LockIcon} size={18} />
                 </div>
                 <div className={styles.statContent}>
                   <div className={styles.statValue}>{polls.length - publicPolls}</div>
@@ -158,7 +159,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
               </div>
             </div>
             <button onClick={() => onNavigate('/create')} className={styles.createButton}>
-              <Plus size={18} />
+              <HugeiconsIcon icon={Add01Icon} size={18} />
               Create Poll
             </button>
           </div>
@@ -171,23 +172,23 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
           <div className={styles.actionsGrid}>
             <button onClick={() => onNavigate('/create')} className={styles.actionCard}>
               <div className={styles.actionIconWrapper}>
-                <Plus size={24} />
+                <HugeiconsIcon icon={Add01Icon} size={24} />
               </div>
               <div className={styles.actionContent}>
                 <h3>Create Poll</h3>
                 <p>Start a new poll in seconds</p>
               </div>
-              <ChevronRight size={20} className={styles.actionArrow} />
+              <HugeiconsIcon icon={ArrowRight01Icon} size={20} className={styles.actionArrow} />
             </button>
             <button onClick={() => onNavigate('/explore')} className={styles.actionCard}>
               <div className={styles.actionIconWrapper}>
-                <TrendingUp size={24} />
+                <HugeiconsIcon icon={ChartIncreaseIcon} size={24} />
               </div>
               <div className={styles.actionContent}>
                 <h3>Explore Polls</h3>
                 <p>Discover trending public polls</p>
               </div>
-              <ChevronRight size={20} className={styles.actionArrow} />
+              <HugeiconsIcon icon={ArrowRight01Icon} size={20} className={styles.actionArrow} />
             </button>
           </div>
         </section>
@@ -212,26 +213,26 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                   onClick={() => onNavigate('/create')}
                   className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
                 >
-                  <Plus size={18} />
+                  <HugeiconsIcon icon={Add01Icon} size={18} />
                   Create Your First Poll
                 </button>
                 <button
                   onClick={() => onNavigate('/explore')}
                   className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
                 >
-                  <Globe size={18} />
+                  <HugeiconsIcon icon={GlobeIcon} size={18} />
                   Explore Public Polls
                 </button>
               </div>
               <div className={styles.emptyFeatures}>
                 <span>
-                  <Check size={16} /> Real-time results
+                  <HugeiconsIcon icon={Tick01Icon} size={16} /> Real-time results
                 </span>
                 <span>
-                  <Check size={16} /> Easy sharing
+                  <HugeiconsIcon icon={Tick01Icon} size={16} /> Easy sharing
                 </span>
                 <span>
-                  <Check size={16} /> Beautiful visuals
+                  <HugeiconsIcon icon={Tick01Icon} size={16} /> Beautiful visuals
                 </span>
               </div>
             </div>
@@ -248,7 +249,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                       <span
                         className={`${styles.visibilityBadge} ${poll.is_public ? styles.public : styles.private}`}
                       >
-                        {poll.is_public ? <Globe size={12} /> : <Lock size={12} />}
+                        {poll.is_public ? <HugeiconsIcon icon={GlobeIcon} size={12} /> : <HugeiconsIcon icon={LockIcon} size={12} />}
                         {poll.is_public ? 'Public' : 'Private'}
                       </span>
                       <div className={styles.pollRight}>
@@ -258,14 +259,14 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                             className={styles.menuButton}
                             title="Copy link"
                           >
-                            {copiedId === poll.id ? <Check size={16} /> : <Copy size={16} />}
+                            {copiedId === poll.id ? <HugeiconsIcon icon={Tick01Icon} size={16} /> : <HugeiconsIcon icon={Copy01Icon} size={16} />}
                           </button>
                           <button
                             onClick={() => handleDelete(poll.id)}
                             className={`${styles.menuButton} ${styles.deleteButton}`}
                             title="Delete poll"
                           >
-                            <Trash2 size={16} />
+                            <HugeiconsIcon icon={Delete01Icon} size={16} />
                           </button>
                         </div>
                         {poll.is_active ? (
@@ -283,7 +284,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
 
                   <div className={styles.pollMeta}>
                     <span className={styles.pollDate}>
-                      <Calendar size={14} />
+                      <HugeiconsIcon icon={Calendar01Icon} size={14} />
                       {new Date(poll.created_at).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -299,7 +300,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                           onClick={() => onNavigate(`/poll/${poll.id}`)}
                           className={styles.viewButton}
                         >
-                          <ExternalLink size={16} />
+                          <HugeiconsIcon icon={SquareArrowUpRightIcon} size={16} />
                           View Poll
                         </button>
                         <button
@@ -307,7 +308,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                           className={`${styles.toggleButton} ${styles.toggleDeactivate}`}
                           title="Deactivate"
                         >
-                          <PowerOff size={16} />
+                          <HugeiconsIcon icon={ToggleOffIcon} size={16} />
                           Deactivate
                         </button>
                       </>
@@ -317,7 +318,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                           onClick={() => toggleStatus(poll.id, poll.is_active)}
                           className={styles.activateButton}
                         >
-                          <Power size={16} />
+                          <HugeiconsIcon icon={ToggleOnIcon} size={16} />
                           Activate Poll
                         </button>
                         <button
@@ -325,7 +326,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                           className={styles.viewButtonSecondary}
                           title="View Poll"
                         >
-                          <ExternalLink size={16} />
+                          <HugeiconsIcon icon={SquareArrowUpRightIcon} size={16} />
                           View
                         </button>
                       </>
@@ -356,7 +357,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
               rel="noopener noreferrer"
               className={styles.footerLink}
             >
-              <Code2 size={14} />
+              <HugeiconsIcon icon={CodeIcon} size={14} />
               built by aswinasok<span className={styles.footerDot}>.</span>
             </a>
           </div>

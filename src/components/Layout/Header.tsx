@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { authFacade, pollFacade } from '../../core/appServices';
 import type { LeaderboardPoll } from '../../types';
-import { LogOut, Clock } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Logout01Icon, Clock01Icon } from '@hugeicons/core-free-icons';
 import { track } from '@vercel/analytics';
 import styles from './Header.module.css';
 
@@ -83,7 +84,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
                     onClick={() => onNavigate(`/poll/${recentPoll.id}`)}
                     className={styles.trendingItem}
                   >
-                    <Clock size={14} />
+                    <HugeiconsIcon icon={Clock01Icon} size={14} />
                     <span className={styles.trendingTitle}>{recentPoll.title}</span>
                     <span className={styles.trendingVotes}>
                       {recentPoll.total_votes.toLocaleString()} votes
@@ -104,7 +105,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
                     {user.email?.charAt(0).toUpperCase()}
                   </button>
                   <button onClick={handleSignOut} className={styles.signOutButton} title="Sign out">
-                    <LogOut size={18} />
+                    <HugeiconsIcon icon={Logout01Icon} size={18} />
                   </button>
                 </div>
               ) : (

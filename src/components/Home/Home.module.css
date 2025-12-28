@@ -386,7 +386,8 @@
 }
 
 @keyframes floatUp {
-  0%, 5% {
+  0%,
+  5% {
     opacity: 0;
     transform: translateY(0);
   }
@@ -409,7 +410,8 @@
 }
 
 @keyframes flicker {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   5% {
@@ -471,7 +473,6 @@
     opacity: 0.8;
   }
 }
-
 
 @keyframes rippleEffect {
   0% {
@@ -687,7 +688,7 @@
 
 .trustedLabel {
   font-size: 1rem;
-  color: var(--color-text-muted);
+  color: var(--color-text);
   margin-bottom: 2rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -867,94 +868,138 @@
   margin: 0 auto;
 }
 
-/* How It Works Section */
-.howItWorksSection {
+/* Bento Grid Section */
+.bentoSection {
   padding: 4rem 0;
 }
 
-.stepsGrid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(120px, auto);
+  gap: 0.625rem;
 }
 
-.stepCard {
+.bentoCard {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-lg);
-  padding: 2rem;
-  text-align: center;
-  flex: 1;
-  max-width: 280px;
+  padding: 1.5rem;
+  padding-top: 1.75rem;
   position: relative;
+  overflow: visible;
   transition: all var(--transition-normal) var(--ease-out);
   box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+  display: flex;
+  flex-direction: column;
 }
 
-.stepCard:hover {
-  border-color: var(--glass-border-hover);
-  transform: translateY(-4px);
-  background: var(--glass-bg-hover);
-  box-shadow:
-    var(--glass-shadow),
-    var(--glass-inner-highlight),
-    0 0 20px rgba(62, 207, 142, 0.1);
+.bentoCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  pointer-events: none;
+  z-index: 10;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+}
+
+.bentoCard:hover::before {
+  animation: cardGlare 0.8s ease-out;
+}
+
+@keyframes cardGlare {
+  0% {
+    left: -50%;
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 1;
+  }
+}
+
+.bentoCard:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Bento card sizing */
+.bentoSmall {
+  grid-column: span 1;
+}
+
+.bentoWide {
+  grid-column: span 2;
 }
 
 .stepNumber {
   position: absolute;
   top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 28px;
-  height: 28px;
+  left: 1rem;
+  width: 24px;
+  height: 24px;
   background: var(--color-primary);
   color: #000000;
   border-radius: 50%;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 20;
 }
 
-.stepIconWrapper {
-  width: 64px;
-  height: 64px;
-  background: var(--color-primary-light);
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.25rem;
-  color: var(--color-primary);
-  transition: all var(--transition-fast) var(--ease-out);
+/* Stitching line between step numbers */
+.stepNumber::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: calc(100% + 2rem);
+  height: 0;
+  border-top: 2px dashed var(--color-primary);
+  opacity: 0.5;
+  transform: translateY(-50%);
+  margin-left: 0.5rem;
 }
 
-.stepCard:hover .stepIconWrapper {
-  background: var(--color-primary);
-  color: #000000;
-  transform: scale(1.1);
+/* Hide stitching on the last step (step 3) */
+.bentoCard:nth-child(3) .stepNumber::after {
+  display: none;
 }
 
-.stepTitle {
-  font-size: 1.125rem;
+.bentoIconSmall {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  color: #ffffff;
+  opacity: 0.015;
+  transition: all var(--transition-normal) var(--ease-out);
+  pointer-events: none;
+}
+
+.bentoCard:hover .bentoIconSmall {
+  opacity: 0.025;
+}
+
+.bentoTitleSmall {
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
-.stepDescription {
-  font-size: 0.875rem;
+.bentoDescriptionSmall {
+  font-size: 1rem;
   color: var(--color-text-light);
-  line-height: 1.5;
-}
-
-.stepConnector {
-  color: var(--color-text-muted);
+  line-height: 1.6;
 }
 
 /* Features Overview Section */
@@ -994,70 +1039,6 @@
 .featureItem svg {
   color: var(--color-primary);
   flex-shrink: 0;
-}
-
-/* Use Cases Section */
-.useCasesSection {
-  padding: 4rem 0;
-}
-
-.useCasesGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-
-.useCaseCard {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  transition: all var(--transition-normal) var(--ease-out);
-  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
-}
-
-.useCaseCard:hover {
-  border-color: var(--glass-border-hover);
-  transform: translateY(-4px);
-  background: var(--glass-bg-hover);
-  box-shadow:
-    var(--glass-shadow),
-    var(--glass-inner-highlight),
-    0 0 20px rgba(62, 207, 142, 0.1);
-}
-
-.useCaseIcon {
-  width: 48px;
-  height: 48px;
-  background: var(--color-primary-light);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  color: var(--color-primary);
-  transition: all var(--transition-fast) var(--ease-out);
-}
-
-.useCaseCard:hover .useCaseIcon {
-  background: var(--color-primary);
-  color: #000000;
-  transform: scale(1.1);
-}
-
-.useCaseTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.5rem;
-}
-
-.useCaseDescription {
-  font-size: 0.875rem;
-  color: var(--color-text-light);
-  line-height: 1.5;
 }
 
 /* FAQ Section */
@@ -1359,19 +1340,12 @@
 }
 
 @media (max-width: 992px) {
-  .stepsGrid {
-    flex-direction: column;
-    align-items: center;
+  .bentoGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .stepCard {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .stepConnector {
-    transform: rotate(90deg);
-    padding: 0;
+  .bentoWide {
+    grid-column: span 2;
   }
 
   .heroTitle {
@@ -1511,17 +1485,26 @@
     padding: 0 0.5rem;
   }
 
-  .howItWorksSection {
+  /* Bento Grid responsive */
+  .bentoSection {
     padding: 3rem 0;
   }
 
-  .stepCard {
-    padding: 1.5rem;
+  .bentoGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
   }
 
-  .stepIconWrapper {
-    width: 56px;
-    height: 56px;
+  .bentoWide {
+    grid-column: span 2;
+  }
+
+  .bentoTitleSmall {
+    font-size: 1.125rem;
+  }
+
+  .bentoDescriptionSmall {
+    font-size: 0.9375rem;
   }
 
   /* Features responsive */
@@ -1536,25 +1519,6 @@
   .featureItem {
     font-size: 0.8125rem;
     padding: 0.5rem 0.875rem;
-  }
-
-  /* Use Cases responsive */
-  .useCasesSection {
-    padding: 3rem 0;
-  }
-
-  .useCasesGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .useCaseCard {
-    padding: 1.25rem;
-  }
-
-  .useCaseIcon {
-    width: 40px;
-    height: 40px;
   }
 
   /* FAQ responsive */
@@ -1730,12 +1694,22 @@
     font-size: 0.9375rem;
   }
 
-  .howItWorksSection {
+  /* Bento Grid small mobile */
+  .bentoSection {
     padding: 2rem 0;
   }
 
-  .stepCard {
-    padding: 1.25rem;
+  .bentoGrid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .bentoWide {
+    grid-column: span 1;
+  }
+
+  .bentoCard {
+    padding: 1rem;
   }
 
   .stepNumber {
@@ -1743,20 +1717,15 @@
     height: 24px;
     font-size: 0.75rem;
     top: -10px;
+    left: 16px;
   }
 
-  .stepIconWrapper {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 1rem;
-  }
-
-  .stepTitle {
+  .bentoTitleSmall {
     font-size: 1rem;
   }
 
-  .stepDescription {
-    font-size: 0.8125rem;
+  .bentoDescriptionSmall {
+    font-size: 0.875rem;
   }
 
   .ctaSection {
@@ -1774,34 +1743,6 @@
   .ctaButton {
     padding: 0.625rem 1.25rem;
     font-size: 0.9375rem;
-  }
-
-  /* Use Cases small mobile */
-  .useCasesSection {
-    padding: 2rem 0;
-  }
-
-  .useCasesGrid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .useCaseCard {
-    padding: 1rem;
-  }
-
-  .useCaseIcon {
-    width: 36px;
-    height: 36px;
-    margin-bottom: 0.75rem;
-  }
-
-  .useCaseTitle {
-    font-size: 0.9375rem;
-  }
-
-  .useCaseDescription {
-    font-size: 0.8125rem;
   }
 
   /* FAQ small mobile */

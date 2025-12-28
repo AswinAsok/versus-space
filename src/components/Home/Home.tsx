@@ -1,22 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  ArrowRight,
-  ChevronRight,
-  Vote,
-  Share2,
-  Eye,
-  Code2,
-  Star,
-  HelpCircle,
-  Users,
-  Presentation,
-  GraduationCap,
-  Calendar,
-  MessageSquare,
-  BookOpen,
-  Plus,
-} from 'lucide-react';
+  ArrowRight01Icon,
+  Tap01Icon,
+  Share01Icon,
+  EyeIcon,
+  CodeIcon,
+  StarIcon,
+  HelpCircleIcon,
+  UserGroupIcon,
+  Presentation01Icon,
+  GraduationScrollIcon,
+  Calendar01Icon,
+  Comment01Icon,
+  BookOpen01Icon,
+  Add01Icon,
+} from '@hugeicons/core-free-icons';
 import { track } from '@vercel/analytics';
 import { Leaderboard } from './Leaderboard';
 import { HomeSchema } from './HomeSchema';
@@ -153,7 +153,7 @@ export function Home({ onNavigate }: HomeProps) {
                 >
                   <span className={styles.githubStarText}>Star On GitHub</span>
                   <span className={styles.githubStarCount}>
-                    <Star size={14} fill="currentColor" />
+                    <HugeiconsIcon icon={StarIcon} size={14} />
                     {githubStars !== null ? githubStars.toLocaleString() : '...'}
                   </span>
                 </a>
@@ -184,7 +184,7 @@ export function Home({ onNavigate }: HomeProps) {
                     onClick={() => onNavigate('/create')}
                     className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
                   >
-                    Create Free Poll <ArrowRight size={18} />
+                    Create Free Poll <HugeiconsIcon icon={ArrowRight01Icon} size={18} />
                   </button>
                 </div>
               </div>
@@ -260,7 +260,7 @@ export function Home({ onNavigate }: HomeProps) {
             </h2>
             <Leaderboard onNavigate={onNavigate} />
             <button onClick={() => onNavigate('/create')} className={styles.ctaButtonGreen}>
-              <Plus size={18} />
+              <HugeiconsIcon icon={Add01Icon} size={18} />
               Create Your Own Poll
             </button>
           </section>
@@ -297,143 +297,123 @@ export function Home({ onNavigate }: HomeProps) {
             </div>
           </section>
 
-          {/* How It Works Section - Optimized for HowTo Schema */}
-          <section
-            id="how-it-works"
-            className={styles.howItWorksSection}
-            aria-labelledby="how-it-works-title"
-          >
+          {/* Bento Grid - How It Works & Use Cases Combined */}
+          <section id="how-it-works" className={styles.bentoSection} aria-labelledby="bento-title">
             <div className={styles.sectionHeader}>
               <span className={styles.sectionBadge}>
-                Simple Process
-                <span className={styles.srOnly}> - Step-by-step guide to create polls</span>
+                Get Started
+                <span className={styles.srOnly}> - How to create polls and use cases</span>
               </span>
-              <h2 id="how-it-works-title" className={styles.sectionTitle}>
-                How to Create a Real-Time Poll
+              <h2 id="bento-title" className={styles.sectionTitle}>
+                Create Polls in Seconds
               </h2>
               <p className={styles.sectionSubtitle}>
-                Create an interactive online poll in under 30 seconds. No signup or technical skills
-                required.
+                Simple steps to launch real-time polls. Perfect for any situation.
               </p>
             </div>
-            <div className={styles.stepsGrid}>
-              <div className={styles.stepCard}>
+            <div className={styles.bentoGrid}>
+              {/* Row 1: Steps */}
+              {/* Step 1 - Wide */}
+              <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
                 <div className={styles.stepNumber}>1</div>
-                <div className={styles.stepIconWrapper}>
-                  <Vote size={32} />
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={Tap01Icon} size={56} />
                 </div>
-                <h3 className={styles.stepTitle}>Create Your Poll</h3>
-                <p className={styles.stepDescription}>
-                  Enter your question and add voting options. Customize with images and set
-                  visibility to public or private.
+                <h3 className={styles.bentoTitleSmall}>Create Your Poll</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  Enter your question and add voting options.
                 </p>
               </div>
-              <div className={styles.stepConnector}>
-                <ChevronRight size={24} />
-              </div>
-              <div className={styles.stepCard}>
-                <div className={styles.stepNumber}>2</div>
-                <div className={styles.stepIconWrapper}>
-                  <Share2 size={32} />
-                </div>
-                <h3 className={styles.stepTitle}>Share the Link</h3>
-                <p className={styles.stepDescription}>
-                  Copy your unique poll URL and distribute via email, chat, social media, or display
-                  on screen during presentations.
-                </p>
-              </div>
-              <div className={styles.stepConnector}>
-                <ChevronRight size={24} />
-              </div>
-              <div className={styles.stepCard}>
-                <div className={styles.stepNumber}>3</div>
-                <div className={styles.stepIconWrapper}>
-                  <Eye size={32} />
-                </div>
-                <h3 className={styles.stepTitle}>Watch Live Results</h3>
-                <p className={styles.stepDescription}>
-                  View real-time vote counts with split-screen visualizations as your audience
-                  responds instantly.
-                </p>
-              </div>
-            </div>
-          </section>
 
-          {/* Use Cases Section - Optimized for List Snippets */}
-          <section
-            id="use-cases"
-            className={styles.useCasesSection}
-            aria-labelledby="use-cases-title"
-          >
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionBadge}>
-                Use Cases
-                <span className={styles.srOnly}>
-                  {' '}
-                  - Real-world applications for real-time polling
-                </span>
-              </span>
-              <h2 id="use-cases-title" className={styles.sectionTitle}>
-                Best Uses for Real-Time Polling
-              </h2>
-              <p className={styles.sectionSubtitle}>
-                Real-time polling is perfect for any situation where you need instant audience
-                feedback.
-              </p>
-            </div>
-            <div className={styles.useCasesGrid}>
-              <div className={styles.useCaseCard}>
-                <div className={styles.useCaseIcon}>
-                  <Presentation size={24} />
+              {/* Step 2 */}
+              <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
+                <div className={styles.stepNumber}>2</div>
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={Share01Icon} size={56} />
                 </div>
-                <h3 className={styles.useCaseTitle}>Live Presentations</h3>
-                <p className={styles.useCaseDescription}>
-                  Engage audiences and gather instant feedback during talks and meetings.
+                <h3 className={styles.bentoTitleSmall}>Share the Link</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  Distribute via email, chat, or social media.
                 </p>
               </div>
-              <div className={styles.useCaseCard}>
-                <div className={styles.useCaseIcon}>
-                  <GraduationCap size={24} />
+
+              {/* Step 3 */}
+              <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
+                <div className={styles.stepNumber}>3</div>
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={EyeIcon} size={56} />
                 </div>
-                <h3 className={styles.useCaseTitle}>Classroom Activities</h3>
-                <p className={styles.useCaseDescription}>
-                  Increase student participation and check understanding in real-time.
+                <h3 className={styles.bentoTitleSmall}>Watch Live Results</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  View real-time votes as they stream in.
                 </p>
               </div>
-              <div className={styles.useCaseCard}>
-                <div className={styles.useCaseIcon}>
-                  <Users size={24} />
+
+              {/* Row 2: Use Cases */}
+              {/* Use Case - Presentations */}
+              <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={Presentation01Icon} size={56} />
                 </div>
-                <h3 className={styles.useCaseTitle}>Team Decisions</h3>
-                <p className={styles.useCaseDescription}>
-                  Make group choices quickly with transparent voting and instant results.
+                <h3 className={styles.bentoTitleSmall}>Live Presentations</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  Engage audiences during talks and meetings.
                 </p>
               </div>
-              <div className={styles.useCaseCard}>
-                <div className={styles.useCaseIcon}>
-                  <Calendar size={24} />
+
+              {/* Use Case - Classroom */}
+              <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={GraduationScrollIcon} size={56} />
                 </div>
-                <h3 className={styles.useCaseTitle}>Events & Conferences</h3>
-                <p className={styles.useCaseDescription}>
-                  Run interactive Q&A sessions and audience polls at any scale.
+                <h3 className={styles.bentoTitleSmall}>Classroom Activities</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  Check student understanding in real-time.
                 </p>
               </div>
-              <div className={styles.useCaseCard}>
-                <div className={styles.useCaseIcon}>
-                  <MessageSquare size={24} />
+
+              {/* Use Case - Team - Wide */}
+              <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={UserGroupIcon} size={56} />
                 </div>
-                <h3 className={styles.useCaseTitle}>Social Engagement</h3>
-                <p className={styles.useCaseDescription}>
-                  Create shareable "this vs that" content that drives interaction.
+                <h3 className={styles.bentoTitleSmall}>Team Decisions</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  Make group choices with transparent voting.
                 </p>
               </div>
-              <div className={styles.useCaseCard}>
-                <div className={styles.useCaseIcon}>
-                  <Vote size={24} />
+
+              {/* Row 3: More Use Cases */}
+              {/* Use Case - Events - Wide */}
+              <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={Calendar01Icon} size={56} />
                 </div>
-                <h3 className={styles.useCaseTitle}>Quick Feedback</h3>
-                <p className={styles.useCaseDescription}>
-                  Gauge preferences and opinions instantly without lengthy surveys.
+                <h3 className={styles.bentoTitleSmall}>Events & Conferences</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  Run interactive Q&A and polls at scale.
+                </p>
+              </div>
+
+              {/* Use Case - Social */}
+              <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={Comment01Icon} size={56} />
+                </div>
+                <h3 className={styles.bentoTitleSmall}>Social Engagement</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  Create shareable "this vs that" content.
+                </p>
+              </div>
+
+              {/* Use Case - Feedback */}
+              <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
+                <div className={styles.bentoIconSmall}>
+                  <HugeiconsIcon icon={Tap01Icon} size={56} />
+                </div>
+                <h3 className={styles.bentoTitleSmall}>Quick Feedback</h3>
+                <p className={styles.bentoDescriptionSmall}>
+                  Gauge preferences without lengthy surveys.
                 </p>
               </div>
             </div>
@@ -459,14 +439,14 @@ export function Home({ onNavigate }: HomeProps) {
             <div className={styles.faqGrid}>
               <div className={styles.faqItem}>
                 <div className={styles.faqQuestion}>
-                  <HelpCircle size={20} aria-hidden="true" />
+                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
                   <h3>What is Versus Space?</h3>
                 </div>
                 <p className={styles.faqAnswer}>
                   Versus Space is a free real-time polling platform that allows you to create
                   interactive polls in seconds and watch votes stream in live with split-screen
                   visualizations. It's perfect for{' '}
-                  <a href="#use-cases" className={styles.faqLink}>
+                  <a href="#how-it-works" className={styles.faqLink}>
                     presentations, events, classrooms, and team decisions
                   </a>
                   .
@@ -474,7 +454,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <div className={styles.faqItem}>
                 <div className={styles.faqQuestion}>
-                  <HelpCircle size={20} aria-hidden="true" />
+                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
                   <h3>Is Versus Space free to use?</h3>
                 </div>
                 <p className={styles.faqAnswer}>
@@ -488,7 +468,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <div className={styles.faqItem}>
                 <div className={styles.faqQuestion}>
-                  <HelpCircle size={20} aria-hidden="true" />
+                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
                   <h3>Do participants need an account to vote?</h3>
                 </div>
                 <p className={styles.faqAnswer}>
@@ -498,7 +478,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <div className={styles.faqItem}>
                 <div className={styles.faqQuestion}>
-                  <HelpCircle size={20} aria-hidden="true" />
+                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
                   <h3>Can I see poll results in real-time?</h3>
                 </div>
                 <p className={styles.faqAnswer}>
@@ -509,7 +489,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <div className={styles.faqItem}>
                 <div className={styles.faqQuestion}>
-                  <HelpCircle size={20} aria-hidden="true" />
+                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
                   <h3>Are online polls anonymous?</h3>
                 </div>
                 <p className={styles.faqAnswer}>
@@ -520,7 +500,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
               <div className={styles.faqItem}>
                 <div className={styles.faqQuestion}>
-                  <HelpCircle size={20} aria-hidden="true" />
+                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
                   <h3>How do I share a poll with my audience?</h3>
                 </div>
                 <p className={styles.faqAnswer}>
@@ -546,7 +526,7 @@ export function Home({ onNavigate }: HomeProps) {
               <p className={styles.ctaSubtitle}>Free forever. No signup required.</p>
             </div>
             <button onClick={() => onNavigate('/create')} className={styles.ctaButton}>
-              Create Free Poll <ArrowRight size={16} />
+              Create Free Poll <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </button>
           </div>
         </section>
@@ -559,14 +539,11 @@ export function Home({ onNavigate }: HomeProps) {
                 Create Poll
               </Link>
               <Link to="/blog" className={styles.footerNavLink}>
-                <BookOpen size={14} />
+                <HugeiconsIcon icon={BookOpen01Icon} size={14} />
                 Blog
               </Link>
-              <a href="#features" className={styles.footerNavLink}>
-                Features
-              </a>
-              <a href="#use-cases" className={styles.footerNavLink}>
-                Use Cases
+              <a href="#how-it-works" className={styles.footerNavLink}>
+                How It Works
               </a>
               <a href="#faq" className={styles.footerNavLink}>
                 FAQ
@@ -591,7 +568,7 @@ export function Home({ onNavigate }: HomeProps) {
                 rel="noopener noreferrer"
                 className={styles.footerLink}
               >
-                <Code2 size={14} />
+                <HugeiconsIcon icon={CodeIcon} size={14} />
                 built by aswinasok<span className={styles.footerDot}>.</span>
               </a>
             </div>

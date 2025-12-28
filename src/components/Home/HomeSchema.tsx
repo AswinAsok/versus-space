@@ -282,12 +282,6 @@ export function HomeSchema({ pollsCount, votesCount }: HomeSchemaProps) {
       {
         '@type': 'ListItem',
         position: 4,
-        name: 'Use Cases',
-        item: `${baseUrl}/#use-cases`,
-      },
-      {
-        '@type': 'ListItem',
-        position: 5,
         name: 'FAQ',
         item: `${baseUrl}/#faq`,
       },

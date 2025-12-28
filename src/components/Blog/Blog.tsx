@@ -7,7 +7,8 @@
 
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Calendar, Clock, ArrowRight, BookOpen, Code2, Vote } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Calendar01Icon, Clock01Icon, ArrowRight01Icon, BookOpen01Icon, CodeIcon, Tap01Icon } from '@hugeicons/core-free-icons';
 import LightRays from '../ReactBits/LightRays';
 import styles from './Blog.module.css';
 
@@ -180,7 +181,7 @@ export function Blog() {
           <header className={styles.blogHeader}>
             <div className={styles.headerContent}>
               <span className={styles.headerBadge}>
-                <BookOpen size={16} />
+                <HugeiconsIcon icon={BookOpen01Icon} size={16} />
                 Resources
               </span>
               <h1 className={styles.headerTitle}>
@@ -205,7 +206,7 @@ export function Blog() {
                     <span className={styles.postCategory}>{post.category}</span>
                     <div className={styles.postDateInfo}>
                       <span className={styles.postDate}>
-                        <Calendar size={14} />
+                        <HugeiconsIcon icon={Calendar01Icon} size={14} />
                         {new Date(post.publishedDate).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -213,7 +214,7 @@ export function Blog() {
                         })}
                       </span>
                       <span className={styles.postReadTime}>
-                        <Clock size={14} />
+                        <HugeiconsIcon icon={Clock01Icon} size={14} />
                         {post.readTime}
                       </span>
                     </div>
@@ -223,7 +224,7 @@ export function Blog() {
                   </h3>
                   <p className={styles.postExcerpt}>{post.excerpt}</p>
                   <Link to={`/blog/${post.slug}`} className={styles.readMore}>
-                    Read article <ArrowRight size={16} />
+                    Read article <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
                   </Link>
                 </article>
               ))}
@@ -241,7 +242,7 @@ export function Blog() {
               <p className={styles.ctaSubtitle}>Free forever. No signup required.</p>
             </div>
             <Link to="/create" className={styles.ctaButton}>
-              Create Free Poll <ArrowRight size={16} />
+              Create Free Poll <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </Link>
           </div>
         </section>

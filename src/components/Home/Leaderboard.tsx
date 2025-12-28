@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Trophy, Users, ChevronRight, TrendingUp, Pin } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ChampionIcon, UserGroupIcon, ArrowRight01Icon, ChartIncreaseIcon, PinIcon } from '@hugeicons/core-free-icons';
 import { pollFacade } from '../../core/appServices';
 import type { LeaderboardPoll } from '../../types';
 import styles from './Leaderboard.module.css';
@@ -58,7 +59,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
       <div className={styles.leaderboardContainer}>
         <div className={styles.leaderboardHeader}>
           <div className={styles.leaderboardTitleRow}>
-            <Trophy className={styles.trophyIcon} size={28} />
+            <HugeiconsIcon icon={ChampionIcon} size={28} className={styles.trophyIcon} />
             <h2 className={styles.leaderboardTitle}>Live Leaderboard</h2>
           </div>
           <p className={styles.leaderboardSubtitle}>Top public polls by votes</p>
@@ -76,7 +77,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
       <div className={styles.leaderboardContainer}>
         <div className={styles.leaderboardHeader}>
           <div className={styles.leaderboardTitleRow}>
-            <Trophy className={styles.trophyIcon} size={28} />
+            <HugeiconsIcon icon={ChampionIcon} size={28} className={styles.trophyIcon} />
             <h2 className={styles.leaderboardTitle}>Live Leaderboard</h2>
           </div>
         </div>
@@ -90,13 +91,13 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
       <div className={styles.leaderboardContainer}>
         <div className={styles.leaderboardHeader}>
           <div className={styles.leaderboardTitleRow}>
-            <Trophy className={styles.trophyIcon} size={28} />
+            <HugeiconsIcon icon={ChampionIcon} size={28} className={styles.trophyIcon} />
             <h2 className={styles.leaderboardTitle}>Live Leaderboard</h2>
           </div>
           <p className={styles.leaderboardSubtitle}>Top public polls by votes</p>
         </div>
         <div className={styles.emptyState}>
-          <Users size={48} className={styles.emptyIcon} />
+          <HugeiconsIcon icon={UserGroupIcon} size={48} className={styles.emptyIcon} />
           <p>No public polls yet</p>
           <span>Be the first to create one!</span>
         </div>
@@ -108,7 +109,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
     <div className={styles.leaderboardContainer}>
       <div className={styles.leaderboardHeader}>
         <span className={styles.leaderboardBadge}>
-          <Trophy size={14} />
+          <HugeiconsIcon icon={ChampionIcon} size={14} />
           Top Polls
         </span>
         <h2 className={styles.leaderboardTitle}>Live Leaderboard</h2>
@@ -125,7 +126,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
           >
             {index === 0 && (
               <span className={styles.pinnedBadge}>
-                <Pin size={28} />
+                <HugeiconsIcon icon={PinIcon} size={28} style={{ transform: 'rotate(-45deg)' }} />
               </span>
             )}
             <div className={styles.rankBadge} data-rank={index + 1}>
@@ -154,7 +155,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
                   if (winningInfo) {
                     return (
                       <span className={styles.winningInfo}>
-                        <TrendingUp size={12} />
+                        <HugeiconsIcon icon={ChartIncreaseIcon} size={12} />
                         {winningInfo.winner} {winningInfo.lead > 0 ? `+${winningInfo.lead}` : ''}
                       </span>
                     );
@@ -162,7 +163,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
                   return null;
                 })()}
               <span className={styles.voteCount}>{poll.total_votes.toLocaleString()} votes</span>
-              <ChevronRight size={18} className={styles.chevron} />
+              <HugeiconsIcon icon={ArrowRight01Icon} size={18} className={styles.chevron} />
             </div>
           </button>
         ))}
