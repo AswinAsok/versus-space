@@ -9,9 +9,14 @@ import {
 } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { Header } from './components/Layout/Header';
+import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { Home } from './components/Home/Home';
 import { AuthForm } from './components/Auth/AuthForm';
-import { Dashboard } from './components/Dashboard/Dashboard';
+import { DashboardHome } from './components/Dashboard/DashboardHome';
+import { MyPolls } from './components/Dashboard/MyPolls';
+import { Settings } from './components/Settings/Settings';
+import { Profile } from './components/Profile/Profile';
+import { Analytics } from './components/Analytics/Analytics';
 import { CreatePoll } from './components/Poll/CreatePoll';
 import { PollView } from './components/Poll/PollView';
 import { Blog } from './components/Blog/Blog';
@@ -25,11 +30,38 @@ function RoutedApp() {
   const navigate = useNavigate();
   const location = useLocation();
   const isPollView = location.pathname.startsWith('/poll/');
+  const isDashboardView = location.pathname.startsWith('/dashboard');
 
   if (loading) {
     return (
       <div className={appStyles.app}>
         <MouseLoader />
+      </div>
+    );
+  }
+
+  // Dashboard routes use their own layout with sidebar
+  if (isDashboardView) {
+    return (
+      <div className={appStyles.app}>
+        <Routes>
+          <Route
+            path="/dashboard/*"
+            element={
+              user ? (
+                <DashboardLayout user={user} />
+              ) : (
+                <Navigate to="/auth" replace />
+              )
+            }
+          >
+            <Route index element={<DashboardHome user={user!} />} />
+            <Route path="polls" element={<MyPolls user={user!} />} />
+            <Route path="settings" element={<Settings user={user!} />} />
+            <Route path="profile" element={<Profile user={user!} />} />
+            <Route path="analytics" element={<Analytics user={user!} />} />
+          </Route>
+        </Routes>
       </div>
     );
   }
@@ -60,16 +92,6 @@ function RoutedApp() {
             }
           />
           <Route
-            path="/dashboard"
-            element={
-              user ? (
-                <Dashboard user={user} onNavigate={navigate} />
-              ) : (
-                <Navigate to="/auth" replace />
-              )
-            }
-          />
-          <Route
             path="/create"
             element={
               user ? (
@@ -80,6 +102,8 @@ function RoutedApp() {
             }
           />
           <Route path="/poll/:pollId" element={<PollRoute />} />
+          {/* Explore redirects to home with leaderboard */}
+          <Route path="/explore" element={<Navigate to="/#leaderboard" replace />} />
           {/* Blog routes for SEO content */}
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />

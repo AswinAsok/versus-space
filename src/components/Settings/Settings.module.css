@@ -1,0 +1,313 @@
+/* Settings Container */
+.settingsContainer {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  font-family: 'Google Sans', sans-serif;
+}
+
+.settingsInner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.pageHeader {
+  margin-bottom: 2rem;
+}
+
+.pageTitle {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.pageSubtitle {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+/* Sections */
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.dangerTitle {
+  color: var(--color-danger);
+}
+
+/* Setting Cards */
+.settingCard {
+  background: rgba(28, 28, 28, 0.4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.dangerCard {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.settingItem:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.settingIcon {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-light);
+  flex-shrink: 0;
+}
+
+.dangerIcon {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-danger);
+}
+
+.googleIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.settingContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.settingLabel {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
+.settingValue {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.settingDescription {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.settingAction {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+
+.settingAction:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-border-hover);
+}
+
+.dangerButton {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-danger);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+
+.dangerButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Badges */
+.verifiedBadge,
+.connectedBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.verifiedBadge {
+  background: rgba(62, 207, 142, 0.1);
+  color: var(--color-primary);
+}
+
+.connectedBadge {
+  background: rgba(100, 116, 139, 0.1);
+  color: var(--color-text-light);
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+}
+
+.modal {
+  background: rgba(28, 28, 28, 0.95);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.modalIcon {
+  width: 64px;
+  height: 64px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-danger);
+  margin: 0 auto 1.5rem;
+}
+
+.modalTitle {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+}
+
+.modalText {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.modalActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.modalCancelButton {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.modalCancelButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.modalDeleteButton {
+  flex: 1;
+  background: var(--color-danger);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.modalDeleteButton:hover {
+  background: #dc2626;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settingsContainer {
+    padding: 1.5rem;
+  }
+
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+
+  .settingItem {
+    flex-wrap: wrap;
+  }
+
+  .settingContent {
+    flex-basis: calc(100% - 56px);
+  }
+
+  .settingAction,
+  .dangerButton,
+  .verifiedBadge,
+  .connectedBadge {
+    margin-left: 56px;
+    margin-top: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .settingsContainer {
+    padding: 1rem;
+  }
+
+  .pageTitle {
+    font-size: 1.375rem;
+  }
+
+  .settingItem {
+    padding: 1rem;
+  }
+
+  .settingIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .modalActions {
+    flex-direction: column;
+  }
+}
