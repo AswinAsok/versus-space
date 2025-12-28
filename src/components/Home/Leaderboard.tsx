@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Trophy, Users, ChevronRight, Plus, TrendingUp, Pin } from 'lucide-react';
+import { Trophy, Users, ChevronRight, TrendingUp, Pin } from 'lucide-react';
 import { pollFacade } from '../../core/appServices';
 import type { LeaderboardPoll } from '../../types';
 import styles from './Leaderboard.module.css';
@@ -120,6 +120,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
           <button
             key={poll.id}
             className={styles.leaderboardItem}
+            style={{ '--index': index } as React.CSSProperties}
             onClick={() => onNavigate(`/poll/${poll.id}`)}
           >
             {index === 0 && (
@@ -166,19 +167,6 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
           </button>
         ))}
 
-        {/* Create Poll Card */}
-        <button className={styles.createPollCard} onClick={() => onNavigate('/create')}>
-          <div className={styles.createPollIcon}>
-            <Plus size={20} />
-          </div>
-          <div className={styles.createPollInfo}>
-            <h3 className={styles.createPollTitle}>Create Your Own Poll</h3>
-            <p className={styles.createPollSubtitle}>
-              Start a new poll and see it climb the leaderboard
-            </p>
-          </div>
-          <ChevronRight size={18} className={styles.chevron} />
-        </button>
       </div>
     </div>
   );

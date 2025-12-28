@@ -15,6 +15,7 @@ import {
   Calendar,
   MessageSquare,
   BookOpen,
+  Plus,
 } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import { Leaderboard } from './Leaderboard';
@@ -258,6 +259,10 @@ export function Home({ onNavigate }: HomeProps) {
               Top Polls Leaderboard
             </h2>
             <Leaderboard onNavigate={onNavigate} />
+            <button onClick={() => onNavigate('/create')} className={styles.ctaButtonGreen}>
+              <Plus size={18} />
+              Create Your Own Poll
+            </button>
           </section>
 
           {/* Built For Section */}

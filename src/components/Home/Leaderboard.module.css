@@ -41,7 +41,73 @@
 .leaderboardList {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.leaderboardList.stacked {
+  cursor: pointer;
+  height: 120px;
+}
+
+.leaderboardList.stacked .leaderboardItem {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(calc(var(--index) * 6px)) scale(calc(1 - var(--index) * 0.01));
+  opacity: 1;
+  z-index: calc(10 - var(--index));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: blur(calc(var(--index) * 4px));
+  pointer-events: none;
+}
+
+.leaderboardList.stacked .leaderboardItem:first-child {
+  filter: none;
+  pointer-events: auto;
+}
+
+.leaderboardList.stacked .leaderboardItem:nth-child(n+3) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.leaderboardList.stacked .leaderboardItem:hover {
+  transform: translateY(calc(var(--index) * 8px - 4px)) scale(calc(1 - var(--index) * 0.015));
+}
+
+.leaderboardList.stacked::after {
+  content: 'Click to expand';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.leaderboardList.expanded {
+  height: auto;
+}
+
+.leaderboardList.expanded .leaderboardItem {
+  position: relative;
+  transform: none;
+  opacity: 1;
+  z-index: 1;
 }
 
 .leaderboardItem {
@@ -233,59 +299,29 @@
   opacity: 1;
 }
 
-/* Create Poll Card */
-.createPollCard {
-  display: flex;
+/* Create Poll Button */
+.createPollBtn {
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  background: transparent;
-  border: 1px dashed var(--color-border);
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  margin: 1rem auto 0;
+  background: #000000;
+  color: var(--color-primary);
+  border: none;
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-normal) var(--ease-out);
-  text-align: left;
-  width: 100%;
-}
-
-.createPollCard:hover {
-  border-color: var(--color-primary);
-  border-style: solid;
-  background: var(--color-primary-light);
-}
-
-.createPollIcon {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.createPollCard:hover .createPollIcon {
-  background: var(--color-primary);
-  color: #000000;
-}
-
-.createPollInfo {
-  flex: 1;
-  min-width: 0;
-}
-
-.createPollTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.25rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
 
-.createPollSubtitle {
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
+.createPollBtn:hover {
+  background: #1c1c1c;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Winning Info */
@@ -387,7 +423,7 @@
 
 @media (max-width: 768px) {
   .leaderboardContainer {
-    padding: 1.5rem;
+    padding: 1.5rem 0;
   }
 
   .leaderboardHeader {
@@ -436,22 +472,9 @@
     font-size: 0.8125rem;
   }
 
-  .createPollCard {
-    padding: 1rem;
-    gap: 0.75rem;
-  }
-
-  .createPollIcon {
-    width: 28px;
-    height: 28px;
-  }
-
-  .createPollTitle {
-    font-size: 0.9375rem;
-  }
-
-  .createPollSubtitle {
-    font-size: 0.75rem;
+  .createPollBtn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
   }
 
   .winningInfo {
@@ -462,7 +485,7 @@
 /* Small mobile breakpoint */
 @media (max-width: 480px) {
   .leaderboardContainer {
-    padding: 1rem;
+    padding: 1rem 0;
   }
 
   .leaderboardHeader {
@@ -517,43 +540,31 @@
   }
 
   .pollActions {
-    flex-direction: column;
-    align-items: flex-end;
+    flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
   }
 
+  .pollActions .chevron {
+    display: none;
+  }
+
+  .winningInfo {
+    display: none;
+  }
+
   .voteCount {
-    padding: 0.1875rem 0.375rem;
-    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.6875rem;
   }
 
   .createdTime {
     font-size: 0.6875rem;
   }
 
-  .createPollCard {
-    padding: 0.875rem;
-    gap: 0.625rem;
-    border-radius: var(--radius-md);
-  }
-
-  .createPollIcon {
-    width: 26px;
-    height: 26px;
-  }
-
-  .createPollTitle {
-    font-size: 0.875rem;
-    margin-bottom: 0.1875rem;
-  }
-
-  .createPollSubtitle {
-    font-size: 0.6875rem;
-  }
-
-  .winningInfo {
-    font-size: 0.625rem;
-    gap: 0.375rem;
+  .createPollBtn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
   }
 
   .loadingState,

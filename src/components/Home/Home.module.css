@@ -1185,6 +1185,29 @@
   box-shadow: var(--shadow-lg);
 }
 
+.ctaButtonGreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  margin: 1.5rem auto 0;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--color-primary);
+  color: #000000;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.ctaButtonGreen:hover {
+  background: var(--color-primary-hover, #4ae09a);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(62, 207, 142, 0.3);
+}
+
 /* Footer - Enhanced for SEO with Internal Links */
 .footer {
   display: flex;
