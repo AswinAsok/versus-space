@@ -51,11 +51,12 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem 2rem 0;
+  overflow: visible;
 }
 
 /* Hero Section */
 .hero {
-  padding: 6rem 0 3rem;
+  padding: 10rem 0 5rem;
   animation: fadeIn var(--transition-slow);
   position: relative;
 }
@@ -243,14 +244,14 @@
 }
 
 .heroTitle {
-  font-size: 3.5rem;
+  font-size: 3.25rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   letter-spacing: -0.03em;
   color: var(--color-text);
   animation: fadeInDown 0.6s var(--ease-out);
   line-height: 1.1;
-  max-width: 600px;
+  max-width: 650px;
 }
 
 .gradientText {
@@ -261,11 +262,11 @@
 }
 
 .heroSubtitle {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--color-text-light);
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   font-weight: 400;
-  max-width: 500px;
+  max-width: 520px;
   line-height: 1.6;
   animation: fadeInUp 0.6s var(--ease-out) 0.1s both;
 }
@@ -309,8 +310,11 @@
 
 /* Stats Section */
 .statsSection {
-  padding: 3rem 0;
+  padding: 3rem 0 0;
   animation: fadeInUp 0.6s var(--ease-out) 0.4s both;
+  overflow: visible;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
 .statsGrid {
@@ -1157,7 +1161,9 @@
   }
 
   .statsSection {
-    padding: 2rem 0;
+    padding: 1rem 0 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
   }
 
   .statsGrid {
@@ -1364,7 +1370,9 @@
   }
 
   .statsSection {
-    padding: 1.5rem 0;
+    padding: 0.5rem 0 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
   }
 
   .statsGrid {

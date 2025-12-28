@@ -23,7 +23,7 @@ import { HomeSEO } from '../SEO/SEO';
 import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
-import CountUp from '../ReactBits/CountUp/CountUp';
+import CurvedLoop from '../ReactBits/CurvedLoop/CurvedLoop';
 import { pollFacade } from '../../core/appServices';
 
 interface HomeProps {
@@ -106,53 +106,28 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
             </div>
           </section>
+        </main>
 
-          {/* Stats Section */}
-          <section id="stats" className={styles.statsSection} aria-labelledby="stats-title">
-            <h2 id="stats-title" className={styles.srOnly}>
-              Platform Statistics
-            </h2>
-            <div className={styles.statsGrid} aria-live="polite" aria-atomic="true">
-              <div className={styles.statItem}>
-                <div
-                  className={styles.statNumber}
-                  aria-label={`${stats.pollsCount.toLocaleString()} polls created`}
-                >
-                  <CountUp
-                    to={stats.pollsCount}
-                    from={0}
-                    duration={2}
-                    separator=","
-                    className={styles.countUp}
-                  />
-                </div>
-                <div className={styles.statLabel}>Polls Created</div>
-              </div>
-              <div className={styles.statDivider} aria-hidden="true"></div>
-              <div className={styles.statItem}>
-                <div
-                  className={styles.statNumber}
-                  aria-label={`${stats.votesCount.toLocaleString()} votes cast`}
-                >
-                  <CountUp
-                    to={stats.votesCount}
-                    from={0}
-                    duration={2}
-                    separator=","
-                    className={styles.countUp}
-                  />
-                </div>
-                <div className={styles.statLabel}>Clicks Cast</div>
-              </div>
-              <div className={styles.statDivider} aria-hidden="true"></div>
-              <div className={styles.statItem}>
-                <button onClick={() => onNavigate('/create')} className={styles.statButton}>
-                  Create Poll <ArrowRight size={20} />
-                </button>
-              </div>
-            </div>
-          </section>
+        {/* Stats Section - Curved Loop (Full Width) */}
+        <section id="stats" className={styles.statsSection} aria-labelledby="stats-title">
+          <h2 id="stats-title" className={styles.srOnly}>
+            Platform Statistics
+          </h2>
+          <CurvedLoop
+            segments={[
+              { text: stats.pollsCount.toLocaleString(), isNumber: true },
+              { text: ' Polls Created ✦ ' },
+              { text: stats.votesCount.toLocaleString(), isNumber: true },
+              { text: ' Clicks Cast • ' },
+            ]}
+            speed={1.5}
+            curveAmount={250}
+            direction="left"
+            interactive={true}
+          />
+        </section>
 
+        <div className={styles.homeInner}>
           {/* Leaderboard Section */}
           <section
             id="leaderboard"
@@ -434,7 +409,7 @@ export function Home({ onNavigate }: HomeProps) {
               </div>
             </div>
           </section>
-        </main>
+        </div>
 
         {/* CTA Section */}
         <section id="cta" className={styles.ctaSection} aria-labelledby="cta-title">

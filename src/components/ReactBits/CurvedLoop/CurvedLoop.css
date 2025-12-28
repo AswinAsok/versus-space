@@ -1,0 +1,75 @@
+.curved-loop-container {
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.curved-loop-svg {
+  user-select: none;
+  width: 100vw;
+  height: 100px;
+  overflow: visible;
+  display: block;
+  cursor: grab;
+}
+
+.curved-loop-svg:active {
+  cursor: grabbing;
+}
+
+.curved-loop-text {
+  font-size: 42px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  opacity: 0.8;
+}
+
+.curved-loop-label {
+  fill: #ffffff;
+}
+
+.curved-loop-number {
+  fill: var(--color-primary, #3ecf8e);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .curved-loop-container {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+  }
+
+  .curved-loop-svg {
+    height: 80px;
+    width: 100vw;
+  }
+
+  .curved-loop-text {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+}
+
+@media (max-width: 480px) {
+  .curved-loop-container {
+    padding: 0;
+    margin: 0;
+  }
+
+  .curved-loop-svg {
+    height: 70px;
+  }
+
+  .curved-loop-text {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+}
