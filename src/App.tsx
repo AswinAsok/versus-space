@@ -16,8 +16,8 @@ import { CreatePoll } from './components/Poll/CreatePoll';
 import { PollView } from './components/Poll/PollView';
 import { Blog } from './components/Blog/Blog';
 import { BlogPostPage } from './components/Blog/BlogPost';
+import { MouseLoader } from './components/Loading/MouseLoader';
 import appStyles from './components/App.module.css';
-import sharedStyles from './styles/Shared.module.css';
 
 // Wrapper that reads router state and renders the correct views.
 function RoutedApp() {
@@ -29,7 +29,7 @@ function RoutedApp() {
   if (loading) {
     return (
       <div className={appStyles.app}>
-        <div className={sharedStyles.loading}>Loading...</div>
+        <MouseLoader />
       </div>
     );
   }

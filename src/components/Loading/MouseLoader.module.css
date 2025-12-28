@@ -1,0 +1,224 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-bg);
+  z-index: 1000;
+  gap: 2rem;
+}
+
+.loaderArea {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.cursor {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary);
+  filter: drop-shadow(0 2px 8px rgba(62, 207, 142, 0.4));
+  animation: moveCursor 3s ease-in-out infinite;
+  z-index: 10;
+}
+
+.cursorIcon {
+  width: 100%;
+  height: 100%;
+}
+
+/* +1 floating text */
+.plusOne {
+  position: absolute;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(62, 207, 142, 0.5);
+}
+
+.plus1 {
+  top: 10px;
+  left: 18px;
+  animation: floatUp 3s ease-out infinite;
+  animation-delay: 0.1s;
+}
+
+.plus2 {
+  top: 50px;
+  left: 88px;
+  animation: floatUp 3s ease-out infinite;
+  animation-delay: 1.1s;
+}
+
+.plus3 {
+  top: 80px;
+  left: 48px;
+  animation: floatUp 3s ease-out infinite;
+  animation-delay: 2.1s;
+}
+
+.message {
+  color: var(--color-text-light);
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.5em;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.lastChar {
+  color: var(--color-primary);
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: var(--color-primary);
+  margin-left: 1px;
+  animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Cursor movement animation - moves to 3 click points */
+@keyframes moveCursor {
+  0%, 5% {
+    top: 10px;
+    left: 10px;
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(0.85);
+  }
+  15% {
+    transform: scale(1);
+  }
+  30%, 35% {
+    top: 50px;
+    left: 80px;
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.85);
+  }
+  45% {
+    transform: scale(1);
+  }
+  65%, 70% {
+    top: 80px;
+    left: 40px;
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(0.85);
+  }
+  80% {
+    transform: scale(1);
+  }
+  100% {
+    top: 10px;
+    left: 10px;
+    transform: scale(1);
+  }
+}
+
+/* +1 float up animation */
+@keyframes floatUp {
+  0%, 5% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    opacity: 0;
+    transform: translateY(-30px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(1);
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .container {
+    gap: 1.5rem;
+  }
+
+  .loaderArea {
+    width: 100px;
+    height: 100px;
+  }
+
+  .cursor {
+    width: 20px;
+    height: 20px;
+  }
+
+  .message {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    gap: 1.25rem;
+  }
+
+  .loaderArea {
+    width: 80px;
+    height: 80px;
+  }
+
+  .cursor {
+    width: 18px;
+    height: 18px;
+  }
+
+  .plusOne {
+    font-size: 0.875rem;
+  }
+
+  .plus1 {
+    top: 8px;
+    left: 14px;
+  }
+
+  .plus2 {
+    top: 40px;
+    left: 70px;
+  }
+
+  .plus3 {
+    top: 64px;
+    left: 38px;
+  }
+
+  .message {
+    font-size: 0.9375rem;
+  }
+}
