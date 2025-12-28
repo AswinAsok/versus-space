@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { authFacade } from '../../core/appServices';
 import { AuthSEO } from '../SEO/SEO';
-import { Zap, BarChart3, Users, Lock, Check, ArrowRight, MailCheck } from 'lucide-react';
+import { ArrowRight, MailCheck } from 'lucide-react';
 import styles from './AuthForm.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -37,46 +37,12 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
     }
   };
 
-  const features = [
-    { icon: Zap, text: 'Real-time voting updates' },
-    { icon: BarChart3, text: 'Beautiful split-screen visualizations' },
-    { icon: Users, text: 'Unlimited participants' },
-    { icon: Lock, text: 'Public & private poll options' },
-  ];
-
   return (
     <div className={styles.authPage}>
       {/* SEO - noindex for auth pages */}
       <AuthSEO />
-      {/* Left Panel - Marketing */}
-      <div className={styles.marketingPanel}>
-        <div className={styles.marketingContent}>
-          <h1 className={styles.marketingTitle}>Create engaging polls in seconds</h1>
-          <p className={styles.marketingSubtitle}>
-            Join thousands of teams using versus.space to make better decisions with real-time
-            voting.
-          </p>
 
-          <div className={styles.featuresList}>
-            {features.map((feature, index) => (
-              <div key={index} className={styles.featureItem}>
-                <div className={styles.featureIcon}>
-                  <feature.icon size={20} />
-                </div>
-                <span>{feature.text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Background decoration */}
-        <div className={styles.bgDecoration}>
-          <div className={styles.bgCircle1}></div>
-          <div className={styles.bgCircle2}></div>
-        </div>
-      </div>
-
-      {/* Right Panel - Form */}
+      {/* Centered Form */}
       <div className={styles.formPanel}>
         <div className={styles.formWrapper}>
           <div className={styles.formHeader}>
@@ -163,23 +129,6 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
               </button>
             </p>
           </div>
-
-          {!isLogin && (
-            <div className={styles.benefits}>
-              <div className={styles.benefitItem}>
-                <Check size={16} />
-                <span>Free forever for basic use</span>
-              </div>
-              <div className={styles.benefitItem}>
-                <Check size={16} />
-                <span>No credit card required</span>
-              </div>
-              <div className={styles.benefitItem}>
-                <Check size={16} />
-                <span>Setup in 30 seconds</span>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
