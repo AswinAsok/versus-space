@@ -13,15 +13,50 @@
   position: relative;
   overflow: hidden;
   transition: all var(--transition-fast) var(--ease-out);
+  box-shadow: 0 2px 8px rgba(62, 207, 142, 0.3);
+}
+
+/* Glare/shine effect */
+.btnPrimary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: none;
+}
+
+.btnPrimary:hover::before {
+  animation: glareShine 0.6s ease-out;
+}
+
+@keyframes glareShine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 150%;
+  }
 }
 
 .btnPrimary:hover:not(:disabled) {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
+  background: var(--color-primary);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .btnPrimary:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(62, 207, 142, 0.3);
 }
 
 /* Supabase-styled Secondary Button */

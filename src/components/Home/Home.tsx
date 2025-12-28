@@ -64,41 +64,46 @@ export function Home({ onNavigate }: HomeProps) {
         <main id="main-content" className={styles.homeInner}>
           {/* Hero Section */}
           <section id="hero" className={styles.hero} aria-labelledby="hero-title">
-            <h1 id="hero-title" className={styles.heroTitle}>
-              Create <span className={styles.gradientText}>Real-Time Polls</span> That{' '}
-              <span className={styles.gradientText}>Engage</span> Instantly
-            </h1>
-            <p className={styles.heroSubtitle}>
-              Launch free online polls in under 30 seconds. Watch votes stream in live with
-              split-screen visualizations. Perfect for presentations, classrooms, events, and team
-              decisions.
-            </p>
-            <div className={styles.heroActions}>
-              <button
-                onClick={() => onNavigate('/create')}
-                className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
-              >
-                Create Free Poll <ArrowRight size={18} />
-              </button>
-              <a
-                href="https://github.com/AswinAsok/versus-space"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
-              >
-                <Star size={18} /> {'Give a Star'}
-              </a>
-            </div>
-            <p className={styles.heroNote}>Free to use • No signup required • Unlimited polls</p>
+            <div className={styles.heroContent}>
+              <div className={styles.heroText}>
+                <h1 id="hero-title" className={styles.heroTitle}>
+                  Create <span className={styles.gradientText}>Real-Time Polls</span> That{' '}
+                  <span className={styles.gradientText}>Engage</span> Instantly
+                </h1>
+                <p className={styles.heroSubtitle}>
+                  Launch free online polls in seconds. Watch votes stream in live cool animations.
+                  Perfect for presentations, classrooms, events, and team decisions.
+                </p>
+                <div className={styles.heroActions}>
+                  <button
+                    onClick={() => onNavigate('/create')}
+                    className={`${sharedStyles.btnPrimary} ${sharedStyles.btnLarge}`}
+                  >
+                    Create Free Poll <ArrowRight size={18} />
+                  </button>
+                  <a
+                    href="https://github.com/AswinAsok/versus-space"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
+                  >
+                    <Star size={18} /> {'Give a Star'}
+                  </a>
+                </div>
+                <p className={styles.heroNote}>
+                  Free to use • No signup required • Unlimited polls
+                </p>
+              </div>
 
-            <div className={styles.demoVideoWrapper}>
-              <iframe
-                className={styles.demoVideo}
-                src="https://www.youtube.com/embed/lC7ViK-1DhI"
-                title="Versus Space Demo - See how real-time polling works"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              <div className={styles.demoVideoWrapper}>
+                <iframe
+                  className={styles.demoVideo}
+                  src="https://www.youtube.com/embed/lC7ViK-1DhI"
+                  title="Versus Space Demo - See how real-time polling works"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
             </div>
           </section>
 

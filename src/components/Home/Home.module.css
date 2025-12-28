@@ -55,10 +55,21 @@
 
 /* Hero Section */
 .hero {
-  text-align: center;
   padding: 6rem 0 3rem;
   animation: fadeIn var(--transition-slow);
   position: relative;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+}
+
+.heroText {
+  flex: 1;
+  text-align: left;
 }
 
 /* Backed By Badge - YC style */
@@ -239,9 +250,7 @@
   color: var(--color-text);
   animation: fadeInDown 0.6s var(--ease-out);
   line-height: 1.1;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 600px;
 }
 
 .gradientText {
@@ -256,9 +265,7 @@
   color: var(--color-text-light);
   margin-bottom: 2rem;
   font-weight: 400;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 500px;
   line-height: 1.6;
   animation: fadeInUp 0.6s var(--ease-out) 0.1s both;
 }
@@ -266,7 +273,6 @@
 .heroActions {
   display: flex;
   gap: 1rem;
-  justify-content: center;
   animation: fadeInUp 0.6s var(--ease-out) 0.2s both;
 }
 
@@ -278,7 +284,7 @@
 }
 
 .demoVideoWrapper {
-  margin-top: 3rem;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -287,7 +293,6 @@
 
 .demoVideo {
   width: 100%;
-  max-width: 800px;
   aspect-ratio: 16 / 9;
   border: none;
   border-radius: var(--radius-lg);
@@ -1074,9 +1079,28 @@
     padding: 2rem 0;
   }
 
+  .heroContent {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .heroText {
+    text-align: center;
+  }
+
+  .heroTitle {
+    max-width: 100%;
+  }
+
+  .heroSubtitle {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .demoVideoWrapper {
-    margin-top: 2rem;
     padding: 0 1rem;
+    width: 100%;
   }
 
   .demoVideo {
@@ -1276,8 +1300,11 @@
     padding: 1.5rem 0;
   }
 
+  .heroContent {
+    gap: 1.5rem;
+  }
+
   .demoVideoWrapper {
-    margin-top: 1.5rem;
     padding: 0 0.5rem;
   }
 
