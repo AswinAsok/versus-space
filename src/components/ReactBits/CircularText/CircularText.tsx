@@ -71,18 +71,22 @@ export default function CircularText({
           position: 'relative',
         }}
       >
-        {letters.map((letter, index) => (
-          <span
-            key={index}
-            style={{
-              transform: `rotate(${index * angleStep}deg)`,
-              transformOrigin: `0 ${radius}px`,
-              color: highlightIndices.has(index) ? highlightColor : '#ffffff',
-            }}
-          >
-            {letter}
-          </span>
-        ))}
+        {letters.map((letter, index) => {
+          const isHighlighted = highlightIndices.has(index);
+          return (
+            <span
+              key={index}
+              className={isHighlighted ? 'glitch-letter' : ''}
+              style={{
+                transform: `rotate(${index * angleStep}deg)`,
+                transformOrigin: `0 ${radius}px`,
+                color: isHighlighted ? highlightColor : '#ffffff',
+              }}
+            >
+              {letter}
+            </span>
+          );
+        })}
       </div>
     </div>
   );

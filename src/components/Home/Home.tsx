@@ -4,8 +4,6 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import {
   ArrowRight01Icon,
   Tap01Icon,
-  Share01Icon,
-  EyeIcon,
   CodeIcon,
   StarIcon,
   HelpCircleIcon,
@@ -28,6 +26,7 @@ import CurvedLoop from '../ReactBits/CurvedLoop/CurvedLoop';
 import CircularText from '../ReactBits/CircularText/CircularText';
 import { pollFacade } from '../../core/appServices';
 import type { PlatformStats } from '../../types';
+import { faqItems } from './faqData';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
@@ -43,6 +42,7 @@ export function Home({ onNavigate }: HomeProps) {
   const initialStatsLoaded = useRef(false);
   const pendingStatsDelta = useRef<PlatformStats>({ pollsCount: 0, votesCount: 0 });
   const lastBurstTime = useRef(0);
+  const [openFaqQuestion, setOpenFaqQuestion] = useState<string | null>(null);
 
   // Fetch GitHub stars
   useEffect(() => {
@@ -316,9 +316,6 @@ export function Home({ onNavigate }: HomeProps) {
               {/* Step 1 - Wide */}
               <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
                 <div className={styles.stepNumber}>1</div>
-                <div className={styles.bentoIconSmall}>
-                  <HugeiconsIcon icon={Tap01Icon} size={56} />
-                </div>
                 <h3 className={styles.bentoTitleSmall}>Create Your Poll</h3>
                 <p className={styles.bentoDescriptionSmall}>
                   Enter your question and add voting options.
@@ -328,9 +325,6 @@ export function Home({ onNavigate }: HomeProps) {
               {/* Step 2 */}
               <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
                 <div className={styles.stepNumber}>2</div>
-                <div className={styles.bentoIconSmall}>
-                  <HugeiconsIcon icon={Share01Icon} size={56} />
-                </div>
                 <h3 className={styles.bentoTitleSmall}>Share the Link</h3>
                 <p className={styles.bentoDescriptionSmall}>
                   Distribute via email, chat, or social media.
@@ -340,9 +334,6 @@ export function Home({ onNavigate }: HomeProps) {
               {/* Step 3 */}
               <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
                 <div className={styles.stepNumber}>3</div>
-                <div className={styles.bentoIconSmall}>
-                  <HugeiconsIcon icon={EyeIcon} size={56} />
-                </div>
                 <h3 className={styles.bentoTitleSmall}>Watch Live Results</h3>
                 <p className={styles.bentoDescriptionSmall}>
                   View real-time votes as they stream in.
@@ -419,99 +410,48 @@ export function Home({ onNavigate }: HomeProps) {
             </div>
           </section>
 
-          {/* FAQ Section - Optimized for PAA Snippets */}
+          {/* FAQ Section - Minimal */}
           <section id="faq" className={styles.faqSection} aria-labelledby="faq-title">
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionBadge}>
-                FAQ
-                <span className={styles.srOnly}>
-                  {' '}
-                  - Frequently asked questions about Versus Space
-                </span>
-              </span>
-              <h2 id="faq-title" className={styles.sectionTitle}>
-                Frequently Asked Questions
-              </h2>
-              <p className={styles.sectionSubtitle}>
-                Everything you need to know about real-time polling with Versus Space.
-              </p>
-            </div>
-            <div className={styles.faqGrid}>
-              <div className={styles.faqItem}>
-                <div className={styles.faqQuestion}>
-                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
-                  <h3>What is Versus Space?</h3>
-                </div>
-                <p className={styles.faqAnswer}>
-                  Versus Space is a free real-time polling platform that allows you to create
-                  interactive polls in seconds and watch votes stream in live with split-screen
-                  visualizations. It's perfect for{' '}
-                  <a href="#how-it-works" className={styles.faqLink}>
-                    presentations, events, classrooms, and team decisions
-                  </a>
-                  .
-                </p>
-              </div>
-              <div className={styles.faqItem}>
-                <div className={styles.faqQuestion}>
-                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
-                  <h3>Is Versus Space free to use?</h3>
-                </div>
-                <p className={styles.faqAnswer}>
-                  Yes, Versus Space is completely free to use with no limits on the number of polls
-                  you can create or votes you can receive. No credit card required.{' '}
-                  <a href="#features" className={styles.faqLink}>
-                    See all features
-                  </a>
-                  .
-                </p>
-              </div>
-              <div className={styles.faqItem}>
-                <div className={styles.faqQuestion}>
-                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
-                  <h3>Do participants need an account to vote?</h3>
-                </div>
-                <p className={styles.faqAnswer}>
-                  No, participants can vote instantly by clicking your shared link. No signup or
-                  account creation is required to participate in polls.
-                </p>
-              </div>
-              <div className={styles.faqItem}>
-                <div className={styles.faqQuestion}>
-                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
-                  <h3>Can I see poll results in real-time?</h3>
-                </div>
-                <p className={styles.faqAnswer}>
-                  Yes, Versus Space shows poll results updating in real-time as participants vote.
-                  Results display through split-screen visualizations that animate live, making it
-                  ideal for presentations and events.
-                </p>
-              </div>
-              <div className={styles.faqItem}>
-                <div className={styles.faqQuestion}>
-                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
-                  <h3>Are online polls anonymous?</h3>
-                </div>
-                <p className={styles.faqAnswer}>
-                  Yes, Versus Space polls are anonymous by default. Participants can vote without
-                  providing personal information. Poll creators see aggregate results but not
-                  individual voter identities.
-                </p>
-              </div>
-              <div className={styles.faqItem}>
-                <div className={styles.faqQuestion}>
-                  <HugeiconsIcon icon={HelpCircleIcon} size={20} />
-                  <h3>How do I share a poll with my audience?</h3>
-                </div>
-                <p className={styles.faqAnswer}>
-                  Share your poll by copying the unique URL to send via email or chat, displaying
-                  the link on screen during presentations, or posting directly to social media.{' '}
-                  <a href="#how-it-works" className={styles.faqLink}>
-                    See how it works
-                  </a>
-                  .
-                </p>
-              </div>
+            <h2 id="faq-title" className={styles.faqTitle}>
+              Frequently Asked Questions
+            </h2>
+            <div className={styles.faqList} role="list">
+              {faqItems.map((item) => {
+                const isOpen = openFaqQuestion === item.question;
+                return (
+                  <div
+                    key={item.question}
+                    className={`${styles.faqItem} ${isOpen ? styles.faqItemOpen : ''}`}
+                    role="listitem"
+                  >
+                    <button
+                      className={styles.faqTrigger}
+                      aria-expanded={isOpen}
+                      onClick={() => setOpenFaqQuestion(isOpen ? null : item.question)}
+                    >
+                      <div className={styles.faqQuestion}>
+                        <HugeiconsIcon icon={HelpCircleIcon} size={20} />
+                        <h3>{item.question}</h3>
+                      </div>
+                      <span
+                        className={`${styles.faqChevron} ${isOpen ? styles.faqChevronOpen : ''}`}
+                        aria-hidden="true"
+                      >
+                        <HugeiconsIcon icon={Add01Icon} size={16} />
+                      </span>
+                    </button>
+                    <div
+                      className={`${styles.faqAnswerWrapper} ${isOpen ? styles.faqAnswerOpen : ''}`}
+                      role="region"
+                      aria-live="polite"
+                    >
+                      <div>
+                        <p className={styles.faqAnswer}>{item.answer}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </section>
         </div>
