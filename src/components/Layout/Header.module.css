@@ -67,6 +67,16 @@
   letter-spacing: -0.02em;
 }
 
+.logoImage {
+  height: 18px;
+  width: auto;
+  transition: opacity var(--transition-fast) var(--ease-out);
+}
+
+.logoButton:hover .logoImage {
+  opacity: 0.8;
+}
+
 .logoHighlight {
   transition: color 0.3s ease-in-out;
 }
@@ -368,6 +378,10 @@
     height: 28px;
   }
 
+  .logoImage {
+    height: 16px;
+  }
+
   .navLink span {
     display: none;
   }
@@ -425,6 +439,10 @@
 
   .logo {
     font-size: 1rem;
+  }
+
+  .logoImage {
+    height: 14px;
   }
 
   .navRight {

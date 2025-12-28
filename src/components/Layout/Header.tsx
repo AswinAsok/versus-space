@@ -50,11 +50,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
           <nav className={styles.headerNav}>
             <div className={styles.navLeft}>
               <button onClick={() => onNavigate('/')} className={styles.logoButton}>
-                <span className={styles.logo}>
-                  <span className={styles.logoHighlight}>v</span>ersu
-                  <span className={styles.logoHighlight}>s</span>
-                  <span className={styles.logoDot}>.</span>space
-                </span>
+                <img src="/vs.png" alt="versus.space" className={styles.logoImage} />
               </button>
             </div>
 
