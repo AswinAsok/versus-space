@@ -24,6 +24,7 @@ import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
 import CurvedLoop from '../ReactBits/CurvedLoop/CurvedLoop';
+import CircularText from '../ReactBits/CircularText/CircularText';
 import { pollFacade } from '../../core/appServices';
 import type { PlatformStats } from '../../types';
 
@@ -33,6 +34,7 @@ interface HomeProps {
 
 export function Home({ onNavigate }: HomeProps) {
   const [stats, setStats] = useState<PlatformStats>({ pollsCount: 0, votesCount: 0 });
+  const [githubStars, setGithubStars] = useState<number | null>(null);
   const [clickBursts, setClickBursts] = useState<
     Array<{ id: number; x: number; y: number; rotation: number; scale: number }>
   >([]);
@@ -40,6 +42,18 @@ export function Home({ onNavigate }: HomeProps) {
   const initialStatsLoaded = useRef(false);
   const pendingStatsDelta = useRef<PlatformStats>({ pollsCount: 0, votesCount: 0 });
   const lastBurstTime = useRef(0);
+
+  // Fetch GitHub stars
+  useEffect(() => {
+    fetch('https://api.github.com/repos/AswinAsok/versus-space')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.stargazers_count !== undefined) {
+          setGithubStars(data.stargazers_count);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   const spawnClickBurst = useCallback(() => {
     const now = Date.now();
@@ -130,9 +144,35 @@ export function Home({ onNavigate }: HomeProps) {
           <section id="hero" className={styles.hero} aria-labelledby="hero-title">
             <div className={styles.heroContent}>
               <div className={styles.heroText}>
+                <a
+                  href="https://github.com/AswinAsok/versus-space"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.githubStarBadge}
+                >
+                  <span className={styles.githubStarText}>Star On GitHub</span>
+                  <span className={styles.githubStarCount}>
+                    <Star size={14} fill="currentColor" />
+                    {githubStars !== null ? githubStars.toLocaleString() : '...'}
+                  </span>
+                </a>
                 <h1 id="hero-title" className={styles.heroTitle}>
-                  Create <span className={styles.gradientText}>Real-Time Polls</span> That{' '}
-                  <span className={styles.gradientText}>Engage</span> Instantly
+                  Create{' '}
+                  <span className={styles.gradientTextWrapper}>
+                    <span className={styles.gradientText}>Real-Time Polls</span>
+                    <span className={styles.clickCursor} aria-hidden="true">
+                      <span className={styles.ripple}></span>
+                      <span className={styles.plusOne}>+1</span>
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L6.35 2.85a.5.5 0 0 0-.85.36Z" />
+                      </svg>
+                    </span>
+                  </span>{' '}
+                  That{' '}
+                  <span className={styles.gradientTextWrapper}>
+                    <span className={`${styles.gradientText} ${styles.flickerText}`}>Engage</span>
+                  </span>{' '}
+                  Instantly
                 </h1>
                 <p className={styles.heroSubtitle}>
                   Launch free online polls in seconds. Watch votes stream in live cool animations.
@@ -145,28 +185,27 @@ export function Home({ onNavigate }: HomeProps) {
                   >
                     Create Free Poll <ArrowRight size={18} />
                   </button>
-                  <a
-                    href="https://github.com/AswinAsok/versus-space"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${sharedStyles.btnSecondary} ${sharedStyles.btnLarge}`}
-                  >
-                    <Star size={18} /> {'Give a Star'}
-                  </a>
                 </div>
-                <p className={styles.heroNote}>
-                  Free to use • No signup required • Unlimited polls
-                </p>
               </div>
 
               <div className={styles.demoVideoWrapper}>
-                <iframe
-                  className={styles.demoVideo}
-                  src="https://www.youtube.com/embed/lC7ViK-1DhI"
-                  title="Versus Space Demo - See how real-time polling works"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+                <div className={styles.iframeContainer}>
+                  <iframe
+                    className={styles.demoVideo}
+                    src="https://www.youtube.com/embed/lC7ViK-1DhI"
+                    title="Versus Space Demo - See how real-time polling works"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                  <CircularText
+                    text="✦ MADE FOR FUN ✦ MADE FOR FUN "
+                    spinDuration={12}
+                    onHover="speedUp"
+                    className={styles.circularTextBadge}
+                    radius={70}
+                    highlightWord="FUN"
+                  />
+                </div>
               </div>
             </div>
           </section>
