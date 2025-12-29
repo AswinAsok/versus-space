@@ -14,6 +14,9 @@ import {
   Comment01Icon,
   BookOpen01Icon,
   Add01Icon,
+  CheckmarkCircle02Icon,
+  SparklesIcon,
+  CrownIcon,
 } from '@hugeicons/core-free-icons';
 import { track } from '@vercel/analytics';
 import { Leaderboard } from './Leaderboard';
@@ -381,6 +384,161 @@ export function Home({ onNavigate }: HomeProps) {
                 <p className={styles.bentoDescriptionSmall}>
                   Gauge preferences without lengthy surveys.
                 </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Pricing Section */}
+          <section id="pricing" className={styles.pricingSection} aria-labelledby="pricing-title">
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionBadge}>
+                Pricing
+                <span className={styles.srOnly}> - Simple and transparent</span>
+              </span>
+              <h2 id="pricing-title" className={styles.sectionTitle}>
+                Simple Pricing
+              </h2>
+              <p className={styles.sectionSubtitle}>
+                Start free, upgrade when you need more.
+              </p>
+            </div>
+            <div className={styles.pricingGrid}>
+              {/* Free Tier */}
+              <div className={styles.pricingCard}>
+                <div className={styles.pricingCardInner}>
+                  <h3 className={styles.pricingTierName}>Free</h3>
+                  <p className={styles.pricingTagline}>Perfect for getting started.</p>
+
+                  <div className={styles.pricingPriceBlock}>
+                    <span className={styles.pricingCurrency}>Rs.</span>
+                    <span className={styles.pricingAmount}>0</span>
+                    <span className={styles.pricingPeriod}>/mo</span>
+                  </div>
+                  <p className={styles.pricingBilling}>Free forever</p>
+
+                  <button
+                    onClick={() => onNavigate('/create')}
+                    className={styles.pricingButton}
+                  >
+                    Get Started with Free
+                  </button>
+
+                  <div className={styles.pricingFeatureHighlight}>
+                    <strong>3 Polls</strong> with <strong>unlimited votes</strong>
+                  </div>
+
+                  <ul className={styles.pricingFeatures}>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Real-time results</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Share via link</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Basic analytics</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Public polls</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Pro Tier */}
+              <div className={`${styles.pricingCard} ${styles.pricingCardPro}`}>
+                <div className={styles.mostPopularBadge}>
+                  <HugeiconsIcon icon={CrownIcon} size={14} />
+                  Most Popular
+                </div>
+                <div className={styles.pricingCardInner}>
+                  <h3 className={`${styles.pricingTierName} ${styles.pricingTierNamePro}`}>Pro</h3>
+                  <p className={styles.pricingTagline}>Best for creators who need more.</p>
+
+                  <div className={styles.pricingPriceBlock}>
+                    <span className={styles.pricingCurrency}>Rs.</span>
+                    <span className={styles.pricingAmount}>15</span>
+                    <span className={styles.pricingPeriod}>/mo</span>
+                  </div>
+                  <p className={styles.pricingBilling}>Billed monthly</p>
+
+                  <button
+                    onClick={() => onNavigate('/dashboard')}
+                    className={`${styles.pricingButton} ${styles.pricingButtonPro}`}
+                  >
+                    Get Started with Pro
+                  </button>
+
+                  <div className={styles.pricingFeatureHighlight}>
+                    <strong>Unlimited Polls</strong> with <strong>full control</strong>
+                  </div>
+
+                  <ul className={styles.pricingFeatures}>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Everything in Free</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Advanced analytics</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Poll controls & automation</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Private polls</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Priority support</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Enterprise Tier (Joke) */}
+              <div className={`${styles.pricingCard} ${styles.pricingCardEnterprise}`}>
+                <div className={styles.pricingCardInner}>
+                  <h3 className={styles.pricingTierName}>Enterprise</h3>
+                  <p className={styles.pricingTagline}>For agencies and teams scaling up.</p>
+
+                  <div className={styles.pricingPriceBlock}>
+                    <span className={styles.pricingAmountJoke}>Just Kidding</span>
+                  </div>
+                  <p className={styles.pricingBillingJoke}>There's no enterprise tier</p>
+
+                  <div className={styles.pricingButtonDisabled}>
+                    Maybe Someday
+                  </div>
+
+                  <div className={styles.pricingFeatureHighlightJoke}>
+                    We're just a <strong>fun side project</strong>
+                  </div>
+
+                  <ul className={styles.pricingFeaturesJoke}>
+                    <li>
+                      <span>~</span>
+                      <span>No dedicated account manager</span>
+                    </li>
+                    <li>
+                      <span>~</span>
+                      <span>No SLA guarantees</span>
+                    </li>
+                    <li>
+                      <span>~</span>
+                      <span>No corporate meetings</span>
+                    </li>
+                    <li>
+                      <span>~</span>
+                      <span>Just vibes</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </section>

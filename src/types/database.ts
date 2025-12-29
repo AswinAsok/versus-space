@@ -174,6 +174,7 @@ export interface Database {
       public_poll_leaderboard: {
         Row: {
           id: string;
+          slug: string;
           title: string;
           creator_id: string;
           is_active: boolean;

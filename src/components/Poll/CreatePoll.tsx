@@ -4,9 +4,9 @@ import { useCreatePoll, useUpdatePoll, useUserPollCount } from '../../hooks/useP
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { CreatePollSEO } from '../SEO/SEO';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { GlobeIcon, LockIcon, Key01Icon } from '@hugeicons/core-free-icons';
+import { GlobeIcon, LockIcon, Key01Icon, Clock01Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
 import type { CreatePollData, PollWithOptions } from '../../types';
-import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
+import { FREE_PLAN_POLL_LIMIT, FREE_PLAN_POLL_DURATION_MINUTES } from '../../config/plans';
 import { MouseLoader } from '../Loading/MouseLoader';
 import styles from './CreatePoll.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -45,6 +45,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const [autoVoteIntervalSeconds, setAutoVoteIntervalSeconds] = useState<number>(30);
   const [globalTargetVotes, setGlobalTargetVotes] = useState<number>(50);
   const [autoVotesEnabled, setAutoVotesEnabled] = useState(false);
+  const [showFreeUserModal, setShowFreeUserModal] = useState(false);
 
   const isSuperAdmin = profile?.role === 'superadmin';
   const isPro = isSuperAdmin || profile?.plan === 'pro';
@@ -98,50 +99,69 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
     setOptions(options.map((opt) => (opt.id === id ? { ...opt, [field]: value } : opt)));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const validateForm = (): boolean => {
     setError('');
 
     if (options.length < 2) {
       setError('Please add at least 2 options');
-      return;
+      return false;
     }
 
     if (options.some((opt) => !opt.title.trim())) {
       setError('All options must have a title');
-      return;
+      return false;
     }
 
     if (!isPublic && !accessKey.trim()) {
       setError('Private polls require an access key');
-      return;
+      return false;
     }
 
     if (durationMinutes !== '' && durationMinutes <= 0) {
       setError('Timer must be greater than 0 minutes or left blank');
-      return;
+      return false;
     }
 
     if (maxVotesPerIp !== '' && maxVotesPerIp <= 0) {
       setError('Max votes per IP must be greater than 0 or left blank');
-      return;
+      return false;
     }
 
     if (isAtFreeLimit) {
       setError(
         `Free plan limit reached. Upgrade to Pro to create more than ${FREE_PLAN_POLL_LIMIT} polls.`
       );
-      return;
+      return false;
     }
 
     if (!isPro && !isPublic) {
       setError('Private polls are available on the Pro plan.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    // Show confirmation modal for free users creating new polls
+    if (!isPro && !isEditMode) {
+      setShowFreeUserModal(true);
       return;
     }
 
+    await submitPoll();
+  };
+
+  const submitPoll = async () => {
+    setShowFreeUserModal(false);
+
     try {
       const effectiveAutoVotesEnabled = isPro ? autoVotesEnabled : false;
-      const effectiveDuration = isPro ? durationMinutes : '';
+      const effectiveDuration = isPro ? durationMinutes : FREE_PLAN_POLL_DURATION_MINUTES;
       const effectiveMaxVotesPerIp = isPro ? maxVotesPerIp : '';
       const effectiveInterval = isPro ? autoVoteIntervalSeconds : 30;
 
@@ -544,6 +564,45 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
           </button>
         </form>
       </div>
+
+      {/* Free User Timer Confirmation Modal */}
+      {showFreeUserModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowFreeUserModal(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <button
+              className={styles.modalClose}
+              onClick={() => setShowFreeUserModal(false)}
+            >
+              <HugeiconsIcon icon={Cancel01Icon} size={18} />
+            </button>
+            <div className={styles.modalIcon}>
+              <HugeiconsIcon icon={Clock01Icon} size={24} />
+            </div>
+            <h3 className={styles.modalTitle}>Auto-close Timer</h3>
+            <p className={styles.modalDescription}>
+              Your poll will automatically close in <strong>{FREE_PLAN_POLL_DURATION_MINUTES} minutes</strong>.
+            </p>
+            <p className={styles.modalSubtext}>
+              Upgrade to Pro for custom timer settings.
+            </p>
+            <div className={styles.modalActions}>
+              <button
+                className={styles.modalButtonSecondary}
+                onClick={() => setShowFreeUserModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className={styles.modalButtonPrimary}
+                onClick={submitPoll}
+                disabled={loading}
+              >
+                {loading ? 'Creating...' : 'Create Poll'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

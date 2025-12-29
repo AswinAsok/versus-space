@@ -1490,3 +1490,209 @@
     font-size: 0.6875rem;
   }
 }
+
+/* Free User Timer Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background: var(--color-bg-alt);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  max-width: 380px;
+  width: 100%;
+  position: relative;
+  animation: modalSlideIn 0.2s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modalClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast) var(--ease-out);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalClose:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+}
+
+.modalIcon {
+  width: 48px;
+  height: 48px;
+  background: rgba(62, 207, 142, 0.1);
+  border: 1px solid rgba(62, 207, 142, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  margin: 0 auto 1rem;
+}
+
+.modalTitle {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.modalDescription {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 0.25rem;
+}
+
+.modalDescription strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.modalSubtext {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  margin-bottom: 1rem;
+}
+
+.modalHeader svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.modalHeader strong {
+  color: var(--color-primary);
+}
+
+.modalActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modalButtonSecondary {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.modalButtonSecondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--color-text);
+}
+
+.modalButtonPrimary {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: var(--color-primary);
+  border: none;
+  color: #000000;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.modalButtonPrimary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.modalButtonPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Modal responsive */
+@media (max-width: 480px) {
+  .modal {
+    padding: 1.25rem;
+  }
+
+  .modalIcon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0.875rem;
+  }
+
+  .modalTitle {
+    font-size: 1rem;
+  }
+
+  .modalDescription {
+    font-size: 0.8125rem;
+  }
+
+  .modalSubtext {
+    font-size: 0.6875rem;
+  }
+
+  .modalButtonSecondary,
+  .modalButtonPrimary {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.75rem;
+  }
+}
