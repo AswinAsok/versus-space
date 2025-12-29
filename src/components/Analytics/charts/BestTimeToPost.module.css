@@ -1,0 +1,219 @@
+/* Card */
+.card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.title {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.01em;
+}
+
+/* Insight Banner */
+.insight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(62, 207, 142, 0.1);
+  border: 1px solid rgba(62, 207, 142, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--color-text);
+}
+
+.insight svg {
+  color: #3ecf8e;
+  flex-shrink: 0;
+}
+
+.insight strong {
+  color: #3ecf8e;
+  font-weight: 600;
+}
+
+/* Heatmap Container */
+.heatmapContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.heatmap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Hour Labels */
+.hourLabels {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 2px;
+}
+
+.cornerSpace {
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.hourLabel {
+  flex: 1;
+  text-align: center;
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+/* Grid Rows */
+.row {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.dayLabel {
+  width: 36px;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  text-align: right;
+  padding-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.cell {
+  flex: 1;
+  aspect-ratio: 1;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast) var(--ease-out);
+  cursor: default;
+  min-height: 28px;
+}
+
+.cell:hover {
+  transform: scale(1.1);
+  z-index: 1;
+}
+
+.cellValue {
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.legendLabel {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+}
+
+.legendGradient {
+  display: flex;
+  gap: 2px;
+}
+
+.legendCell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Empty State */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.emptyHint {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    padding: 1.25rem;
+  }
+
+  .cell {
+    min-height: 24px;
+  }
+
+  .cornerSpace,
+  .dayLabel {
+    width: 28px;
+  }
+
+  .insight {
+    font-size: 0.75rem;
+    padding: 0.625rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cell {
+    min-height: 20px;
+  }
+
+  .cellValue {
+    display: none;
+  }
+
+  .hourLabel {
+    font-size: 0.5rem;
+  }
+}

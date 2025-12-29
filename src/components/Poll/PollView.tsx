@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usePoll } from '../../hooks/usePoll';
 import { pollFacade } from '../../core/appServices';
+import { supabase } from '../../lib/supabaseClient';
 import { VotingInterface } from './VotingInterface';
 import { PollSEO } from '../SEO/SEO';
 import { Lock, Key, Code2, Eye, EyeOff, XCircle } from 'lucide-react';
@@ -29,6 +30,33 @@ export function PollView({ pollId }: PollViewProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Track presence for analytics (show who's viewing this poll)
+  useEffect(() => {
+    if (!pollId) return;
+
+    const channel = supabase.channel(`poll-presence:${pollId}`, {
+      config: { presence: { key: 'viewers' } },
+    });
+
+    channel
+      .on('presence', { event: 'sync' }, () => {
+        // Presence sync - we just need to be subscribed
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          // Track this viewer's presence
+          await channel.track({
+            viewerId: crypto.randomUUID(),
+            joinedAt: new Date().toISOString(),
+          });
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [pollId]);
 
   useEffect(() => {
     const checkAccess = async () => {

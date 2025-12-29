@@ -1,0 +1,178 @@
+/* Live Stats Bar */
+.statsBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  gap: 1rem;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.statsBar:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.statIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.liveIcon {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.liveDot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: #ef4444;
+  border-radius: 50%;
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+.votesIcon {
+  background: rgba(62, 207, 142, 0.15);
+  color: var(--color-primary);
+}
+
+.votesIcon.pulse {
+  animation: votePulse 0.3s ease-out;
+}
+
+@keyframes votePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(62, 207, 142, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(62, 207, 142, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(62, 207, 142, 0);
+  }
+}
+
+.todayIcon {
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
+}
+
+.velocityIcon {
+  background: rgba(245, 166, 35, 0.15);
+  color: #f5a623;
+}
+
+.activeIcon {
+  background: rgba(62, 207, 142, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activeDot {
+  width: 10px;
+  height: 10px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--color-primary);
+  animation: activePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes activePulse {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--color-primary);
+  }
+  50% {
+    box-shadow: 0 0 15px var(--color-primary), 0 0 25px var(--color-primary);
+  }
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.statValue {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .statsBar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .statItem {
+    flex: 0 0 calc(50% - 1rem);
+    justify-content: flex-start;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .statValue {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .statItem {
+    flex: 0 0 100%;
+  }
+}

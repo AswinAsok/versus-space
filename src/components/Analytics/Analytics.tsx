@@ -1,152 +1,250 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { User } from '@supabase/supabase-js';
-import { pollFacade } from '../../core/appServices';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { pollFacade, voteFacade } from '../../core/appServices';
 import {
-  BarChartIcon,
-  Activity01Icon,
-  ViewIcon,
-  ChartIncreaseIcon,
-} from '@hugeicons/core-free-icons';
-import type { Poll } from '../../types';
+  VotesOverTimeChart,
+  VotesPerPollChart,
+  OptionBreakdownChart,
+  LiveStatsBar,
+  LiveActivityFeed,
+  VotingHeatmap,
+  RealVsSimulatedChart,
+  ActivePollsTracker,
+  VoteMomentumGauge,
+  PersonalRecords,
+  OptionRace,
+  BestTimeToPost,
+  MilestoneProgress,
+  PollHealthScores,
+} from './charts';
+import type { Poll, VoteDailyCount, PollVoteSummary, OptionVoteData } from '../../types';
 import styles from './Analytics.module.css';
 
 interface AnalyticsProps {
   user: User;
 }
 
+type DateRange = 7 | 30 | 90;
+
 export function Analytics({ user }: AnalyticsProps) {
   const [polls, setPolls] = useState<Poll[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartsLoading, setChartsLoading] = useState(true);
+
+  // Chart data state
+  const [votesOverTime, setVotesOverTime] = useState<Map<string, VoteDailyCount[]>>(new Map());
+  const [votesPerPoll, setVotesPerPoll] = useState<PollVoteSummary[]>([]);
+  const [dateRange, setDateRange] = useState<DateRange>(30);
+  const [selectedPollId, setSelectedPollId] = useState<string>('');
+
+  // New chart data
+  const [voteTimestamps, setVoteTimestamps] = useState<Date[]>([]);
+  const [realVotes, setRealVotes] = useState(0);
+  const [simulatedVotes, setSimulatedVotes] = useState(0);
 
   const loadPolls = useCallback(async () => {
     try {
       const data = await pollFacade.getUserPolls(user.id);
       setPolls(data);
+      if (data.length > 0 && !selectedPollId) {
+        setSelectedPollId(data[0].id);
+      }
     } catch (err) {
       console.error('Failed to load polls:', err);
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, [user.id, selectedPollId]);
+
+  const loadChartData = useCallback(async () => {
+    if (polls.length === 0) {
+      setChartsLoading(false);
+      return;
+    }
+
+    setChartsLoading(true);
+    try {
+      const pollIds = polls.map((p) => p.id);
+
+      const [timeData, totalData, timestamps, authStats] = await Promise.all([
+        voteFacade.getVotesOverTime(pollIds, dateRange),
+        voteFacade.getTotalVotesForPolls(pollIds),
+        voteFacade.getVoteTimestamps(pollIds, 90), // Always fetch 90 days for heatmap
+        voteFacade.getVoteAuthenticityStats(pollIds),
+      ]);
+
+      setVotesOverTime(timeData);
+      setVotesPerPoll(totalData);
+      setVoteTimestamps(timestamps);
+      setRealVotes(authStats.realVotes);
+      setSimulatedVotes(authStats.simulatedVotes);
+    } catch (err) {
+      console.error('Failed to load chart data:', err);
+    } finally {
+      setChartsLoading(false);
+    }
+  }, [polls, dateRange]);
 
   useEffect(() => {
     loadPolls();
   }, [loadPolls]);
 
-  const totalPolls = polls.length;
-  const activePolls = polls.filter((p) => p.is_active).length;
-  const publicPolls = polls.filter((p) => p.is_public).length;
+  useEffect(() => {
+    if (polls.length > 0) {
+      loadChartData();
+    }
+  }, [polls, loadChartData]);
 
-  // Sort polls by created_at to get recent activity
-  const recentPolls = [...polls]
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    .slice(0, 5);
+  // Poll titles map for chart legends
+  const pollTitles = useMemo(() => {
+    const map = new Map<string, string>();
+    polls.forEach((poll) => map.set(poll.id, poll.title));
+    return map;
+  }, [polls]);
+
+  // Option breakdown data for selected poll
+  const [optionData, setOptionData] = useState<OptionVoteData[]>([]);
+  const [optionLoading, setOptionLoading] = useState(false);
+
+  useEffect(() => {
+    const loadOptionData = async () => {
+      if (!selectedPollId) {
+        setOptionData([]);
+        return;
+      }
+
+      setOptionLoading(true);
+      try {
+        const pollData = await pollFacade.getPoll(selectedPollId);
+        if (pollData?.options) {
+          setOptionData(
+            pollData.options.map((opt) => ({
+              optionId: opt.id,
+              optionTitle: opt.title,
+              voteCount: opt.vote_count,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error('Failed to load option data:', err);
+      } finally {
+        setOptionLoading(false);
+      }
+    };
+
+    loadOptionData();
+  }, [selectedPollId]);
+
+  const selectedPollTitle = polls.find((p) => p.id === selectedPollId)?.title || '';
+  const totalVotes = votesPerPoll.reduce((sum, p) => sum + p.totalVotes, 0);
+  const activePolls = polls.filter((p) => p.is_active).length;
+  const pollIds = polls.map((p) => p.id);
+
+  if (loading) {
+    return (
+      <div className={styles.analyticsContainer}>
+        <div className={styles.analyticsInner}>
+          <div className={styles.loadingState}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Loading analytics...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.analyticsContainer}>
       <div className={styles.analyticsInner}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Analytics</h1>
-          <p className={styles.pageSubtitle}>Overview of your poll performance and activity</p>
+          <p className={styles.pageSubtitle}>Real-time insights into your poll performance</p>
         </div>
 
-        {/* Stats Overview */}
-        <div className={styles.statsGrid}>
-          <div className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <HugeiconsIcon icon={BarChartIcon} size={24} />
-            </div>
-            <div className={styles.statContent}>
-              <span className={styles.statValue}>{loading ? '-' : totalPolls}</span>
-              <span className={styles.statLabel}>Total Polls</span>
-            </div>
-          </div>
-
-          <div className={styles.statCard}>
-            <div className={`${styles.statIcon} ${styles.activeIcon}`}>
-              <HugeiconsIcon icon={Activity01Icon} size={24} />
-            </div>
-            <div className={styles.statContent}>
-              <span className={styles.statValue}>{loading ? '-' : activePolls}</span>
-              <span className={styles.statLabel}>Active Polls</span>
-            </div>
-          </div>
-
-          <div className={styles.statCard}>
-            <div className={`${styles.statIcon} ${styles.publicIcon}`}>
-              <HugeiconsIcon icon={ViewIcon} size={24} />
-            </div>
-            <div className={styles.statContent}>
-              <span className={styles.statValue}>{loading ? '-' : publicPolls}</span>
-              <span className={styles.statLabel}>Public Polls</span>
-            </div>
-          </div>
-
-          <div className={styles.statCard}>
-            <div className={`${styles.statIcon} ${styles.growthIcon}`}>
-              <HugeiconsIcon icon={ChartIncreaseIcon} size={24} />
-            </div>
-            <div className={styles.statContent}>
-              <span className={styles.statValue}>
-                {loading ? '-' : Math.round((activePolls / Math.max(totalPolls, 1)) * 100)}%
-              </span>
-              <span className={styles.statLabel}>Active Rate</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Activity */}
+        {/* Live Stats Bar */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Recent Activity</h2>
-
-          {loading ? (
-            <div className={styles.loadingState}>
-              <div className={styles.loadingSpinner}></div>
-              <p>Loading activity...</p>
-            </div>
-          ) : recentPolls.length === 0 ? (
-            <div className={styles.emptyState}>
-              <p>No polls created yet. Create your first poll to see activity here.</p>
-            </div>
-          ) : (
-            <div className={styles.activityList}>
-              {recentPolls.map((poll) => (
-                <div key={poll.id} className={styles.activityItem}>
-                  <div className={styles.activityDot}></div>
-                  <div className={styles.activityContent}>
-                    <span className={styles.activityTitle}>{poll.title}</span>
-                    <span className={styles.activityMeta}>
-                      Created{' '}
-                      {new Date(poll.created_at).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </span>
-                  </div>
-                  <span
-                    className={`${styles.activityStatus} ${poll.is_active ? styles.active : styles.inactive}`}
-                  >
-                    {poll.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+          <LiveStatsBar
+            userId={user.id}
+            totalVotes={totalVotes}
+            activePolls={activePolls}
+            pollIds={pollIds}
+          />
         </section>
 
-        {/* Coming Soon Notice */}
-        <div className={styles.comingSoon}>
-          <HugeiconsIcon icon={ChartIncreaseIcon} size={24} className={styles.comingSoonIcon} />
-          <div className={styles.comingSoonContent}>
-            <h3 className={styles.comingSoonTitle}>More Analytics Coming Soon</h3>
-            <p className={styles.comingSoonText}>
-              We're working on detailed charts, vote trends, and engagement metrics.
-              Stay tuned for updates!
-            </p>
-          </div>
+        {/* Row 0: Momentum + Milestone + Personal Records */}
+        <div className={styles.threeColumnGrid}>
+          <VoteMomentumGauge pollIds={pollIds} />
+          <MilestoneProgress totalVotes={totalVotes} />
+          <PersonalRecords polls={polls} />
         </div>
+
+        {/* Votes Over Time Chart - Full Width Hero */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Manual Votes Over Time</h2>
+            <div className={styles.dateRangeSelector}>
+              {([7, 30, 90] as DateRange[]).map((days) => (
+                <button
+                  key={days}
+                  className={`${styles.dateRangeButton} ${dateRange === days ? styles.dateRangeActive : ''}`}
+                  onClick={() => setDateRange(days)}
+                >
+                  {days}d
+                </button>
+              ))}
+            </div>
+          </div>
+          <VotesOverTimeChart
+            data={votesOverTime}
+            pollTitles={pollTitles}
+            loading={chartsLoading}
+            days={dateRange}
+          />
+        </section>
+
+        {/* Row 1: Option Race + Poll Health Scores */}
+        <div className={styles.twoColumnGrid}>
+          <OptionRace
+            polls={polls}
+            selectedPollId={selectedPollId}
+            onPollChange={setSelectedPollId}
+          />
+          <PollHealthScores polls={polls} />
+        </div>
+
+        {/* Row 2: Best Time to Post + Active Polls Tracker */}
+        <div className={styles.twoColumnGrid}>
+          <BestTimeToPost pollIds={pollIds} />
+          <ActivePollsTracker polls={polls} />
+        </div>
+
+        {/* Row 3: Live Activity Feed + Voting Heatmap */}
+        <div className={styles.twoColumnGrid}>
+          <LiveActivityFeed pollIds={pollIds} pollTitles={pollTitles} />
+          <VotingHeatmap voteTimestamps={voteTimestamps} loading={chartsLoading} />
+        </div>
+
+        {/* Row 4: Vote Authenticity + Votes by Poll */}
+        <div className={styles.twoColumnGrid}>
+          <RealVsSimulatedChart
+            realVotes={realVotes}
+            simulatedVotes={simulatedVotes}
+            loading={chartsLoading}
+          />
+          <VotesPerPollChart data={votesPerPoll} loading={chartsLoading} />
+        </div>
+
+        {/* Row 5: Option Breakdown - Full Width */}
+        <section className={styles.section}>
+          <OptionBreakdownChart
+            data={optionData}
+            pollTitle={selectedPollTitle}
+            loading={optionLoading}
+            polls={polls}
+            selectedPollId={selectedPollId}
+            onPollChange={setSelectedPollId}
+          />
+        </section>
       </div>
     </div>
   );

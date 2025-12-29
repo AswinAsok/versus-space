@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { VoteGateway } from '../../domain/votes';
+import type { VoteGateway, VoteAuthenticityStats } from '../../domain/votes';
 import type { Database } from '../../../types/database';
-import type { Vote, UserSession } from '../../../types';
+import type { Vote, UserSession, VoteDailyCount, PollVoteSummary } from '../../../types';
 
 export function createSupabaseVoteGateway(client: SupabaseClient<Database>): VoteGateway {
   return {
@@ -46,6 +46,130 @@ export function createSupabaseVoteGateway(client: SupabaseClient<Database>): Vot
 
       if (error) throw error;
       return (data as Pick<Vote, 'option_id'>[]) || [];
+    },
+
+    async getVotesOverTime(pollIds, days) {
+      if (pollIds.length === 0) return new Map();
+
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+
+      const { data, error } = await client
+        .from('votes')
+        .select('poll_id, created_at')
+        .in('poll_id', pollIds)
+        .gte('created_at', startDate.toISOString())
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      // Group votes by poll_id and date
+      const result = new Map<string, VoteDailyCount[]>();
+
+      // Initialize map for all poll IDs
+      pollIds.forEach((pollId) => result.set(pollId, []));
+
+      // Group votes by date
+      const votesByPollAndDate = new Map<string, Map<string, number>>();
+
+      (data || []).forEach((vote) => {
+        const pollId = vote.poll_id;
+        const date = new Date(vote.created_at).toISOString().split('T')[0];
+
+        if (!votesByPollAndDate.has(pollId)) {
+          votesByPollAndDate.set(pollId, new Map());
+        }
+
+        const pollDates = votesByPollAndDate.get(pollId)!;
+        pollDates.set(date, (pollDates.get(date) || 0) + 1);
+      });
+
+      // Convert to VoteDailyCount arrays
+      votesByPollAndDate.forEach((dates, pollId) => {
+        const counts: VoteDailyCount[] = [];
+        dates.forEach((count, date) => {
+          counts.push({ date, count });
+        });
+        counts.sort((a, b) => a.date.localeCompare(b.date));
+        result.set(pollId, counts);
+      });
+
+      return result;
+    },
+
+    async getTotalVotesForPolls(pollIds) {
+      if (pollIds.length === 0) return [];
+
+      // Get polls with their titles and options (which have vote_count)
+      const { data: polls, error: pollsError } = await client
+        .from('polls')
+        .select('id, title')
+        .in('id', pollIds);
+
+      if (pollsError) throw pollsError;
+
+      // Get vote counts from poll_options (includes simulated votes)
+      const { data: options, error: optionsError } = await client
+        .from('poll_options')
+        .select('poll_id, vote_count')
+        .in('poll_id', pollIds);
+
+      if (optionsError) throw optionsError;
+
+      // Sum vote counts per poll from options
+      const voteCounts = new Map<string, number>();
+      (options || []).forEach((option) => {
+        const current = voteCounts.get(option.poll_id) || 0;
+        voteCounts.set(option.poll_id, current + (option.vote_count || 0));
+      });
+
+      // Build result
+      return (polls || []).map((poll) => ({
+        pollId: poll.id,
+        pollTitle: poll.title,
+        totalVotes: voteCounts.get(poll.id) || 0,
+      })) satisfies PollVoteSummary[];
+    },
+
+    async getVoteTimestamps(pollIds, days) {
+      if (pollIds.length === 0) return [];
+
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+
+      const { data, error } = await client
+        .from('votes')
+        .select('created_at')
+        .in('poll_id', pollIds)
+        .gte('created_at', startDate.toISOString());
+
+      if (error) throw error;
+
+      return (data || []).map((vote) => new Date(vote.created_at));
+    },
+
+    async getVoteAuthenticityStats(pollIds) {
+      if (pollIds.length === 0) return { realVotes: 0, simulatedVotes: 0 };
+
+      const { data, error } = await client
+        .from('votes')
+        .select('is_simulated')
+        .in('poll_id', pollIds);
+
+      if (error) throw error;
+
+      let realVotes = 0;
+      let simulatedVotes = 0;
+
+      (data || []).forEach((vote) => {
+        if (vote.is_simulated) {
+          simulatedVotes++;
+        } else {
+          realVotes++;
+        }
+      });
+
+      return { realVotes, simulatedVotes } satisfies VoteAuthenticityStats;
     },
   };
 }

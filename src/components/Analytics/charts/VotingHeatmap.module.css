@@ -1,0 +1,191 @@
+/* Heatmap Card */
+.heatmapCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.heatmapCard:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.heatmapTitle {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.25rem 0;
+}
+
+.heatmapSubtitle {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1.5rem 0;
+}
+
+/* Loading State */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--color-text-muted);
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 0.75rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Heatmap Container */
+.heatmapContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Hour Labels */
+.hourLabels {
+  display: flex;
+  align-items: center;
+  padding-left: 40px;
+}
+
+.cornerSpacer {
+  width: 0;
+}
+
+.hourLabel {
+  flex: 1;
+  text-align: center;
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  min-width: calc((100% - 40px) / 8);
+}
+
+/* Grid */
+.gridContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dayRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dayLabel {
+  width: 32px;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.hourCells {
+  display: flex;
+  flex: 1;
+  gap: 2px;
+}
+
+.cell {
+  flex: 1;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast) var(--ease-out);
+  cursor: default;
+  min-width: 0;
+  max-height: 24px;
+}
+
+.cell:hover {
+  transform: scale(1.2);
+  z-index: 1;
+  box-shadow: 0 0 10px rgba(62, 207, 142, 0.3);
+}
+
+.cellCount {
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.legendLabel {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+}
+
+.legendGradient {
+  display: flex;
+  gap: 2px;
+}
+
+.legendCell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* Footnote */
+.heatmapFootnote {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .heatmapCard {
+    padding: 1rem;
+  }
+
+  .cell {
+    max-height: 18px;
+  }
+
+  .cellCount {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hourLabels {
+    display: none;
+  }
+
+  .dayLabel {
+    width: 24px;
+    font-size: 0.5rem;
+  }
+}

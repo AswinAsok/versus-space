@@ -1,0 +1,215 @@
+import { useState, useEffect, useRef } from 'react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Fire02Icon, ArrowUp01Icon, ArrowDown01Icon } from '@hugeicons/core-free-icons';
+import { supabase } from '../../../lib/supabaseClient';
+import styles from './VoteMomentumGauge.module.css';
+
+interface VoteMomentumGaugeProps {
+  pollIds: string[];
+}
+
+export function VoteMomentumGauge({ pollIds }: VoteMomentumGaugeProps) {
+  const [currentHourVotes, setCurrentHourVotes] = useState(0);
+  const [averageHourlyVotes, setAverageHourlyVotes] = useState(0);
+  const [lastHourVotes, setLastHourVotes] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const animatedValue = useRef(0);
+  const [displayValue, setDisplayValue] = useState(0);
+
+  // Calculate momentum metrics
+  useEffect(() => {
+    if (pollIds.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchMomentum = async () => {
+      const now = new Date();
+      const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+      const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+      try {
+        // Get votes in current hour
+        const { count: currentCount } = await supabase
+          .from('votes')
+          .select('*', { count: 'exact', head: true })
+          .in('poll_id', pollIds)
+          .gte('created_at', oneHourAgo.toISOString());
+
+        // Get votes in previous hour (for trend)
+        const { count: lastCount } = await supabase
+          .from('votes')
+          .select('*', { count: 'exact', head: true })
+          .in('poll_id', pollIds)
+          .gte('created_at', twoHoursAgo.toISOString())
+          .lt('created_at', oneHourAgo.toISOString());
+
+        // Get average hourly votes over last 7 days
+        const { count: weekCount } = await supabase
+          .from('votes')
+          .select('*', { count: 'exact', head: true })
+          .in('poll_id', pollIds)
+          .gte('created_at', sevenDaysAgo.toISOString());
+
+        const hoursInWeek = 7 * 24;
+        const avgHourly = weekCount ? Math.round(weekCount / hoursInWeek) : 0;
+
+        setCurrentHourVotes(currentCount || 0);
+        setLastHourVotes(lastCount || 0);
+        setAverageHourlyVotes(avgHourly);
+      } catch (err) {
+        console.error('Failed to fetch momentum:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMomentum();
+
+    // Refresh every minute
+    const interval = setInterval(fetchMomentum, 60000);
+    return () => clearInterval(interval);
+  }, [pollIds]);
+
+  // Subscribe to real-time votes
+  useEffect(() => {
+    if (pollIds.length === 0) return;
+
+    const channel = supabase
+      .channel('momentum-votes')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'votes' },
+        (payload) => {
+          if (pollIds.includes(payload.new.poll_id)) {
+            setCurrentHourVotes((prev) => prev + 1);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [pollIds]);
+
+  // Animate the display value
+  useEffect(() => {
+    const target = currentHourVotes;
+    const start = animatedValue.current;
+    const duration = 500;
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(start + (target - start) * eased);
+
+      setDisplayValue(current);
+      animatedValue.current = current;
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [currentHourVotes]);
+
+  const isHot = currentHourVotes > averageHourlyVotes * 1.5;
+  const trend = currentHourVotes > lastHourVotes ? 'up' : currentHourVotes < lastHourVotes ? 'down' : 'stable';
+  const multiplier = averageHourlyVotes > 0 ? (currentHourVotes / averageHourlyVotes).toFixed(1) : '0';
+
+  // Calculate gauge angle (0-180 degrees)
+  const maxVotes = Math.max(averageHourlyVotes * 3, currentHourVotes, 10);
+  const gaugeAngle = Math.min((currentHourVotes / maxVotes) * 180, 180);
+
+  if (loading) {
+    return (
+      <div className={styles.gaugeCard}>
+        <div className={styles.loading}>
+          <div className={styles.loadingSpinner} />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${styles.gaugeCard} ${isHot ? styles.hot : ''}`}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>Vote Momentum</h3>
+        {isHot && (
+          <div className={styles.hotBadge}>
+            <HugeiconsIcon icon={Fire02Icon} size={14} />
+            <span>HOT</span>
+          </div>
+        )}
+      </div>
+
+      <div className={styles.gaugeContainer}>
+        <svg viewBox="0 0 200 120" className={styles.gauge}>
+          {/* Background arc */}
+          <path
+            d="M 20 100 A 80 80 0 0 1 180 100"
+            fill="none"
+            stroke="rgba(255,255,255,0.08)"
+            strokeWidth="12"
+            strokeLinecap="round"
+          />
+          {/* Active arc */}
+          <path
+            d="M 20 100 A 80 80 0 0 1 180 100"
+            fill="none"
+            stroke={isHot ? '#f97316' : '#3ecf8e'}
+            strokeWidth="12"
+            strokeLinecap="round"
+            strokeDasharray={`${(gaugeAngle / 180) * 251.2} 251.2`}
+            className={styles.activeArc}
+          />
+          {/* Needle */}
+          <g transform={`rotate(${gaugeAngle - 90}, 100, 100)`}>
+            <line
+              x1="100"
+              y1="100"
+              x2="100"
+              y2="35"
+              stroke="var(--color-text)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className={styles.needle}
+            />
+            <circle cx="100" cy="100" r="6" fill="var(--color-text)" />
+          </g>
+        </svg>
+
+        <div className={styles.gaugeValue}>
+          <span className={styles.valueNumber}>{displayValue}</span>
+          <span className={styles.valueUnit}>votes/hr</span>
+        </div>
+      </div>
+
+      <div className={styles.stats}>
+        <div className={styles.stat}>
+          <span className={styles.statLabel}>Average</span>
+          <span className={styles.statValue}>{averageHourlyVotes}/hr</span>
+        </div>
+        <div className={styles.stat}>
+          <span className={styles.statLabel}>Multiplier</span>
+          <span className={`${styles.statValue} ${isHot ? styles.hotValue : ''}`}>
+            {multiplier}x
+          </span>
+        </div>
+        <div className={styles.stat}>
+          <span className={styles.statLabel}>Trend</span>
+          <span className={`${styles.statValue} ${styles.trend} ${styles[trend]}`}>
+            {trend === 'up' && <HugeiconsIcon icon={ArrowUp01Icon} size={14} />}
+            {trend === 'down' && <HugeiconsIcon icon={ArrowDown01Icon} size={14} />}
+            {trend === 'stable' && '—'}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
