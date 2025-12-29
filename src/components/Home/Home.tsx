@@ -185,7 +185,7 @@ export function Home({ onNavigate }: HomeProps) {
                     allowFullScreen
                   />
                   <CircularText
-                    text="✦ MADE FOR FUN ✦ MADE FOR FUN "
+                    text="✦ MADE FOR FUN ✦ MADE WITH FUN "
                     spinDuration={12}
                     onHover="speedUp"
                     className={styles.circularTextBadge}
@@ -483,7 +483,7 @@ export function Home({ onNavigate }: HomeProps) {
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>30-minute auto-close timer</span>
+                      <span>15-minute auto-close timer</span>
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
@@ -500,7 +500,9 @@ export function Home({ onNavigate }: HomeProps) {
                   Most Popular
                 </div>
                 <div className={styles.pricingCardInner}>
-                  <h3 className={`${styles.pricingTierName} ${styles.pricingTierNamePro}`}>Pro</h3>
+                  <h3 className={`${styles.pricingTierName} ${styles.pricingTierNamePro}`}>
+                    Pro + Chai
+                  </h3>
                   <p className={styles.pricingTagline}>One chai = One month of Pro. Fair deal?</p>
 
                   <div className={styles.pricingPriceBlock}>
@@ -559,39 +561,52 @@ export function Home({ onNavigate }: HomeProps) {
                 </div>
               </div>
 
-              {/* Enterprise Tier (Joke) */}
+              {/* Support Tier */}
               <div className={`${styles.pricingCard} ${styles.pricingCardEnterprise}`}>
                 <div className={styles.pricingCardInner}>
-                  <h3 className={styles.pricingTierName}>Enterprise</h3>
-                  <p className={styles.pricingTagline}>For agencies and teams scaling up.</p>
+                  <h3 className={styles.pricingTierName}>Just Chai</h3>
+                  <p className={styles.pricingTagline}>
+                    No use case? Just vibing with the project?
+                  </p>
 
                   <div className={styles.pricingPriceBlock}>
-                    <span className={styles.pricingAmountJoke}>Just For Symmetry</span>
+                    <span className={styles.pricingAmountJoke}>Any Amount</span>
                   </div>
-                  <p className={styles.pricingBillingJoke}>There's no enterprise tier</p>
+                  <p className={styles.pricingBillingJoke}>Fuel the chai addiction anyway</p>
 
-                  <div className={styles.pricingButtonDisabled}>Maybe Someday</div>
+                  <a
+                    href="https://www.buymeacoffee.com/aswinasok"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.pricingButtonSupport}
+                    onClick={() => track('buymeacoffee_click', { location: 'pricing' })}
+                  >
+                    <img
+                      src="https://img.buymeacoffee.com/button-api/?text=Buy me a chai&emoji=☕&slug=aswinasok&button_colour=FFDD00&font_colour=000000&font_family=Lato&outline_colour=000000&coffee_colour=ffffff"
+                      alt="Buy me a chai"
+                    />
+                  </a>
 
                   <div className={styles.pricingFeatureHighlightJoke}>
-                    We're just a <strong>fun side project</strong>
+                    Every sip counts — <strong>thank you!</strong>
                   </div>
 
                   <ul className={styles.pricingFeaturesJoke}>
                     <li>
-                      <span>~</span>
-                      <span>No dedicated account manager</span>
+                      <span>♥</span>
+                      <span>Support an indie dev</span>
                     </li>
                     <li>
-                      <span>~</span>
-                      <span>No SLA guarantees</span>
+                      <span>♥</span>
+                      <span>Keep the servers running</span>
                     </li>
                     <li>
-                      <span>~</span>
-                      <span>No corporate meetings</span>
+                      <span>♥</span>
+                      <span>Fund more chai breaks</span>
                     </li>
                     <li>
-                      <span>~</span>
-                      <span>Just vibes</span>
+                      <span>♥</span>
+                      <span>Good karma guaranteed</span>
                     </li>
                   </ul>
                 </div>

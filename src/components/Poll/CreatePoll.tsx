@@ -40,7 +40,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const loading = createPoll.isPending || updatePoll.isPending;
   const { data: profile, isLoading: profileLoading } = useUserProfile(user);
   const { data: pollCount = 0, isLoading: pollCountLoading } = useUserPollCount(user.id);
-  const [durationMinutes, setDurationMinutes] = useState<number | ''>('');
+  const [durationMinutes, setDurationMinutes] = useState<number | ''>(FREE_PLAN_POLL_DURATION_MINUTES);
   const [maxVotesPerIp, setMaxVotesPerIp] = useState<number | ''>('');
   const [autoVoteIntervalSeconds, setAutoVoteIntervalSeconds] = useState<number>(30);
   const [globalTargetVotes, setGlobalTargetVotes] = useState<number>(50);
@@ -91,7 +91,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
     setIsPublic(true);
     setAccessKey('');
     setAutoVotesEnabled(false);
-    setDurationMinutes('');
+    setDurationMinutes(FREE_PLAN_POLL_DURATION_MINUTES);
     setMaxVotesPerIp('');
   }, [profile, isPro]);
 

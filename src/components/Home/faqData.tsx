@@ -9,26 +9,26 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Is Versus Space free to use?',
     answer:
-      'Yes, Versus Space is 100% free with no hidden costs, premium tiers, or usage limits. Create unlimited polls, collect unlimited votes, and access all features without ever entering a credit card. We built this as an open-source project to make real-time polling accessible to everyone—from students running classroom quizzes to professionals hosting large-scale events.',
+      'Yes! The free plan lets you create up to 3 polls with unlimited votes. Free polls auto-close after 15 minutes and are public. For unlimited polls, custom timers, private access keys, vote limiting, and analytics, upgrade to Pro for just Rs. 15/month (less than a chai).',
   },
   {
     question: 'Do participants need an account to vote?',
     answer:
-      'No accounts or signups required. When you share your poll link, participants can vote with a single click—no registration, email verification, or personal information needed. This zero-friction approach means higher participation rates and instant engagement, whether you\'re polling 5 people or 5,000.',
+      'No accounts or signups required. When you share your poll link, participants can vote with a single click—no registration, email verification, or personal information needed. This zero-friction approach means higher participation rates and instant engagement.',
   },
   {
     question: 'Can I see poll results in real-time?',
     answer:
-      'Absolutely. Results update instantly with smooth animations as each vote comes in. You\'ll see vote counts tick up live, progress bars animate, and percentages recalculate in real-time. This makes Versus Space ideal for live presentations, interactive workshops, audience Q&A sessions, and any scenario where immediate visual feedback creates excitement and engagement.',
+      'Absolutely. Results update instantly with smooth animations as each vote comes in. You\'ll see vote counts tick up live, progress bars animate, and percentages recalculate in real-time. This makes Versus Space ideal for live presentations, interactive workshops, and audience Q&A sessions.',
   },
   {
-    question: 'Are online polls anonymous?',
+    question: 'How long do polls stay open?',
     answer:
-      'Yes, all votes are completely anonymous by design. We don\'t track or store any personally identifiable information about voters. Poll creators only see aggregate statistics—total vote counts and percentages—never individual voter identities, IP addresses, or device information. Your audience can vote honestly without privacy concerns.',
+      'Free polls automatically close after 15 minutes. Pro users can set custom timers or leave polls open indefinitely. Once a poll closes, results are preserved and displayed in grayscale to indicate voting has ended.',
   },
   {
     question: 'How do I share a poll with my audience?',
     answer:
-      'Sharing is simple: after creating your poll, you\'ll get a unique, short URL that you can distribute anywhere. Copy it to your clipboard with one click, then share via email, Slack, Discord, WhatsApp, social media, or embed it in presentations. For live events, display the link or QR code on screen so attendees can scan and vote from their phones instantly.',
+      'After creating your poll, you\'ll get a unique, short URL. Copy it with one click and share via email, Slack, Discord, WhatsApp, or social media. For live events, display the link or QR code on screen so attendees can scan and vote from their phones instantly.',
   },
 ];
