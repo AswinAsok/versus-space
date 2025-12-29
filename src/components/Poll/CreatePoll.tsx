@@ -128,7 +128,9 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
     }
 
     if (isAtFreeLimit) {
-      setError(`Free plan limit reached. Upgrade to Pro to create more than ${FREE_PLAN_POLL_LIMIT} polls.`);
+      setError(
+        `Free plan limit reached. Upgrade to Pro to create more than ${FREE_PLAN_POLL_LIMIT} polls.`
+      );
       return;
     }
 
@@ -172,7 +174,9 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       } else {
         // Create new poll
         const endsAt =
-          effectiveDuration === '' ? undefined : new Date(Date.now() + effectiveDuration * 60 * 1000);
+          effectiveDuration === ''
+            ? undefined
+            : new Date(Date.now() + effectiveDuration * 60 * 1000);
 
         const pollData: CreatePollData = {
           title,
@@ -194,7 +198,13 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
         onSuccess(poll.slug);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : isEditMode ? 'Failed to update poll' : 'Failed to create poll');
+      setError(
+        err instanceof Error
+          ? err.message
+          : isEditMode
+            ? 'Failed to update poll'
+            : 'Failed to create poll'
+      );
     }
   };
 
@@ -214,9 +224,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       {!isEditMode && <CreatePollSEO />}
       <div className={styles.createPollInner}>
         <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>
-            {isEditMode ? 'Edit poll' : 'Create a new poll'}
-          </h1>
+          <h1 className={styles.pageTitle}>{isEditMode ? 'Edit poll' : 'Create a new poll'}</h1>
           <p className={styles.pageSubtitle}>
             {isEditMode
               ? 'Update your poll settings and options'
@@ -258,10 +266,10 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <div>
-                <h3 className={styles.cardTitle}>Answer Options</h3>
+                <h3 className={styles.cardTitle}>Possible Options</h3>
                 <p className={styles.cardDescription}>Add the choices people can vote for</p>
               </div>
-                          </div>
+            </div>
             <div className={styles.optionsList}>
               {options.map((option, index) => (
                 <div
@@ -284,7 +292,6 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                       className={styles.optionTitleInput}
                     />
                   </div>
-
                 </div>
               ))}
             </div>
@@ -292,6 +299,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
 
           {/* Poll Controls */}
           <div className={`${styles.card} ${!isPro ? styles.lockedCard : ''}`}>
+            {!isPro && (
+              <p className={styles.proDescription}>
+                Control how long the poll runs and prevent spam
+              </p>
+            )}
             <h3 className={styles.cardTitle}>
               Poll Controls
               {!isPro && <span className={styles.proBadge}>Pro</span>}
@@ -330,13 +342,20 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                   className={styles.controlInput}
                   disabled={loading || !isPro}
                 />
-                <p className={styles.controlHint}>Stops automated scripts and heavy repeat voters.</p>
+                <p className={styles.controlHint}>
+                  Stops automated scripts and heavy repeat voters.
+                </p>
               </div>
             </div>
           </div>
 
           {/* Auto Votes Card */}
           <div className={`${styles.card} ${!isPro ? styles.lockedCard : ''}`}>
+            {!isPro && (
+              <p className={styles.proDescription}>
+                Simulate engagement by automatically adding votes
+              </p>
+            )}
             <h3 className={styles.cardTitle}>
               Auto Votes
               {!isPro && <span className={styles.proBadge}>Pro</span>}
@@ -367,7 +386,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                         min={10}
                         max={50000}
                         value={globalTargetVotes}
-                        onChange={(e) => setGlobalTargetVotes(Math.min(50000, Math.max(10, Number(e.target.value) || 10)))}
+                        onChange={(e) =>
+                          setGlobalTargetVotes(
+                            Math.min(50000, Math.max(10, Number(e.target.value) || 10))
+                          )
+                        }
                         className={styles.sliderValueInput}
                         disabled={loading || !isPro}
                       />
@@ -405,7 +428,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                           min={5}
                           max={300}
                           value={autoVoteIntervalSeconds}
-                          onChange={(e) => setAutoVoteIntervalSeconds(Math.min(300, Math.max(5, Number(e.target.value) || 5)))}
+                          onChange={(e) =>
+                            setAutoVoteIntervalSeconds(
+                              Math.min(300, Math.max(5, Number(e.target.value) || 5))
+                            )
+                          }
                           className={styles.sliderValueInput}
                           disabled={loading || !isPro}
                         />
@@ -440,7 +467,9 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
               )}
               {isPro && (
                 <div className={styles.infoBox}>
-                  <strong>Fair distribution:</strong> Auto votes are split equally among all options to ensure no option gets an unfair advantage. This creates realistic engagement while maintaining poll integrity.
+                  <strong>Fair distribution:</strong> Auto votes are split equally among all options
+                  to ensure no option gets an unfair advantage. This creates realistic engagement
+                  while maintaining poll integrity.
                 </div>
               )}
             </div>
