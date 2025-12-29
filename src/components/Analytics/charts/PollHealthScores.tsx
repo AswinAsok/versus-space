@@ -7,9 +7,11 @@ import styles from './PollHealthScores.module.css';
 
 interface PollHealthScoresProps {
   polls: Poll[];
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
-export function PollHealthScores({ polls }: PollHealthScoresProps) {
+export function PollHealthScores({ polls, showProBadge, proDescription }: PollHealthScoresProps) {
   const [scores, setScores] = useState<PollHealthScore[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -123,7 +125,13 @@ export function PollHealthScores({ polls }: PollHealthScoresProps) {
   if (loading) {
     return (
       <div className={styles.card}>
-        <h3 className={styles.title}>Poll Health Scores</h3>
+        {proDescription && <p className={styles.proDescriptionTop}>{proDescription}</p>}
+        <div className={styles.headerLeft}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Poll Health Scores</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.loading}>
           <div className={styles.loadingSpinner} />
         </div>
@@ -134,7 +142,13 @@ export function PollHealthScores({ polls }: PollHealthScoresProps) {
   if (scores.length === 0) {
     return (
       <div className={styles.card}>
-        <h3 className={styles.title}>Poll Health Scores</h3>
+        {proDescription && <p className={styles.proDescriptionTop}>{proDescription}</p>}
+        <div className={styles.headerLeft}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Poll Health Scores</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.empty}>
           <p>No polls to analyze</p>
         </div>
@@ -144,8 +158,14 @@ export function PollHealthScores({ polls }: PollHealthScoresProps) {
 
   return (
     <div className={styles.card}>
+      {proDescription && <p className={styles.proDescriptionTop}>{proDescription}</p>}
       <div className={styles.header}>
-        <h3 className={styles.title}>Poll Health Scores</h3>
+        <div className={styles.headerLeft}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Poll Health Scores</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <span className={styles.subtitle}>Based on engagement, balance & velocity</span>
       </div>
 

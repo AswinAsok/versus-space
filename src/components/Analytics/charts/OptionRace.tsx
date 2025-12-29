@@ -9,6 +9,8 @@ interface OptionRaceProps {
   polls: Poll[];
   selectedPollId: string;
   onPollChange: (pollId: string) => void;
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
 interface RaceOption {
@@ -26,7 +28,7 @@ const RACE_COLORS = [
   '#78716c', // warm stone
 ];
 
-export function OptionRace({ polls, selectedPollId, onPollChange }: OptionRaceProps) {
+export function OptionRace({ polls, selectedPollId, onPollChange, showProBadge, proDescription }: OptionRaceProps) {
   const [options, setOptions] = useState<RaceOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [leadChange, setLeadChange] = useState<string | null>(null);
@@ -121,9 +123,13 @@ export function OptionRace({ polls, selectedPollId, onPollChange }: OptionRacePr
 
   return (
     <div className={styles.raceCard}>
+      {proDescription && <p className={styles.proDescription}>{proDescription}</p>}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <h3 className={styles.title}>Option Race</h3>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Option Race</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
           {leadChange && (
             <div className={styles.leadChange}>
               <HugeiconsIcon icon={ChampionIcon} size={14} />

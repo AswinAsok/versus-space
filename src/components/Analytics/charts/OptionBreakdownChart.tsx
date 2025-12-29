@@ -3,6 +3,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import type { OptionVoteData, Poll } from '../../../types';
 import styles from './Charts.module.css';
+import optionStyles from './OptionBreakdownChart.module.css';
 
 interface OptionBreakdownChartProps {
   data: OptionVoteData[];
@@ -11,6 +12,8 @@ interface OptionBreakdownChartProps {
   polls: Poll[];
   selectedPollId: string;
   onPollChange: (pollId: string) => void;
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
 const CHART_COLORS = [
@@ -26,14 +29,22 @@ export function OptionBreakdownChart({
   polls,
   selectedPollId,
   onPollChange,
+  showProBadge,
+  proDescription,
 }: OptionBreakdownChartProps) {
   const totalVotes = data.reduce((sum, item) => sum + item.voteCount, 0);
 
   if (loading) {
     return (
       <div className={styles.chartCard}>
+        {proDescription && <p className={optionStyles.proDescriptionTop}>{proDescription}</p>}
         <div className={styles.chartHeader}>
-          <h3 className={styles.chartTitle}>Option Breakdown</h3>
+          <div className={optionStyles.headerLeft}>
+            <div className={optionStyles.titleRow}>
+              <h3 className={styles.chartTitle}>Option Breakdown</h3>
+              {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+            </div>
+          </div>
           <select
             value={selectedPollId}
             onChange={(e) => onPollChange(e.target.value)}
@@ -61,7 +72,13 @@ export function OptionBreakdownChart({
   if (polls.length === 0) {
     return (
       <div className={styles.chartCard}>
-        <h3 className={styles.chartTitle}>Option Breakdown</h3>
+        {proDescription && <p className={optionStyles.proDescriptionTop}>{proDescription}</p>}
+        <div className={optionStyles.headerLeft}>
+          <div className={optionStyles.titleRow}>
+            <h3 className={styles.chartTitle}>Option Breakdown</h3>
+            {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.chartEmpty}>
           <p>No polls available.</p>
         </div>
@@ -72,8 +89,14 @@ export function OptionBreakdownChart({
   if (data.length === 0 || totalVotes === 0) {
     return (
       <div className={styles.chartCard}>
+        {proDescription && <p className={optionStyles.proDescriptionTop}>{proDescription}</p>}
         <div className={styles.chartHeader}>
-          <h3 className={styles.chartTitle}>Option Breakdown</h3>
+          <div className={optionStyles.headerLeft}>
+            <div className={optionStyles.titleRow}>
+              <h3 className={styles.chartTitle}>Option Breakdown</h3>
+              {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+            </div>
+          </div>
           <select
             value={selectedPollId}
             onChange={(e) => onPollChange(e.target.value)}
@@ -95,8 +118,14 @@ export function OptionBreakdownChart({
 
   return (
     <div className={styles.chartCard}>
+      {proDescription && <p className={optionStyles.proDescriptionTop}>{proDescription}</p>}
       <div className={styles.chartHeader}>
-        <h3 className={styles.chartTitle}>Option Breakdown</h3>
+        <div className={optionStyles.headerLeft}>
+          <div className={optionStyles.titleRow}>
+            <h3 className={styles.chartTitle}>Option Breakdown</h3>
+            {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <select
           value={selectedPollId}
           onChange={(e) => onPollChange(e.target.value)}

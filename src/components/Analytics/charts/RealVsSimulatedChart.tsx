@@ -2,14 +2,17 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import styles from './Charts.module.css';
+import localStyles from './RealVsSimulatedChart.module.css';
 
 interface RealVsSimulatedChartProps {
   realVotes: number;
   simulatedVotes: number;
   loading?: boolean;
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
-export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading }: RealVsSimulatedChartProps) {
+export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showProBadge, proDescription }: RealVsSimulatedChartProps) {
   const totalVotes = realVotes + simulatedVotes;
   const realPercentage = totalVotes > 0 ? ((realVotes / totalVotes) * 100).toFixed(1) : '0';
   const simulatedPercentage = totalVotes > 0 ? ((simulatedVotes / totalVotes) * 100).toFixed(1) : '0';
@@ -22,7 +25,13 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading }: Rea
   if (loading) {
     return (
       <div className={styles.chartCard}>
-        <h3 className={styles.chartTitle}>Vote Authenticity</h3>
+        {proDescription && <p className={localStyles.proDescriptionTop}>{proDescription}</p>}
+        <div className={localStyles.headerLeft}>
+          <div className={localStyles.titleRow}>
+            <h3 className={styles.chartTitle}>Vote Authenticity</h3>
+            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.skeletonCircle}>
           <Skeleton circle width={150} height={150} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
         </div>
@@ -37,7 +46,13 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading }: Rea
   if (totalVotes === 0) {
     return (
       <div className={styles.chartCard}>
-        <h3 className={styles.chartTitle}>Vote Authenticity</h3>
+        {proDescription && <p className={localStyles.proDescriptionTop}>{proDescription}</p>}
+        <div className={localStyles.headerLeft}>
+          <div className={localStyles.titleRow}>
+            <h3 className={styles.chartTitle}>Vote Authenticity</h3>
+            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.chartEmpty}>
           <p>No vote data available.</p>
         </div>
@@ -47,7 +62,13 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading }: Rea
 
   return (
     <div className={styles.chartCard}>
-      <h3 className={styles.chartTitle}>Vote Authenticity</h3>
+      {proDescription && <p className={localStyles.proDescriptionTop}>{proDescription}</p>}
+      <div className={localStyles.headerLeft}>
+        <div className={localStyles.titleRow}>
+          <h3 className={styles.chartTitle}>Vote Authenticity</h3>
+          {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+        </div>
+      </div>
       <div className={styles.chartWrapper}>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>

@@ -8,11 +8,16 @@
 /* Main Content Area */
 .mainContent {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 220px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   transition: margin-left var(--transition-normal) var(--ease-out);
+}
+
+/* Collapsed Sidebar State */
+.sidebarIsCollapsed .mainContent {
+  margin-left: 60px;
 }
 
 /* Mobile Header - Hidden on Desktop */
@@ -22,7 +27,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 56px;
   background: rgba(17, 24, 28, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -51,35 +56,33 @@
 }
 
 .mobileLogo {
-  height: 18px;
+  height: 16px;
   width: auto;
 }
 
 .mobileAvatar {
-  width: 36px;
-  height: 36px;
-  background: var(--color-primary);
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000000;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 600;
-  font-size: 0.875rem;
-}
-
-/* Tablet */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .mainContent {
-    margin-left: 72px;
-  }
+  font-size: 0.8125rem;
 }
 
 /* Mobile */
 @media (max-width: 768px) {
   .mainContent {
     margin-left: 0;
-    padding-top: 60px;
+    padding-top: 56px;
+  }
+
+  .sidebarIsCollapsed .mainContent {
+    margin-left: 0;
   }
 
   .mobileHeader {

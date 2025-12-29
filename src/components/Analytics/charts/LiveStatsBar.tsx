@@ -14,9 +14,10 @@ interface LiveStatsBarProps {
   totalVotes: number;
   activePolls: number;
   pollIds: string[];
+  showSampleNote?: boolean;
 }
 
-export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePolls, pollIds }: LiveStatsBarProps) {
+export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePolls, pollIds, showSampleNote }: LiveStatsBarProps) {
   const [liveViewers, setLiveViewers] = useState(0);
   const [totalVotes, setTotalVotes] = useState(initialTotalVotes);
   const [votesToday, setVotesToday] = useState(0);
@@ -147,8 +148,14 @@ export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePoll
   }, []);
 
   return (
-    <div className={styles.statsBar}>
-      <div className={styles.statItem}>
+    <div className={styles.statsBarWrapper}>
+      {showSampleNote && (
+        <div className={styles.sampleNote}>
+          Showing sample data — create your first poll to see real analytics
+        </div>
+      )}
+      <div className={styles.statsBar}>
+        <div className={styles.statItem}>
         <div className={`${styles.statIcon} ${styles.liveIcon}`}>
           <span className={styles.liveDot} />
           <HugeiconsIcon icon={UserMultiple02Icon} size={18} />
@@ -205,6 +212,7 @@ export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePoll
           <span className={styles.statValue}>{activePolls}</span>
           <span className={styles.statLabel}>Active Polls</span>
         </div>
+      </div>
       </div>
     </div>
   );

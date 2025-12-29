@@ -9,7 +9,10 @@ import {
   HelpCircleIcon,
   Logout01Icon,
   Cancel01Icon,
+  SidebarLeft01Icon,
+  SidebarRight01Icon,
 } from '@hugeicons/core-free-icons';
+import { useUserProfile } from '../../hooks/useUserProfile';
 import styles from './Sidebar.module.css';
 
 interface SidebarProps {
@@ -19,6 +22,8 @@ interface SidebarProps {
   onSignOut: () => void;
   isOpen: boolean;
   onClose: () => void;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
 }
 
 const mainNavItems = [
@@ -33,10 +38,15 @@ const bottomNavItems = [
   { icon: HelpCircleIcon, label: 'Help', path: 'https://github.com/AswinAsok/versus-space', external: true },
 ];
 
-export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onClose }: SidebarProps) {
+export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProps) {
   const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const userEmail = user.email || '';
   const userInitial = displayName.charAt(0).toUpperCase();
+
+  const { data: profile } = useUserProfile(user);
+  const isSuperAdmin = profile?.role === 'superadmin';
+  const isPro = isSuperAdmin || profile?.plan === 'pro';
+  const planLabel = isSuperAdmin ? 'Admin' : isPro ? 'Pro' : 'Free';
 
   const handleNavClick = (path: string, external?: boolean) => {
     if (external) {
@@ -64,14 +74,22 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
       />
 
       {/* Sidebar */}
-      <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
+      <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''} ${isCollapsed ? styles.sidebarCollapsed : ''}`}>
         {/* Header */}
         <div className={styles.sidebarHeader}>
           <button onClick={() => handleNavClick('/')} className={styles.logoButton}>
-            <img src="/vs.png" alt="versus.space" className={styles.logoImage} />
+            <img src="/vs.png" alt="versus.space" className={`${styles.logoImage} ${isCollapsed ? styles.logoCollapsed : ''}`} />
           </button>
           <button className={styles.closeButton} onClick={onClose} aria-label="Close menu">
             <HugeiconsIcon icon={Cancel01Icon} size={20} />
+          </button>
+          <button
+            className={styles.collapseButton}
+            onClick={onToggleCollapse}
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={isCollapsed ? 'Expand' : 'Collapse'}
+          >
+            <HugeiconsIcon icon={isCollapsed ? SidebarRight01Icon : SidebarLeft01Icon} size={18} />
           </button>
         </div>
 
@@ -82,12 +100,13 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
               <li key={item.path}>
                 <button
                   onClick={() => handleNavClick(item.path)}
-                  className={`${styles.navItem} ${isActive(item.path) ? styles.navItemActive : ''}`}
+                  className={`${styles.navItem} ${isActive(item.path) ? styles.navItemActive : ''} ${isCollapsed ? styles.navItemCollapsed : ''}`}
+                  title={isCollapsed ? item.label : undefined}
                 >
                   <span className={styles.navIcon}>
-                    <HugeiconsIcon icon={item.icon} size={20} />
+                    <HugeiconsIcon icon={item.icon} size={isCollapsed ? 20 : 18} />
                   </span>
-                  <span className={styles.navLabel}>{item.label}</span>
+                  <span className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}>{item.label}</span>
                   {isActive(item.path) && <span className={styles.activeIndicator} />}
                 </button>
               </li>
@@ -103,12 +122,13 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
                 <li key={item.path}>
                   <button
                     onClick={() => handleNavClick(item.path, item.external)}
-                    className={`${styles.navItem} ${isActive(item.path) ? styles.navItemActive : ''}`}
+                    className={`${styles.navItem} ${isActive(item.path) ? styles.navItemActive : ''} ${isCollapsed ? styles.navItemCollapsed : ''}`}
+                    title={isCollapsed ? item.label : undefined}
                   >
                     <span className={styles.navIcon}>
-                      <HugeiconsIcon icon={item.icon} size={20} />
+                      <HugeiconsIcon icon={item.icon} size={isCollapsed ? 20 : 18} />
                     </span>
-                    <span className={styles.navLabel}>{item.label}</span>
+                    <span className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}>{item.label}</span>
                   </button>
                 </li>
               ))}
@@ -116,17 +136,26 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
           </nav>
 
           {/* User Profile Section */}
-          <div className={styles.userSection}>
+          <div className={`${styles.userSection} ${isCollapsed ? styles.userSectionCollapsed : ''}`}>
             <div className={styles.userInfo}>
-              <div className={styles.userAvatar}>{userInitial}</div>
-              <div className={styles.userDetails}>
+              <div className={styles.avatarWrapper}>
+                <div className={styles.userAvatar}>{userInitial}</div>
+                {!isCollapsed && (
+                  <span className={`${styles.planBadge} ${isPro ? styles.planPro : styles.planFree}`}>
+                    {planLabel}
+                  </span>
+                )}
+              </div>
+              <div className={`${styles.userDetails} ${isCollapsed ? styles.userDetailsHidden : ''}`}>
                 <span className={styles.userName}>{displayName}</span>
                 <span className={styles.userEmail}>{userEmail}</span>
               </div>
             </div>
-            <button onClick={onSignOut} className={styles.signOutButton} title="Sign out">
-              <HugeiconsIcon icon={Logout01Icon} size={18} />
-            </button>
+            {!isCollapsed && (
+              <button onClick={onSignOut} className={styles.signOutButton} title="Sign out">
+                <HugeiconsIcon icon={Logout01Icon} size={16} />
+              </button>
+            )}
           </div>
         </div>
       </aside>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollFacade, voteFacade } from '../../core/appServices';
+import { useUserProfile } from '../../hooks/useUserProfile';
 import {
   VotesOverTimeChart,
   VotesPerPollChart,
@@ -29,6 +30,11 @@ export function Analytics({ user }: AnalyticsProps) {
   const [polls, setPolls] = useState<Poll[]>([]);
   const [loading, setLoading] = useState(true);
   const [chartsLoading, setChartsLoading] = useState(true);
+
+  // Check Pro status
+  const { data: profile } = useUserProfile(user);
+  const isSuperAdmin = profile?.role === 'superadmin';
+  const isPro = isSuperAdmin || profile?.plan === 'pro';
 
   // Chart data state
   const [votesOverTime, setVotesOverTime] = useState<Map<string, VoteDailyCount[]>>(new Map());
@@ -91,8 +97,11 @@ export function Analytics({ user }: AnalyticsProps) {
   useEffect(() => {
     if (polls.length > 0) {
       loadChartData();
+    } else if (!loading) {
+      // No polls, so no chart data to load - stop showing loading state
+      setChartsLoading(false);
     }
-  }, [polls, loadChartData]);
+  }, [polls, loading, loadChartData]);
 
   // Poll titles map for chart legends
   const pollTitles = useMemo(() => {
@@ -139,6 +148,108 @@ export function Analytics({ user }: AnalyticsProps) {
   const activePolls = polls.filter((p) => p.is_active).length;
   const pollIds = polls.map((p) => p.id);
 
+  // Check if we have no data (new account)
+  const hasNoData = polls.length === 0;
+
+  // Simulated real-time dummy data state
+  const [dummyTotalVotesState, setDummyTotalVotesState] = useState(211);
+  const [dummyOptionDataState, setDummyOptionDataState] = useState<OptionVoteData[]>([
+    { optionId: 'opt-1', optionTitle: 'Option A', voteCount: 65 },
+    { optionId: 'opt-2', optionTitle: 'Option B', voteCount: 48 },
+  ]);
+  const [dummyVotesPerPollState, setDummyVotesPerPollState] = useState<PollVoteSummary[]>([
+    { pollId: 'demo-1', pollTitle: 'Sample Poll 1', totalVotes: 127 },
+    { pollId: 'demo-2', pollTitle: 'Sample Poll 2', totalVotes: 84 },
+  ]);
+
+  // Simulate real-time updates for dummy data
+  useEffect(() => {
+    if (!hasNoData) return;
+
+    const interval = setInterval(() => {
+      // Random chance to add a vote (30% chance every 2 seconds)
+      if (Math.random() < 0.3) {
+        // Increment total votes
+        setDummyTotalVotesState(prev => prev + 1);
+
+        // Randomly pick which option gets the vote
+        const optionIndex = Math.random() < 0.55 ? 0 : 1;
+        setDummyOptionDataState(prev => prev.map((opt, idx) =>
+          idx === optionIndex ? { ...opt, voteCount: opt.voteCount + 1 } : opt
+        ));
+
+        // Randomly pick which poll gets the vote
+        const pollIndex = Math.random() < 0.6 ? 0 : 1;
+        setDummyVotesPerPollState(prev => prev.map((poll, idx) =>
+          idx === pollIndex ? { ...poll, totalVotes: poll.totalVotes + 1 } : poll
+        ));
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [hasNoData]);
+
+  // Dummy data for empty state
+  const dummyPolls: Poll[] = hasNoData ? [
+    {
+      id: 'demo-1',
+      title: 'Sample Poll 1',
+      slug: 'sample-poll-1',
+      is_public: true,
+      is_active: true,
+      created_at: new Date().toISOString(),
+      user_id: user.id,
+    },
+    {
+      id: 'demo-2',
+      title: 'Sample Poll 2',
+      slug: 'sample-poll-2',
+      is_public: true,
+      is_active: false,
+      created_at: new Date(Date.now() - 86400000).toISOString(),
+      user_id: user.id,
+    },
+  ] : polls;
+
+  const dummyVotesPerPoll: PollVoteSummary[] = hasNoData ? dummyVotesPerPollState : votesPerPoll;
+
+  const dummyVotesOverTime = hasNoData ? (() => {
+    const map = new Map<string, VoteDailyCount[]>();
+    const today = new Date();
+    const data: VoteDailyCount[] = [];
+    for (let i = dateRange - 1; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      data.push({ date: dateStr, count: Math.floor(Math.random() * 20) + 5 });
+    }
+    map.set('demo-1', data);
+    map.set('demo-2', data.map(d => ({ ...d, count: Math.floor(d.count * 0.7) })));
+    return map;
+  })() : votesOverTime;
+
+  const dummyPollTitles = hasNoData ? new Map([
+    ['demo-1', 'Sample Poll 1'],
+    ['demo-2', 'Sample Poll 2'],
+  ]) : pollTitles;
+
+  const dummyOptionData: OptionVoteData[] = hasNoData ? dummyOptionDataState : optionData;
+
+  const dummyVoteTimestamps = hasNoData ? (() => {
+    const timestamps: Date[] = [];
+    const now = Date.now();
+    for (let i = 0; i < 50; i++) {
+      timestamps.push(new Date(now - Math.random() * 30 * 24 * 60 * 60 * 1000));
+    }
+    return timestamps;
+  })() : voteTimestamps;
+
+  const dummyTotalVotes = hasNoData ? dummyTotalVotesState : totalVotes;
+  const dummyActivePolls = hasNoData ? 1 : activePolls;
+  const dummyPollIds = hasNoData ? ['demo-1', 'demo-2'] : pollIds;
+  const dummyRealVotes = hasNoData ? dummyTotalVotesState : realVotes;
+  const dummySimulatedVotes = hasNoData ? 0 : simulatedVotes;
+
   if (loading) {
     return (
       <div className={styles.analyticsContainer}>
@@ -160,91 +271,146 @@ export function Analytics({ user }: AnalyticsProps) {
           <p className={styles.pageSubtitle}>Real-time insights into your poll performance</p>
         </div>
 
-        {/* Live Stats Bar */}
-        <section className={styles.section}>
-          <LiveStatsBar
-            userId={user.id}
-            totalVotes={totalVotes}
-            activePolls={activePolls}
-            pollIds={pollIds}
-          />
-        </section>
+        {/* Live Stats Bar - Always visible */}
+        <LiveStatsBar
+          userId={user.id}
+          totalVotes={dummyTotalVotes}
+          activePolls={dummyActivePolls}
+          pollIds={dummyPollIds}
+          showSampleNote={hasNoData}
+        />
 
         {/* Real-time Section: Momentum + Option Race */}
         <div className={styles.twoColumnGrid}>
-          <VoteMomentumGauge pollIds={pollIds} />
-          <OptionRace
-            polls={polls}
-            selectedPollId={selectedPollId}
-            onPollChange={setSelectedPollId}
-          />
+          <div className={styles.proWrapper}>
+            <div className={!isPro ? styles.proContent : ''}>
+              <VoteMomentumGauge
+                pollIds={dummyPollIds}
+                showProBadge={!isPro}
+                proDescription={!isPro ? 'Track voting momentum in real-time' : undefined}
+              />
+            </div>
+          </div>
+          <div className={styles.proWrapper}>
+            <div className={!isPro ? styles.proContent : ''}>
+              <OptionRace
+                polls={dummyPolls}
+                selectedPollId={hasNoData ? 'demo-1' : selectedPollId}
+                onPollChange={hasNoData ? () => {} : setSelectedPollId}
+                showProBadge={!isPro}
+                proDescription={!isPro ? 'Watch options compete live' : undefined}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Vote Toast Notifications */}
-        <VoteToast pollIds={pollIds} pollTitles={pollTitles} />
+        {!hasNoData && isPro && <VoteToast pollIds={pollIds} pollTitles={pollTitles} />}
 
         {/* Progress Section: Milestone + Personal Records */}
         <div className={styles.twoColumnGrid}>
-          <MilestoneProgress totalVotes={totalVotes} loading={chartsLoading} />
-          <PersonalRecords polls={polls} />
+          <div className={styles.proWrapper}>
+            <div className={!isPro ? styles.proContent : ''}>
+              <MilestoneProgress
+                totalVotes={dummyTotalVotes}
+                loading={chartsLoading && !hasNoData}
+                showProBadge={!isPro}
+                proDescription={!isPro ? 'Celebrate your voting milestones' : undefined}
+              />
+            </div>
+          </div>
+          <div className={styles.proWrapper}>
+            <div className={!isPro ? styles.proContent : ''}>
+              <PersonalRecords
+                polls={dummyPolls}
+                showProBadge={!isPro}
+                proDescription={!isPro ? 'See your best performing polls' : undefined}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Votes Over Time Chart - Full Width */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Votes Over Time</h2>
-            <div className={styles.dateRangeSelector}>
-              {([1, 3, 7, 30, 90] as DateRange[]).map((days) => (
-                <button
-                  key={days}
-                  className={`${styles.dateRangeButton} ${dateRange === days ? styles.dateRangeActive : ''}`}
-                  onClick={() => setDateRange(days)}
-                >
-                  {days === 1 ? '24h' : days === 3 ? '72h' : `${days}d`}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className={!isPro ? styles.proContent : ''}>
           <VotesOverTimeChart
-            data={votesOverTime}
-            pollTitles={pollTitles}
-            loading={chartsLoading}
+            data={dummyVotesOverTime}
+            pollTitles={dummyPollTitles}
+            loading={chartsLoading && !hasNoData}
             days={dateRange}
-          />
-        </section>
-
-        {/* Vote Activity Heatmap - Full Width */}
-        <section className={styles.section}>
-          <VotingHeatmap voteTimestamps={voteTimestamps} totalVotesAllPolls={totalVotes} loading={chartsLoading} />
-        </section>
-
-        {/* Poll Health Scores - Full Width */}
-        <section className={styles.section}>
-          <PollHealthScores polls={polls} />
-        </section>
-
-        {/* Active Polls + Vote Authenticity + Option Breakdown */}
-        <div className={styles.threeColumnGrid}>
-          <ActivePollsTracker polls={polls} />
-          <RealVsSimulatedChart
-            realVotes={realVotes}
-            simulatedVotes={simulatedVotes}
-            loading={chartsLoading}
-          />
-          <OptionBreakdownChart
-            data={optionData}
-            pollTitle={selectedPollTitle}
-            loading={optionLoading}
-            polls={polls}
-            selectedPollId={selectedPollId}
-            onPollChange={setSelectedPollId}
+            showProBadge={!isPro}
+            proDescription={!isPro ? 'Analyze voting trends over time' : undefined}
+            onDateRangeChange={setDateRange}
+            isPro={isPro}
           />
         </div>
 
+        {/* Vote Activity Heatmap - Full Width */}
+        <div className={!isPro ? styles.proContent : ''}>
+          <VotingHeatmap
+            voteTimestamps={dummyVoteTimestamps}
+            totalVotesAllPolls={dummyTotalVotes}
+            loading={chartsLoading && !hasNoData}
+            showProBadge={!isPro}
+            proDescription={!isPro ? 'Discover peak voting hours' : undefined}
+          />
+        </div>
+
+        {/* Poll Health Scores - Full Width */}
+        <div className={!isPro ? styles.proContent : ''}>
+          <PollHealthScores
+            polls={dummyPolls}
+            showProBadge={!isPro}
+            proDescription={!isPro ? 'Monitor poll engagement health' : undefined}
+          />
+        </div>
+
+        {/* Active Polls + Vote Authenticity + Option Breakdown */}
+        <div className={styles.threeColumnGrid}>
+          <div className={styles.proWrapper}>
+            <div className={!isPro ? styles.proContent : ''}>
+              <ActivePollsTracker
+                polls={dummyPolls}
+                showProBadge={!isPro}
+                proDescription={!isPro ? 'Track all your active polls' : undefined}
+              />
+            </div>
+          </div>
+          <div className={styles.proWrapper}>
+            <div className={!isPro ? styles.proContent : ''}>
+              <RealVsSimulatedChart
+                realVotes={dummyRealVotes}
+                simulatedVotes={dummySimulatedVotes}
+                loading={chartsLoading && !hasNoData}
+                showProBadge={!isPro}
+                proDescription={!isPro ? 'Verify vote authenticity' : undefined}
+              />
+            </div>
+          </div>
+          <div className={styles.proWrapper}>
+            <div className={!isPro ? styles.proContent : ''}>
+              <OptionBreakdownChart
+                data={dummyOptionData}
+                pollTitle={hasNoData ? 'Sample Poll 1' : selectedPollTitle}
+                loading={optionLoading && !hasNoData}
+                polls={dummyPolls}
+                selectedPollId={hasNoData ? 'demo-1' : selectedPollId}
+                onPollChange={hasNoData ? () => {} : setSelectedPollId}
+                showProBadge={!isPro}
+                proDescription={!isPro ? 'Deep dive into option stats' : undefined}
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Total Votes by Poll - Full Width */}
-        <section className={styles.section}>
-          <VotesPerPollChart data={votesPerPoll} loading={chartsLoading} />
-        </section>
+        <div className={!isPro ? styles.proContent : ''}>
+          <VotesPerPollChart
+            data={dummyVotesPerPoll}
+            loading={chartsLoading && !hasNoData}
+            showProBadge={!isPro}
+            proDescription={!isPro ? 'Compare performance across polls' : undefined}
+          />
+        </div>
       </div>
     </div>
   );

@@ -14,9 +14,11 @@ interface PollPresence {
 
 interface ActivePollsTrackerProps {
   polls: Poll[];
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
-export function ActivePollsTracker({ polls }: ActivePollsTrackerProps) {
+export function ActivePollsTracker({ polls, showProBadge, proDescription }: ActivePollsTrackerProps) {
   const [pollPresence, setPollPresence] = useState<Map<string, number>>(new Map());
   const [isConnected, setIsConnected] = useState(false);
 
@@ -83,10 +85,14 @@ export function ActivePollsTracker({ polls }: ActivePollsTrackerProps) {
 
   return (
     <div className={styles.trackerCard}>
+      {proDescription && <p className={styles.proDescription}>{proDescription}</p>}
       <div className={styles.trackerHeader}>
         <div className={styles.headerLeft}>
-          <span className={`${styles.statusDot} ${isConnected ? styles.connected : ''}`} />
-          <h3 className={styles.trackerTitle}>Live Poll Activity</h3>
+          <div className={styles.titleRow}>
+            <span className={`${styles.statusDot} ${isConnected ? styles.connected : ''}`} />
+            <h3 className={styles.trackerTitle}>Live Poll Activity</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
         </div>
         <div className={styles.totalViewers}>
           <HugeiconsIcon icon={UserMultiple02Icon} size={16} />

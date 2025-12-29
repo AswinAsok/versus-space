@@ -15,11 +15,17 @@ import type { VoteDailyCount } from '../../../types';
 import styles from './Charts.module.css';
 import chartStyles from './VotesOverTimeChart.module.css';
 
+type DateRange = 1 | 3 | 7 | 30 | 90;
+
 interface VotesOverTimeChartProps {
   data: Map<string, VoteDailyCount[]>;
   pollTitles: Map<string, string>;
   loading?: boolean;
   days: number;
+  showProBadge?: boolean;
+  proDescription?: string;
+  onDateRangeChange?: (days: DateRange) => void;
+  isPro?: boolean;
 }
 
 const CHART_COLORS = [
@@ -28,7 +34,7 @@ const CHART_COLORS = [
   '#78716c', // warm stone
 ];
 
-export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOverTimeChartProps) {
+export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBadge, proDescription, onDateRangeChange, isPro = true }: VotesOverTimeChartProps) {
   const [hiddenPolls, setHiddenPolls] = useState<Set<string>>(new Set());
   const [isMobile, setIsMobile] = useState(false);
 
@@ -155,6 +161,28 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
   if (loading) {
     return (
       <div className={styles.chartCard}>
+        {proDescription && <p className={chartStyles.proDescription}>{proDescription}</p>}
+        <div className={chartStyles.header}>
+          <div className={chartStyles.headerLeft}>
+            <div className={chartStyles.titleRow}>
+              <h3 className={styles.chartTitle}>Votes Over Time</h3>
+              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+            </div>
+          </div>
+          {onDateRangeChange && (
+            <div className={chartStyles.dateRangeSelector}>
+              {([1, 3, 7, 30, 90] as DateRange[]).map((d) => (
+                <button
+                  key={d}
+                  className={`${chartStyles.dateRangeButton} ${days === d ? chartStyles.dateRangeActive : ''}`}
+                  disabled
+                >
+                  {d === 1 ? '24h' : d === 3 ? '72h' : `${d}d`}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div className={styles.skeletonLine}>
           <Skeleton height={250} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={8} />
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '0.5rem' }}>
@@ -169,6 +197,29 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
   if (allPollIds.length === 0) {
     return (
       <div className={styles.chartCard}>
+        {proDescription && <p className={chartStyles.proDescription}>{proDescription}</p>}
+        <div className={chartStyles.header}>
+          <div className={chartStyles.headerLeft}>
+            <div className={chartStyles.titleRow}>
+              <h3 className={styles.chartTitle}>Votes Over Time</h3>
+              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+            </div>
+          </div>
+          {onDateRangeChange && (
+            <div className={chartStyles.dateRangeSelector}>
+              {([1, 3, 7, 30, 90] as DateRange[]).map((d) => (
+                <button
+                  key={d}
+                  className={`${chartStyles.dateRangeButton} ${days === d ? chartStyles.dateRangeActive : ''}`}
+                  onClick={() => isPro && onDateRangeChange(d)}
+                  disabled={!isPro}
+                >
+                  {d === 1 ? '24h' : d === 3 ? '72h' : `${d}d`}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div className={styles.chartEmpty}>
           <p>No polls available.</p>
         </div>
@@ -179,6 +230,29 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
   if (!hasAnyVotes) {
     return (
       <div className={styles.chartCard}>
+        {proDescription && <p className={chartStyles.proDescription}>{proDescription}</p>}
+        <div className={chartStyles.header}>
+          <div className={chartStyles.headerLeft}>
+            <div className={chartStyles.titleRow}>
+              <h3 className={styles.chartTitle}>Votes Over Time</h3>
+              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+            </div>
+          </div>
+          {onDateRangeChange && (
+            <div className={chartStyles.dateRangeSelector}>
+              {([1, 3, 7, 30, 90] as DateRange[]).map((d) => (
+                <button
+                  key={d}
+                  className={`${chartStyles.dateRangeButton} ${days === d ? chartStyles.dateRangeActive : ''}`}
+                  onClick={() => isPro && onDateRangeChange(d)}
+                  disabled={!isPro}
+                >
+                  {d === 1 ? '24h' : d === 3 ? '72h' : `${d}d`}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div className={styles.chartEmpty}>
           <p>No votes in the last {days} days</p>
         </div>
@@ -196,6 +270,29 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
 
   return (
     <div className={styles.chartCard}>
+      {proDescription && <p className={chartStyles.proDescription}>{proDescription}</p>}
+      <div className={chartStyles.header}>
+        <div className={chartStyles.headerLeft}>
+          <div className={chartStyles.titleRow}>
+            <h3 className={styles.chartTitle}>Votes Over Time</h3>
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+          </div>
+        </div>
+        {onDateRangeChange && (
+          <div className={chartStyles.dateRangeSelector}>
+            {([1, 3, 7, 30, 90] as DateRange[]).map((d) => (
+              <button
+                key={d}
+                className={`${chartStyles.dateRangeButton} ${days === d ? chartStyles.dateRangeActive : ''}`}
+                onClick={() => isPro && onDateRangeChange(d)}
+                disabled={!isPro}
+              >
+                {d === 1 ? '24h' : d === 3 ? '72h' : `${d}d`}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <div className={styles.chartWrapper}>
         <ResponsiveContainer width="100%" height={chartHeight}>
           <AreaChart data={chartData} margin={{ top: 10, right: isMobile ? 5 : 10, left: isMobile ? -20 : -10, bottom: 0 }}>

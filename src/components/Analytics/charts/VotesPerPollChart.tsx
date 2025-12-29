@@ -13,10 +13,13 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import type { PollVoteSummary } from '../../../types';
 import styles from './Charts.module.css';
+import localStyles from './VotesPerPollChart.module.css';
 
 interface VotesPerPollChartProps {
   data: PollVoteSummary[];
   loading?: boolean;
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
 const CHART_COLORS = [
@@ -25,7 +28,7 @@ const CHART_COLORS = [
   '#78716c', // warm stone
 ];
 
-export function VotesPerPollChart({ data, loading }: VotesPerPollChartProps) {
+export function VotesPerPollChart({ data, loading, showProBadge, proDescription }: VotesPerPollChartProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -52,7 +55,13 @@ export function VotesPerPollChart({ data, loading }: VotesPerPollChartProps) {
   if (loading) {
     return (
       <div className={styles.chartCard}>
-        <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
+        {proDescription && <p className={localStyles.proDescription}>{proDescription}</p>}
+        <div className={localStyles.headerLeft}>
+          <div className={localStyles.titleRow}>
+            <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
+            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.skeletonWrapper}>
           {[...Array(5)].map((_, i) => (
             <div key={i} className={styles.skeletonRow}>
@@ -68,7 +77,13 @@ export function VotesPerPollChart({ data, loading }: VotesPerPollChartProps) {
   if (chartData.length === 0) {
     return (
       <div className={styles.chartCard}>
-        <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
+        {proDescription && <p className={localStyles.proDescription}>{proDescription}</p>}
+        <div className={localStyles.headerLeft}>
+          <div className={localStyles.titleRow}>
+            <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
+            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.chartEmpty}>
           <p>No polls with votes yet.</p>
         </div>
@@ -78,7 +93,13 @@ export function VotesPerPollChart({ data, loading }: VotesPerPollChartProps) {
 
   return (
     <div className={styles.chartCard}>
-      <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
+      {proDescription && <p className={localStyles.proDescription}>{proDescription}</p>}
+      <div className={localStyles.headerLeft}>
+        <div className={localStyles.titleRow}>
+          <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
+          {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+        </div>
+      </div>
       <div className={styles.chartWrapper}>
         <ResponsiveContainer width="100%" height={Math.max(350, chartData.length * 50)}>
           <BarChart

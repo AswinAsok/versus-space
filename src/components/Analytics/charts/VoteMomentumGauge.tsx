@@ -8,9 +8,11 @@ import styles from './VoteMomentumGauge.module.css';
 
 interface VoteMomentumGaugeProps {
   pollIds: string[];
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
-export function VoteMomentumGauge({ pollIds }: VoteMomentumGaugeProps) {
+export function VoteMomentumGauge({ pollIds, showProBadge, proDescription }: VoteMomentumGaugeProps) {
   const [currentHourVotes, setCurrentHourVotes] = useState(0);
   const [averageHourlyVotes, setAverageHourlyVotes] = useState(0);
   const [lastHourVotes, setLastHourVotes] = useState(0);
@@ -152,8 +154,14 @@ export function VoteMomentumGauge({ pollIds }: VoteMomentumGaugeProps) {
 
   return (
     <div className={`${styles.gaugeCard} ${isHot ? styles.hot : ''}`}>
+      {proDescription && <p className={styles.proDescription}>{proDescription}</p>}
       <div className={styles.header}>
-        <h3 className={styles.title}>Vote Momentum</h3>
+        <div className={styles.headerLeft}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Vote Momentum</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
+        </div>
         {isHot && (
           <div className={styles.hotBadge}>
             <HugeiconsIcon icon={Fire02Icon} size={14} />

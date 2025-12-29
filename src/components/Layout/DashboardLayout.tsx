@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { User } from '@supabase/supabase-js';
 import { authFacade } from '../../core/appServices';
@@ -13,8 +13,16 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ user }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebarCollapsed');
+    return saved ? JSON.parse(saved) : true;
+  });
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', JSON.stringify(sidebarCollapsed));
+  }, [sidebarCollapsed]);
 
   const handleSignOut = async () => {
     await authFacade.signOut();
@@ -27,7 +35,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   };
 
   return (
-    <div className={styles.dashboardLayout}>
+    <div className={`${styles.dashboardLayout} ${sidebarCollapsed ? styles.sidebarIsCollapsed : ''}`}>
       <Sidebar
         user={user}
         currentPath={location.pathname}
@@ -35,6 +43,8 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         onSignOut={handleSignOut}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        isCollapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
 
       {/* Mobile Header */}

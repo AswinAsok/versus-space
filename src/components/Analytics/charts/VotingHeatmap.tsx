@@ -7,6 +7,8 @@ interface VotingHeatmapProps {
   voteTimestamps: Date[];
   totalVotesAllPolls: number; // Total votes including simulated
   loading?: boolean;
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
 interface DayData {
@@ -15,7 +17,7 @@ interface DayData {
   level: number;
 }
 
-export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading }: VotingHeatmapProps) {
+export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, showProBadge, proDescription }: VotingHeatmapProps) {
   const trackedVoteCount = voteTimestamps.length;
 
   const { days, weeks, months } = useMemo(() => {
@@ -140,8 +142,14 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading }: V
 
   return (
     <div className={styles.card}>
+      {proDescription && <p className={styles.proDescription}>{proDescription}</p>}
       <div className={styles.header}>
-        <h3 className={styles.title}>Vote Activity</h3>
+        <div className={styles.headerLeft}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Vote Activity</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <span className={styles.subtitle}>
           {trackedVoteCount.toLocaleString()} tracked votes in the last year
         </span>

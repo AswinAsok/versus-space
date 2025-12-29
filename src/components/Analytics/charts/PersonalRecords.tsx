@@ -12,6 +12,8 @@ import styles from './PersonalRecords.module.css';
 
 interface PersonalRecordsProps {
   polls: Poll[];
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
 interface Record {
@@ -23,7 +25,7 @@ interface Record {
   color: string;
 }
 
-export function PersonalRecords({ polls }: PersonalRecordsProps) {
+export function PersonalRecords({ polls, showProBadge, proDescription }: PersonalRecordsProps) {
   const [records, setRecords] = useState<Record[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -188,7 +190,13 @@ export function PersonalRecords({ polls }: PersonalRecordsProps) {
   if (loading) {
     return (
       <div className={styles.recordsCard}>
-        <h3 className={styles.title}>Personal Records</h3>
+        {proDescription && <p className={styles.proDescription}>{proDescription}</p>}
+        <div className={styles.headerLeft}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Personal Records</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.loading}>
           <div className={styles.loadingSpinner} />
         </div>
@@ -199,7 +207,13 @@ export function PersonalRecords({ polls }: PersonalRecordsProps) {
   if (records.length === 0) {
     return (
       <div className={styles.recordsCard}>
-        <h3 className={styles.title}>Personal Records</h3>
+        {proDescription && <p className={styles.proDescription}>{proDescription}</p>}
+        <div className={styles.headerLeft}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Personal Records</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.empty}>
           <p>No records yet. Create some polls to see your achievements!</p>
         </div>
@@ -209,7 +223,13 @@ export function PersonalRecords({ polls }: PersonalRecordsProps) {
 
   return (
     <div className={styles.recordsCard}>
-      <h3 className={styles.title}>Personal Records</h3>
+      {proDescription && <p className={styles.proDescription}>{proDescription}</p>}
+      <div className={styles.headerLeft}>
+        <div className={styles.titleRow}>
+          <h3 className={styles.title}>Personal Records</h3>
+          {showProBadge && <span className={styles.proBadge}>Pro</span>}
+        </div>
+      </div>
       <div className={styles.recordsGrid}>
         {records.map((record, index) => (
           <div

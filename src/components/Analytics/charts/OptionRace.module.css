@@ -28,10 +28,40 @@
 
 .headerLeft {
   display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.titleRow {
+  display: flex;
   align-items: center;
-  gap: 1rem;
-  flex: 1;
-  min-width: 0;
+  gap: 0.5rem;
+}
+
+.proBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.375rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.proDescription {
+  font-size: 0.625rem;
+  color: #fff;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: 0.02em;
+  animation: textShimmer 3.5s ease-in-out infinite;
 }
 
 .title {
@@ -64,6 +94,26 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes textShimmer {
+  0%, 100% {
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 0 0 0px rgba(255, 255, 255, 0);
+  }
+  50% {
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
   }
 }
 

@@ -8,6 +8,8 @@ import styles from './MilestoneProgress.module.css';
 interface MilestoneProgressProps {
   totalVotes: number;
   loading?: boolean;
+  showProBadge?: boolean;
+  proDescription?: string;
 }
 
 const MILESTONES = [
@@ -21,7 +23,7 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
-export function MilestoneProgress({ totalVotes, loading }: MilestoneProgressProps) {
+export function MilestoneProgress({ totalVotes, loading, showProBadge, proDescription }: MilestoneProgressProps) {
   const [showCelebration, setShowCelebration] = useState(false);
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
@@ -94,8 +96,14 @@ export function MilestoneProgress({ totalVotes, loading }: MilestoneProgressProp
 
   return (
     <div className={`${styles.card} ${showCelebration ? styles.celebrating : ''}`}>
+      {proDescription && <p className={styles.proDescription}>{proDescription}</p>}
       <div className={styles.header}>
-        <h3 className={styles.title}>Milestone Progress</h3>
+        <div className={styles.headerLeft}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>Milestone Progress</h3>
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          </div>
+        </div>
         <div className={styles.badge}>
           <HugeiconsIcon icon={ChartIncreaseIcon} size={14} />
           <span>{achievedMilestones.length} achieved</span>
