@@ -15,11 +15,12 @@ export function getProCheckoutUrl({ email, userId, customerName }: CheckoutParam
 
   const params = new URLSearchParams({
     email,
-    // Pass userId as metadata for webhook to identify the user
-    metadata: JSON.stringify({ userId }),
     redirect_url: successUrl,
     cancel_url: cancelUrl,
   });
+
+  // Pass userId as metadata using bracket notation for nested object
+  params.set('metadata[userId]', userId);
 
   if (customerName) {
     params.set('name', customerName);
