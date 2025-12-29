@@ -9,7 +9,7 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Is Versus Space free to use?',
     answer:
-      'Yes! The free plan lets you create up to 3 polls with unlimited votes. Free polls auto-close after 15 minutes and are public. For unlimited polls, custom timers, private access keys, vote limiting, and analytics, upgrade to Pro for just Rs. 15/month (less than a chai).',
+      'Yes! The free plan lets you create up to 3 polls with unlimited votes. Free polls auto-close after 15 minutes and are public. For unlimited polls, custom timers, private access keys, vote limiting, and analytics, upgrade to Pro for just $0.18/month (less than a chai).',
   },
   {
     question: 'Do participants need an account to vote?',

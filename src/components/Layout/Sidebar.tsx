@@ -12,7 +12,9 @@ import {
   SidebarLeft01Icon,
   SidebarRight01Icon,
   ArrowUp01Icon,
+  Coffee01Icon,
 } from '@hugeicons/core-free-icons';
+import { track } from '@vercel/analytics';
 import { getProCheckoutUrl } from '../../utils/payment';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import styles from './Sidebar.module.css';
@@ -161,6 +163,23 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
               </span>
             </button>
           )}
+
+          {/* Buy Me a Coffee */}
+          <a
+            href="https://www.buymeacoffee.com/aswinasok"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.coffeeButton} ${isCollapsed ? styles.coffeeButtonCollapsed : ''}`}
+            title={isCollapsed ? 'Buy me a chai' : undefined}
+            onClick={() => track('buymeacoffee_click', { location: 'sidebar' })}
+          >
+            <span className={styles.coffeeIcon}>
+              <HugeiconsIcon icon={Coffee01Icon} size={isCollapsed ? 18 : 16} />
+            </span>
+            <span className={`${styles.coffeeLabel} ${isCollapsed ? styles.coffeeLabelHidden : ''}`}>
+              Buy me a chai
+            </span>
+          </a>
 
           {/* User Profile Section */}
           <div className={`${styles.userSection} ${isCollapsed ? styles.userSectionCollapsed : ''}`}>

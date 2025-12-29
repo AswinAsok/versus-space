@@ -53,7 +53,7 @@ export function UpgradePlan({ user, currentPollCount }: UpgradePlanProps) {
           <p className={styles.upgradeSubtitle}>Unlock the full potential of your polls</p>
         </div>
         <div className={styles.priceTag}>
-          <span className={styles.priceAmount}>Rs. {PRO_PLAN_PRICE}</span>
+          <span className={styles.priceAmount}>$0.18</span>
           <span className={styles.pricePeriod}>/month</span>
         </div>
       </div>

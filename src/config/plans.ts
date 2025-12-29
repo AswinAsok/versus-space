@@ -13,4 +13,4 @@ export const DODO_PAYMENTS_CONFIG = {
 };
 
 // Pro plan pricing
-export const PRO_PLAN_PRICE = 15; // Rs. 15/month
+export const PRO_PLAN_PRICE = 15; // ~$0.18/month (₹15 INR)

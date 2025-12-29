@@ -457,11 +457,11 @@ export function Home({ onNavigate }: HomeProps) {
                   <p className={styles.pricingTagline}>Perfect for getting started.</p>
 
                   <div className={styles.pricingPriceBlock}>
-                    <span className={styles.pricingCurrency}>₹</span>
+                    <span className={styles.pricingCurrency}>$</span>
                     <span className={styles.pricingAmount}>0</span>
                     <span className={styles.pricingPeriod}>/mo</span>
                   </div>
-                  <p className={styles.pricingBillingAlt}>$0 USD</p>
+                  <p className={styles.pricingBillingAlt}>₹0 INR</p>
                   <p className={styles.pricingBilling}>Free forever</p>
 
                   <button onClick={() => onNavigate('/create')} className={styles.pricingButton}>
@@ -506,11 +506,11 @@ export function Home({ onNavigate }: HomeProps) {
                   <p className={styles.pricingTagline}>One chai = One month of Pro. Fair deal?</p>
 
                   <div className={styles.pricingPriceBlock}>
-                    <span className={styles.pricingCurrency}>₹</span>
-                    <span className={styles.pricingAmount}>15</span>
+                    <span className={styles.pricingCurrency}>$</span>
+                    <span className={styles.pricingAmount}>0.18</span>
                     <span className={styles.pricingPeriod}>/mo</span>
                   </div>
-                  <p className={styles.pricingBillingAlt}>~$0.18 USD</p>
+                  <p className={styles.pricingBillingAlt}>~₹15 INR</p>
                   <p className={styles.pricingBilling}>Less than a cutting chai</p>
 
                   <button
@@ -611,6 +611,18 @@ export function Home({ onNavigate }: HomeProps) {
                   </ul>
                 </div>
               </div>
+            </div>
+
+            <div className={styles.pricingNote}>
+              <p className={styles.pricingNoteText}>
+                YESS, with this pricing this app won't survive — but this is my first project with a
+                subscription model, and my only <span className={styles.pricingNoteWhite}>AIM</span>{' '}
+                is to get my{' '}
+                <span className={styles.pricingNoteHighlight}>FIRST PAYING CUSTOMER</span>. As you
+                can already see, there are{' '}
+                <span className={styles.pricingNoteHighlight}>NO PLANS</span> to turn this into the
+                next <span className={styles.pricingNoteHighlight}>MILLION DOLLAR</span> idea.
+              </p>
             </div>
           </section>
 

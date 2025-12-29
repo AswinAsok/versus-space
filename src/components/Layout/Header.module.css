@@ -70,6 +70,7 @@
 .logoImage {
   height: 18px;
   width: auto;
+  object-fit: contain;
   transition: opacity var(--transition-fast) var(--ease-out);
 }
 
@@ -233,6 +234,7 @@
 .backedByPill .backedByLogo {
   height: 12px;
   width: auto;
+  object-fit: contain;
 }
 
 .backedByPill .backedByAsterisk {
@@ -296,6 +298,10 @@
 .userAvatar {
   width: 36px;
   height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  aspect-ratio: 1;
+  flex-shrink: 0;
   background: var(--color-primary);
   border-radius: 50%;
   display: flex;
@@ -406,6 +412,8 @@
   .userAvatar {
     width: 32px;
     height: 32px;
+    min-width: 32px;
+    min-height: 32px;
     font-size: 0.75rem;
   }
 
@@ -469,6 +477,8 @@
   .userAvatar {
     width: 28px;
     height: 28px;
+    min-width: 28px;
+    min-height: 28px;
     font-size: 0.6875rem;
   }
 
