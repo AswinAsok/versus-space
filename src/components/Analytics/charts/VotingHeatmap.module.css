@@ -1,11 +1,11 @@
 .card {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  height: 100%;
+  border-radius: var(--radius-lg);
+  padding: 1.1rem;
   display: flex;
   flex-direction: column;
+  transition: all var(--transition-normal) var(--ease-out);
 }
 
 .card:hover {
@@ -14,7 +14,7 @@
 }
 
 .header {
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
 .title {
@@ -23,6 +23,7 @@
   font-weight: 600;
   color: var(--color-text);
   margin: 0 0 0.25rem 0;
+  letter-spacing: -0.01em;
 }
 
 .subtitle {
@@ -38,17 +39,9 @@
   justify-content: center;
 }
 
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.skeletonGrid {
+  flex: 1;
+  padding: 1rem 0;
 }
 
 /* Graph Wrapper */
@@ -57,6 +50,7 @@
   display: flex;
   flex-direction: column;
   overflow-x: auto;
+  gap: 0.35rem;
 }
 
 .graphWrapper::-webkit-scrollbar {
@@ -76,21 +70,23 @@
 /* Month Row */
 .monthRow {
   display: flex;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .dayLabelSpacer {
-  width: 32px;
+  width: 24px;
   flex-shrink: 0;
 }
 
 .monthLabels {
   display: flex;
   gap: 3px;
+  flex: 1;
 }
 
 .monthCell {
-  width: 11px;
+  flex: 1;
+  min-width: 0;
   font-size: 0.625rem;
   color: var(--color-text-muted);
   text-align: left;
@@ -101,7 +97,8 @@
 /* Grid Row */
 .gridRow {
   display: flex;
-  gap: 4px;
+  gap: 3px;
+  flex: 1;
 }
 
 /* Day Labels */
@@ -109,13 +106,13 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  width: 28px;
+  width: 24px;
   flex-shrink: 0;
 }
 
 .dayLabel {
-  height: 11px;
-  font-size: 0.5625rem;
+  flex: 1;
+  font-size: 0.5rem;
   color: var(--color-text-muted);
   display: flex;
   align-items: center;
@@ -127,13 +124,14 @@
   display: grid;
   gap: 3px;
   grid-auto-flow: column;
+  flex: 1;
   /* grid-template-columns and grid-template-rows set via inline style */
 }
 
 /* Cells */
 .cell {
-  width: 11px;
-  height: 11px;
+  aspect-ratio: 1;
+  min-width: 8px;
   border-radius: 2px;
   cursor: default;
   transition: transform 0.1s ease;
@@ -176,15 +174,17 @@
   justify-content: flex-end;
   gap: 4px;
   margin-top: auto;
-  padding-top: 0.75rem;
+  padding-top: 0.5rem;
   font-size: 0.5625rem;
   color: var(--color-text-muted);
 }
 
 .legend .cell {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
   flex-shrink: 0;
+  aspect-ratio: auto;
 }
 
 .legend .cell:hover {
@@ -193,11 +193,13 @@
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .card {
-    padding: 0.875rem;
+    padding: 1.25rem;
   }
+}
 
+@media (max-width: 640px) {
   .dayLabels {
     display: none;
   }

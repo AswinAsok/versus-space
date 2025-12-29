@@ -1,4 +1,6 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import type { OptionVoteData, Poll } from '../../../types';
 import styles from './Charts.module.css';
 
@@ -45,9 +47,12 @@ export function OptionBreakdownChart({
             ))}
           </select>
         </div>
-        <div className={styles.chartLoading}>
-          <div className={styles.loadingSpinner} />
-          <p>Loading chart data...</p>
+        <div className={styles.skeletonCircle}>
+          <Skeleton circle width={150} height={150} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+        </div>
+        <div className={styles.skeletonStats}>
+          <Skeleton width={80} height={16} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton width={80} height={16} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
         </div>
       </div>
     );
@@ -105,14 +110,14 @@ export function OptionBreakdownChart({
         </select>
       </div>
       <div className={styles.chartWrapper}>
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={200}>
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={60}
-              outerRadius={90}
+              innerRadius={50}
+              outerRadius={75}
               paddingAngle={2}
               dataKey="voteCount"
               nameKey="optionTitle"
@@ -139,23 +144,22 @@ export function OptionBreakdownChart({
                 return [`${value} votes (${percentage}%)`, name];
               }}
             />
-            <Legend
-              layout="vertical"
-              align="right"
-              verticalAlign="middle"
-              wrapperStyle={{ paddingLeft: '20px' }}
-              formatter={(value) => (
-                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '12px' }}>
-                  {value.length > 18 ? value.slice(0, 18) + '...' : value}
-                </span>
-              )}
-            />
           </PieChart>
         </ResponsiveContainer>
       </div>
-      <div className={styles.totalVotes}>
-        <span className={styles.totalVotesValue}>{totalVotes}</span>
-        <span className={styles.totalVotesLabel}>Total Votes</span>
+
+      <div className={styles.authenticityStats}>
+        {data.map((item, index) => {
+          const percentage = ((item.voteCount / totalVotes) * 100).toFixed(1);
+          return (
+            <div key={item.optionId} className={styles.authStat}>
+              <span className={styles.authDot} style={{ background: CHART_COLORS[index % CHART_COLORS.length] }} />
+              <span className={styles.authLabel}>{item.optionTitle.length > 12 ? item.optionTitle.slice(0, 12) + '...' : item.optionTitle}</span>
+              <span className={styles.authValue}>{item.voteCount.toLocaleString()}</span>
+              <span className={styles.authPercent}>{percentage}%</span>
+            </div>
+          );
+        })}
       </div>
       <p className={styles.chartFootnote}>Shows how votes are distributed among options for the selected poll.</p>
     </div>

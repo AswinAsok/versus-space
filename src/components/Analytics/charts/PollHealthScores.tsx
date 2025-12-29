@@ -161,7 +161,7 @@ export function PollHealthScores({ polls }: PollHealthScoresProps) {
                 className={styles.scoreIcon}
                 style={{ color: getScoreColor(poll.score) }}
               >
-                <HugeiconsIcon icon={getScoreIcon(poll.score)} size={18} />
+                <HugeiconsIcon icon={getScoreIcon(poll.score)} size={14} />
               </div>
               <div className={styles.scoreInfo}>
                 <span className={styles.pollTitle}>{poll.pollTitle}</span>

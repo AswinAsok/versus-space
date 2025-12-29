@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import styles from './VotingHeatmap.module.css';
 
 interface VotingHeatmapProps {
@@ -14,7 +16,9 @@ interface DayData {
 }
 
 export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading }: VotingHeatmapProps) {
-  const { days, weeks, displayTotal, months } = useMemo(() => {
+  const trackedVoteCount = voteTimestamps.length;
+
+  const { days, weeks, months } = useMemo(() => {
     const today = new Date();
     today.setHours(23, 59, 59, 999);
 
@@ -25,49 +29,29 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading }: V
       voteCounts.set(key, (voteCounts.get(key) || 0) + 1);
     });
 
-    const trackedTotal = voteTimestamps.length;
-
-    // Calculate scaling factor to show all votes
-    // If we have tracked votes, scale them up to represent total votes
-    // If no tracked votes, distribute total evenly across 90 days
-    const scaleFactor = trackedTotal > 0
-      ? totalVotesAllPolls / trackedTotal
-      : 1;
-
-    // Generate exactly 90 days of data
+    // Generate exactly 365 days of data (full year) - only show actual tracked votes
     const daysArray: DayData[] = [];
-    const scaledCounts: number[] = [];
+    const counts: number[] = [];
 
-    for (let i = 89; i >= 0; i--) {
+    for (let i = 364; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       date.setHours(0, 0, 0, 0);
 
-      const trackedCount = voteCounts.get(formatDateKey(date)) || 0;
-      // Scale up the count to represent total votes proportionally
-      const scaledCount = Math.round(trackedCount * scaleFactor);
-      scaledCounts.push(scaledCount);
-      daysArray.push({ date, count: scaledCount, level: 0 }); // Level set later
+      const count = voteCounts.get(formatDateKey(date)) || 0;
+      counts.push(count);
+      daysArray.push({ date, count, level: 0 });
     }
 
-    // If no tracked votes but we have total votes, distribute evenly
-    if (trackedTotal === 0 && totalVotesAllPolls > 0) {
-      const perDay = Math.floor(totalVotesAllPolls / 90);
-      daysArray.forEach((day, i) => {
-        day.count = perDay;
-        scaledCounts[i] = perDay;
-      });
-    }
-
-    // Calculate levels based on scaled counts
-    const maxCount = Math.max(...scaledCounts, 1);
+    // Calculate levels based on counts
+    const maxCount = Math.max(...counts, 1);
     daysArray.forEach((day) => {
       day.level = getLevel(day.count, maxCount);
     });
 
     // Calculate number of weeks (columns)
     const firstDayOfWeek = daysArray[0].date.getDay(); // 0 = Sunday
-    const totalCells = firstDayOfWeek + 90;
+    const totalCells = firstDayOfWeek + 365;
     const numWeeks = Math.ceil(totalCells / 7);
 
     // Build month labels
@@ -90,10 +74,9 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading }: V
     return {
       days: daysArray,
       weeks: numWeeks,
-      displayTotal: totalVotesAllPolls,
       months: monthLabels
     };
-  }, [voteTimestamps, totalVotesAllPolls]);
+  }, [voteTimestamps]);
 
   function formatDateKey(date: Date): string {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -146,9 +129,10 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading }: V
       <div className={styles.card}>
         <div className={styles.header}>
           <h3 className={styles.title}>Vote Activity</h3>
+          <Skeleton width={200} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
         </div>
-        <div className={styles.loading}>
-          <div className={styles.spinner} />
+        <div className={styles.skeletonGrid}>
+          <Skeleton height={120} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={4} />
         </div>
       </div>
     );
@@ -159,7 +143,7 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading }: V
       <div className={styles.header}>
         <h3 className={styles.title}>Vote Activity</h3>
         <span className={styles.subtitle}>
-          {displayTotal.toLocaleString()} votes in the last 90 days
+          {trackedVoteCount.toLocaleString()} tracked votes in the last year
         </span>
       </div>
 
@@ -196,8 +180,8 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading }: V
           <div
             className={styles.grid}
             style={{
-              gridTemplateColumns: `repeat(${weeks}, 11px)`,
-              gridTemplateRows: 'repeat(7, 11px)'
+              gridTemplateColumns: `repeat(${weeks}, 1fr)`,
+              gridTemplateRows: 'repeat(7, 1fr)'
             }}
           >
             {gridCells.map((cell, index) => (

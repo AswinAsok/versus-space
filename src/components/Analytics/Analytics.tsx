@@ -68,7 +68,7 @@ export function Analytics({ user }: AnalyticsProps) {
       const [timeData, totalData, timestamps, authStats] = await Promise.all([
         voteFacade.getVotesOverTime(pollIds, dateRange),
         voteFacade.getTotalVotesForPolls(pollIds),
-        voteFacade.getVoteTimestamps(pollIds, 90), // Always fetch 90 days for heatmap
+        voteFacade.getVoteTimestamps(pollIds, 365), // Fetch 365 days for heatmap
         voteFacade.getVoteAuthenticityStats(pollIds),
       ]);
 
@@ -185,7 +185,7 @@ export function Analytics({ user }: AnalyticsProps) {
 
         {/* Progress Section: Milestone + Personal Records */}
         <div className={styles.twoColumnGrid}>
-          <MilestoneProgress totalVotes={totalVotes} />
+          <MilestoneProgress totalVotes={totalVotes} loading={chartsLoading} />
           <PersonalRecords polls={polls} />
         </div>
 
@@ -213,19 +213,19 @@ export function Analytics({ user }: AnalyticsProps) {
           />
         </section>
 
-        {/* Analysis Section: Poll Health + Voting Heatmap */}
-        <div className={styles.twoColumnGrid}>
-          <PollHealthScores polls={polls} />
-          <VotingHeatmap voteTimestamps={voteTimestamps} totalVotesAllPolls={totalVotes} loading={chartsLoading} />
-        </div>
-
-        {/* Active Polls */}
+        {/* Vote Activity Heatmap - Full Width */}
         <section className={styles.section}>
-          <ActivePollsTracker polls={polls} />
+          <VotingHeatmap voteTimestamps={voteTimestamps} totalVotesAllPolls={totalVotes} loading={chartsLoading} />
         </section>
 
-        {/* Vote Authenticity + Option Breakdown */}
-        <div className={styles.twoColumnGrid}>
+        {/* Poll Health Scores - Full Width */}
+        <section className={styles.section}>
+          <PollHealthScores polls={polls} />
+        </section>
+
+        {/* Active Polls + Vote Authenticity + Option Breakdown */}
+        <div className={styles.threeColumnGrid}>
+          <ActivePollsTracker polls={polls} />
           <RealVsSimulatedChart
             realVotes={realVotes}
             simulatedVotes={simulatedVotes}

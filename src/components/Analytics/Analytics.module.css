@@ -175,7 +175,7 @@
 }
 
 .threeColumnGrid > * {
-  min-height: 240px;
+  min-height: 200px;
 }
 
 .twoColumnGrid {
@@ -186,7 +186,7 @@
 }
 
 .twoColumnGrid > * {
-  min-height: 280px;
+  min-height: 220px;
 }
 
 /* Activity List */

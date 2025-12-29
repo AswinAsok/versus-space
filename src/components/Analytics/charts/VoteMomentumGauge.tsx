@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Fire02Icon, ArrowUp01Icon, ArrowDown01Icon } from '@hugeicons/core-free-icons';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { supabase } from '../../../lib/supabaseClient';
 import styles from './VoteMomentumGauge.module.css';
 
@@ -129,8 +131,20 @@ export function VoteMomentumGauge({ pollIds }: VoteMomentumGaugeProps) {
   if (loading) {
     return (
       <div className={styles.gaugeCard}>
-        <div className={styles.loading}>
-          <div className={styles.loadingSpinner} />
+        <div className={styles.header}>
+          <h3 className={styles.title}>Vote Momentum</h3>
+        </div>
+        <div className={styles.skeletonContent}>
+          <Skeleton width={80} height={48} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton width={60} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" style={{ marginTop: 8 }} />
+        </div>
+        <div className={styles.skeletonGauge}>
+          <Skeleton height={8} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={4} />
+        </div>
+        <div className={styles.skeletonStats}>
+          <Skeleton width={60} height={32} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton width={60} height={32} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton width={60} height={32} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
         </div>
       </div>
     );

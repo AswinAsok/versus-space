@@ -66,56 +66,80 @@ export function createSupabaseVoteGateway(client: SupabaseClient<Database>): Vot
     async getVotesOverTime(pollIds, days) {
       if (pollIds.length === 0) return new Map();
 
-      const startDate = new Date();
-      startDate.setDate(startDate.getDate() - days);
+      const formatDateKey = (date: Date) =>
+        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const formatHourKey = (date: Date) =>
+        `${formatDateKey(date)}-${String(date.getHours()).padStart(2, '0')}`;
 
-      const { data, error } = await client
-        .from('votes')
-        .select('poll_id, created_at')
-        .in('poll_id', pollIds)
-        .gte('created_at', startDate.toISOString())
-        .order('created_at', { ascending: true });
+      // Build the time buckets that match what the chart expects
+      const bucketKeys: string[] = [];
+      if (days === 1) {
+        const now = new Date();
+        for (let i = 23; i >= 0; i--) {
+          const hour = new Date(now);
+          hour.setHours(now.getHours() - i, 0, 0, 0);
+          bucketKeys.push(formatHourKey(hour));
+        }
+      } else {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        for (let i = days - 1; i >= 0; i--) {
+          const date = new Date(today);
+          date.setDate(date.getDate() - i);
+          bucketKeys.push(formatDateKey(date));
+        }
+      }
+
+      const startDate = (() => {
+        if (days === 1) {
+          const start = new Date();
+          start.setMinutes(0, 0, 0);
+          start.setHours(start.getHours() - 23);
+          return start;
+        }
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
+        start.setDate(start.getDate() - (days - 1));
+        return start;
+      })();
+
+      // Get timezone offset in minutes (negative because getTimezoneOffset returns opposite sign)
+      const tzOffsetMinutes = -new Date().getTimezoneOffset();
+
+      // Use RPC function for efficient aggregation
+      const { data, error } = await client.rpc('get_votes_over_time', {
+        p_poll_ids: pollIds,
+        p_start_date: startDate.toISOString(),
+        p_group_by_hour: days === 1,
+        p_tz_offset_minutes: tzOffsetMinutes,
+      });
 
       if (error) throw error;
 
-      // Group votes by poll_id and date
-      const result = new Map<string, VoteDailyCount[]>();
-
-      // Initialize map for all poll IDs
-      pollIds.forEach((pollId) => result.set(pollId, []));
-
-      // Group votes by date
-      const votesByPollAndDate = new Map<string, Map<string, number>>();
-
-      (data || []).forEach((vote) => {
-        const pollId = vote.poll_id;
-        const voteDate = new Date(vote.created_at);
-
-        // For 24h view (days === 1), group by hour; otherwise group by date
-        let key: string;
-        if (days === 1) {
-          // Include hour in the key for hourly grouping
-          key = `${voteDate.getFullYear()}-${String(voteDate.getMonth() + 1).padStart(2, '0')}-${String(voteDate.getDate()).padStart(2, '0')}-${String(voteDate.getHours()).padStart(2, '0')}`;
-        } else {
-          // Daily grouping
-          key = `${voteDate.getFullYear()}-${String(voteDate.getMonth() + 1).padStart(2, '0')}-${String(voteDate.getDate()).padStart(2, '0')}`;
-        }
-
-        if (!votesByPollAndDate.has(pollId)) {
-          votesByPollAndDate.set(pollId, new Map());
-        }
-
-        const pollDates = votesByPollAndDate.get(pollId)!;
-        pollDates.set(key, (pollDates.get(key) || 0) + 1);
+      // Pre-seed buckets for all polls
+      const votesByPoll = new Map<string, Map<string, number>>();
+      pollIds.forEach((pollId) => {
+        votesByPoll.set(
+          pollId,
+          new Map(bucketKeys.map((key) => [key, 0]))
+        );
       });
 
-      // Convert to VoteDailyCount arrays
-      votesByPollAndDate.forEach((dates, pollId) => {
-        const counts: VoteDailyCount[] = [];
-        dates.forEach((count, date) => {
-          counts.push({ date, count });
-        });
-        counts.sort((a, b) => a.date.localeCompare(b.date));
+      // Place aggregated vote counts into buckets
+      (data || []).forEach((row: { poll_id: string; time_bucket: string; vote_count: number }) => {
+        const pollBuckets = votesByPoll.get(row.poll_id);
+        if (pollBuckets && pollBuckets.has(row.time_bucket)) {
+          pollBuckets.set(row.time_bucket, row.vote_count);
+        }
+      });
+
+      // Build result
+      const result = new Map<string, VoteDailyCount[]>();
+      votesByPoll.forEach((buckets, pollId) => {
+        const counts: VoteDailyCount[] = bucketKeys.map((key) => ({
+          date: key,
+          count: buckets.get(key) || 0,
+        }));
         result.set(pollId, counts);
       });
 
@@ -159,42 +183,61 @@ export function createSupabaseVoteGateway(client: SupabaseClient<Database>): Vot
     async getVoteTimestamps(pollIds, days) {
       if (pollIds.length === 0) return [];
 
-      const startDate = new Date();
-      startDate.setDate(startDate.getDate() - days);
+      const startDate = (() => {
+        if (days === 1) {
+          const start = new Date();
+          start.setMinutes(0, 0, 0);
+          start.setHours(start.getHours() - 23);
+          return start;
+        }
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
+        start.setDate(start.getDate() - (days - 1));
+        return start;
+      })();
 
-      const { data, error } = await client
-        .from('votes')
-        .select('created_at')
-        .in('poll_id', pollIds)
-        .gte('created_at', startDate.toISOString());
+      // Use RPC function to get aggregated counts by date (much faster)
+      const { data, error } = await client.rpc('get_vote_counts_by_date', {
+        p_poll_ids: pollIds,
+        p_start_date: startDate.toISOString(),
+      });
 
       if (error) throw error;
 
-      return (data || []).map((vote) => new Date(vote.created_at));
+      // Convert aggregated data back to timestamps for compatibility
+      // Create one timestamp per vote on each date
+      const allTimestamps: Date[] = [];
+      (data || []).forEach((row: { vote_date: string; vote_count: number }) => {
+        const date = new Date(row.vote_date);
+        for (let i = 0; i < row.vote_count; i++) {
+          allTimestamps.push(date);
+        }
+      });
+
+      return allTimestamps;
     },
 
     async getVoteAuthenticityStats(pollIds) {
       if (pollIds.length === 0) return { realVotes: 0, simulatedVotes: 0 };
 
+      // Use poll_options.vote_count as source of truth (all votes are real)
       const { data, error } = await client
-        .from('votes')
-        .select('is_simulated')
+        .from('poll_options')
+        .select('vote_count')
         .in('poll_id', pollIds);
 
       if (error) throw error;
 
-      let realVotes = 0;
-      let simulatedVotes = 0;
+      const totalVotes = (data || []).reduce(
+        (sum, option) => sum + (option.vote_count || 0),
+        0
+      );
 
-      (data || []).forEach((vote) => {
-        if (vote.is_simulated) {
-          simulatedVotes++;
-        } else {
-          realVotes++;
-        }
-      });
-
-      return { realVotes, simulatedVotes } satisfies VoteAuthenticityStats;
+      // All votes are real (simulated votes have been converted)
+      return {
+        realVotes: totalVotes,
+        simulatedVotes: 0,
+      } satisfies VoteAuthenticityStats;
     },
   };
 }

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import {
   AreaChart,
   Area,
@@ -9,8 +9,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import type { VoteDailyCount } from '../../../types';
 import styles from './Charts.module.css';
+import chartStyles from './VotesOverTimeChart.module.css';
 
 interface VotesOverTimeChartProps {
   data: Map<string, VoteDailyCount[]>;
@@ -26,6 +29,8 @@ const CHART_COLORS = [
 ];
 
 export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOverTimeChartProps) {
+  const [hiddenPolls, setHiddenPolls] = useState<Set<string>>(new Set());
+
   // Get only poll IDs that have votes in the time range (filter out 0-vote polls)
   const allPollIds = useMemo(() => {
     const pollsWithVotes: string[] = [];
@@ -37,6 +42,24 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
     });
     return pollsWithVotes;
   }, [data]);
+
+  // Visible poll IDs (not hidden)
+  const visiblePollIds = useMemo(() => {
+    return allPollIds.filter(id => !hiddenPolls.has(id));
+  }, [allPollIds, hiddenPolls]);
+
+  // Toggle poll visibility
+  const handleLegendClick = useCallback((pollId: string) => {
+    setHiddenPolls(prev => {
+      const next = new Set(prev);
+      if (next.has(pollId)) {
+        next.delete(pollId);
+      } else {
+        next.add(pollId);
+      }
+      return next;
+    });
+  }, []);
 
   const chartData = useMemo(() => {
     // For 24h view, show hourly data
@@ -124,9 +147,12 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
   if (loading) {
     return (
       <div className={styles.chartCard}>
-        <div className={styles.chartLoading}>
-          <div className={styles.loadingSpinner} />
-          <p>Loading chart data...</p>
+        <div className={styles.skeletonLine}>
+          <Skeleton height={250} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={8} />
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+            <Skeleton width={80} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+            <Skeleton width={80} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          </div>
         </div>
       </div>
     );
@@ -203,12 +229,27 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
             />
             <Legend
               wrapperStyle={{ paddingTop: '16px' }}
-              formatter={(value) => (
-                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '12px' }}>
-                  {(pollTitles.get(value) || value).slice(0, 20)}
-                  {(pollTitles.get(value) || value).length > 20 ? '...' : ''}
-                </span>
-              )}
+              onClick={(e) => {
+                if (e && e.dataKey) {
+                  handleLegendClick(e.dataKey as string);
+                }
+              }}
+              formatter={(value) => {
+                const isHidden = hiddenPolls.has(value);
+                const title = pollTitles.get(value) || value;
+                const displayTitle = title.length > 20 ? title.slice(0, 20) + '...' : title;
+                return (
+                  <span
+                    className={chartStyles.legendItem}
+                    style={{
+                      color: isHidden ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.7)',
+                      textDecoration: isHidden ? 'line-through' : 'none',
+                    }}
+                  >
+                    {displayTitle}
+                  </span>
+                );
+              }}
             />
             {allPollIds.map((pollId, index) => (
               <Area
@@ -216,10 +257,11 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
                 type="monotone"
                 dataKey={pollId}
                 stroke={CHART_COLORS[index % CHART_COLORS.length]}
-                strokeWidth={2}
-                fill={`url(#gradient-${pollId})`}
+                strokeWidth={hiddenPolls.has(pollId) ? 0 : 2}
+                fill={hiddenPolls.has(pollId) ? 'transparent' : `url(#gradient-${pollId})`}
                 dot={false}
-                activeDot={{ r: 5, strokeWidth: 0 }}
+                activeDot={hiddenPolls.has(pollId) ? false : { r: 5, strokeWidth: 0 }}
+                hide={hiddenPolls.has(pollId)}
               />
             ))}
           </AreaChart>

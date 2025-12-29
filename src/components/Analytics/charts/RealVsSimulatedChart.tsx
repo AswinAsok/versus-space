@@ -1,4 +1,6 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import styles from './Charts.module.css';
 
 interface RealVsSimulatedChartProps {
@@ -21,9 +23,12 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading }: Rea
     return (
       <div className={styles.chartCard}>
         <h3 className={styles.chartTitle}>Vote Authenticity</h3>
-        <div className={styles.chartLoading}>
-          <div className={styles.loadingSpinner} />
-          <p>Loading data...</p>
+        <div className={styles.skeletonCircle}>
+          <Skeleton circle width={150} height={150} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+        </div>
+        <div className={styles.skeletonStats}>
+          <Skeleton width={100} height={16} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton width={100} height={16} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
         </div>
       </div>
     );

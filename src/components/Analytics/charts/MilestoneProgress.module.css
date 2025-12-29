@@ -56,6 +56,18 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .currentVotes {
@@ -84,6 +96,7 @@
 /* Progress Section */
 .progressSection {
   margin-bottom: 1rem;
+  animation: fadeInUp 0.4s ease-out 0.1s both;
 }
 
 .progressLabels {
@@ -194,6 +207,27 @@
   to {
     opacity: 1;
   }
+}
+
+/* Skeleton Loading */
+.skeletonContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.skeletonProgress {
+  margin-bottom: 1rem;
+}
+
+.skeletonFooter {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Responsive */

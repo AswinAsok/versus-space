@@ -1,0 +1,12 @@
+/* Votes Over Time Chart Styles */
+
+.legendItem {
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.legendItem:hover {
+  opacity: 0.8;
+}
