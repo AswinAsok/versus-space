@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '@supabase/supabase-js';
-import { useUserPolls, useDeletePoll, useTogglePollStatus } from '../../hooks/usePollQueries';
+import { useUserPolls, useDeletePoll, useTogglePollStatus, useUserPollCount } from '../../hooks/usePollQueries';
+import { useUserProfile } from '../../hooks/useUserProfile';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   Delete01Icon,
@@ -16,6 +17,7 @@ import {
   Tick01Icon,
   PencilEdit01Icon,
 } from '@hugeicons/core-free-icons';
+import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import styles from './MyPolls.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -28,8 +30,15 @@ export function MyPolls({ user }: MyPollsProps) {
   const navigate = useNavigate();
 
   const { data: polls = [], isLoading, error } = useUserPolls(user.id);
+  const { data: pollCount = 0, isLoading: pollCountLoading } = useUserPollCount(user.id);
+  const { data: profile } = useUserProfile(user);
   const deletePoll = useDeletePoll();
   const toggleStatus = useTogglePollStatus();
+
+  const isSuperAdmin = profile?.role === 'superadmin';
+  const isPro = isSuperAdmin || profile?.plan === 'pro';
+  const resolvedPollCount = pollCount ?? polls.length;
+  const isAtFreeLimit = !isPro && resolvedPollCount >= FREE_PLAN_POLL_LIMIT;
 
   const handleDelete = async (pollId: string) => {
     if (!confirm('Are you sure you want to delete this poll?')) return;
@@ -75,11 +84,21 @@ export function MyPolls({ user }: MyPollsProps) {
             {polls.length} {polls.length === 1 ? 'poll' : 'polls'} in your collection
           </p>
         </div>
-        <button onClick={() => navigate('/dashboard/create')} className={styles.createButton}>
+        <button
+          onClick={() => navigate('/dashboard/create')}
+          className={styles.createButton}
+          disabled={isAtFreeLimit || pollCountLoading}
+        >
           <HugeiconsIcon icon={Add01Icon} size={18} />
-          Create Poll
+          {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Poll'}
         </button>
       </div>
+
+      {isAtFreeLimit && (
+        <div className={sharedStyles.errorMessage}>
+          Free plan limit reached. Upgrade to Pro to create more than {FREE_PLAN_POLL_LIMIT} polls.
+        </div>
+      )}
 
       {error && <div className={sharedStyles.errorMessage}>{error instanceof Error ? error.message : 'Failed to load polls'}</div>}
 
@@ -94,9 +113,10 @@ export function MyPolls({ user }: MyPollsProps) {
             <button
               onClick={() => navigate('/dashboard/create')}
               className={styles.emptyButton}
+              disabled={isAtFreeLimit || pollCountLoading}
             >
               <HugeiconsIcon icon={Add01Icon} size={18} />
-              Create Your First Poll
+              {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Your First Poll'}
             </button>
             <button
               onClick={() => navigate('/explore')}

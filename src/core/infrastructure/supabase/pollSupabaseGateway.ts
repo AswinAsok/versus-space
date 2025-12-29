@@ -1,34 +1,68 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type {
-  Poll,
-  PollOption,
-  PollWithOptions,
-  CreatePollData,
-  UpdatePollData,
-  LeaderboardPoll,
-  PlatformStats,
-} from '../../../types';
+import type { PollOption, CreatePollData, UpdatePollData, LeaderboardPoll, PlatformStats } from '../../../types';
 import type { Database } from '../../../types/database';
 import type { PollGateway } from '../../domain/polls';
 import { generateUniqueSlug } from '../../../utils/slug';
+import { FREE_PLAN_POLL_LIMIT } from '../../../config/plans';
 
 export function createSupabasePollGateway(client: SupabaseClient<Database>): PollGateway {
   return {
     async createPoll(data, userId) {
-      const slug = generateUniqueSlug(data.title);
+      const { data: profile, error: profileError } = await client
+        .from('user_profiles')
+        .select('plan, role')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+
+      const isSuperAdmin = profile?.role === 'superadmin';
+      const isPro = isSuperAdmin || profile?.plan === 'pro';
+
+      if (!isPro) {
+        const { count, error: countError } = await client
+          .from('polls')
+          .select('*', { count: 'exact', head: true })
+          .eq('creator_id', userId);
+
+        if (countError) throw countError;
+        if ((count ?? 0) >= FREE_PLAN_POLL_LIMIT) {
+          throw new Error(`Free plan limit reached. Upgrade to Pro to create more than ${FREE_PLAN_POLL_LIMIT} polls.`);
+        }
+
+        if (!data.is_public) {
+          throw new Error('Private polls are available on the Pro plan.');
+        }
+      }
+
+      const safeData: CreatePollData = {
+        ...data,
+        is_public: isPro ? data.is_public : true,
+        access_key: isPro ? data.access_key : null,
+        ends_at: isPro ? data.ends_at : undefined,
+        max_votes_per_ip: isPro ? data.max_votes_per_ip : null,
+        auto_vote_interval_seconds: isPro ? data.auto_vote_interval_seconds : 30,
+        options: data.options.map((option) => ({
+          ...option,
+          simulated_enabled: isPro ? option.simulated_enabled : false,
+          simulated_target_votes: isPro ? option.simulated_target_votes : null,
+        })),
+      };
+
+      const slug = generateUniqueSlug(safeData.title);
 
       const { data: poll, error: pollError } = await client
         .from('polls')
         .insert({
-          title: data.title,
+          title: safeData.title,
           slug,
           creator_id: userId,
           is_active: true,
-          is_public: data.is_public,
-          access_key: data.is_public ? null : data.access_key || null,
-          ends_at: data.ends_at ?? null,
-          max_votes_per_ip: data.max_votes_per_ip ?? null,
-          auto_vote_interval_seconds: data.auto_vote_interval_seconds ?? 30,
+          is_public: safeData.is_public,
+          access_key: safeData.is_public ? null : safeData.access_key || null,
+          ends_at: safeData.ends_at ?? null,
+          max_votes_per_ip: safeData.max_votes_per_ip ?? null,
+          auto_vote_interval_seconds: safeData.auto_vote_interval_seconds ?? 30,
         })
         .select()
         .single();
@@ -36,7 +70,7 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
       if (pollError) throw pollError;
       if (!poll) throw new Error('Failed to create poll');
 
-      const optionsToInsert = data.options.map((option) => ({
+      const optionsToInsert = safeData.options.map((option) => ({
         poll_id: poll.id,
         title: option.title,
         image_url: option.image_url,
@@ -117,6 +151,16 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
 
       if (error) throw error;
       return data || [];
+    },
+
+    async getUserPollCount(userId) {
+      const { count, error } = await client
+        .from('polls')
+        .select('*', { count: 'exact', head: true })
+        .eq('creator_id', userId);
+
+      if (error) throw error;
+      return count ?? 0;
     },
 
     async updatePoll(pollId, data: UpdatePollData) {

@@ -142,6 +142,33 @@ export interface Database {
         };
         Relationships: [];
       };
+      user_profiles: {
+        Row: {
+          user_id: string;
+          email: string | null;
+          plan: 'free' | 'pro';
+          role: 'user' | 'superadmin';
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          email?: string | null;
+          plan?: 'free' | 'pro';
+          role?: 'user' | 'superadmin';
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          email?: string | null;
+          plan?: 'free' | 'pro';
+          role?: 'user' | 'superadmin';
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       public_poll_leaderboard: {

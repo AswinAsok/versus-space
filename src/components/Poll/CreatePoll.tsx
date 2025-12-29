@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
-import { useCreatePoll, useUpdatePoll } from '../../hooks/usePollQueries';
+import { useCreatePoll, useUpdatePoll, useUserPollCount } from '../../hooks/usePollQueries';
+import { useUserProfile } from '../../hooks/useUserProfile';
 import { CreatePollSEO } from '../SEO/SEO';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { GlobeIcon, LockIcon, Key01Icon } from '@hugeicons/core-free-icons';
 import type { CreatePollData, PollWithOptions } from '../../types';
+import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
+import { MouseLoader } from '../Loading/MouseLoader';
 import styles from './CreatePoll.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -35,11 +38,17 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const createPoll = useCreatePoll();
   const updatePoll = useUpdatePoll();
   const loading = createPoll.isPending || updatePoll.isPending;
+  const { data: profile, isLoading: profileLoading } = useUserProfile(user);
+  const { data: pollCount = 0, isLoading: pollCountLoading } = useUserPollCount(user.id);
   const [durationMinutes, setDurationMinutes] = useState<number | ''>('');
   const [maxVotesPerIp, setMaxVotesPerIp] = useState<number | ''>('');
   const [autoVoteIntervalSeconds, setAutoVoteIntervalSeconds] = useState<number>(30);
   const [globalTargetVotes, setGlobalTargetVotes] = useState<number>(50);
   const [autoVotesEnabled, setAutoVotesEnabled] = useState(false);
+
+  const isSuperAdmin = profile?.role === 'superadmin';
+  const isPro = isSuperAdmin || profile?.plan === 'pro';
+  const isAtFreeLimit = !isPro && !isEditMode && pollCount >= FREE_PLAN_POLL_LIMIT;
 
   // Load existing poll data when editing
   useEffect(() => {
@@ -76,6 +85,15 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
     }
   }, [editPoll]);
 
+  useEffect(() => {
+    if (!profile || isPro) return;
+    setIsPublic(true);
+    setAccessKey('');
+    setAutoVotesEnabled(false);
+    setDurationMinutes('');
+    setMaxVotesPerIp('');
+  }, [profile, isPro]);
+
   const updateOption = (id: string, field: 'title' | 'image_url', value: string) => {
     setOptions(options.map((opt) => (opt.id === id ? { ...opt, [field]: value } : opt)));
   };
@@ -109,9 +127,24 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       return;
     }
 
+    if (isAtFreeLimit) {
+      setError(`Free plan limit reached. Upgrade to Pro to create more than ${FREE_PLAN_POLL_LIMIT} polls.`);
+      return;
+    }
+
+    if (!isPro && !isPublic) {
+      setError('Private polls are available on the Pro plan.');
+      return;
+    }
+
     try {
+      const effectiveAutoVotesEnabled = isPro ? autoVotesEnabled : false;
+      const effectiveDuration = isPro ? durationMinutes : '';
+      const effectiveMaxVotesPerIp = isPro ? maxVotesPerIp : '';
+      const effectiveInterval = isPro ? autoVoteIntervalSeconds : 30;
+
       // Calculate per-option target votes (divide equally among options)
-      const perOptionTarget = autoVotesEnabled
+      const perOptionTarget = effectiveAutoVotesEnabled
         ? Math.floor(globalTargetVotes / options.length)
         : null;
 
@@ -123,14 +156,14 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
             title,
             is_public: isPublic,
             access_key: isPublic ? null : accessKey,
-            max_votes_per_ip: maxVotesPerIp === '' ? null : maxVotesPerIp,
-            auto_vote_interval_seconds: autoVoteIntervalSeconds || 30,
+            max_votes_per_ip: effectiveMaxVotesPerIp === '' ? null : effectiveMaxVotesPerIp,
+            auto_vote_interval_seconds: effectiveInterval || 30,
             options: options.map((opt, index) => ({
               id: opt.id,
               title: opt.title,
               image_url: opt.image_url || null,
               position: index,
-              simulated_enabled: autoVotesEnabled,
+              simulated_enabled: effectiveAutoVotesEnabled,
               simulated_target_votes: perOptionTarget,
             })),
           },
@@ -139,20 +172,20 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       } else {
         // Create new poll
         const endsAt =
-          durationMinutes === '' ? undefined : new Date(Date.now() + durationMinutes * 60 * 1000);
+          effectiveDuration === '' ? undefined : new Date(Date.now() + effectiveDuration * 60 * 1000);
 
         const pollData: CreatePollData = {
           title,
           is_public: isPublic,
           access_key: isPublic ? undefined : accessKey,
           ends_at: endsAt ? endsAt.toISOString() : undefined,
-          max_votes_per_ip: maxVotesPerIp === '' ? undefined : maxVotesPerIp,
-          auto_vote_interval_seconds: autoVoteIntervalSeconds || 30,
+          max_votes_per_ip: effectiveMaxVotesPerIp === '' ? undefined : effectiveMaxVotesPerIp,
+          auto_vote_interval_seconds: effectiveInterval || 30,
           options: options.map((opt, index) => ({
             title: opt.title,
             image_url: opt.image_url || null,
             position: index,
-            simulated_enabled: autoVotesEnabled,
+            simulated_enabled: effectiveAutoVotesEnabled,
             simulated_target_votes: perOptionTarget,
           })),
         };
@@ -164,6 +197,16 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       setError(err instanceof Error ? err.message : isEditMode ? 'Failed to update poll' : 'Failed to create poll');
     }
   };
+
+  if (profileLoading || pollCountLoading) {
+    return (
+      <div className={styles.createPollContainer}>
+        <div className={styles.createPollInner}>
+          <MouseLoader />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.createPollContainer}>
@@ -179,6 +222,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
               ? 'Update your poll settings and options'
               : 'Set up your question and options to start collecting votes'}
           </p>
+          {isAtFreeLimit && (
+            <div className={sharedStyles.errorMessage}>
+              Free plan limit reached. Upgrade to Pro to create more polls.
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className={styles.createPollForm}>
@@ -243,8 +291,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
           </div>
 
           {/* Poll Controls */}
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Poll Controls</h3>
+          <div className={`${styles.card} ${!isPro ? styles.lockedCard : ''}`}>
+            <h3 className={styles.cardTitle}>
+              Poll Controls
+              {!isPro && <span className={styles.proBadge}>Pro</span>}
+            </h3>
             <p className={styles.cardDescription}>
               Control how long the poll runs and prevent spam by limiting votes per IP.
             </p>
@@ -260,7 +311,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                     setDurationMinutes(e.target.value === '' ? '' : Number(e.target.value))
                   }
                   className={styles.controlInput}
-                  disabled={loading}
+                  disabled={loading || !isPro}
                 />
                 <p className={styles.controlHint}>
                   After this time, voting stops and results are shown in grayscale.
@@ -277,7 +328,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                     setMaxVotesPerIp(e.target.value === '' ? '' : Number(e.target.value))
                   }
                   className={styles.controlInput}
-                  disabled={loading}
+                  disabled={loading || !isPro}
                 />
                 <p className={styles.controlHint}>Stops automated scripts and heavy repeat voters.</p>
               </div>
@@ -285,8 +336,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
           </div>
 
           {/* Auto Votes Card */}
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Auto Votes</h3>
+          <div className={`${styles.card} ${!isPro ? styles.lockedCard : ''}`}>
+            <h3 className={styles.cardTitle}>
+              Auto Votes
+              {!isPro && <span className={styles.proBadge}>Pro</span>}
+            </h3>
             <p className={styles.cardDescription}>
               Simulate engagement by automatically adding votes to your poll.
             </p>
@@ -297,13 +351,13 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                     type="checkbox"
                     checked={autoVotesEnabled}
                     onChange={(e) => setAutoVotesEnabled(e.target.checked)}
-                    disabled={loading}
+                    disabled={loading || !isPro}
                   />
                   <span className={styles.toggleSwitch} />
                   Enable auto votes
                 </label>
               </div>
-              {autoVotesEnabled && (
+              {autoVotesEnabled && isPro && (
                 <div className={styles.autoVotesFields}>
                   <div className={styles.sliderItem}>
                     <div className={styles.sliderHeader}>
@@ -315,7 +369,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                         value={globalTargetVotes}
                         onChange={(e) => setGlobalTargetVotes(Math.min(50000, Math.max(10, Number(e.target.value) || 10)))}
                         className={styles.sliderValueInput}
-                        disabled={loading}
+                        disabled={loading || !isPro}
                       />
                     </div>
                     <div className={styles.sliderWrapper}>
@@ -327,7 +381,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                         value={globalTargetVotes}
                         onChange={(e) => setGlobalTargetVotes(Number(e.target.value))}
                         className={styles.slider}
-                        disabled={loading}
+                        disabled={loading || !isPro}
                       />
                       <div className={styles.sliderTicks}>
                         <span>10</span>
@@ -353,7 +407,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                           value={autoVoteIntervalSeconds}
                           onChange={(e) => setAutoVoteIntervalSeconds(Math.min(300, Math.max(5, Number(e.target.value) || 5)))}
                           className={styles.sliderValueInput}
-                          disabled={loading}
+                          disabled={loading || !isPro}
                         />
                         <span className={styles.sliderUnit}>sec</span>
                       </div>
@@ -367,7 +421,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                         value={autoVoteIntervalSeconds}
                         onChange={(e) => setAutoVoteIntervalSeconds(Number(e.target.value))}
                         className={styles.slider}
-                        disabled={loading}
+                        disabled={loading || !isPro}
                       />
                       <div className={styles.sliderTicks}>
                         <span>5s</span>
@@ -384,9 +438,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                   </div>
                 </div>
               )}
-              <div className={styles.infoBox}>
-                <strong>Fair distribution:</strong> Auto votes are split equally among all options to ensure no option gets an unfair advantage. This creates realistic engagement while maintaining poll integrity.
-              </div>
+              {isPro && (
+                <div className={styles.infoBox}>
+                  <strong>Fair distribution:</strong> Auto votes are split equally among all options to ensure no option gets an unfair advantage. This creates realistic engagement while maintaining poll integrity.
+                </div>
+              )}
             </div>
           </div>
 
@@ -413,7 +469,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                 type="button"
                 className={`${styles.visibilityOption} ${!isPublic ? styles.visibilityActive : ''}`}
                 onClick={() => setIsPublic(false)}
-                disabled={loading}
+                disabled={loading || !isPro}
               >
                 <div className={styles.visibilityIcon}>
                   <HugeiconsIcon icon={LockIcon} size={18} />
@@ -437,7 +493,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                   value={accessKey}
                   onChange={(e) => setAccessKey(e.target.value)}
                   placeholder="Enter a secret key for participants"
-                  disabled={loading}
+                  disabled={loading || !isPro}
                   maxLength={50}
                   className={styles.accessKeyInput}
                 />
@@ -446,14 +502,16 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
           </div>
 
           {/* Submit Button */}
-          <button type="submit" className={styles.submitButton} disabled={loading}>
-            {loading
-              ? isEditMode
-                ? 'Saving...'
-                : 'Creating...'
-              : isEditMode
-                ? 'Save Changes'
-                : 'Create Poll'}
+          <button type="submit" className={styles.submitButton} disabled={loading || isAtFreeLimit}>
+            {isAtFreeLimit
+              ? 'Upgrade to Pro'
+              : loading
+                ? isEditMode
+                  ? 'Saving...'
+                  : 'Creating...'
+                : isEditMode
+                  ? 'Save Changes'
+                  : 'Create Poll'}
           </button>
         </form>
       </div>

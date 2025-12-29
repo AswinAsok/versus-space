@@ -8,6 +8,7 @@ export const pollKeys = {
   all: ['polls'] as const,
   lists: () => [...pollKeys.all, 'list'] as const,
   list: (userId: string) => [...pollKeys.lists(), userId] as const,
+  count: (userId: string) => [...pollKeys.all, 'count', userId] as const,
   details: () => [...pollKeys.all, 'detail'] as const,
   detail: (id: string) => [...pollKeys.details(), id] as const,
   bySlug: (slug: string) => [...pollKeys.all, 'slug', slug] as const,
@@ -23,6 +24,17 @@ export function useUserPolls(userId: string | undefined) {
   return useQuery({
     queryKey: pollKeys.list(userId ?? ''),
     queryFn: () => pollFacade.getUserPolls(userId!),
+    enabled: !!userId,
+  });
+}
+
+/**
+ * Fetch count of user's polls with caching
+ */
+export function useUserPollCount(userId: string | undefined) {
+  return useQuery({
+    queryKey: pollKeys.count(userId ?? ''),
+    queryFn: () => pollFacade.getUserPollCount(userId!),
     enabled: !!userId,
   });
 }

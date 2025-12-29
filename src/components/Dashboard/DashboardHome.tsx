@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '@supabase/supabase-js';
 import { pollFacade } from '../../core/appServices';
+import { useUserProfile } from '../../hooks/useUserProfile';
 import { DashboardSEO } from '../SEO/SEO';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -15,8 +16,10 @@ import {
   ArrowRight01Icon,
   SquareArrowUpRightIcon,
 } from '@hugeicons/core-free-icons';
+import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import type { Poll } from '../../types';
 import styles from './DashboardHome.module.css';
+import sharedStyles from '../../styles/Shared.module.css';
 
 interface DashboardHomeProps {
   user: User;
@@ -26,6 +29,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   const [polls, setPolls] = useState<Poll[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { data: profile, isLoading: profileLoading } = useUserProfile(user);
 
   const loadPolls = useCallback(async () => {
     try {
@@ -44,6 +48,10 @@ export function DashboardHome({ user }: DashboardHomeProps) {
 
   const activePolls = polls.filter((p) => p.is_active).length;
   const publicPolls = polls.filter((p) => p.is_public).length;
+  const pollCount = polls.length;
+  const isSuperAdmin = profile?.role === 'superadmin';
+  const isPro = isSuperAdmin || profile?.plan === 'pro';
+  const isAtFreeLimit = !isPro && pollCount >= FREE_PLAN_POLL_LIMIT;
 
   // Get display name from user metadata or email
   const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'there';
@@ -62,7 +70,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 3);
 
-  if (loading) {
+  if (loading || profileLoading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
@@ -127,23 +135,36 @@ export function DashboardHome({ user }: DashboardHomeProps) {
               </div>
             </div>
           </div>
-          <button onClick={() => navigate('/dashboard/create')} className={styles.createButton}>
+          <button
+            onClick={() => navigate('/dashboard/create')}
+            className={styles.createButton}
+            disabled={isAtFreeLimit}
+          >
             <HugeiconsIcon icon={Add01Icon} size={18} />
-            Create Poll
+            {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Poll'}
           </button>
         </div>
+        {isAtFreeLimit && (
+          <div className={sharedStyles.errorMessage}>
+            Free plan limit reached. Upgrade to Pro to create more than {FREE_PLAN_POLL_LIMIT} polls.
+          </div>
+        )}
       </section>
 
       {/* Quick Actions Section */}
       <section className={styles.quickActionsSection}>
         <div className={styles.actionsGrid}>
-          <button onClick={() => navigate('/dashboard/create')} className={styles.actionCard}>
+          <button
+            onClick={() => navigate('/dashboard/create')}
+            className={styles.actionCard}
+            disabled={isAtFreeLimit}
+          >
             <div className={styles.actionIconWrapper}>
               <HugeiconsIcon icon={Add01Icon} size={24} />
             </div>
             <div className={styles.actionContent}>
               <h3>Create Poll</h3>
-              <p>Start a new poll in seconds</p>
+              <p>{isAtFreeLimit ? 'Upgrade to add more polls' : 'Start a new poll in seconds'}</p>
             </div>
             <HugeiconsIcon icon={ArrowRight01Icon} size={20} className={styles.actionArrow} />
           </button>
@@ -181,9 +202,13 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             <p className={styles.emptyDescription}>
               Create your first poll and start collecting feedback
             </p>
-            <button onClick={() => navigate('/dashboard/create')} className={styles.emptyButton}>
+            <button
+              onClick={() => navigate('/dashboard/create')}
+              className={styles.emptyButton}
+              disabled={isAtFreeLimit}
+            >
               <HugeiconsIcon icon={Add01Icon} size={18} />
-              Create Your First Poll
+              {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Your First Poll'}
             </button>
           </div>
         ) : (

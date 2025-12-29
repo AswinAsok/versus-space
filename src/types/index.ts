@@ -4,6 +4,9 @@ export type Poll = Database['public']['Tables']['polls']['Row'];
 export type PollOption = Database['public']['Tables']['poll_options']['Row'];
 export type Vote = Database['public']['Tables']['votes']['Row'];
 export type UserSession = Database['public']['Tables']['user_sessions']['Row'];
+export type UserProfile = Database['public']['Tables']['user_profiles']['Row'];
+export type PlanTier = 'free' | 'pro';
+export type UserRole = 'user' | 'superadmin';
 
 export interface PollWithOptions extends Poll {
   options: PollOption[];
