@@ -8,6 +8,8 @@
   flex-direction: column;
   height: 100%;
   transition: all var(--transition-normal) var(--ease-out);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .trackerCard:hover {

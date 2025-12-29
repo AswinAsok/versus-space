@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import {
   AreaChart,
   Area,
@@ -30,6 +30,14 @@ const CHART_COLORS = [
 
 export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOverTimeChartProps) {
   const [hiddenPolls, setHiddenPolls] = useState<Set<string>>(new Set());
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Get only poll IDs that have votes in the time range (filter out 0-vote polls)
   const allPollIds = useMemo(() => {
@@ -182,11 +190,15 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
   // For 24h view (24 data points), show every 3rd hour
   const tickInterval = days === 1 ? 2 : days <= 7 ? 0 : days <= 30 ? 4 : 13;
 
+  // Responsive chart height
+  const chartHeight = isMobile ? 220 : 300;
+  const legendTitleLength = isMobile ? 12 : 20;
+
   return (
     <div className={styles.chartCard}>
       <div className={styles.chartWrapper}>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <AreaChart data={chartData} margin={{ top: 10, right: isMobile ? 5 : 10, left: isMobile ? -20 : -10, bottom: 0 }}>
             <defs>
               {allPollIds.map((pollId, index) => (
                 <linearGradient key={pollId} id={`gradient-${pollId}`} x1="0" y1="0" x2="0" y2="1">
@@ -199,17 +211,18 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
             <XAxis
               dataKey="date"
               stroke="rgba(255,255,255,0.4)"
-              fontSize={11}
+              fontSize={isMobile ? 9 : 11}
               tickLine={false}
               axisLine={false}
-              interval={tickInterval}
+              interval={isMobile ? tickInterval + 1 : tickInterval}
             />
             <YAxis
               stroke="rgba(255,255,255,0.4)"
-              fontSize={12}
+              fontSize={isMobile ? 10 : 12}
               tickLine={false}
               axisLine={false}
               allowDecimals={false}
+              width={isMobile ? 30 : 40}
             />
             <Tooltip
               contentStyle={{
@@ -237,7 +250,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
               formatter={(value) => {
                 const isHidden = hiddenPolls.has(value);
                 const title = pollTitles.get(value) || value;
-                const displayTitle = title.length > 20 ? title.slice(0, 20) + '...' : title;
+                const displayTitle = title.length > legendTitleLength ? title.slice(0, legendTitleLength) + '...' : title;
                 return (
                   <span
                     className={chartStyles.legendItem}

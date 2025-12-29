@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   BarChart,
   Bar,
@@ -25,13 +26,27 @@ const CHART_COLORS = [
 ];
 
 export function VotesPerPollChart({ data, loading }: VotesPerPollChartProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Responsive values
+  const titleMaxLength = isMobile ? 15 : 35;
+  const yAxisWidth = isMobile ? 100 : 220;
+  const fontSize = isMobile ? 11 : 13;
+
   // Sort by total votes descending and take top 8
   const chartData = [...data]
     .sort((a, b) => b.totalVotes - a.totalVotes)
     .slice(0, 8)
     .map((item) => ({
       ...item,
-      shortTitle: item.pollTitle.length > 35 ? item.pollTitle.slice(0, 35) + '...' : item.pollTitle,
+      shortTitle: item.pollTitle.length > titleMaxLength ? item.pollTitle.slice(0, titleMaxLength) + '...' : item.pollTitle,
     }));
 
   if (loading) {
@@ -85,11 +100,11 @@ export function VotesPerPollChart({ data, loading }: VotesPerPollChartProps) {
               type="category"
               dataKey="shortTitle"
               stroke="rgba(255,255,255,0.7)"
-              fontSize={13}
+              fontSize={fontSize}
               fontWeight={500}
               tickLine={false}
               axisLine={false}
-              width={220}
+              width={yAxisWidth}
             />
             <Tooltip
               cursor={{ fill: 'rgba(255,255,255,0.03)' }}

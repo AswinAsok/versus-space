@@ -3,8 +3,9 @@
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-lg);
-  padding: 0.9rem;
+  padding: 0.9rem 1rem;
   transition: all var(--transition-normal) var(--ease-out);
+  max-width: 100%;
 }
 
 .card:hover {
@@ -42,8 +43,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
-  padding: 0.5rem 0.6rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: var(--radius-sm);
@@ -162,8 +163,9 @@
   font-family: 'Parkinsans', sans-serif;
   font-size: 0.875rem;
   font-weight: 700;
-  min-width: 24px;
+  min-width: 20px;
   text-align: right;
+  flex-shrink: 0;
 }
 
 /* More Count */
@@ -212,19 +214,28 @@
 /* Responsive */
 @media (max-width: 768px) {
   .card {
-    padding: 1rem;
+    padding: 0.875rem 1rem;
   }
 
   .scoreBar {
     width: 36px;
   }
+
+  .scoreValue {
+    font-size: 0.8125rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .card {
+    padding: 0.75rem 0.875rem;
+  }
+
   .scoreItem {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.35rem;
+    padding: 0.5rem 0.625rem;
   }
 
   .scoreRight {
@@ -235,5 +246,13 @@
   .scoreBar {
     flex: 1;
     max-width: none;
+  }
+
+  .pollTitle {
+    font-size: 0.75rem;
+  }
+
+  .metrics {
+    font-size: 0.5625rem;
   }
 }

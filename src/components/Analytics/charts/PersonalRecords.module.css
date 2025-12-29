@@ -5,6 +5,8 @@
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   transition: all var(--transition-normal) var(--ease-out);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .recordsCard:hover {

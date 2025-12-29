@@ -9,6 +9,8 @@
   padding: 1rem 1.5rem;
   gap: 1rem;
   transition: all var(--transition-normal) var(--ease-out);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .statsBar:hover {

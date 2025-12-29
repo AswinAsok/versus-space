@@ -10,6 +10,7 @@
   transition: all var(--transition-normal) var(--ease-out);
   position: relative;
   overflow: hidden;
+  max-width: 100%;
 }
 
 .card:hover {
@@ -238,5 +239,75 @@
 
   .votesNumber {
     font-size: 1.75rem;
+  }
+
+  .title {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.75rem;
+  }
+
+  .header {
+    margin-bottom: 0.75rem;
+  }
+
+  .title {
+    font-size: 0.875rem;
+  }
+
+  .badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+  }
+
+  .mainStats {
+    margin-bottom: 0.75rem;
+  }
+
+  .votesNumber {
+    font-size: 1.5rem;
+  }
+
+  .votesLabel {
+    font-size: 0.6875rem;
+  }
+
+  .progressSection {
+    margin-bottom: 0.75rem;
+  }
+
+  .progressLabels {
+    margin-bottom: 0.375rem;
+  }
+
+  .progressFrom,
+  .progressTo {
+    font-size: 0.625rem;
+  }
+
+  .progressTrack {
+    height: 6px;
+  }
+
+  .progressGlow {
+    width: 10px;
+    height: 10px;
+  }
+
+  .progressPercent {
+    font-size: 0.8125rem;
+  }
+
+  .progressRemaining {
+    font-size: 0.6875rem;
+  }
+
+  .nextMilestone {
+    padding-top: 0.75rem;
+    font-size: 0.6875rem;
   }
 }

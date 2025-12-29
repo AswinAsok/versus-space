@@ -10,3 +10,16 @@
 .legendItem:hover {
   opacity: 0.8;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .legendItem {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .legendItem {
+    font-size: 10px;
+  }
+}
