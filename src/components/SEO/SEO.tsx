@@ -186,7 +186,7 @@ export function AuthSEO() {
 
 // Individual Poll SEO - Dynamic based on poll data
 interface PollSEOProps {
-  pollId: string;
+  slug: string;
   pollTitle: string;
   pollDescription?: string;
   totalVotes?: number;
@@ -195,7 +195,7 @@ interface PollSEOProps {
 }
 
 export function PollSEO({
-  pollId,
+  slug,
   pollTitle,
   pollDescription,
   totalVotes = 0,
@@ -213,7 +213,7 @@ export function PollSEO({
     '@type': 'WebPage',
     name: title,
     description: description,
-    url: `https://versus.space/poll/${pollId}`,
+    url: `https://versus.space/poll/${slug}`,
     mainEntity: {
       '@type': 'Question',
       name: pollTitle,
@@ -236,7 +236,7 @@ export function PollSEO({
       title={title}
       description={description}
       keywords={`vote ${pollTitle}, poll ${pollTitle}, online voting, real-time poll results`}
-      canonicalUrl={`https://versus.space/poll/${pollId}`}
+      canonicalUrl={`https://versus.space/poll/${slug}`}
       structuredData={pollStructuredData}
     />
   );

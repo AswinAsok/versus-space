@@ -65,8 +65,8 @@ export function MyPolls({ user }: MyPollsProps) {
     }
   };
 
-  const copyPollLink = async (pollId: string) => {
-    const url = `${window.location.origin}/poll/${pollId}`;
+  const copyPollLink = async (slug: string, pollId: string) => {
+    const url = `${window.location.origin}/poll/${slug}`;
     await navigator.clipboard.writeText(url);
     setCopiedId(pollId);
     setTimeout(() => setCopiedId(null), 2000);
@@ -157,7 +157,7 @@ export function MyPolls({ user }: MyPollsProps) {
                   <div className={styles.pollRight}>
                     <div className={styles.pollMenu}>
                       <button
-                        onClick={() => copyPollLink(poll.id)}
+                        onClick={() => copyPollLink(poll.slug, poll.id)}
                         className={styles.menuButton}
                         title="Copy link"
                       >
@@ -201,7 +201,7 @@ export function MyPolls({ user }: MyPollsProps) {
                 {poll.is_active ? (
                   <>
                     <button
-                      onClick={() => navigate(`/poll/${poll.id}`)}
+                      onClick={() => navigate(`/poll/${poll.slug}`)}
                       className={styles.viewButton}
                     >
                       <HugeiconsIcon icon={SquareArrowUpRightIcon} size={16} />
@@ -226,7 +226,7 @@ export function MyPolls({ user }: MyPollsProps) {
                       Activate Poll
                     </button>
                     <button
-                      onClick={() => navigate(`/poll/${poll.id}`)}
+                      onClick={() => navigate(`/poll/${poll.slug}`)}
                       className={styles.viewButtonSecondary}
                       title="View Poll"
                     >

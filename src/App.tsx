@@ -57,7 +57,7 @@ function RoutedApp() {
           >
             <Route index element={<DashboardHome user={user!} />} />
             <Route path="polls" element={<MyPolls user={user!} />} />
-            <Route path="create" element={<CreatePoll user={user!} onSuccess={(pollId) => navigate(`/poll/${pollId}`)} />} />
+            <Route path="create" element={<CreatePoll user={user!} onSuccess={(slug) => navigate(`/poll/${slug}`)} />} />
             <Route path="settings" element={<Settings user={user!} />} />
             <Route path="profile" element={<Profile user={user!} />} />
             <Route path="analytics" element={<Analytics user={user!} />} />
@@ -103,7 +103,7 @@ function RoutedApp() {
               )
             }
           />
-          <Route path="/poll/:pollId" element={<PollRoute />} />
+          <Route path="/poll/:slug" element={<PollRoute />} />
           {/* Explore redirects to home with leaderboard */}
           <Route path="/explore" element={<Navigate to="/#leaderboard" replace />} />
           {/* Blog routes for SEO content */}
@@ -118,11 +118,11 @@ function RoutedApp() {
 
 // Poll route wrapper for param extraction and fallback behavior.
 function PollRoute() {
-  const { pollId } = useParams();
-  if (!pollId) {
+  const { slug } = useParams();
+  if (!slug) {
     return <Navigate to="/" replace />;
   }
-  return <PollView pollId={pollId} />;
+  return <PollView slug={slug} />;
 }
 
 function App() {

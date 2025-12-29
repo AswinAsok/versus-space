@@ -5,6 +5,7 @@ export interface Database {
         Row: {
           id: string;
           title: string;
+          slug: string;
           creator_id: string;
           is_active: boolean;
           is_public: boolean;
@@ -18,6 +19,7 @@ export interface Database {
         Insert: {
           id?: string;
           title: string;
+          slug: string;
           creator_id: string;
           is_public: boolean;
           access_key?: string | null;
@@ -31,6 +33,7 @@ export interface Database {
         Update: {
           id?: string;
           title?: string;
+          slug?: string;
           creator_id?: string;
           is_public?: boolean;
           access_key?: string | null;

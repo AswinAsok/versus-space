@@ -9,14 +9,18 @@ import type {
 } from '../../../types';
 import type { Database } from '../../../types/database';
 import type { PollGateway } from '../../domain/polls';
+import { generateUniqueSlug } from '../../../utils/slug';
 
 export function createSupabasePollGateway(client: SupabaseClient<Database>): PollGateway {
   return {
     async createPoll(data, userId) {
+      const slug = generateUniqueSlug(data.title);
+
       const { data: poll, error: pollError } = await client
         .from('polls')
         .insert({
           title: data.title,
+          slug,
           creator_id: userId,
           is_active: true,
           is_public: data.is_public,
@@ -69,6 +73,30 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
         .from('poll_options')
         .select('*')
         .eq('poll_id', pollId)
+        .order('position');
+
+      if (optionsError) throw optionsError;
+
+      return {
+        ...poll,
+        options: options ?? [],
+      };
+    },
+
+    async getPollBySlug(slug) {
+      const { data: poll, error: pollError } = await client
+        .from('polls')
+        .select('*')
+        .eq('slug', slug)
+        .maybeSingle();
+
+      if (pollError) throw pollError;
+      if (!poll) return null;
+
+      const { data: options, error: optionsError } = await client
+        .from('poll_options')
+        .select('*')
+        .eq('poll_id', poll.id)
         .order('position');
 
       if (optionsError) throw optionsError;

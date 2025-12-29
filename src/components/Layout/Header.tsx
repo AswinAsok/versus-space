@@ -81,7 +81,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
                     style={{ bottom: '-4px', left: '40%', animationDelay: '4s' }}
                   ></span>
                   <button
-                    onClick={() => onNavigate(`/poll/${recentPoll.id}`)}
+                    onClick={() => onNavigate(`/poll/${recentPoll.slug}`)}
                     className={styles.trendingItem}
                   >
                     <HugeiconsIcon icon={Clock01Icon} size={14} />

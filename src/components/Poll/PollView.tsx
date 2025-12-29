@@ -9,12 +9,12 @@ import styles from './PollView.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
 interface PollViewProps {
-  pollId: string;
+  slug: string;
 }
 
 // Fetches poll data and renders the voting experience with sharing actions.
-export function PollView({ pollId }: PollViewProps) {
-  const { poll, loading, error } = usePoll(pollId);
+export function PollView({ slug }: PollViewProps) {
+  const { poll, loading, error } = usePoll({ slug });
   const [accessKey, setAccessKey] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [keyError, setKeyError] = useState('');
@@ -33,9 +33,9 @@ export function PollView({ pollId }: PollViewProps) {
 
   // Track presence for analytics (show who's viewing this poll)
   useEffect(() => {
-    if (!pollId) return;
+    if (!poll?.id) return;
 
-    const channel = supabase.channel(`poll-presence:${pollId}`, {
+    const channel = supabase.channel(`poll-presence:${poll.id}`, {
       config: { presence: { key: 'viewers' } },
     });
 
@@ -56,7 +56,7 @@ export function PollView({ pollId }: PollViewProps) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [pollId]);
+  }, [poll?.id]);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -70,10 +70,10 @@ export function PollView({ pollId }: PollViewProps) {
       }
 
       // Check if we have a stored key for this poll
-      const storedKey = sessionStorage.getItem(`poll_key_${pollId}`);
+      const storedKey = sessionStorage.getItem(`poll_key_${poll.id}`);
       if (storedKey) {
         try {
-          const isValid = await pollFacade.validateAccessKey(pollId, storedKey);
+          const isValid = await pollFacade.validateAccessKey(poll.id, storedKey);
           if (isValid) {
             setIsUnlocked(true);
           }
@@ -85,21 +85,21 @@ export function PollView({ pollId }: PollViewProps) {
     };
 
     checkAccess();
-  }, [poll, pollId]);
+  }, [poll]);
 
   const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();
     setKeyError('');
 
-    if (!accessKey.trim()) {
+    if (!accessKey.trim() || !poll) {
       setKeyError('Please enter the access key');
       return;
     }
 
     try {
-      const isValid = await pollFacade.validateAccessKey(pollId, accessKey);
+      const isValid = await pollFacade.validateAccessKey(poll.id, accessKey);
       if (isValid) {
-        sessionStorage.setItem(`poll_key_${pollId}`, accessKey);
+        sessionStorage.setItem(`poll_key_${poll.id}`, accessKey);
         setIsUnlocked(true);
       } else {
         setKeyError('Invalid access key');
@@ -262,14 +262,15 @@ export function PollView({ pollId }: PollViewProps) {
     <div className={styles.pollViewContainer}>
       {/* Dynamic SEO for individual poll pages */}
       <PollSEO
-        pollId={poll.id}
+        slug={poll.slug}
         pollTitle={poll.title}
         totalVotes={totalVotes}
-      optionCount={poll.options.length}
-      createdAt={poll.created_at}
-    />
+        optionCount={poll.options.length}
+        createdAt={poll.created_at}
+      />
       <VotingInterface
         pollId={poll.id}
+        slug={poll.slug}
         title={poll.title}
         options={poll.options}
         isExpired={isExpired || !poll.is_active}

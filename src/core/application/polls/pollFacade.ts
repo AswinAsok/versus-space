@@ -14,6 +14,7 @@ import type { PollGateway } from '../../domain/polls';
 export interface PollFacade {
   createPoll(data: CreatePollData, userId: string): Promise<PollWithOptions>;
   getPoll(pollId: string): Promise<PollWithOptions | null>;
+  getPollBySlug(slug: string): Promise<PollWithOptions | null>;
   getUserPolls(userId: string): Promise<Poll[]>;
   updatePollStatus(pollId: string, isActive: boolean): Promise<void>;
   deletePoll(pollId: string): Promise<void>;
@@ -36,6 +37,7 @@ export function createPollFacade(gateway: PollGateway): PollFacade {
   return {
     createPoll: (data, userId) => gateway.createPoll(data, userId),
     getPoll: (pollId) => gateway.getPoll(pollId),
+    getPollBySlug: (slug) => gateway.getPollBySlug(slug),
     getUserPolls: (userId) => gateway.getUserPolls(userId),
     updatePollStatus: (pollId, isActive) => gateway.updatePollStatus(pollId, isActive),
     deletePoll: (pollId) => gateway.deletePoll(pollId),

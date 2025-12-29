@@ -70,8 +70,8 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
     }
   };
 
-  const copyPollLink = async (pollId: string) => {
-    const url = `${window.location.origin}/poll/${pollId}`;
+  const copyPollLink = async (slug: string, pollId: string) => {
+    const url = `${window.location.origin}/poll/${slug}`;
     await navigator.clipboard.writeText(url);
     setCopiedId(pollId);
     setTimeout(() => setCopiedId(null), 2000);
@@ -255,7 +255,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                       <div className={styles.pollRight}>
                         <div className={styles.pollMenu}>
                           <button
-                            onClick={() => copyPollLink(poll.id)}
+                            onClick={() => copyPollLink(poll.slug, poll.id)}
                             className={styles.menuButton}
                             title="Copy link"
                           >
@@ -297,7 +297,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                     {poll.is_active ? (
                       <>
                         <button
-                          onClick={() => onNavigate(`/poll/${poll.id}`)}
+                          onClick={() => onNavigate(`/poll/${poll.slug}`)}
                           className={styles.viewButton}
                         >
                           <HugeiconsIcon icon={SquareArrowUpRightIcon} size={16} />
@@ -322,7 +322,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
                           Activate Poll
                         </button>
                         <button
-                          onClick={() => onNavigate(`/poll/${poll.id}`)}
+                          onClick={() => onNavigate(`/poll/${poll.slug}`)}
                           className={styles.viewButtonSecondary}
                           title="View Poll"
                         >

@@ -15,6 +15,7 @@ import styles from './VotingInterface.module.css';
 
 interface VotingInterfaceProps {
   pollId: string;
+  slug: string;
   title: string;
   options: PollOption[];
    isExpired: boolean;
@@ -42,6 +43,7 @@ const getPlacesForValue = (value: number): number[] => {
 // Presents poll options, tracks vote velocity, and delegates vote persistence.
 export function VotingInterface({
   pollId,
+  slug,
   title,
   options,
   isExpired,
@@ -220,10 +222,10 @@ export function VotingInterface({
 
   const pollLink = useMemo(() => {
     if (typeof window !== 'undefined') {
-      return `${window.location.origin}/poll/${pollId}`;
+      return `${window.location.origin}/poll/${slug}`;
     }
-    return `/poll/${pollId}`;
-  }, [pollId]);
+    return `/poll/${slug}`;
+  }, [slug]);
 
   const qrImageUrl = useMemo(() => {
     const encoded = encodeURIComponent(pollLink);

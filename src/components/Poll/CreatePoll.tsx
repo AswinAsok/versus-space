@@ -17,7 +17,7 @@ import sharedStyles from '../../styles/Shared.module.css';
 
 interface CreatePollProps {
   user: User;
-  onSuccess: (pollId: string) => void;
+  onSuccess: (slug: string) => void;
 }
 
 interface OptionInput {
@@ -108,7 +108,7 @@ export function CreatePoll({ user, onSuccess }: CreatePollProps) {
       };
 
       const poll = await pollFacade.createPoll(pollData, user.id);
-      onSuccess(poll.id);
+      onSuccess(poll.slug);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create poll');
     } finally {

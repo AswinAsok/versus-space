@@ -208,7 +208,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                   </div>
                 </div>
                 <button
-                  onClick={() => navigate(`/poll/${poll.id}`)}
+                  onClick={() => navigate(`/poll/${poll.slug}`)}
                   className={styles.viewPollButton}
                 >
                   <HugeiconsIcon icon={SquareArrowUpRightIcon} size={16} />

@@ -122,7 +122,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
             key={poll.id}
             className={styles.leaderboardItem}
             style={{ '--index': index } as React.CSSProperties}
-            onClick={() => onNavigate(`/poll/${poll.id}`)}
+            onClick={() => onNavigate(`/poll/${poll.slug}`)}
           >
             {index === 0 && (
               <span className={styles.pinnedBadge}>
