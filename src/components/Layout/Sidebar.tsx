@@ -11,7 +11,9 @@ import {
   Cancel01Icon,
   SidebarLeft01Icon,
   SidebarRight01Icon,
+  ArrowUp01Icon,
 } from '@hugeicons/core-free-icons';
+import { getProCheckoutUrl } from '../../utils/payment';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import styles from './Sidebar.module.css';
 
@@ -55,6 +57,15 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
       onNavigate(path);
       onClose();
     }
+  };
+
+  const handleUpgradeClick = () => {
+    const checkoutUrl = getProCheckoutUrl({
+      email: userEmail,
+      userId: user.id,
+      customerName: displayName,
+    });
+    window.location.href = checkoutUrl;
   };
 
   const isActive = (path: string) => {
@@ -134,6 +145,22 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
               ))}
             </ul>
           </nav>
+
+          {/* Upgrade Button - Only for Free Users */}
+          {!isPro && (
+            <button
+              onClick={handleUpgradeClick}
+              className={`${styles.upgradeButton} ${isCollapsed ? styles.upgradeButtonCollapsed : ''}`}
+              title={isCollapsed ? 'Upgrade to Pro' : undefined}
+            >
+              <span className={styles.upgradeIcon}>
+                <HugeiconsIcon icon={ArrowUp01Icon} size={isCollapsed ? 18 : 16} />
+              </span>
+              <span className={`${styles.upgradeLabel} ${isCollapsed ? styles.upgradeLabelHidden : ''}`}>
+                Upgrade to Pro
+              </span>
+            </button>
+          )}
 
           {/* User Profile Section */}
           <div className={`${styles.userSection} ${isCollapsed ? styles.userSectionCollapsed : ''}`}>

@@ -17,6 +17,7 @@ import {
   CheckmarkCircle02Icon,
   SparklesIcon,
   CrownIcon,
+  Coffee01Icon,
 } from '@hugeicons/core-free-icons';
 import { track } from '@vercel/analytics';
 import { Leaderboard } from './Leaderboard';
@@ -27,15 +28,22 @@ import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
 import CurvedLoop from '../ReactBits/CurvedLoop/CurvedLoop';
 import CircularText from '../ReactBits/CircularText/CircularText';
-import { usePlatformStats } from '../../hooks/usePollQueries';
+import { usePlatformStats, useProUserCount } from '../../hooks/usePollQueries';
 import { faqItems } from './faqData';
 
 interface HomeProps {
   onNavigate: (path: string) => void;
 }
 
+// Chai meter constants
+const TOTAL_HOURS_WORKED = 30;
+const HOURS_PER_WORK_DAY = 4;
+const CUPS_PER_DAY = 6;
+const TOTAL_CHAI_CONSUMED = Math.ceil((TOTAL_HOURS_WORKED / HOURS_PER_WORK_DAY) * CUPS_PER_DAY); // 45 cups
+
 export function Home({ onNavigate }: HomeProps) {
   const { data: stats } = usePlatformStats();
+  const { data: proUserCount = 0 } = useProUserCount();
   const [githubStars, setGithubStars] = useState<number | null>(null);
   const [clickBursts, setClickBursts] = useState<
     Array<{ id: number; x: number; y: number; rotation: number; scale: number }>
@@ -388,6 +396,45 @@ export function Home({ onNavigate }: HomeProps) {
             </div>
           </section>
 
+          {/* Chai Meter Section */}
+          <section id="chai-meter" className={styles.chaiMeterSection}>
+            <div className={styles.chaiMeterCard}>
+              <div className={styles.chaiMeterHeader}>
+                <div className={styles.chaiMeterIcon}>
+                  <HugeiconsIcon icon={Coffee01Icon} size={24} />
+                </div>
+                <div className={styles.chaiMeterText}>
+                  <h3 className={styles.chaiMeterTitle}>The Chai Meter</h3>
+                  <p className={styles.chaiMeterSubtitle}>
+                    This project took ~{TOTAL_HOURS_WORKED} hours to build. At {CUPS_PER_DAY} cups
+                    of chai per day across {HOURS_PER_WORK_DAY}-hour work sessions, that's{' '}
+                    {TOTAL_CHAI_CONSUMED} cups consumed.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.chaiMeterProgress}>
+                <div className={styles.chaiMeterLabels}>
+                  <span className={styles.chaiMeterCurrent}>
+                    {proUserCount} chai{proUserCount !== 1 ? 's' : ''} funded
+                  </span>
+                  <span className={styles.chaiMeterGoal}>Goal: {TOTAL_CHAI_CONSUMED} chais</span>
+                </div>
+                <div className={styles.chaiMeterBar}>
+                  <div
+                    className={styles.chaiMeterFill}
+                    style={{
+                      width: `${Math.min((proUserCount / TOTAL_CHAI_CONSUMED) * 100, 100)}%`,
+                    }}
+                  />
+                </div>
+                <p className={styles.chaiMeterNote}>
+                  Every Pro subscription = 1 chai paid back. Help me break even on my chai
+                  addiction!
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* Pricing Section */}
           <section id="pricing" className={styles.pricingSection} aria-labelledby="pricing-title">
             <div className={styles.sectionHeader}>
@@ -396,10 +443,10 @@ export function Home({ onNavigate }: HomeProps) {
                 <span className={styles.srOnly}> - Simple and transparent</span>
               </span>
               <h2 id="pricing-title" className={styles.sectionTitle}>
-                Simple Pricing
+                Cheaper Than Chai
               </h2>
               <p className={styles.sectionSubtitle}>
-                Start free, upgrade when you need more.
+                Support this project for the price of a cup of tea in Bangalore. That's it.
               </p>
             </div>
             <div className={styles.pricingGrid}>
@@ -410,16 +457,14 @@ export function Home({ onNavigate }: HomeProps) {
                   <p className={styles.pricingTagline}>Perfect for getting started.</p>
 
                   <div className={styles.pricingPriceBlock}>
-                    <span className={styles.pricingCurrency}>Rs.</span>
+                    <span className={styles.pricingCurrency}>₹</span>
                     <span className={styles.pricingAmount}>0</span>
                     <span className={styles.pricingPeriod}>/mo</span>
                   </div>
+                  <p className={styles.pricingBillingAlt}>$0 USD</p>
                   <p className={styles.pricingBilling}>Free forever</p>
 
-                  <button
-                    onClick={() => onNavigate('/create')}
-                    className={styles.pricingButton}
-                  >
+                  <button onClick={() => onNavigate('/create')} className={styles.pricingButton}>
                     Get Started with Free
                   </button>
 
@@ -430,19 +475,19 @@ export function Home({ onNavigate }: HomeProps) {
                   <ul className={styles.pricingFeatures}>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Real-time results</span>
+                      <span>Real-time live results</span>
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Share via link</span>
+                      <span>Shareable poll links</span>
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Basic analytics</span>
+                      <span>30-minute auto-close timer</span>
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Public polls</span>
+                      <span>Public polls only</span>
                     </li>
                   </ul>
                 </div>
@@ -456,46 +501,59 @@ export function Home({ onNavigate }: HomeProps) {
                 </div>
                 <div className={styles.pricingCardInner}>
                   <h3 className={`${styles.pricingTierName} ${styles.pricingTierNamePro}`}>Pro</h3>
-                  <p className={styles.pricingTagline}>Best for creators who need more.</p>
+                  <p className={styles.pricingTagline}>One chai = One month of Pro. Fair deal?</p>
 
                   <div className={styles.pricingPriceBlock}>
-                    <span className={styles.pricingCurrency}>Rs.</span>
+                    <span className={styles.pricingCurrency}>₹</span>
                     <span className={styles.pricingAmount}>15</span>
                     <span className={styles.pricingPeriod}>/mo</span>
                   </div>
-                  <p className={styles.pricingBilling}>Billed monthly</p>
+                  <p className={styles.pricingBillingAlt}>~$0.18 USD</p>
+                  <p className={styles.pricingBilling}>Less than a cutting chai</p>
 
                   <button
                     onClick={() => onNavigate('/dashboard')}
                     className={`${styles.pricingButton} ${styles.pricingButtonPro}`}
                   >
-                    Get Started with Pro
+                    Buy Me a Chai
                   </button>
 
                   <div className={styles.pricingFeatureHighlight}>
-                    <strong>Unlimited Polls</strong> with <strong>full control</strong>
+                    <strong>Unlimited Polls</strong> + <strong>Pro Analytics</strong>
                   </div>
 
                   <ul className={styles.pricingFeatures}>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Everything in Free</span>
+                      <span>Unlimited polls forever</span>
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Advanced analytics</span>
+                      <span>Custom auto-close timer</span>
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Poll controls & automation</span>
+                      <span>IP-based vote limiting</span>
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Private polls</span>
+                      <span>Auto votes simulation</span>
                     </li>
                     <li>
                       <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
-                      <span>Priority support</span>
+                      <span>Private polls with access key</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Vote trends & peak hours</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Engagement & health scores</span>
+                    </li>
+                    <li>
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} />
+                      <span>Geographic analytics</span>
                     </li>
                   </ul>
                 </div>
@@ -508,13 +566,11 @@ export function Home({ onNavigate }: HomeProps) {
                   <p className={styles.pricingTagline}>For agencies and teams scaling up.</p>
 
                   <div className={styles.pricingPriceBlock}>
-                    <span className={styles.pricingAmountJoke}>Just Kidding</span>
+                    <span className={styles.pricingAmountJoke}>Just For Symmetry</span>
                   </div>
                   <p className={styles.pricingBillingJoke}>There's no enterprise tier</p>
 
-                  <div className={styles.pricingButtonDisabled}>
-                    Maybe Someday
-                  </div>
+                  <div className={styles.pricingButtonDisabled}>Maybe Someday</div>
 
                   <div className={styles.pricingFeatureHighlightJoke}>
                     We're just a <strong>fun side project</strong>

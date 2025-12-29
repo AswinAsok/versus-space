@@ -496,15 +496,23 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
           </div>
 
           {/* Visibility Card */}
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Visibility</h3>
+          <div className={`${styles.card} ${!isPro ? styles.lockedCard : ''}`}>
+            {!isPro && (
+              <p className={styles.proDescription}>
+                Control poll visibility with public or private access
+              </p>
+            )}
+            <h3 className={styles.cardTitle}>
+              Visibility
+              {!isPro && <span className={styles.proBadge}>Pro</span>}
+            </h3>
             <p className={styles.cardDescription}>Choose who can see and vote on your poll</p>
             <div className={styles.visibilityToggle}>
               <button
                 type="button"
                 className={`${styles.visibilityOption} ${isPublic ? styles.visibilityActive : ''}`}
                 onClick={() => setIsPublic(true)}
-                disabled={loading}
+                disabled={loading || !isPro}
               >
                 <div className={styles.visibilityIcon}>
                   <HugeiconsIcon icon={GlobeIcon} size={18} />
@@ -517,7 +525,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
               <button
                 type="button"
                 className={`${styles.visibilityOption} ${!isPublic ? styles.visibilityActive : ''}`}
-                onClick={() => setIsPublic(false)}
+                onClick={() => isPro && setIsPublic(false)}
                 disabled={loading || !isPro}
               >
                 <div className={styles.visibilityIcon}>
@@ -530,7 +538,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
               </button>
             </div>
 
-            {!isPublic && (
+            {!isPublic && isPro && (
               <div className={styles.accessKeySection}>
                 <label htmlFor="accessKey" className={styles.accessKeyLabel}>
                   <HugeiconsIcon icon={Key01Icon} size={14} />
@@ -542,7 +550,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                   value={accessKey}
                   onChange={(e) => setAccessKey(e.target.value)}
                   placeholder="Enter a secret key for participants"
-                  disabled={loading || !isPro}
+                  disabled={loading}
                   maxLength={50}
                   className={styles.accessKeyInput}
                 />

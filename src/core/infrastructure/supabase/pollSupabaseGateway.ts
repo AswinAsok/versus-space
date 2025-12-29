@@ -353,5 +353,15 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
         client.removeChannel(channel);
       };
     },
+
+    async getProUserCount() {
+      const { count, error } = await client
+        .from('user_profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('plan', 'pro');
+
+      if (error) throw error;
+      return count ?? 0;
+    },
   };
 }

@@ -15,6 +15,7 @@ export const pollKeys = {
   leaderboard: (limit?: number) => [...pollKeys.all, 'leaderboard', limit] as const,
   platformStats: () => [...pollKeys.all, 'platformStats'] as const,
   mostRecent: () => [...pollKeys.all, 'mostRecent'] as const,
+  proUserCount: () => [...pollKeys.all, 'proUserCount'] as const,
 };
 
 /**
@@ -254,5 +255,15 @@ export function usePollPublicStatus(pollId: string | undefined) {
     queryKey: [...pollKeys.detail(pollId ?? ''), 'public'],
     queryFn: () => pollFacade.isPollPublic(pollId!),
     enabled: !!pollId,
+  });
+}
+
+/**
+ * Fetch pro user count with caching
+ */
+export function useProUserCount() {
+  return useQuery({
+    queryKey: pollKeys.proUserCount(),
+    queryFn: () => pollFacade.getProUserCount(),
   });
 }

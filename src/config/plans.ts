@@ -4,3 +4,16 @@ export const SUPERADMIN_EMAILS = [
   'aswinasokofficial@gmail.com',
   'aswinasokofficail@gmail.com', // safety net for misspelling
 ];
+
+// DodoPayments Configuration
+export const DODO_PAYMENTS_CONFIG = {
+  // Replace with your actual DodoPayments product ID from the dashboard
+  proProductId: import.meta.env.VITE_DODO_PRO_PRODUCT_ID || 'your_product_id_here',
+  checkoutBaseUrl: 'https://checkout.dodopayments.com/buy',
+  // Success and cancel redirect URLs
+  successUrl: `${window.location.origin}/dashboard?upgrade=success`,
+  cancelUrl: `${window.location.origin}/dashboard?upgrade=cancelled`,
+};
+
+// Pro plan pricing
+export const PRO_PLAN_PRICE = 15; // Rs. 15/month

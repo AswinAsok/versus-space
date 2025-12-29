@@ -30,4 +30,5 @@ export interface PollGateway {
     applyStats: (updater: (prev: PlatformStats) => PlatformStats) => void,
     onNewVote?: () => void
   ): () => void;
+  getProUserCount(): Promise<number>;
 }

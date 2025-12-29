@@ -34,6 +34,7 @@ export interface PollFacade {
     applyStats: (updater: (prev: PlatformStats) => PlatformStats) => void,
     onNewVote?: () => void
   ): () => void;
+  getProUserCount(): Promise<number>;
 }
 
 export function createPollFacade(gateway: PollGateway): PollFacade {
@@ -55,5 +56,6 @@ export function createPollFacade(gateway: PollGateway): PollFacade {
     getPlatformStats: () => gateway.getPlatformStats(),
     subscribeToPlatformStats: (applyStats, onNewVote) =>
       gateway.subscribeToPlatformStats(applyStats, onNewVote),
+    getProUserCount: () => gateway.getProUserCount(),
   };
 }

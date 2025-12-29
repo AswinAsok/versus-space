@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { User } from '@supabase/supabase-js';
 import { pollFacade } from '../../core/appServices';
 import { useUserProfile } from '../../hooks/useUserProfile';
@@ -15,8 +15,10 @@ import {
   ChartIncreaseIcon,
   ArrowRight01Icon,
   SquareArrowUpRightIcon,
+  CheckmarkCircle02Icon,
 } from '@hugeicons/core-free-icons';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
+import { UpgradePlan } from './UpgradePlan';
 import type { Poll } from '../../types';
 import styles from './DashboardHome.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -28,8 +30,27 @@ interface DashboardHomeProps {
 export function DashboardHome({ user }: DashboardHomeProps) {
   const [polls, setPolls] = useState<Poll[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(false);
   const navigate = useNavigate();
-  const { data: profile, isLoading: profileLoading } = useUserProfile(user);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: profile, isLoading: profileLoading, refetch: refetchProfile } = useUserProfile(user);
+
+  // Handle upgrade success/cancel from DodoPayments redirect
+  useEffect(() => {
+    const upgradeStatus = searchParams.get('upgrade');
+    if (upgradeStatus === 'success') {
+      setShowUpgradeSuccess(true);
+      refetchProfile();
+      // Clear the query param
+      searchParams.delete('upgrade');
+      setSearchParams(searchParams, { replace: true });
+      // Auto-hide success message after 5 seconds
+      setTimeout(() => setShowUpgradeSuccess(false), 5000);
+    } else if (upgradeStatus === 'cancelled') {
+      searchParams.delete('upgrade');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams, refetchProfile]);
 
   const loadPolls = useCallback(async () => {
     try {
@@ -82,6 +103,17 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   return (
     <div className={styles.dashboardContainer}>
       <DashboardSEO />
+
+      {/* Upgrade Success Message */}
+      {showUpgradeSuccess && (
+        <div className={styles.successBanner}>
+          <HugeiconsIcon icon={CheckmarkCircle02Icon} size={20} />
+          <span>Welcome to Pro! Your upgrade is being processed.</span>
+          <button onClick={() => setShowUpgradeSuccess(false)} className={styles.dismissButton}>
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Welcome Header */}
       <div className={styles.welcomeHeader}>
@@ -243,6 +275,13 @@ export function DashboardHome({ user }: DashboardHomeProps) {
           </div>
         )}
       </section>
+
+      {/* Upgrade Plan Section - Only show for free users */}
+      {!isPro && (
+        <section className={styles.upgradeSection}>
+          <UpgradePlan user={user} currentPollCount={pollCount} />
+        </section>
+      )}
     </div>
   );
 }
