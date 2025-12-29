@@ -72,6 +72,8 @@ export function VotingInterface({
   const [qrModalOpen, setQrModalOpen] = useState(false);
 
   const floatingIdRef = useRef(0);
+  // Use ref instead of state for voting lock - ref updates are synchronous
+  const isVotingRef = useRef(false);
   const confettiIdRef = useRef(0);
   const totalUserVotesRef = useRef(0);
   const initialCountAnimationDoneRef = useRef(false);
@@ -296,13 +298,26 @@ export function VotingInterface({
   }, []);
 
   const handleVote = async (optionId: string, optionIndex: number, event: React.MouseEvent) => {
+    // Prevent event bubbling and default behavior
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Synchronous check using ref - prevents multiple rapid votes
+    if (isVotingRef.current) {
+      return;
+    }
+    // Set immediately (synchronous) to block any concurrent calls
+    isVotingRef.current = true;
+
     if (isExpired) {
+      isVotingRef.current = false;
       setVoteError('This poll has ended.');
       return;
     }
 
     const totalForUser = Array.from(userVotes.values()).reduce((sum, val) => sum + val, 0);
     if (maxVotesPerIp && totalForUser >= maxVotesPerIp) {
+      isVotingRef.current = false;
       setVoteError(`Vote limit reached (${maxVotesPerIp} per IP).`);
       return;
     }
@@ -371,17 +386,20 @@ export function VotingInterface({
       triggerScreenShake();
     }
 
-    try {
-      // Cast multiple votes if crit
-      for (let i = 0; i < voteValue; i++) {
-        await voteFacade.castVote(pollId, optionId, null, ipToUse || 'unknown');
-      }
+    // Update previousVoteCountsRef BEFORE the API call (optimistically)
+    // This prevents the real-time subscription's useEffect from double-counting
+    const currentOptionCount = options[optionIndex]?.vote_count ?? 0;
+    const optimisticBase = previousVoteCountsRef.current.get(optionId) ?? currentOptionCount;
+    previousVoteCountsRef.current.set(optionId, optimisticBase + voteValue);
 
-      // Maintain a local sliding window rate to avoid extra network traffic.
-      rateCalculatorRef.current.addVote(optionId);
-      const currentOptionCount = options[optionIndex]?.vote_count ?? 0;
-      const optimisticBase = previousVoteCountsRef.current.get(optionId) ?? currentOptionCount;
-      previousVoteCountsRef.current.set(optionId, optimisticBase + voteValue);
+    // Add to rate calculator optimistically for responsive UI
+    rateCalculatorRef.current.addVote(optionId);
+
+    try {
+      // Cast the vote (single vote, no loop needed)
+      console.log('[VotingInterface] Casting vote for option:', optionId, 'at:', new Date().toISOString());
+      await voteFacade.castVote(pollId, optionId, null, ipToUse || 'unknown');
+      console.log('[VotingInterface] Vote cast completed');
 
       // Track what the current user has contributed for contextual feedback.
       setUserVotes((prev) => {
@@ -406,6 +424,9 @@ export function VotingInterface({
       } else {
         setVoteError(message);
       }
+    } finally {
+      // Reset voting flag after a short delay to allow rapid but controlled voting
+      setTimeout(() => { isVotingRef.current = false; }, 150);
     }
   };
 

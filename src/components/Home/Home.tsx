@@ -24,8 +24,7 @@ import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
 import CurvedLoop from '../ReactBits/CurvedLoop/CurvedLoop';
 import CircularText from '../ReactBits/CircularText/CircularText';
-import { pollFacade } from '../../core/appServices';
-import type { PlatformStats } from '../../types';
+import { usePlatformStats } from '../../hooks/usePollQueries';
 import { faqItems } from './faqData';
 
 interface HomeProps {
@@ -33,14 +32,12 @@ interface HomeProps {
 }
 
 export function Home({ onNavigate }: HomeProps) {
-  const [stats, setStats] = useState<PlatformStats>({ pollsCount: 0, votesCount: 0 });
+  const { data: stats } = usePlatformStats();
   const [githubStars, setGithubStars] = useState<number | null>(null);
   const [clickBursts, setClickBursts] = useState<
     Array<{ id: number; x: number; y: number; rotation: number; scale: number }>
   >([]);
   const clickBurstTimeouts = useRef<number[]>([]);
-  const initialStatsLoaded = useRef(false);
-  const pendingStatsDelta = useRef<PlatformStats>({ pollsCount: 0, votesCount: 0 });
   const lastBurstTime = useRef(0);
   const [openFaqQuestion, setOpenFaqQuestion] = useState<string | null>(null);
 
@@ -78,50 +75,28 @@ export function Home({ onNavigate }: HomeProps) {
     clickBurstTimeouts.current.push(timeoutId);
   }, []);
 
-  const applyRealtimeStats = useCallback((updater: (prev: PlatformStats) => PlatformStats) => {
-    setStats((prev) => {
-      const next = updater(prev);
-      if (!initialStatsLoaded.current) {
-        pendingStatsDelta.current = {
-          pollsCount: pendingStatsDelta.current.pollsCount + (next.pollsCount - prev.pollsCount),
-          votesCount: pendingStatsDelta.current.votesCount + (next.votesCount - prev.votesCount),
-        };
-      }
-      return next;
-    });
-  }, []);
-
+  // Cleanup burst timeouts on unmount
   useEffect(() => {
-    pollFacade
-      .getPlatformStats()
-      .then((initialStats) => {
-        initialStatsLoaded.current = true;
-        setStats({
-          pollsCount: initialStats.pollsCount + pendingStatsDelta.current.pollsCount,
-          votesCount: initialStats.votesCount + pendingStatsDelta.current.votesCount,
-        });
-        pendingStatsDelta.current = { pollsCount: 0, votesCount: 0 };
-      })
-      .catch((error) => {
-        console.error(error);
-        initialStatsLoaded.current = true;
-      });
-
-    const unsubscribe = pollFacade.subscribeToPlatformStats(applyRealtimeStats, spawnClickBurst);
-
     return () => {
-      unsubscribe();
       clickBurstTimeouts.current.forEach((timeoutId) => clearTimeout(timeoutId));
       clickBurstTimeouts.current = [];
     };
-  }, [applyRealtimeStats, spawnClickBurst]);
+  }, []);
+
+  // Spawn click burst periodically for engagement effect (the real-time subscription is handled in usePlatformStats)
+  useEffect(() => {
+    // Check for new votes via stats changes
+    if (stats && stats.votesCount > 0) {
+      spawnClickBurst();
+    }
+  }, [stats?.votesCount, spawnClickBurst]);
 
   return (
     <>
       {/* Dynamic SEO meta tags */}
       <HomeSEO />
       {/* JSON-LD Schema Markup for SEO */}
-      <HomeSchema pollsCount={stats.pollsCount} votesCount={stats.votesCount} />
+      <HomeSchema pollsCount={stats?.pollsCount ?? 0} votesCount={stats?.votesCount ?? 0} />
 
       <div className={styles.homeContainer}>
         <div className={styles.lightRaysContainer}>
@@ -235,9 +210,9 @@ export function Home({ onNavigate }: HomeProps) {
           <div className={styles.statsContent}>
             <CurvedLoop
               segments={[
-                { text: stats.pollsCount.toLocaleString(), isNumber: true },
+                { text: (stats?.pollsCount ?? 0).toLocaleString(), isNumber: true },
                 { text: ' Polls Created ✦ ' },
-                { text: stats.votesCount.toLocaleString(), isNumber: true },
+                { text: (stats?.votesCount ?? 0).toLocaleString(), isNumber: true },
                 { text: ' Clicks Cast ✦ ' },
               ]}
               speed={1.5}

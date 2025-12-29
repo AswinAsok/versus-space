@@ -6,7 +6,8 @@ import type { Vote, UserSession, VoteDailyCount, PollVoteSummary } from '../../.
 export function createSupabaseVoteGateway(client: SupabaseClient<Database>): VoteGateway {
   return {
     async castVote(pollId, optionId, userId, ipAddress) {
-      // Call RPC for rate limiting and counter increment
+      // Call RPC for validation + vote insert. poll_options.vote_count is incremented by the
+      // on_vote_created trigger, so the RPC must not bump it to avoid double-counting.
       const { error } = await client.rpc('cast_vote_with_limits', {
         p_poll_id: pollId,
         p_option_id: optionId,
@@ -16,19 +17,8 @@ export function createSupabaseVoteGateway(client: SupabaseClient<Database>): Vot
 
       if (error) throw error;
 
-      // Also insert into votes table for time-series tracking
-      const { error: insertError } = await client.from('votes').insert({
-        poll_id: pollId,
-        option_id: optionId,
-        user_id: userId,
-        ip_address: ipAddress,
-        is_simulated: false,
-      });
-
-      // Don't throw on insert error - RPC already succeeded
-      if (insertError) {
-        console.warn('Failed to insert vote record:', insertError);
-      }
+      // REMOVED: Duplicate insert that was causing triple-counting due to database triggers
+      // The RPC handles the insert and triggers handle the counter updates.
     },
 
     async updateUserSession(userId, pollId) {

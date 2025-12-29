@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
-import { pollFacade } from '../../core/appServices';
+import { useCreatePoll, useUpdatePoll } from '../../hooks/usePollQueries';
 import { CreatePollSEO } from '../SEO/SEO';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { GlobeIcon, LockIcon, Key01Icon } from '@hugeicons/core-free-icons';
@@ -30,8 +30,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
     { id: '1', title: '', image_url: '' },
     { id: '2', title: '', image_url: '' },
   ]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const createPoll = useCreatePoll();
+  const updatePoll = useUpdatePoll();
+  const loading = createPoll.isPending || updatePoll.isPending;
   const [durationMinutes, setDurationMinutes] = useState<number | ''>('');
   const [maxVotesPerIp, setMaxVotesPerIp] = useState<number | ''>('');
   const [autoVoteIntervalSeconds, setAutoVoteIntervalSeconds] = useState<number>(30);
@@ -106,8 +109,6 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       return;
     }
 
-    setLoading(true);
-
     try {
       // Calculate per-option target votes (divide equally among options)
       const perOptionTarget = autoVotesEnabled
@@ -116,20 +117,23 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
 
       if (isEditMode && editPoll) {
         // Update existing poll
-        const updatedPoll = await pollFacade.updatePoll(editPoll.id, {
-          title,
-          is_public: isPublic,
-          access_key: isPublic ? null : accessKey,
-          max_votes_per_ip: maxVotesPerIp === '' ? null : maxVotesPerIp,
-          auto_vote_interval_seconds: autoVoteIntervalSeconds || 30,
-          options: options.map((opt, index) => ({
-            id: opt.id,
-            title: opt.title,
-            image_url: opt.image_url || null,
-            position: index,
-            simulated_enabled: autoVotesEnabled,
-            simulated_target_votes: perOptionTarget,
-          })),
+        const updatedPoll = await updatePoll.mutateAsync({
+          pollId: editPoll.id,
+          data: {
+            title,
+            is_public: isPublic,
+            access_key: isPublic ? null : accessKey,
+            max_votes_per_ip: maxVotesPerIp === '' ? null : maxVotesPerIp,
+            auto_vote_interval_seconds: autoVoteIntervalSeconds || 30,
+            options: options.map((opt, index) => ({
+              id: opt.id,
+              title: opt.title,
+              image_url: opt.image_url || null,
+              position: index,
+              simulated_enabled: autoVotesEnabled,
+              simulated_target_votes: perOptionTarget,
+            })),
+          },
         });
         onSuccess(updatedPoll.slug);
       } else {
@@ -153,13 +157,11 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
           })),
         };
 
-        const poll = await pollFacade.createPoll(pollData, user.id);
+        const poll = await createPoll.mutateAsync({ data: pollData, userId: user.id });
         onSuccess(poll.slug);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : isEditMode ? 'Failed to update poll' : 'Failed to create poll');
-    } finally {
-      setLoading(false);
     }
   };
 

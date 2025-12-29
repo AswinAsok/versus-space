@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -8,7 +7,9 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuth } from './hooks/useAuth';
+import { usePollById } from './hooks/usePollQueries';
 import { Header } from './components/Layout/Header';
 import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { Home } from './components/Home/Home';
@@ -23,10 +24,20 @@ import { PollView } from './components/Poll/PollView';
 import { Blog } from './components/Blog/Blog';
 import { BlogPostPage } from './components/Blog/BlogPost';
 import { MouseLoader } from './components/Loading/MouseLoader';
-import { pollFacade } from './core/appServices';
-import type { PollWithOptions } from './types';
 import type { User } from '@supabase/supabase-js';
 import appStyles from './components/App.module.css';
+
+// Create a client with default options
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes (formerly cacheTime)
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 // Wrapper that reads router state and renders the correct views.
 function RoutedApp() {
@@ -133,41 +144,16 @@ function PollRoute() {
 // Edit poll route wrapper that fetches poll data
 function EditPollRoute({ user, onSuccess }: { user: User; onSuccess: (slug: string) => void }) {
   const { pollId } = useParams();
-  const [poll, setPoll] = useState<PollWithOptions | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { data: poll, isLoading, error } = usePollById(pollId);
 
-  useEffect(() => {
-    if (!pollId) return;
-
-    const fetchPoll = async () => {
-      try {
-        const pollData = await pollFacade.getPoll(pollId);
-        if (!pollData) {
-          setError('Poll not found');
-        } else if (pollData.creator_id !== user.id) {
-          setError('You do not have permission to edit this poll');
-        } else {
-          setPoll(pollData);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load poll');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPoll();
-  }, [pollId, user.id]);
-
-  if (loading) {
+  if (isLoading) {
     return <MouseLoader />;
   }
 
   if (error) {
     return (
       <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>
-        {error}
+        {error instanceof Error ? error.message : 'Failed to load poll'}
       </div>
     );
   }
@@ -176,14 +162,24 @@ function EditPollRoute({ user, onSuccess }: { user: User; onSuccess: (slug: stri
     return <Navigate to="/dashboard/polls" replace />;
   }
 
+  if (poll.creator_id !== user.id) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+        You do not have permission to edit this poll
+      </div>
+    );
+  }
+
   return <CreatePoll user={user} onSuccess={onSuccess} editPoll={poll} />;
 }
 
 function App() {
   return (
-    <BrowserRouter>
-      <RoutedApp />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <RoutedApp />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '@supabase/supabase-js';
-import { pollFacade } from '../../core/appServices';
+import { useUserPolls, useDeletePoll, useTogglePollStatus } from '../../hooks/usePollQueries';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   Delete01Icon,
@@ -16,7 +16,6 @@ import {
   Tick01Icon,
   PencilEdit01Icon,
 } from '@hugeicons/core-free-icons';
-import type { Poll } from '../../types';
 import styles from './MyPolls.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -25,42 +24,26 @@ interface MyPollsProps {
 }
 
 export function MyPolls({ user }: MyPollsProps) {
-  const [polls, setPolls] = useState<Poll[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const loadPolls = useCallback(async () => {
-    try {
-      const data = await pollFacade.getUserPolls(user.id);
-      setPolls(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load polls');
-    } finally {
-      setLoading(false);
-    }
-  }, [user.id]);
-
-  useEffect(() => {
-    loadPolls();
-  }, [loadPolls]);
+  const { data: polls = [], isLoading, error } = useUserPolls(user.id);
+  const deletePoll = useDeletePoll();
+  const toggleStatus = useTogglePollStatus();
 
   const handleDelete = async (pollId: string) => {
     if (!confirm('Are you sure you want to delete this poll?')) return;
 
     try {
-      await pollFacade.deletePoll(pollId);
-      setPolls(polls.filter((p) => p.id !== pollId));
+      await deletePoll.mutateAsync(pollId);
     } catch {
       alert('Failed to delete poll');
     }
   };
 
-  const toggleStatus = async (pollId: string, isActive: boolean) => {
+  const handleToggleStatus = async (pollId: string, isActive: boolean) => {
     try {
-      await pollFacade.updatePollStatus(pollId, !isActive);
-      setPolls(polls.map((p) => (p.id === pollId ? { ...p, is_active: !isActive } : p)));
+      await toggleStatus.mutateAsync({ pollId, isActive: !isActive });
     } catch {
       alert('Failed to update poll status');
     }
@@ -73,7 +56,7 @@ export function MyPolls({ user }: MyPollsProps) {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
@@ -98,7 +81,7 @@ export function MyPolls({ user }: MyPollsProps) {
         </button>
       </div>
 
-      {error && <div className={sharedStyles.errorMessage}>{error}</div>}
+      {error && <div className={sharedStyles.errorMessage}>{error instanceof Error ? error.message : 'Failed to load polls'}</div>}
 
       {polls.length === 0 ? (
         <div className={styles.emptyState}>
@@ -216,7 +199,7 @@ export function MyPolls({ user }: MyPollsProps) {
                       View Poll
                     </button>
                     <button
-                      onClick={() => toggleStatus(poll.id, poll.is_active)}
+                      onClick={() => handleToggleStatus(poll.id, poll.is_active)}
                       className={`${styles.toggleButton} ${styles.toggleDeactivate}`}
                       title="Deactivate"
                     >
@@ -227,7 +210,7 @@ export function MyPolls({ user }: MyPollsProps) {
                 ) : (
                   <>
                     <button
-                      onClick={() => toggleStatus(poll.id, poll.is_active)}
+                      onClick={() => handleToggleStatus(poll.id, poll.is_active)}
                       className={styles.activateButton}
                     >
                       <HugeiconsIcon icon={ToggleOnIcon} size={16} />

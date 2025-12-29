@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ChampionIcon, UserGroupIcon, ArrowRight01Icon, ChartIncreaseIcon, PinIcon } from '@hugeicons/core-free-icons';
-import { pollFacade } from '../../core/appServices';
-import type { LeaderboardPoll } from '../../types';
+import { useLeaderboard } from '../../hooks/usePollQueries';
 import styles from './Leaderboard.module.css';
 
 const TRENDING_POLL_ID = '70427c7e-9405-4b76-b062-087790c6f5ef';
@@ -28,31 +27,17 @@ function getWinningInfo(
 }
 
 export function Leaderboard({ onNavigate }: LeaderboardProps) {
-  const [polls, setPolls] = useState<LeaderboardPoll[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { data: leaderboardData, isLoading: loading, error } = useLeaderboard(5);
 
-  useEffect(() => {
-    const fetchLeaderboard = async () => {
-      try {
-        const data = await pollFacade.getLeaderboard(5);
-        // Prioritize the trending poll to be first
-        const sortedData = [...data].sort((a, b) => {
-          if (a.id === TRENDING_POLL_ID) return -1;
-          if (b.id === TRENDING_POLL_ID) return 1;
-          return 0;
-        });
-        setPolls(sortedData);
-      } catch (err) {
-        setError('Failed to load leaderboard');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLeaderboard();
-  }, []);
+  // Prioritize the trending poll to be first
+  const polls = useMemo(() => {
+    if (!leaderboardData) return [];
+    return [...leaderboardData].sort((a, b) => {
+      if (a.id === TRENDING_POLL_ID) return -1;
+      if (b.id === TRENDING_POLL_ID) return 1;
+      return 0;
+    });
+  }, [leaderboardData]);
 
   if (loading) {
     return (
@@ -81,7 +66,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
             <h2 className={styles.leaderboardTitle}>Live Leaderboard</h2>
           </div>
         </div>
-        <div className={styles.errorState}>{error}</div>
+        <div className={styles.errorState}>Failed to load leaderboard</div>
       </div>
     );
   }

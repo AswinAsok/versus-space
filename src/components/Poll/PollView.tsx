@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { usePoll } from '../../hooks/usePoll';
-import { pollFacade } from '../../core/appServices';
+import { usePollBySlug, useValidateAccessKey } from '../../hooks/usePollQueries';
 import { supabase } from '../../lib/supabaseClient';
 import { VotingInterface } from './VotingInterface';
 import { PollSEO } from '../SEO/SEO';
@@ -14,13 +13,15 @@ interface PollViewProps {
 
 // Fetches poll data and renders the voting experience with sharing actions.
 export function PollView({ slug }: PollViewProps) {
-  const { poll, loading, error } = usePoll({ slug });
+  const { data: poll, isLoading: loading, error } = usePollBySlug(slug);
   const [accessKey, setAccessKey] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [keyError, setKeyError] = useState('');
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [showKey, setShowKey] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const validateAccessKey = useValidateAccessKey();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,7 +74,7 @@ export function PollView({ slug }: PollViewProps) {
       const storedKey = sessionStorage.getItem(`poll_key_${poll.id}`);
       if (storedKey) {
         try {
-          const isValid = await pollFacade.validateAccessKey(poll.id, storedKey);
+          const isValid = await validateAccessKey.mutateAsync({ pollId: poll.id, accessKey: storedKey });
           if (isValid) {
             setIsUnlocked(true);
           }
@@ -85,7 +86,7 @@ export function PollView({ slug }: PollViewProps) {
     };
 
     checkAccess();
-  }, [poll]);
+  }, [poll, validateAccessKey]);
 
   const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,7 +98,7 @@ export function PollView({ slug }: PollViewProps) {
     }
 
     try {
-      const isValid = await pollFacade.validateAccessKey(poll.id, accessKey);
+      const isValid = await validateAccessKey.mutateAsync({ pollId: poll.id, accessKey });
       if (isValid) {
         sessionStorage.setItem(`poll_key_${poll.id}`, accessKey);
         setIsUnlocked(true);
