@@ -26,6 +26,23 @@ export interface CreatePollData {
   >;
 }
 
+export interface UpdatePollData {
+  title?: Poll['title'];
+  is_public?: Poll['is_public'];
+  access_key?: Poll['access_key'];
+  ends_at?: Poll['ends_at'];
+  max_votes_per_ip?: Poll['max_votes_per_ip'];
+  auto_vote_interval_seconds?: Poll['auto_vote_interval_seconds'];
+  options?: Array<{
+    id?: string;
+    title: string;
+    image_url?: string | null;
+    position: number;
+    simulated_enabled?: boolean;
+    simulated_target_votes?: number | null;
+  }>;
+}
+
 export type LeaderboardPoll = Database['public']['Views']['public_poll_leaderboard']['Row'];
 
 // Analytics types

@@ -14,6 +14,7 @@ import {
   ToggleOffIcon,
   Copy01Icon,
   Tick01Icon,
+  PencilEdit01Icon,
 } from '@hugeicons/core-free-icons';
 import type { Poll } from '../../types';
 import styles from './MyPolls.module.css';
@@ -166,6 +167,13 @@ export function MyPolls({ user }: MyPollsProps) {
                         ) : (
                           <HugeiconsIcon icon={Copy01Icon} size={16} />
                         )}
+                      </button>
+                      <button
+                        onClick={() => navigate(`/dashboard/edit/${poll.id}`)}
+                        className={styles.menuButton}
+                        title="Edit poll"
+                      >
+                        <HugeiconsIcon icon={PencilEdit01Icon} size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(poll.id)}

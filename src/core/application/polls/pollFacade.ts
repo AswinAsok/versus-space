@@ -3,6 +3,7 @@ import type {
   PollOption,
   PollWithOptions,
   CreatePollData,
+  UpdatePollData,
   LeaderboardPoll,
   PlatformStats,
 } from '../../../types';
@@ -16,6 +17,7 @@ export interface PollFacade {
   getPoll(pollId: string): Promise<PollWithOptions | null>;
   getPollBySlug(slug: string): Promise<PollWithOptions | null>;
   getUserPolls(userId: string): Promise<Poll[]>;
+  updatePoll(pollId: string, data: UpdatePollData): Promise<PollWithOptions>;
   updatePollStatus(pollId: string, isActive: boolean): Promise<void>;
   deletePoll(pollId: string): Promise<void>;
   subscribeToPollOptions(
@@ -39,6 +41,7 @@ export function createPollFacade(gateway: PollGateway): PollFacade {
     getPoll: (pollId) => gateway.getPoll(pollId),
     getPollBySlug: (slug) => gateway.getPollBySlug(slug),
     getUserPolls: (userId) => gateway.getUserPolls(userId),
+    updatePoll: (pollId, data) => gateway.updatePoll(pollId, data),
     updatePollStatus: (pollId, isActive) => gateway.updatePollStatus(pollId, isActive),
     deletePoll: (pollId) => gateway.deletePoll(pollId),
     subscribeToPollOptions: (pollId, applyOptions) =>

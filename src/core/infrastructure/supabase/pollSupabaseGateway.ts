@@ -4,6 +4,7 @@ import type {
   PollOption,
   PollWithOptions,
   CreatePollData,
+  UpdatePollData,
   LeaderboardPoll,
   PlatformStats,
 } from '../../../types';
@@ -116,6 +117,51 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
 
       if (error) throw error;
       return data || [];
+    },
+
+    async updatePoll(pollId, data: UpdatePollData) {
+      // Update poll fields
+      const pollUpdate: Record<string, unknown> = {};
+      if (data.title !== undefined) pollUpdate.title = data.title;
+      if (data.is_public !== undefined) pollUpdate.is_public = data.is_public;
+      if (data.access_key !== undefined) pollUpdate.access_key = data.access_key;
+      if (data.ends_at !== undefined) pollUpdate.ends_at = data.ends_at;
+      if (data.max_votes_per_ip !== undefined) pollUpdate.max_votes_per_ip = data.max_votes_per_ip;
+      if (data.auto_vote_interval_seconds !== undefined)
+        pollUpdate.auto_vote_interval_seconds = data.auto_vote_interval_seconds;
+
+      if (Object.keys(pollUpdate).length > 0) {
+        const { error: pollError } = await client
+          .from('polls')
+          .update(pollUpdate)
+          .eq('id', pollId);
+        if (pollError) throw pollError;
+      }
+
+      // Update options if provided
+      if (data.options) {
+        for (const option of data.options) {
+          if (option.id) {
+            // Update existing option
+            const { error } = await client
+              .from('poll_options')
+              .update({
+                title: option.title,
+                image_url: option.image_url,
+                position: option.position,
+                simulated_enabled: option.simulated_enabled ?? false,
+                simulated_target_votes: option.simulated_target_votes ?? null,
+              })
+              .eq('id', option.id);
+            if (error) throw error;
+          }
+        }
+      }
+
+      // Fetch and return the updated poll
+      const updatedPoll = await this.getPoll(pollId);
+      if (!updatedPoll) throw new Error('Poll not found after update');
+      return updatedPoll;
     },
 
     async updatePollStatus(pollId, isActive) {

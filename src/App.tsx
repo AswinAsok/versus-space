@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -22,6 +23,9 @@ import { PollView } from './components/Poll/PollView';
 import { Blog } from './components/Blog/Blog';
 import { BlogPostPage } from './components/Blog/BlogPost';
 import { MouseLoader } from './components/Loading/MouseLoader';
+import { pollFacade } from './core/appServices';
+import type { PollWithOptions } from './types';
+import type { User } from '@supabase/supabase-js';
 import appStyles from './components/App.module.css';
 
 // Wrapper that reads router state and renders the correct views.
@@ -58,6 +62,7 @@ function RoutedApp() {
             <Route index element={<DashboardHome user={user!} />} />
             <Route path="polls" element={<MyPolls user={user!} />} />
             <Route path="create" element={<CreatePoll user={user!} onSuccess={(slug) => navigate(`/poll/${slug}`)} />} />
+            <Route path="edit/:pollId" element={<EditPollRoute user={user!} onSuccess={(slug) => navigate(`/poll/${slug}`)} />} />
             <Route path="settings" element={<Settings user={user!} />} />
             <Route path="profile" element={<Profile user={user!} />} />
             <Route path="analytics" element={<Analytics user={user!} />} />
@@ -123,6 +128,55 @@ function PollRoute() {
     return <Navigate to="/" replace />;
   }
   return <PollView slug={slug} />;
+}
+
+// Edit poll route wrapper that fetches poll data
+function EditPollRoute({ user, onSuccess }: { user: User; onSuccess: (slug: string) => void }) {
+  const { pollId } = useParams();
+  const [poll, setPoll] = useState<PollWithOptions | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!pollId) return;
+
+    const fetchPoll = async () => {
+      try {
+        const pollData = await pollFacade.getPoll(pollId);
+        if (!pollData) {
+          setError('Poll not found');
+        } else if (pollData.creator_id !== user.id) {
+          setError('You do not have permission to edit this poll');
+        } else {
+          setPoll(pollData);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load poll');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPoll();
+  }, [pollId, user.id]);
+
+  if (loading) {
+    return <MouseLoader />;
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+        {error}
+      </div>
+    );
+  }
+
+  if (!poll) {
+    return <Navigate to="/dashboard/polls" replace />;
+  }
+
+  return <CreatePoll user={user} onSuccess={onSuccess} editPoll={poll} />;
 }
 
 function App() {

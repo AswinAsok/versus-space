@@ -602,17 +602,11 @@ export function VotingInterface({
               <div className={styles.optionInfo}>
                 <h2 className={styles.optionTitle}>{option.title}</h2>
 
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleVote(option.id, index, e);
-                  }}
-                  className={`${styles.voteButton} ${heat > 7 ? styles.buttonOnFire : ''}`}
-                >
+                <div className={`${styles.voteButton} ${heat > 7 ? styles.buttonOnFire : ''}`}>
                   <span className={styles.buttonPulse} />
                   +1 {option.title}
                   {isLeading && <span className={styles.crownIcon}>👑</span>}
-                </button>
+                </div>
 
                 <div className={styles.voteStats}>
                   <div className={styles.rateDisplay}>
