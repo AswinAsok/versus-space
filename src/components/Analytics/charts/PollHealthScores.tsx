@@ -110,8 +110,8 @@ export function PollHealthScores({ polls }: PollHealthScoresProps) {
 
   const getScoreColor = (score: number): string => {
     if (score >= 70) return '#3ecf8e';
-    if (score >= 40) return '#f5a623';
-    return '#ef4444';
+    if (score >= 40) return '#94a3b8';
+    return '#78716c';
   };
 
   const getScoreIcon = (score: number) => {

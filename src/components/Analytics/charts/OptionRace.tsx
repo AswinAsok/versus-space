@@ -21,14 +21,9 @@ interface RaceOption {
 }
 
 const RACE_COLORS = [
-  '#3ecf8e',
-  '#f5a623',
-  '#6366f1',
-  '#ec4899',
-  '#14b8a6',
-  '#f97316',
-  '#8b5cf6',
-  '#06b6d4',
+  '#3ecf8e', // primary green
+  '#94a3b8', // muted slate
+  '#78716c', // warm stone
 ];
 
 export function OptionRace({ polls, selectedPollId, onPollChange }: OptionRaceProps) {
@@ -164,7 +159,7 @@ export function OptionRace({ polls, selectedPollId, onPollChange }: OptionRacePr
                   <div className={styles.racerInfo}>
                     <div className={styles.racerRank}>
                       {index === 0 && option.votes > 0 ? (
-                        <HugeiconsIcon icon={ChampionIcon} size={14} style={{ color: '#f5a623' }} />
+                        <HugeiconsIcon icon={ChampionIcon} size={14} style={{ color: '#3ecf8e' }} />
                       ) : (
                         <span className={styles.rankNumber}>{index + 1}</span>
                       )}

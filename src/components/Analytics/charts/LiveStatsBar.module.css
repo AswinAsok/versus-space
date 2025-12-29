@@ -36,8 +36,8 @@
 }
 
 .liveIcon {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
+  background: rgba(62, 207, 142, 0.15);
+  color: var(--color-primary);
 }
 
 .liveDot {
@@ -46,7 +46,7 @@
   right: 4px;
   width: 8px;
   height: 8px;
-  background: #ef4444;
+  background: var(--color-primary);
   border-radius: 50%;
   animation: livePulse 2s ease-in-out infinite;
 }
@@ -87,13 +87,13 @@
 }
 
 .todayIcon {
-  background: rgba(99, 102, 241, 0.15);
-  color: #6366f1;
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
 }
 
 .velocityIcon {
-  background: rgba(245, 166, 35, 0.15);
-  color: #f5a623;
+  background: rgba(120, 113, 108, 0.15);
+  color: #78716c;
 }
 
 .activeIcon {

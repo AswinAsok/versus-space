@@ -2,9 +2,8 @@
 .trackerCard {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  height: 100%;
+  border-radius: var(--radius-md);
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   transition: all var(--transition-normal) var(--ease-out);
@@ -19,20 +18,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 0.875rem;
 }
 
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .statusDot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: rgba(100, 116, 139, 0.5);
   border-radius: 50%;
   transition: all 0.3s ease;
@@ -40,22 +37,22 @@
 
 .statusDot.connected {
   background: #3ecf8e;
-  box-shadow: 0 0 8px rgba(62, 207, 142, 0.6);
+  box-shadow: 0 0 6px rgba(62, 207, 142, 0.6);
   animation: statusPulse 2s ease-in-out infinite;
 }
 
 @keyframes statusPulse {
   0%, 100% {
-    box-shadow: 0 0 6px rgba(62, 207, 142, 0.4);
+    box-shadow: 0 0 4px rgba(62, 207, 142, 0.4);
   }
   50% {
-    box-shadow: 0 0 12px rgba(62, 207, 142, 0.8);
+    box-shadow: 0 0 10px rgba(62, 207, 142, 0.8);
   }
 }
 
 .trackerTitle {
   font-family: 'Parkinsans', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-text);
   margin: 0;
@@ -64,40 +61,54 @@
 .totalViewers {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.375rem 0.75rem;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
   background: rgba(62, 207, 142, 0.1);
   border-radius: var(--radius-full);
   color: #3ecf8e;
-  font-size: 0.8125rem;
+  font-size: 0.6875rem;
   font-weight: 600;
 }
 
 /* Polls List */
 .pollsList {
-  flex: 1;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.375rem;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.pollsList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pollsList::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 2px;
+}
+
+.pollsList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
 }
 
 .pollItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.625rem;
   background: rgba(0, 0, 0, 0.2);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.04);
-  transition: all 0.2s ease;
-  animation: slideIn 0.3s ease both;
+  transition: all 0.15s ease;
+  animation: slideIn 0.2s ease both;
 }
 
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(-10px);
+    transform: translateX(-8px);
   }
   to {
     opacity: 1;
@@ -113,7 +124,7 @@
 .pollInfo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   flex: 1;
   min-width: 0;
 }
@@ -123,8 +134,8 @@
 }
 
 .activityDot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: rgba(100, 116, 139, 0.4);
   border-radius: 50%;
   transition: all 0.3s ease;
@@ -132,30 +143,28 @@
 
 .activityDot.hasViewers {
   background: #3ecf8e;
-  box-shadow: 0 0 8px rgba(62, 207, 142, 0.6);
+  box-shadow: 0 0 6px rgba(62, 207, 142, 0.6);
   animation: viewerPulse 1.5s ease-in-out infinite;
 }
 
 @keyframes viewerPulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 6px rgba(62, 207, 142, 0.4);
   }
   50% {
-    transform: scale(1.1);
-    box-shadow: 0 0 12px rgba(62, 207, 142, 0.8);
+    transform: scale(1.2);
   }
 }
 
 .pollDetails {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.125rem;
   min-width: 0;
 }
 
 .pollTitle {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: var(--color-text);
   white-space: nowrap;
@@ -164,80 +173,78 @@
 }
 
 .pollMeta {
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   color: var(--color-text-muted);
 }
 
 .viewerBadge {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.25rem 0.625rem;
+  gap: 0.25rem;
+  padding: 0.125rem 0.375rem;
   background: rgba(62, 207, 142, 0.15);
   border-radius: var(--radius-full);
   color: #3ecf8e;
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   font-weight: 600;
   flex-shrink: 0;
 }
 
 /* Empty State */
 .emptyState {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 2rem;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
   color: var(--color-text-muted);
   text-align: center;
 }
 
 .emptyState p {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 0.8125rem;
 }
 
 .emptyHint {
-  font-size: 0.8125rem;
+  font-size: 0.6875rem;
   opacity: 0.7;
 }
 
 /* Inactive Summary */
 .inactiveSummary {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.625rem;
   background: rgba(0, 0, 0, 0.15);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   color: var(--color-text-muted);
-  font-size: 0.8125rem;
+  font-size: 0.6875rem;
   text-align: center;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 /* Footer */
 .trackerFootnote {
-  margin: 1rem 0 0;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  font-size: 0.75rem;
+  margin: 0.75rem 0 0;
+  padding-top: 0.625rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.6875rem;
   color: var(--color-text-muted);
   text-align: center;
+  opacity: 0.7;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .trackerCard {
-    padding: 1.25rem;
+    padding: 0.875rem;
   }
 
-  .trackerHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+  .pollsList {
+    max-height: 150px;
   }
 
   .pollItem {
-    padding: 0.75rem;
+    padding: 0.375rem 0.5rem;
   }
 }

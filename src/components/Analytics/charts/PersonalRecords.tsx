@@ -134,7 +134,7 @@ export function PersonalRecords({ polls }: PersonalRecordsProps) {
             title: 'Most Voted',
             pollTitle: mostVotedPoll.title,
             value: `${maxVotes.toLocaleString()} votes`,
-            color: '#f5a623',
+            color: '#3ecf8e',
           });
         }
 
@@ -156,7 +156,7 @@ export function PersonalRecords({ polls }: PersonalRecordsProps) {
             title: 'Closest Race',
             pollTitle: closestRacePoll.title,
             value: marginPercent < 1 ? 'Tie!' : `${marginPercent.toFixed(1)}% margin`,
-            color: '#6366f1',
+            color: '#94a3b8',
           });
         }
 
@@ -170,7 +170,7 @@ export function PersonalRecords({ polls }: PersonalRecordsProps) {
             title: 'Latest Active',
             pollTitle: recentPoll.title,
             value: daysSinceCreation === 0 ? 'Today' : `${daysSinceCreation}d ago`,
-            color: '#ec4899',
+            color: '#78716c',
           });
         }
 

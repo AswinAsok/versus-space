@@ -6,6 +6,7 @@ import type { Vote, UserSession, VoteDailyCount, PollVoteSummary } from '../../.
 export function createSupabaseVoteGateway(client: SupabaseClient<Database>): VoteGateway {
   return {
     async castVote(pollId, optionId, userId, ipAddress) {
+      // Call RPC for rate limiting and counter increment
       const { error } = await client.rpc('cast_vote_with_limits', {
         p_poll_id: pollId,
         p_option_id: optionId,
@@ -14,6 +15,20 @@ export function createSupabaseVoteGateway(client: SupabaseClient<Database>): Vot
       });
 
       if (error) throw error;
+
+      // Also insert into votes table for time-series tracking
+      const { error: insertError } = await client.from('votes').insert({
+        poll_id: pollId,
+        option_id: optionId,
+        user_id: userId,
+        ip_address: ipAddress,
+        is_simulated: false,
+      });
+
+      // Don't throw on insert error - RPC already succeeded
+      if (insertError) {
+        console.warn('Failed to insert vote record:', insertError);
+      }
     },
 
     async updateUserSession(userId, pollId) {
@@ -74,14 +89,24 @@ export function createSupabaseVoteGateway(client: SupabaseClient<Database>): Vot
 
       (data || []).forEach((vote) => {
         const pollId = vote.poll_id;
-        const date = new Date(vote.created_at).toISOString().split('T')[0];
+        const voteDate = new Date(vote.created_at);
+
+        // For 24h view (days === 1), group by hour; otherwise group by date
+        let key: string;
+        if (days === 1) {
+          // Include hour in the key for hourly grouping
+          key = `${voteDate.getFullYear()}-${String(voteDate.getMonth() + 1).padStart(2, '0')}-${String(voteDate.getDate()).padStart(2, '0')}-${String(voteDate.getHours()).padStart(2, '0')}`;
+        } else {
+          // Daily grouping
+          key = `${voteDate.getFullYear()}-${String(voteDate.getMonth() + 1).padStart(2, '0')}-${String(voteDate.getDate()).padStart(2, '0')}`;
+        }
 
         if (!votesByPollAndDate.has(pollId)) {
           votesByPollAndDate.set(pollId, new Map());
         }
 
         const pollDates = votesByPollAndDate.get(pollId)!;
-        pollDates.set(date, (pollDates.get(date) || 0) + 1);
+        pollDates.set(key, (pollDates.get(key) || 0) + 1);
       });
 
       // Convert to VoteDailyCount arrays

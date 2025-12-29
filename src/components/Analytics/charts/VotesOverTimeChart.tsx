@@ -20,22 +20,62 @@ interface VotesOverTimeChartProps {
 }
 
 const CHART_COLORS = [
-  '#3ecf8e',
-  '#f5a623',
-  '#6366f1',
-  '#ec4899',
-  '#14b8a6',
-  '#f97316',
-  '#8b5cf6',
-  '#06b6d4',
+  '#3ecf8e', // primary green
+  '#94a3b8', // muted slate
+  '#78716c', // warm stone
 ];
 
 export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOverTimeChartProps) {
-  // Get all poll IDs
-  const allPollIds = useMemo(() => Array.from(data.keys()), [data]);
+  // Get only poll IDs that have votes in the time range (filter out 0-vote polls)
+  const allPollIds = useMemo(() => {
+    const pollsWithVotes: string[] = [];
+    data.forEach((votes, pollId) => {
+      const totalVotes = votes.reduce((sum, v) => sum + v.count, 0);
+      if (totalVotes > 0) {
+        pollsWithVotes.push(pollId);
+      }
+    });
+    return pollsWithVotes;
+  }, [data]);
 
   const chartData = useMemo(() => {
-    // Generate all dates in the range
+    // For 24h view, show hourly data
+    if (days === 1) {
+      const hours: string[] = [];
+      const now = new Date();
+
+      // Generate last 24 hours
+      for (let i = 23; i >= 0; i--) {
+        const hour = new Date(now);
+        hour.setHours(now.getHours() - i, 0, 0, 0);
+        const hourKey = `${hour.getFullYear()}-${String(hour.getMonth() + 1).padStart(2, '0')}-${String(hour.getDate()).padStart(2, '0')}-${String(hour.getHours()).padStart(2, '0')}`;
+        hours.push(hourKey);
+      }
+
+      const formatHourLabel = (hourKey: string) => {
+        const hour = parseInt(hourKey.split('-')[3], 10);
+        if (hour === 0) return '12am';
+        if (hour === 12) return '12pm';
+        return hour > 12 ? `${hour - 12}pm` : `${hour}am`;
+      };
+
+      return hours.map((hourKey) => {
+        const point: Record<string, string | number> = {
+          date: formatHourLabel(hourKey),
+          fullDate: hourKey,
+        };
+
+        allPollIds.forEach((pollId) => {
+          const votes = data.get(pollId) || [];
+          const hourVotes = votes.find((v) => v.date === hourKey);
+          point[pollId] = hourVotes?.count || 0;
+        });
+
+        return point;
+      });
+    }
+
+    // For other ranges, show daily data
     const allDates: string[] = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -43,13 +83,23 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      allDates.push(date.toISOString().split('T')[0]);
+      const localDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      allDates.push(localDate);
     }
 
-    // Build chart data with all dates and all polls
+    const formatLabel = (dateStr: string) => {
+      const date = new Date(dateStr);
+      if (days === 3) {
+        return date.toLocaleDateString('en-US', { weekday: 'short' });
+      } else if (days <= 7) {
+        return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' });
+      }
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    };
+
     return allDates.map((date) => {
       const point: Record<string, string | number> = {
-        date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        date: formatLabel(date),
         fullDate: date,
       };
 
@@ -96,17 +146,15 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
     return (
       <div className={styles.chartCard}>
         <div className={styles.chartEmpty}>
-          <p>No manual votes in the last {days} days</p>
-          <span className={styles.chartNote}>
-            This chart only tracks manual votes. Simulated votes are not recorded over time.
-          </span>
+          <p>No votes in the last {days} days</p>
         </div>
       </div>
     );
   }
 
   // Calculate tick interval based on days
-  const tickInterval = days <= 7 ? 0 : days <= 30 ? 4 : 13;
+  // For 24h view (24 data points), show every 3rd hour
+  const tickInterval = days === 1 ? 2 : days <= 7 ? 0 : days <= 30 ? 4 : 13;
 
   return (
     <div className={styles.chartCard}>
@@ -150,6 +198,8 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
                 value,
                 pollTitles.get(name) || name,
               ]}
+              filterNull={false}
+              itemSorter={(item) => -(item.value as number || 0)}
             />
             <Legend
               wrapperStyle={{ paddingTop: '16px' }}
@@ -175,7 +225,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days }: VotesOve
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <p className={styles.chartFootnote}>Daily breakdown of manual votes received. Simulated votes are not tracked over time.</p>
+      <p className={styles.chartFootnote}>Daily breakdown of votes received</p>
     </div>
   );
 }

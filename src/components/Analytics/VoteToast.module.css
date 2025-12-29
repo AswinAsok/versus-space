@@ -1,0 +1,112 @@
+/* Toast Container - Right side */
+.toastContainer {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Individual Toast - Glassmorphic */
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.25rem;
+  min-width: 280px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: auto;
+  cursor: pointer;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: all 0.15s ease;
+}
+
+.toast:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateX(-4px);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* Toast Dot */
+.toastDot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--color-primary);
+}
+
+/* Toast Content */
+.toastContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.toastOption {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.count {
+  font-size: 0.6875rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.toastPoll {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .toastContainer {
+    bottom: 1.5rem;
+    left: 1rem;
+    right: 1rem;
+    transform: none;
+  }
+
+  .toast {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,18 +1,23 @@
-/* Heatmap Card */
-.heatmapCard {
+.card {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  transition: all var(--transition-normal) var(--ease-out);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.heatmapCard:hover {
+.card:hover {
   background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.heatmapTitle {
+.header {
+  margin-bottom: 1rem;
+}
+
+.title {
   font-family: 'Parkinsans', sans-serif;
   font-size: 1rem;
   font-weight: 600;
@@ -20,112 +25,148 @@
   margin: 0 0 0.25rem 0;
 }
 
-.heatmapSubtitle {
-  font-size: 0.8125rem;
+.subtitle {
+  font-size: 0.75rem;
   color: var(--color-text-muted);
-  margin: 0 0 1.5rem 0;
 }
 
-/* Loading State */
-.loadingState {
+/* Loading */
+.loading {
+  flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
-  color: var(--color-text-muted);
 }
 
-.loadingSpinner {
+.spinner {
   width: 24px;
   height: 24px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin-bottom: 0.75rem;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* Heatmap Container */
-.heatmapContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Hour Labels */
-.hourLabels {
-  display: flex;
-  align-items: center;
-  padding-left: 40px;
-}
-
-.cornerSpacer {
-  width: 0;
-}
-
-.hourLabel {
+/* Graph Wrapper */
+.graphWrapper {
   flex: 1;
-  text-align: center;
-  font-size: 0.625rem;
-  color: var(--color-text-muted);
-  min-width: calc((100% - 40px) / 8);
-}
-
-/* Grid */
-.gridContainer {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  overflow-x: auto;
 }
 
-.dayRow {
+.graphWrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.graphWrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.graphWrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+/* Month Row */
+.monthRow {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  margin-bottom: 4px;
 }
 
-.dayLabel {
+.dayLabelSpacer {
   width: 32px;
-  font-size: 0.6875rem;
-  color: var(--color-text-muted);
-  text-align: right;
   flex-shrink: 0;
 }
 
-.hourCells {
+.monthLabels {
   display: flex;
-  flex: 1;
-  gap: 2px;
+  gap: 3px;
 }
 
-.cell {
-  flex: 1;
-  aspect-ratio: 1;
-  border-radius: 2px;
+.monthCell {
+  width: 11px;
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  text-align: left;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+/* Grid Row */
+.gridRow {
+  display: flex;
+  gap: 4px;
+}
+
+/* Day Labels */
+.dayLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.dayLabel {
+  height: 11px;
+  font-size: 0.5625rem;
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast) var(--ease-out);
+  line-height: 1;
+}
+
+/* Grid - This is the key! */
+.grid {
+  display: grid;
+  gap: 3px;
+  grid-auto-flow: column;
+  /* grid-template-columns and grid-template-rows set via inline style */
+}
+
+/* Cells */
+.cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
   cursor: default;
-  min-width: 0;
-  max-height: 24px;
+  transition: transform 0.1s ease;
 }
 
 .cell:hover {
   transform: scale(1.2);
-  z-index: 1;
-  box-shadow: 0 0 10px rgba(62, 207, 142, 0.3);
+  outline: 1px solid rgba(255, 255, 255, 0.5);
+  z-index: 10;
 }
 
-.cellCount {
-  font-size: 0.5rem;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.7);
+.cell[data-level="-1"] {
+  background: transparent;
+}
+
+.cell[data-level="0"] {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cell[data-level="1"] {
+  background: rgba(62, 207, 142, 0.3);
+}
+
+.cell[data-level="2"] {
+  background: rgba(62, 207, 142, 0.5);
+}
+
+.cell[data-level="3"] {
+  background: rgba(62, 207, 142, 0.75);
+}
+
+.cell[data-level="4"] {
+  background: rgb(62, 207, 142);
 }
 
 /* Legend */
@@ -133,59 +174,39 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.legendLabel {
-  font-size: 0.625rem;
-  color: var(--color-text-muted);
-}
-
-.legendGradient {
-  display: flex;
-  gap: 2px;
-}
-
-.legendCell {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-}
-
-/* Footnote */
-.heatmapFootnote {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  opacity: 0.7;
-  text-align: center;
-  margin-top: 1rem;
+  gap: 4px;
+  margin-top: auto;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.5625rem;
+  color: var(--color-text-muted);
+}
+
+.legend .cell {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.legend .cell:hover {
+  transform: none;
+  outline: none;
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .heatmapCard {
-    padding: 1rem;
+@media (max-width: 640px) {
+  .card {
+    padding: 0.875rem;
   }
 
-  .cell {
-    max-height: 18px;
-  }
-
-  .cellCount {
-    display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .hourLabels {
+  .dayLabels {
     display: none;
   }
 
-  .dayLabel {
-    width: 24px;
-    font-size: 0.5rem;
+  .dayLabelSpacer {
+    width: 0;
+  }
+
+  .monthRow {
+    padding-left: 0;
   }
 }

@@ -123,12 +123,12 @@
 
 .metric.medium,
 .metric.good {
-  color: #f5a623;
+  color: #94a3b8;
 }
 
 .metric.low,
 .metric.poor {
-  color: #ef4444;
+  color: #78716c;
 }
 
 .metricDot {

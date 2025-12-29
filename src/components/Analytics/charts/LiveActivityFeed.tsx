@@ -152,7 +152,7 @@ export function LiveActivityFeed({ pollIds, pollTitles }: LiveActivityFeedProps)
 
       <p className={styles.feedFootnote}>
         <span className={styles.legendDot} style={{ background: 'var(--color-primary)' }} /> Real votes
-        <span className={styles.legendDot} style={{ background: '#6366f1', marginLeft: '1rem' }} /> Simulated
+        <span className={styles.legendDot} style={{ background: '#94a3b8', marginLeft: '1rem' }} /> Simulated
       </p>
     </div>
   );

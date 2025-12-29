@@ -12,14 +12,9 @@ interface OptionBreakdownChartProps {
 }
 
 const CHART_COLORS = [
-  '#3ecf8e',
-  '#f5a623',
-  '#6366f1',
-  '#ec4899',
-  '#14b8a6',
-  '#f97316',
-  '#8b5cf6',
-  '#06b6d4',
+  '#3ecf8e', // primary green
+  '#94a3b8', // muted slate
+  '#78716c', // warm stone
 ];
 
 export function OptionBreakdownChart({

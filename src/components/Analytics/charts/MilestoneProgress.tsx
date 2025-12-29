@@ -7,14 +7,22 @@ interface MilestoneProgressProps {
   totalVotes: number;
 }
 
-const MILESTONES = [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000];
+const MILESTONES = [
+  50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000,
+  100000, 250000, 500000, 750000, 1000000, 2500000, 5000000, 10000000
+];
+
+function formatNumber(num: number): string {
+  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+  if (num >= 1000) return `${(num / 1000).toFixed(0)}K`;
+  return num.toString();
+}
 
 export function MilestoneProgress({ totalVotes }: MilestoneProgressProps) {
   const [showCelebration, setShowCelebration] = useState(false);
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
   const milestone = useMemo(() => {
-    // Find next milestone
     let nextMilestone = MILESTONES[MILESTONES.length - 1];
     let previousMilestone = 0;
 
@@ -58,14 +66,7 @@ export function MilestoneProgress({ totalVotes }: MilestoneProgressProps) {
     }
   }, [totalVotes]);
 
-  // Calculate SVG arc
-  const radius = 70;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (animatedProgress / 100) * circumference;
-
-  // Get recently achieved milestones
   const achievedMilestones = MILESTONES.filter((m) => totalVotes >= m);
-  const lastAchieved = achievedMilestones[achievedMilestones.length - 1];
 
   return (
     <div className={`${styles.card} ${showCelebration ? styles.celebrating : ''}`}>
@@ -77,76 +78,47 @@ export function MilestoneProgress({ totalVotes }: MilestoneProgressProps) {
         </div>
       </div>
 
-      <div className={styles.ringContainer}>
-        <svg viewBox="0 0 180 180" className={styles.ring}>
-          {/* Background circle */}
-          <circle
-            cx="90"
-            cy="90"
-            r={radius}
-            fill="none"
-            stroke="rgba(255, 255, 255, 0.06)"
-            strokeWidth="12"
-          />
-          {/* Progress arc */}
-          <circle
-            cx="90"
-            cy="90"
-            r={radius}
-            fill="none"
-            stroke="url(#progressGradient)"
-            strokeWidth="12"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            className={styles.progressArc}
-            transform="rotate(-90 90 90)"
-          />
-          {/* Gradient definition */}
-          <defs>
-            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#3ecf8e" />
-              <stop offset="100%" stopColor="#14b8a6" />
-            </linearGradient>
-          </defs>
-        </svg>
+      {/* Main Stats */}
+      <div className={styles.mainStats}>
+        <div className={styles.currentVotes}>
+          <span className={styles.votesNumber}>{totalVotes.toLocaleString()}</span>
+          <span className={styles.votesLabel}>total votes</span>
+        </div>
+      </div>
 
-        <div className={styles.ringContent}>
-          <span className={styles.currentValue}>
-            {totalVotes.toLocaleString()}
-          </span>
-          <span className={styles.divider}>/</span>
-          <span className={styles.targetValue}>
-            {milestone.next.toLocaleString()}
+      {/* Progress Bar */}
+      <div className={styles.progressSection}>
+        <div className={styles.progressLabels}>
+          <span className={styles.progressFrom}>{formatNumber(milestone.previous)}</span>
+          <span className={styles.progressTo}>{formatNumber(milestone.next)}</span>
+        </div>
+        <div className={styles.progressTrack}>
+          <div
+            className={styles.progressFill}
+            style={{ width: `${animatedProgress}%` }}
+          />
+          <div
+            className={styles.progressGlow}
+            style={{ left: `${animatedProgress}%` }}
+          />
+        </div>
+        <div className={styles.progressInfo}>
+          <span className={styles.progressPercent}>{Math.round(milestone.progress)}%</span>
+          <span className={styles.progressRemaining}>
+            {milestone.votesToNext.toLocaleString()} to go
           </span>
         </div>
       </div>
 
-      <div className={styles.stats}>
-        <div className={styles.stat}>
-          <span className={styles.statValue}>{Math.round(milestone.progress)}%</span>
-          <span className={styles.statLabel}>Progress</span>
-        </div>
-        <div className={styles.statDivider} />
-        <div className={styles.stat}>
-          <span className={styles.statValue}>{milestone.votesToNext.toLocaleString()}</span>
-          <span className={styles.statLabel}>Votes to go</span>
-        </div>
+      {/* Next Milestone */}
+      <div className={styles.nextMilestone}>
+        <HugeiconsIcon icon={StarIcon} size={14} />
+        <span>Next: {formatNumber(milestone.next)} votes</span>
       </div>
-
-      {lastAchieved && (
-        <div className={styles.lastAchieved}>
-          <HugeiconsIcon icon={StarIcon} size={14} />
-          <span>Last milestone: {lastAchieved.toLocaleString()} votes</span>
-        </div>
-      )}
 
       {showCelebration && (
         <div className={styles.celebration}>
-          <span className={styles.celebrationEmoji}>🎉</span>
-          <span className={styles.celebrationText}>
-            Milestone achieved!
-          </span>
+          <span className={styles.celebrationText}>Milestone achieved!</span>
         </div>
       )}
     </div>

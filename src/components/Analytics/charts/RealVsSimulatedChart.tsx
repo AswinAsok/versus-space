@@ -14,7 +14,7 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading }: Rea
 
   const data = [
     { name: 'Real Votes', value: realVotes, color: '#3ecf8e' },
-    { name: 'Simulated', value: simulatedVotes, color: '#6366f1' },
+    { name: 'Simulated', value: simulatedVotes, color: '#94a3b8' },
   ].filter(d => d.value > 0);
 
   if (loading) {
@@ -84,7 +84,7 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading }: Rea
           <span className={styles.authPercent}>{realPercentage}%</span>
         </div>
         <div className={styles.authStat}>
-          <span className={styles.authDot} style={{ background: '#6366f1' }} />
+          <span className={styles.authDot} style={{ background: '#94a3b8' }} />
           <span className={styles.authLabel}>Simulated</span>
           <span className={styles.authValue}>{simulatedVotes.toLocaleString()}</span>
           <span className={styles.authPercent}>{simulatedPercentage}%</span>

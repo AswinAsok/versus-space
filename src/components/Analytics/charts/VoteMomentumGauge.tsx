@@ -122,9 +122,9 @@ export function VoteMomentumGauge({ pollIds }: VoteMomentumGaugeProps) {
   const trend = currentHourVotes > lastHourVotes ? 'up' : currentHourVotes < lastHourVotes ? 'down' : 'stable';
   const multiplier = averageHourlyVotes > 0 ? (currentHourVotes / averageHourlyVotes).toFixed(1) : '0';
 
-  // Calculate gauge angle (0-180 degrees)
-  const maxVotes = Math.max(averageHourlyVotes * 3, currentHourVotes, 10);
-  const gaugeAngle = Math.min((currentHourVotes / maxVotes) * 180, 180);
+  // Calculate gauge percentage (0-100)
+  const maxVotes = Math.max(averageHourlyVotes * 5, 50);
+  const gaugePercent = Math.min((currentHourVotes / maxVotes) * 100, 100);
 
   if (loading) {
     return (
@@ -148,48 +148,31 @@ export function VoteMomentumGauge({ pollIds }: VoteMomentumGaugeProps) {
         )}
       </div>
 
-      <div className={styles.gaugeContainer}>
-        <svg viewBox="0 0 200 120" className={styles.gauge}>
-          {/* Background arc */}
-          <path
-            d="M 20 100 A 80 80 0 0 1 180 100"
-            fill="none"
-            stroke="rgba(255,255,255,0.08)"
-            strokeWidth="12"
-            strokeLinecap="round"
-          />
-          {/* Active arc */}
-          <path
-            d="M 20 100 A 80 80 0 0 1 180 100"
-            fill="none"
-            stroke={isHot ? '#f97316' : '#3ecf8e'}
-            strokeWidth="12"
-            strokeLinecap="round"
-            strokeDasharray={`${(gaugeAngle / 180) * 251.2} 251.2`}
-            className={styles.activeArc}
-          />
-          {/* Needle */}
-          <g transform={`rotate(${gaugeAngle - 90}, 100, 100)`}>
-            <line
-              x1="100"
-              y1="100"
-              x2="100"
-              y2="35"
-              stroke="var(--color-text)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              className={styles.needle}
-            />
-            <circle cx="100" cy="100" r="6" fill="var(--color-text)" />
-          </g>
-        </svg>
+      {/* Main Value */}
+      <div className={styles.mainValue}>
+        <span className={styles.valueNumber}>{displayValue}</span>
+        <span className={styles.valueUnit}>votes/hr</span>
+      </div>
 
-        <div className={styles.gaugeValue}>
-          <span className={styles.valueNumber}>{displayValue}</span>
-          <span className={styles.valueUnit}>votes/hr</span>
+      {/* Progress Bar Gauge */}
+      <div className={styles.gaugeSection}>
+        <div className={styles.gaugeTrack}>
+          <div
+            className={styles.gaugeFill}
+            style={{ width: `${gaugePercent}%` }}
+          />
+          <div
+            className={styles.gaugeGlow}
+            style={{ left: `${gaugePercent}%` }}
+          />
+        </div>
+        <div className={styles.gaugeLabels}>
+          <span>0</span>
+          <span>{maxVotes}</span>
         </div>
       </div>
 
+      {/* Stats */}
       <div className={styles.stats}>
         <div className={styles.stat}>
           <span className={styles.statLabel}>Average</span>

@@ -6,17 +6,16 @@ import {
   VotesPerPollChart,
   OptionBreakdownChart,
   LiveStatsBar,
-  LiveActivityFeed,
   VotingHeatmap,
   RealVsSimulatedChart,
   ActivePollsTracker,
   VoteMomentumGauge,
   PersonalRecords,
   OptionRace,
-  BestTimeToPost,
   MilestoneProgress,
   PollHealthScores,
 } from './charts';
+import { VoteToast } from './VoteToast';
 import type { Poll, VoteDailyCount, PollVoteSummary, OptionVoteData } from '../../types';
 import styles from './Analytics.module.css';
 
@@ -24,7 +23,7 @@ interface AnalyticsProps {
   user: User;
 }
 
-type DateRange = 7 | 30 | 90;
+type DateRange = 1 | 3 | 7 | 30 | 90;
 
 export function Analytics({ user }: AnalyticsProps) {
   const [polls, setPolls] = useState<Poll[]>([]);
@@ -171,25 +170,37 @@ export function Analytics({ user }: AnalyticsProps) {
           />
         </section>
 
-        {/* Row 0: Momentum + Milestone + Personal Records */}
-        <div className={styles.threeColumnGrid}>
+        {/* Real-time Section: Momentum + Option Race */}
+        <div className={styles.twoColumnGrid}>
           <VoteMomentumGauge pollIds={pollIds} />
+          <OptionRace
+            polls={polls}
+            selectedPollId={selectedPollId}
+            onPollChange={setSelectedPollId}
+          />
+        </div>
+
+        {/* Vote Toast Notifications */}
+        <VoteToast pollIds={pollIds} pollTitles={pollTitles} />
+
+        {/* Progress Section: Milestone + Personal Records */}
+        <div className={styles.twoColumnGrid}>
           <MilestoneProgress totalVotes={totalVotes} />
           <PersonalRecords polls={polls} />
         </div>
 
-        {/* Votes Over Time Chart - Full Width Hero */}
+        {/* Votes Over Time Chart - Full Width */}
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Manual Votes Over Time</h2>
+            <h2 className={styles.sectionTitle}>Votes Over Time</h2>
             <div className={styles.dateRangeSelector}>
-              {([7, 30, 90] as DateRange[]).map((days) => (
+              {([1, 3, 7, 30, 90] as DateRange[]).map((days) => (
                 <button
                   key={days}
                   className={`${styles.dateRangeButton} ${dateRange === days ? styles.dateRangeActive : ''}`}
                   onClick={() => setDateRange(days)}
                 >
-                  {days}d
+                  {days === 1 ? '24h' : days === 3 ? '72h' : `${days}d`}
                 </button>
               ))}
             </div>
@@ -202,40 +213,24 @@ export function Analytics({ user }: AnalyticsProps) {
           />
         </section>
 
-        {/* Row 1: Option Race + Poll Health Scores */}
+        {/* Analysis Section: Poll Health + Voting Heatmap */}
         <div className={styles.twoColumnGrid}>
-          <OptionRace
-            polls={polls}
-            selectedPollId={selectedPollId}
-            onPollChange={setSelectedPollId}
-          />
           <PollHealthScores polls={polls} />
+          <VotingHeatmap voteTimestamps={voteTimestamps} totalVotesAllPolls={totalVotes} loading={chartsLoading} />
         </div>
 
-        {/* Row 2: Best Time to Post + Active Polls Tracker */}
-        <div className={styles.twoColumnGrid}>
-          <BestTimeToPost pollIds={pollIds} />
+        {/* Active Polls */}
+        <section className={styles.section}>
           <ActivePollsTracker polls={polls} />
-        </div>
+        </section>
 
-        {/* Row 3: Live Activity Feed + Voting Heatmap */}
-        <div className={styles.twoColumnGrid}>
-          <LiveActivityFeed pollIds={pollIds} pollTitles={pollTitles} />
-          <VotingHeatmap voteTimestamps={voteTimestamps} loading={chartsLoading} />
-        </div>
-
-        {/* Row 4: Vote Authenticity + Votes by Poll */}
+        {/* Vote Authenticity + Option Breakdown */}
         <div className={styles.twoColumnGrid}>
           <RealVsSimulatedChart
             realVotes={realVotes}
             simulatedVotes={simulatedVotes}
             loading={chartsLoading}
           />
-          <VotesPerPollChart data={votesPerPoll} loading={chartsLoading} />
-        </div>
-
-        {/* Row 5: Option Breakdown - Full Width */}
-        <section className={styles.section}>
           <OptionBreakdownChart
             data={optionData}
             pollTitle={selectedPollTitle}
@@ -244,6 +239,11 @@ export function Analytics({ user }: AnalyticsProps) {
             selectedPollId={selectedPollId}
             onPollChange={setSelectedPollId}
           />
+        </div>
+
+        {/* Total Votes by Poll - Full Width */}
+        <section className={styles.section}>
+          <VotesPerPollChart data={votesPerPoll} loading={chartsLoading} />
         </section>
       </div>
     </div>
