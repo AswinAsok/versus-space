@@ -12,7 +12,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { useProUserCount } from '../../hooks/usePollQueries';
-import { getProCheckoutUrl } from '../../utils/payment';
+import { getProCheckoutUrl, isDodoPaymentsConfigured } from '../../utils/payment';
 import styles from './Settings.module.css';
 
 // Chai meter constants
@@ -39,12 +39,17 @@ export function Settings({ user }: SettingsProps) {
   const userEmail = user.email || '';
 
   const handleUpgradeClick = () => {
-    const checkoutUrl = getProCheckoutUrl({
-      email: userEmail,
-      userId: user.id,
-      customerName: displayName,
-    });
-    window.location.href = checkoutUrl;
+    try {
+      const checkoutUrl = getProCheckoutUrl({
+        email: userEmail,
+        userId: user.id,
+        customerName: displayName,
+      });
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Payment system is temporarily unavailable. Please try again later.');
+    }
   };
 
   return (

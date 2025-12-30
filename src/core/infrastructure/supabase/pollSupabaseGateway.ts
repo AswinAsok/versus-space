@@ -382,7 +382,8 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
       const { count, error } = await client
         .from('user_profiles')
         .select('*', { count: 'exact', head: true })
-        .eq('plan', 'pro');
+        .eq('plan', 'pro')
+        .neq('role', 'superadmin');
 
       if (error) throw error;
       return count ?? 0;

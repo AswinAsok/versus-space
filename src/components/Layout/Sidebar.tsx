@@ -6,7 +6,6 @@ import {
   Add01Icon,
   ChartLineData01Icon,
   Settings01Icon,
-  HelpCircleIcon,
   Logout01Icon,
   Cancel01Icon,
   SidebarLeft01Icon,
@@ -39,7 +38,6 @@ const mainNavItems = [
 
 const bottomNavItems = [
   { icon: Settings01Icon, label: 'Settings', path: '/dashboard/settings' },
-  { icon: HelpCircleIcon, label: 'Help', path: 'https://github.com/AswinAsok/versus-space', external: true },
 ];
 
 export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProps) {
@@ -62,12 +60,17 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
   };
 
   const handleUpgradeClick = () => {
-    const checkoutUrl = getProCheckoutUrl({
-      email: userEmail,
-      userId: user.id,
-      customerName: displayName,
-    });
-    window.location.href = checkoutUrl;
+    try {
+      const checkoutUrl = getProCheckoutUrl({
+        email: userEmail,
+        userId: user.id,
+        customerName: displayName,
+      });
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Payment system is temporarily unavailable. Please try again later.');
+    }
   };
 
   const isActive = (path: string) => {
@@ -134,7 +137,7 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
               {bottomNavItems.map((item) => (
                 <li key={item.path}>
                   <button
-                    onClick={() => handleNavClick(item.path, item.external)}
+                    onClick={() => handleNavClick(item.path)}
                     className={`${styles.navItem} ${isActive(item.path) ? styles.navItemActive : ''} ${isCollapsed ? styles.navItemCollapsed : ''}`}
                     title={isCollapsed ? item.label : undefined}
                   >
@@ -145,6 +148,18 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
                   </button>
                 </li>
               ))}
+              <li>
+                <button
+                  onClick={onSignOut}
+                  className={`${styles.navItem} ${styles.logoutItem} ${isCollapsed ? styles.navItemCollapsed : ''}`}
+                  title={isCollapsed ? 'Logout' : undefined}
+                >
+                  <span className={styles.navIcon}>
+                    <HugeiconsIcon icon={Logout01Icon} size={isCollapsed ? 20 : 18} />
+                  </span>
+                  <span className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}>Logout</span>
+                </button>
+              </li>
             </ul>
           </nav>
 
@@ -195,11 +210,6 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
                 <span className={styles.userEmail}>{userEmail}</span>
               </div>
             </div>
-            {!isCollapsed && (
-              <button onClick={onSignOut} className={styles.signOutButton} title="Sign out">
-                <HugeiconsIcon icon={Logout01Icon} size={16} />
-              </button>
-            )}
           </div>
         </div>
       </aside>

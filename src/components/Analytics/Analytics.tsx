@@ -290,6 +290,7 @@ export function Analytics({ user }: AnalyticsProps) {
                 pollIds={dummyPollIds}
                 showProBadge={!isPro}
                 proDescription={!isPro ? 'Track voting momentum in real-time' : undefined}
+                useDummyData={useDummyData}
               />
             </div>
           </div>

@@ -28,11 +28,11 @@ interface SEOProps {
 // Default SEO values optimized for B2B corporate keywords
 const defaults = {
   siteName: 'Versus Space',
-  title: 'Real-Time Polling Software for Teams | Free Online Voting Platform',
+  title: 'Real-Time Polling Software with Analytics | Free Online Voting Platform',
   description:
-    'Create instant polls for team decisions, corporate events, and live presentations. Free real-time voting software trusted by businesses worldwide. No signup required to vote.',
+    'Create instant polls with real-time analytics, poll timers, and live viewer tracking. Free voting software for team decisions and corporate events. Pro analytics for $1 lifetime. No signup required to vote.',
   keywords:
-    'real-time polling software, online voting platform, team decision making tool, corporate polling software, live audience polling, enterprise survey tool, anonymous voting software, presentation polling, business voting app',
+    'real-time polling software, online voting platform, team decision making tool, corporate polling software, poll analytics dashboard, anonymous voting software, poll timer, live viewer tracking, vote authenticity, business voting app',
   baseUrl: 'https://versus.space',
   ogImage: 'https://versus.space/meta/meta-preview-1.png',
   twitterHandle: '@versusspace',
@@ -140,9 +140,9 @@ export function SEO({
 export function HomeSEO() {
   return (
     <SEO
-      title="Real-Time Polling Software for Teams"
-      description="Create instant polls for team decisions, corporate events, and live presentations. Free real-time voting software trusted by businesses worldwide. No signup required to vote."
-      keywords="real-time polling software, online voting platform, team decision making tool, corporate polling software, live audience polling, enterprise survey tool, anonymous voting software, business voting app"
+      title="Real-Time Polling Software with Analytics"
+      description="Create instant polls with real-time analytics, poll timers, and live viewer tracking. Free voting software for team decisions and corporate events. Pro analytics for $1 lifetime. No signup required to vote."
+      keywords="real-time polling software, online voting platform, team decision making tool, corporate polling software, poll analytics dashboard, anonymous voting software, poll timer, live viewer tracking, vote authenticity, business voting app"
       canonicalUrl="https://versus.space/"
     />
   );
@@ -153,8 +153,8 @@ export function CreatePollSEO() {
   return (
     <SEO
       title="Create a Free Online Poll"
-      description="Create a free real-time poll in under 30 seconds. Set up voting options, share with your team, and watch results stream in live. No signup required for participants."
-      keywords="create online poll, make free poll, create voting poll, quick poll maker, real-time poll creator, team voting tool"
+      description="Create a free real-time poll in under 30 seconds. Set poll timers, track live viewers, and watch results stream in live. Pro analytics available for $1 lifetime. No signup required for participants."
+      keywords="create online poll, make free poll, create voting poll, quick poll maker, real-time poll creator, poll timer, team voting tool"
       canonicalUrl="https://versus.space/create"
     />
   );

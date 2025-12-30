@@ -1,7 +1,7 @@
 {
-  "name": "Versus Space - Real-Time Polling Software",
+  "name": "Versus Space - Real-Time Polling with Analytics",
   "short_name": "Versus Space",
-  "description": "Create instant polls for team decisions, corporate events, and live presentations. Free real-time voting software for business teams.",
+  "description": "Create instant polls with real-time analytics, poll timers, and live viewer tracking. Pro analytics for $1 lifetime. Free voting software for business teams.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",

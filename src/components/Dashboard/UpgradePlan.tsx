@@ -19,12 +19,17 @@ export function UpgradePlan({ user, currentPollCount }: UpgradePlanProps) {
   const userEmail = user.email || '';
 
   const handleUpgradeClick = () => {
-    const checkoutUrl = getProCheckoutUrl({
-      email: userEmail,
-      userId: user.id,
-      customerName: displayName,
-    });
-    window.location.href = checkoutUrl;
+    try {
+      const checkoutUrl = getProCheckoutUrl({
+        email: userEmail,
+        userId: user.id,
+        customerName: displayName,
+      });
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Payment system is temporarily unavailable. Please try again later.');
+    }
   };
 
   return (

@@ -10,9 +10,10 @@ interface VoteMomentumGaugeProps {
   pollIds: string[];
   showProBadge?: boolean;
   proDescription?: string;
+  useDummyData?: boolean;
 }
 
-export function VoteMomentumGauge({ pollIds, showProBadge, proDescription }: VoteMomentumGaugeProps) {
+export function VoteMomentumGauge({ pollIds, showProBadge, proDescription, useDummyData = false }: VoteMomentumGaugeProps) {
   const [currentHourVotes, setCurrentHourVotes] = useState(0);
   const [averageHourlyVotes, setAverageHourlyVotes] = useState(0);
   const [lastHourVotes, setLastHourVotes] = useState(0);
@@ -20,10 +21,30 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription }: Vot
   const animatedValue = useRef(0);
   const [displayValue, setDisplayValue] = useState(0);
 
-  // Calculate momentum metrics
+  // Simulate dummy data for demo mode
   useEffect(() => {
-    if (pollIds.length === 0) {
-      setLoading(false);
+    if (!useDummyData) return;
+
+    // Set initial dummy values
+    setCurrentHourVotes(12);
+    setAverageHourlyVotes(8);
+    setLastHourVotes(9);
+    setLoading(false);
+
+    // Simulate real-time updates
+    const interval = setInterval(() => {
+      if (Math.random() < 0.3) {
+        setCurrentHourVotes((prev) => prev + 1);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [useDummyData]);
+
+  // Calculate momentum metrics (only for real data)
+  useEffect(() => {
+    if (useDummyData || pollIds.length === 0) {
+      if (!useDummyData) setLoading(false);
       return;
     }
 
@@ -74,11 +95,11 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription }: Vot
     // Refresh every minute
     const interval = setInterval(fetchMomentum, 60000);
     return () => clearInterval(interval);
-  }, [pollIds]);
+  }, [pollIds, useDummyData]);
 
-  // Subscribe to real-time votes
+  // Subscribe to real-time votes (only for real data)
   useEffect(() => {
-    if (pollIds.length === 0) return;
+    if (useDummyData || pollIds.length === 0) return;
 
     const channel = supabase
       .channel('momentum-votes')
@@ -96,7 +117,7 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription }: Vot
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [pollIds]);
+  }, [pollIds, useDummyData]);
 
   // Animate the display value
   useEffect(() => {
