@@ -243,6 +243,20 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       {/* SEO meta tags for create poll page */}
       {!isEditMode && <CreatePollSEO />}
       <div className={styles.createPollInner}>
+        {/* Upgrade Banner - shown at top when at free limit */}
+        {isAtFreeLimit && (
+          <div className={styles.upgradeBanner}>
+            <div className={styles.upgradeBannerContent}>
+              <span className={styles.upgradeBannerText}>
+                Congratulations! You are eligible for an upgrade
+              </span>
+              <a href="/dashboard/settings" className={styles.upgradeBannerButton}>
+                Upgrade to Pro
+              </a>
+            </div>
+          </div>
+        )}
+
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>{isEditMode ? 'Edit poll' : 'Create a new poll'}</h1>
           <p className={styles.pageSubtitle}>
@@ -250,11 +264,6 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
               ? 'Update your poll settings and options'
               : 'Set up your question and options to start collecting votes'}
           </p>
-          {isAtFreeLimit && (
-            <div className={sharedStyles.errorMessage}>
-              Free plan limit reached. Upgrade to Pro to create more polls.
-            </div>
-          )}
         </div>
 
         <form onSubmit={handleSubmit} className={styles.createPollForm}>

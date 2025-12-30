@@ -3,7 +3,7 @@ import { usePollBySlug, useValidateAccessKey } from '../../hooks/usePollQueries'
 import { supabase } from '../../lib/supabaseClient';
 import { VotingInterface } from './VotingInterface';
 import { PollSEO } from '../SEO/SEO';
-import { Lock, Key, Code2, Eye, EyeOff, XCircle } from 'lucide-react';
+import { Lock, Key, Code2, Eye, EyeOff } from 'lucide-react';
 import styles from './PollView.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -125,48 +125,47 @@ export function PollView({ slug }: PollViewProps) {
   if (!poll.is_active && !isExpired) {
     return (
       <div className={styles.pollViewContainer}>
-        <div className={styles.pollViewInner}>
-          <div className={styles.accessKeyCard}>
-            <div className={styles.accessKeyContainer}>
-              <div className={styles.lockIconWrapper}>
-                <div className={styles.lockIconOuter}>
-                  <div className={styles.lockIconInner}>
-                    <XCircle size={40} />
-                  </div>
-                </div>
-              </div>
-              <h2 className={styles.accessKeyTitle}>Poll Closed</h2>
-              <p className={styles.accessKeyDescription}>
-                This poll is no longer active. The creator has closed voting.
-              </p>
-            </div>
+        <div className={styles.closedPollView}>
+          <div className={styles.closedPollContent}>
+            <span className={styles.closedBadge}>Poll Closed</span>
+            <h1 className={styles.closedTitle}>{poll.title}</h1>
+            <p className={styles.closedDescription}>
+              This poll is no longer accepting votes.
+            </p>
+            <div className={styles.closedDivider} />
+            <p className={styles.closedCta}>
+              Or create your own poll
+            </p>
+            <a href="/dashboard/create" className={styles.createPollButton}>
+              Create Poll
+            </a>
           </div>
+        </div>
 
-          <div className={`${styles.footerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
-            <footer className={styles.footer}>
-              <span>&copy; 2025 versus.space</span>
-              <div className={styles.footerRight}>
-                <a
-                  href="https://neal.fun"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.footerLink}
-                >
-                  inspired from neal<span className={styles.footerDot}>.</span>fun
-                </a>
-                <span className={styles.footerDivider}>·</span>
-                <a
-                  href="https://github.com/AswinAsok"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.footerLink}
-                >
-                  <Code2 size={14} />
-                  built by aswinasok<span className={styles.footerDot}>.</span>
-                </a>
-              </div>
-            </footer>
-          </div>
+        <div className={`${styles.footerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
+          <footer className={styles.footer}>
+            <span>&copy; 2025 versus.space</span>
+            <div className={styles.footerRight}>
+              <a
+                href="https://neal.fun"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                inspired from neal<span className={styles.footerDot}>.</span>fun
+              </a>
+              <span className={styles.footerDivider}>·</span>
+              <a
+                href="https://github.com/AswinAsok"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                <Code2 size={14} />
+                built by aswinasok<span className={styles.footerDot}>.</span>
+              </a>
+            </div>
+          </footer>
         </div>
       </div>
     );

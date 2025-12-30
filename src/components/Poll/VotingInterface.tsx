@@ -18,9 +18,9 @@ interface VotingInterfaceProps {
   slug: string;
   title: string;
   options: PollOption[];
-   isExpired: boolean;
-   maxVotesPerIp?: number | null;
-   endsAt?: string | null;
+  isExpired: boolean;
+  maxVotesPerIp?: number | null;
+  endsAt?: string | null;
 }
 
 interface FloatingNumber {
@@ -397,7 +397,12 @@ export function VotingInterface({
 
     try {
       // Cast the vote (single vote, no loop needed)
-      console.log('[VotingInterface] Casting vote for option:', optionId, 'at:', new Date().toISOString());
+      console.log(
+        '[VotingInterface] Casting vote for option:',
+        optionId,
+        'at:',
+        new Date().toISOString()
+      );
       await voteFacade.castVote(pollId, optionId, null, ipToUse || 'unknown');
       console.log('[VotingInterface] Vote cast completed');
 
@@ -426,7 +431,9 @@ export function VotingInterface({
       }
     } finally {
       // Reset voting flag after a short delay to allow rapid but controlled voting
-      setTimeout(() => { isVotingRef.current = false; }, 150);
+      setTimeout(() => {
+        isVotingRef.current = false;
+      }, 150);
     }
   };
 
@@ -452,18 +459,29 @@ export function VotingInterface({
         <title>{title} | Versus</title>
       </Helmet>
 
-      {/* Status pill in bottom left corner */}
-      {(isExpired || maxVotesPerIp || voteError) && (
+      {/* Poll Closed Banner */}
+      {isExpired && (
+        <div className={styles.closedBanner}>
+          <div className={styles.closedContent}>
+            <span className={styles.closedBadge}>Poll Ended</span>
+            <p className={styles.closedText}>
+              Why view a closed poll when you can create your own?
+            </p>
+            <a href="/dashboard/create" className={styles.closedCta}>
+              Create a Poll
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Status pill for vote limit and errors */}
+      {!isExpired && (maxVotesPerIp || voteError) && (
         <div className={styles.statusPill}>
-          {voteError && (
-            <span className={styles.statusError}>{voteError}</span>
-          )}
-          {isExpired && (
-            <span className={styles.statusInfo}>Poll ended</span>
-          )}
-          {!isExpired && maxVotesPerIp && (
+          {voteError && <span className={styles.statusError}>{voteError}</span>}
+          {maxVotesPerIp && (
             <span className={styles.statusInfo}>
-              {Array.from(userVotes.values()).reduce((sum, val) => sum + val, 0)}/{maxVotesPerIp} votes
+              {Array.from(userVotes.values()).reduce((sum, val) => sum + val, 0)}/{maxVotesPerIp}{' '}
+              votes
             </span>
           )}
         </div>

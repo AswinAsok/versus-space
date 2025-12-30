@@ -118,6 +118,23 @@ export function MyPolls({ user }: MyPollsProps) {
 
   return (
     <div className={styles.myPollsContainer}>
+      {/* Upgrade Banner - shown at top when at free limit */}
+      {isAtFreeLimit && (
+        <div className={styles.upgradeBanner}>
+          <div className={styles.upgradeBannerContent}>
+            <span className={styles.upgradeBannerText}>
+              Congratulations! You are eligible for an upgrade
+            </span>
+            <button
+              onClick={() => navigate('/dashboard/settings')}
+              className={styles.upgradeBannerButton}
+            >
+              Upgrade to Pro
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Page Header */}
       <div className={styles.pageHeader}>
         <div className={styles.headerContent}>
@@ -135,12 +152,6 @@ export function MyPolls({ user }: MyPollsProps) {
           {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Poll'}
         </button>
       </div>
-
-      {isAtFreeLimit && (
-        <div className={sharedStyles.errorMessage}>
-          Free plan limit reached. Upgrade to Pro to create more than {FREE_PLAN_POLL_LIMIT} polls.
-        </div>
-      )}
 
       {error && (
         <div className={sharedStyles.errorMessage}>
@@ -255,7 +266,7 @@ export function MyPolls({ user }: MyPollsProps) {
                 {poll.is_active ? (
                   <>
                     <button
-                      onClick={() => navigate(`/poll/${poll.slug}`)}
+                      onClick={() => window.open(`/poll/${poll.slug}`, '_blank')}
                       className={styles.viewButton}
                     >
                       <HugeiconsIcon icon={SquareArrowUpRightIcon} size={16} />
@@ -280,7 +291,7 @@ export function MyPolls({ user }: MyPollsProps) {
                       Activate Poll
                     </button>
                     <button
-                      onClick={() => navigate(`/poll/${poll.slug}`)}
+                      onClick={() => window.open(`/poll/${poll.slug}`, '_blank')}
                       className={styles.viewButtonSecondary}
                       title="View Poll"
                     >
@@ -384,7 +395,6 @@ export function MyPolls({ user }: MyPollsProps) {
               <p className={styles.modalDescription}>
                 This poll will become live and users will be able to vote on it.
               </p>
-              <div className={styles.modalPollName}>{modalState.pollTitle}</div>
             </div>
             <div className={styles.modalActions}>
               <button className={styles.modalButtonSecondary} onClick={closeModal}>

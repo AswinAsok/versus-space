@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
 import { pollFacade } from '../../core/appServices';
+import { useUserProfile } from '../../hooks/useUserProfile';
 import { DashboardSEO } from '../SEO/SEO';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -20,6 +21,7 @@ import {
   ArrowRight01Icon,
   CodeIcon,
 } from '@hugeicons/core-free-icons';
+import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import type { Poll } from '../../types';
 import styles from './Dashboard.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -34,6 +36,11 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const { data: profile } = useUserProfile(user);
+  const isSuperAdmin = profile?.role === 'superadmin';
+  const isPro = isSuperAdmin || profile?.plan === 'pro';
+  const isAtFreeLimit = !isPro && polls.length >= FREE_PLAN_POLL_LIMIT;
 
   const loadPolls = useCallback(async () => {
     try {
@@ -106,6 +113,23 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
       {/* SEO - noindex for authenticated dashboard */}
       <DashboardSEO />
       <div className={styles.dashboardInner}>
+        {/* Upgrade Banner - shown at top when at free limit */}
+        {isAtFreeLimit && (
+          <div className={styles.upgradeBanner}>
+            <div className={styles.upgradeBannerContent}>
+              <span className={styles.upgradeBannerText}>
+                Congratulations! You are eligible for an upgrade
+              </span>
+              <button
+                onClick={() => onNavigate('/settings')}
+                className={styles.upgradeBannerButton}
+              >
+                Upgrade to Pro
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Welcome Header */}
         <div className={styles.welcomeHeader}>
           <h1 className={styles.welcomeTitle}>

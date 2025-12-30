@@ -1606,6 +1606,154 @@
 }
 }
 
+/* Poll Closed Banner */
+.closedBanner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  animation: closedBannerSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes closedBannerSlideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.closedContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 32px;
+  background: rgba(17, 24, 28, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.closedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.closedText {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  max-width: 280px;
+  line-height: 1.4;
+}
+
+.closedCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closedCta:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(62, 207, 142, 0.3);
+}
+
+.closedCta:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .closedBanner {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    transform: none;
+  }
+
+  @keyframes closedBannerSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .closedContent {
+    padding: 16px 20px;
+    border-radius: 12px;
+  }
+
+  .closedText {
+    font-size: 0.85rem;
+  }
+
+  .closedCta {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .closedBanner {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .closedContent {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .closedBadge {
+    font-size: 0.6rem;
+    padding: 3px 10px;
+  }
+
+  .closedText {
+    font-size: 0.8rem;
+  }
+
+  .closedCta {
+    font-size: 0.8rem;
+    padding: 10px 16px;
+  }
+}
+
 /* Status pill - bottom left corner */
 .statusPill {
   position: fixed;

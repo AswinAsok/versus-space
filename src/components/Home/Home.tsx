@@ -564,7 +564,7 @@ export function Home({ onNavigate }: HomeProps) {
               {/* Support Tier */}
               <div className={`${styles.pricingCard} ${styles.pricingCardEnterprise}`}>
                 <div className={styles.pricingCardInner}>
-                  <h3 className={styles.pricingTierName}>Just Chai</h3>
+                  <h3 className={styles.pricingTierName}>Just Premium Chai</h3>
                   <p className={styles.pricingTagline}>
                     No use case? Just vibing with the project?
                   </p>

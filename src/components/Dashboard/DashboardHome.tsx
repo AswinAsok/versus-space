@@ -21,7 +21,6 @@ import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import { UpgradePlan } from './UpgradePlan';
 import type { Poll } from '../../types';
 import styles from './DashboardHome.module.css';
-import sharedStyles from '../../styles/Shared.module.css';
 
 interface DashboardHomeProps {
   user: User;
@@ -115,6 +114,23 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </div>
       )}
 
+      {/* Upgrade Banner - shown at top when at free limit */}
+      {isAtFreeLimit && (
+        <div className={styles.upgradeBanner}>
+          <div className={styles.upgradeBannerContent}>
+            <span className={styles.upgradeBannerText}>
+              Congratulations! You are eligible for an upgrade
+            </span>
+            <button
+              onClick={() => navigate('/dashboard/settings')}
+              className={styles.upgradeBannerButton}
+            >
+              Upgrade to Pro
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Welcome Header */}
       <div className={styles.welcomeHeader}>
         <h1 className={styles.welcomeTitle}>
@@ -176,11 +192,6 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Poll'}
           </button>
         </div>
-        {isAtFreeLimit && (
-          <div className={sharedStyles.errorMessage}>
-            Free plan limit reached. Upgrade to Pro to create more than {FREE_PLAN_POLL_LIMIT} polls.
-          </div>
-        )}
       </section>
 
       {/* Quick Actions Section */}
@@ -279,6 +290,9 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       {/* Upgrade Plan Section - Only show for free users */}
       {!isPro && (
         <section className={styles.upgradeSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Upgrade Your Plan</h2>
+          </div>
           <UpgradePlan user={user} currentPollCount={pollCount} />
         </section>
       )}
