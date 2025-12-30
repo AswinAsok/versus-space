@@ -31,7 +31,58 @@ interface DodoWebhookPayload {
     metadata?: Record<string, string>;
     status?: string;
     product_id?: string;
+    // Some providers forward metadata_* at this level
+    [key: string]: unknown;
   };
+  // Some providers forward metadata_* at the root level
+  [key: string]: unknown;
+}
+
+function extractMetadata(payload: DodoWebhookPayload): Record<string, string> {
+  const meta =
+    payload.metadata ||
+    payload.data?.metadata ||
+    {};
+
+  // DodoPayments sometimes forwards metadata_* at the root/data level.
+  // Normalize those into the metadata object.
+  const merged: Record<string, string> = { ...meta };
+
+  const copyPrefixedFields = (source?: Record<string, unknown>) => {
+    if (!source) return;
+    for (const [key, value] of Object.entries(source)) {
+      if (!key.startsWith('metadata_')) continue;
+      const unprefixed = key.replace(/^metadata_/, '');
+      merged[unprefixed] = typeof value === 'string' ? value : String(value);
+    }
+  };
+
+  copyPrefixedFields(payload as Record<string, unknown>);
+  copyPrefixedFields(payload.data as Record<string, unknown>);
+
+  return merged;
+}
+
+function extractUserId(metadata: Record<string, string>, customerEmail?: string | null) {
+  // Try common keys first
+  const userId =
+    metadata.userId ||
+    metadata.user_id ||
+    metadata.userid ||
+    metadata.user ||
+    null;
+
+  if (userId) return userId;
+
+  // Fallback: try parsing any metadata value that looks like a UUID
+  for (const value of Object.values(metadata)) {
+    if (typeof value === 'string' && /^[0-9a-fA-F-]{32,}$/.test(value)) {
+      return value;
+    }
+  }
+
+  // Fallback: caller will try email lookup
+  return customerEmail || null;
 }
 
 serve(async (req) => {
@@ -55,7 +106,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Extract data from either root level or nested data object (DodoPayments format varies)
-    const metadata = payload.metadata || payload.data?.metadata || {};
+    const metadata = extractMetadata(payload);
     const customer = payload.customer || payload.data?.customer;
 
     console.log('Extracted metadata:', JSON.stringify(metadata));
@@ -65,8 +116,8 @@ serve(async (req) => {
     // Note: This is a one-time lifetime payment model
     switch (payload.type) {
       case 'payment.succeeded': {
-        // Extract user ID from metadata (DodoPayments uses userId key from metadata_userId param)
-        let userId = metadata.userId || metadata.user_id;
+        // Extract user ID from metadata (DodoPayments uses metadata_userId param)
+        let userId = extractUserId(metadata, customer?.email ?? null);
 
         console.log('userId from metadata:', userId);
 

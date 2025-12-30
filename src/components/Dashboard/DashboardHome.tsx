@@ -31,6 +31,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   const [polls, setPolls] = useState<Poll[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(false);
+  const [isCheckingUpgrade, setIsCheckingUpgrade] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: profile, isLoading: profileLoading, refetch: refetchProfile } = useUserProfile(user);
@@ -38,17 +39,20 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   // Handle upgrade success/cancel from DodoPayments redirect
   useEffect(() => {
     const upgradeStatus = searchParams.get('upgrade');
+
+    if (!upgradeStatus) return;
+
+    const updatedParams = new URLSearchParams(searchParams);
+    updatedParams.delete('upgrade');
+    setSearchParams(updatedParams, { replace: true });
+
     if (upgradeStatus === 'success') {
       setShowUpgradeSuccess(true);
+      setIsCheckingUpgrade(true);
       refetchProfile();
-      // Clear the query param
-      searchParams.delete('upgrade');
-      setSearchParams(searchParams, { replace: true });
-      // Auto-hide success message after 5 seconds
-      setTimeout(() => setShowUpgradeSuccess(false), 5000);
     } else if (upgradeStatus === 'cancelled') {
-      searchParams.delete('upgrade');
-      setSearchParams(searchParams, { replace: true });
+      setShowUpgradeSuccess(false);
+      setIsCheckingUpgrade(false);
     }
   }, [searchParams, setSearchParams, refetchProfile]);
 
@@ -73,6 +77,48 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   const isSuperAdmin = profile?.role === 'superadmin';
   const isPro = isSuperAdmin || profile?.plan === 'pro';
   const isAtFreeLimit = !isPro && pollCount >= FREE_PLAN_POLL_LIMIT;
+
+  // After a successful payment redirect, poll for the plan update for a short window
+  useEffect(() => {
+    if (!isCheckingUpgrade) return;
+
+    if (isPro) {
+      setIsCheckingUpgrade(false);
+      return;
+    }
+
+    let attempts = 0;
+    const maxAttempts = 10; // ~30s total at 3s intervals
+
+    const intervalId = setInterval(async () => {
+      attempts += 1;
+      const { data, error } = await refetchProfile();
+
+      if (error) {
+        console.error('Failed to refresh profile after upgrade:', error);
+      }
+
+      if (data?.plan === 'pro') {
+        setShowUpgradeSuccess(true);
+        setIsCheckingUpgrade(false);
+        return;
+      }
+
+      if (attempts >= maxAttempts) {
+        setIsCheckingUpgrade(false);
+      }
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [isCheckingUpgrade, isPro, refetchProfile]);
+
+  // Auto-hide the banner after a short time, but only once it's been shown
+  useEffect(() => {
+    if (!showUpgradeSuccess) return;
+
+    const timeout = setTimeout(() => setShowUpgradeSuccess(false), isPro ? 4000 : 8000);
+    return () => clearTimeout(timeout);
+  }, [showUpgradeSuccess, isPro]);
 
   // Get display name from user metadata or email
   const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'there';
@@ -103,7 +149,11 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       {showUpgradeSuccess && (
         <div className={styles.successBanner}>
           <HugeiconsIcon icon={CheckmarkCircle02Icon} size={20} />
-          <span>Welcome to Pro! Your upgrade is being processed.</span>
+          <span>
+            {isPro
+              ? 'You are now on Pro. Enjoy unlimited polls.'
+              : 'Welcome to Pro! Your upgrade is being processed.'}
+          </span>
           <button onClick={() => setShowUpgradeSuccess(false)} className={styles.dismissButton}>
             Dismiss
           </button>
