@@ -27,6 +27,7 @@
   width: 100%;
   margin: 0 auto;
   padding: 1.5rem;
+  padding-top: 3.5rem; /* Offset for ProductHunt banner */
 }
 
 /* Loading State */

@@ -2,7 +2,7 @@
 .sidebar {
   position: fixed;
   left: 0;
-  top: 0;
+  top: 56px; /* Offset for ProductHunt banner */
   bottom: 0;
   width: 220px;
   background: rgba(17, 24, 28, 0.95);
@@ -45,7 +45,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.875rem 1rem;
+  padding: 1.25rem 1rem 0.875rem;
   border-bottom: 1px solid var(--color-border);
   min-height: 52px;
 }
@@ -432,8 +432,8 @@
 }
 
 .userAvatar {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
@@ -442,7 +442,7 @@
   justify-content: center;
   color: rgba(255, 255, 255, 0.8);
   font-weight: 600;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   flex-shrink: 0;
 }
 
