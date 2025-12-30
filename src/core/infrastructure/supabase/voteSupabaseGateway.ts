@@ -210,23 +210,27 @@ export function createSupabaseVoteGateway(client: SupabaseClient<Database>): Vot
     async getVoteAuthenticityStats(pollIds) {
       if (pollIds.length === 0) return { realVotes: 0, simulatedVotes: 0 };
 
-      // Use poll_options.vote_count as source of truth (all votes are real)
+      // Get vote_count and simulated_votes_added from poll_options
       const { data, error } = await client
         .from('poll_options')
-        .select('vote_count')
+        .select('vote_count, simulated_votes_added')
         .in('poll_id', pollIds);
 
       if (error) throw error;
 
-      const totalVotes = (data || []).reduce(
-        (sum, option) => sum + (option.vote_count || 0),
-        0
-      );
+      let totalVotes = 0;
+      let simulatedVotes = 0;
 
-      // All votes are real (simulated votes have been converted)
+      (data || []).forEach((option) => {
+        totalVotes += option.vote_count || 0;
+        simulatedVotes += option.simulated_votes_added || 0;
+      });
+
+      const realVotes = totalVotes - simulatedVotes;
+
       return {
-        realVotes: totalVotes,
-        simulatedVotes: 0,
+        realVotes: Math.max(0, realVotes),
+        simulatedVotes,
       } satisfies VoteAuthenticityStats;
     },
   };

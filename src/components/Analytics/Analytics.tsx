@@ -146,7 +146,12 @@ export function Analytics({ user }: AnalyticsProps) {
 
   const selectedPollTitle = polls.find((p) => p.id === selectedPollId)?.title || '';
   const totalVotes = votesPerPoll.reduce((sum, p) => sum + p.totalVotes, 0);
-  const activePolls = polls.filter((p) => p.is_active).length;
+  // Count active polls - considering both is_active flag and ends_at expiration
+  const activePolls = polls.filter((p) => {
+    if (!p.is_active) return false;
+    if (p.ends_at) return new Date(p.ends_at) > new Date();
+    return true;
+  }).length;
   const pollIds = polls.map((p) => p.id);
 
   // Check if we should show dummy data

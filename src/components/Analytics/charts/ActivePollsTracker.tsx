@@ -70,13 +70,22 @@ export function ActivePollsTracker({ polls, showProBadge, proDescription }: Acti
     };
   }, [polls]);
 
+  // Helper to check if poll is truly active (not expired by timer)
+  const isPollActive = (poll: Poll): boolean => {
+    if (!poll.is_active) return false;
+    if (poll.ends_at) {
+      return new Date(poll.ends_at) > new Date();
+    }
+    return true;
+  };
+
   // Build sorted list of polls with presence data
   const pollsWithPresence: PollPresence[] = polls
     .map((poll) => ({
       pollId: poll.id,
       pollTitle: poll.title,
       viewerCount: pollPresence.get(poll.id) || 0,
-      isActive: poll.is_active,
+      isActive: isPollActive(poll),
     }))
     .sort((a, b) => b.viewerCount - a.viewerCount);
 
