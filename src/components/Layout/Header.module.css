@@ -1,7 +1,7 @@
 /* Header wrapper for background effect */
 .headerWrapper {
   position: fixed;
-  top: 0;
+  top: 56px; /* Offset for ProductHunt banner */
   left: 0;
   right: 0;
   display: flex;
@@ -278,7 +278,14 @@
   border-radius: 999px;
   transition: all var(--transition-fast) var(--ease-out);
   align-self: center;
-  height: fit-content;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .createButton:hover {
@@ -478,8 +485,8 @@
   }
 
   .createButton {
-    padding: 0.2rem 0.75rem;
-    font-size: 0.625rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.6875rem;
   }
 
   .userSection {
@@ -524,5 +531,18 @@
 
   .appHeader {
     max-width: calc(100% - 1rem);
+  }
+}
+
+/* Adjust for smaller banner on mobile */
+@media (max-width: 768px) {
+  .headerWrapper {
+    top: 50px; /* Smaller banner on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .headerWrapper {
+    top: 44px; /* Even smaller banner on small mobile */
   }
 }

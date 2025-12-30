@@ -67,7 +67,7 @@
 
 /* Hero Section */
 .hero {
-  padding: 10rem 2rem 5rem;
+  padding: 12rem 2rem 5rem; /* Extra padding for PH banner + header */
   animation: fadeIn var(--transition-slow);
   position: relative;
 }
@@ -233,18 +233,41 @@
   animation: fadeInDown 0.5s var(--ease-out);
 }
 
+/* Hero Badges Container */
+.heroBadges {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  animation: fadeInDown 0.5s var(--ease-out);
+}
+
 /* GitHub Star Badge */
 .githubStarBadge {
   display: inline-flex;
   align-items: center;
   gap: 0;
-  margin-bottom: 1.5rem;
   text-decoration: none;
   border-radius: var(--radius-full);
   overflow: hidden;
-  animation: fadeInDown 0.5s var(--ease-out);
   transition: all var(--transition-fast) var(--ease-out);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Product Hunt Badge */
+.productHuntBadge {
+  display: inline-flex;
+  align-items: center;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.productHuntBadge:hover {
+  transform: translateY(-1px);
+}
+
+.productHuntBadge img {
+  display: block;
 }
 
 .githubStarBadge:hover {
@@ -1762,6 +1785,11 @@
 
   .heroText {
     text-align: center;
+  }
+
+  .heroBadges {
+    justify-content: center;
+    margin-top: 2rem;
   }
 
   .heroTitle {

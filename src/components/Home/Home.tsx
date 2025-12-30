@@ -5,7 +5,6 @@ import {
   ArrowRight01Icon,
   Tap01Icon,
   CodeIcon,
-  StarIcon,
   HelpCircleIcon,
   UserGroupIcon,
   Presentation01Icon,
@@ -41,25 +40,12 @@ const TOTAL_CHAI = DAYS_OF_WORK * CHAI_PER_DAY; // 30 chai total
 export function Home({ onNavigate }: HomeProps) {
   const { data: stats } = usePlatformStats();
   const { data: proUserCount = 0 } = useProUserCount();
-  const [githubStars, setGithubStars] = useState<number | null>(null);
   const [clickBursts, setClickBursts] = useState<
     Array<{ id: number; x: number; y: number; rotation: number; scale: number }>
   >([]);
   const clickBurstTimeouts = useRef<number[]>([]);
   const lastBurstTime = useRef(0);
   const [openFaqQuestion, setOpenFaqQuestion] = useState<string | null>(null);
-
-  // Fetch GitHub stars
-  useEffect(() => {
-    fetch('https://api.github.com/repos/AswinAsok/versus-space')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.stargazers_count !== undefined) {
-          setGithubStars(data.stargazers_count);
-        }
-      })
-      .catch(console.error);
-  }, []);
 
   const spawnClickBurst = useCallback(() => {
     const now = Date.now();
@@ -128,18 +114,21 @@ export function Home({ onNavigate }: HomeProps) {
           <section id="hero" className={styles.hero} aria-labelledby="hero-title">
             <div className={styles.heroContent}>
               <div className={styles.heroText}>
-                <a
-                  href="https://github.com/AswinAsok/versus-space"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.githubStarBadge}
-                >
-                  <span className={styles.githubStarText}>Star On GitHub</span>
-                  <span className={styles.githubStarCount}>
-                    <HugeiconsIcon icon={StarIcon} size={14} />
-                    {githubStars !== null ? githubStars.toLocaleString() : '...'}
-                  </span>
-                </a>
+                <div className={styles.heroBadges}>
+                  <a
+                    href="https://www.producthunt.com/products/versus-space?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-versus-space"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.productHuntBadge}
+                  >
+                    <img
+                      src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1056182&theme=light&t=1767099459600"
+                      alt="Versus Space - Decision gamified with fun | Product Hunt"
+                      width="200"
+                      height="43"
+                    />
+                  </a>
+                </div>
                 <h1 id="hero-title" className={styles.heroTitle}>
                   Create{' '}
                   <span className={styles.gradientTextWrapper}>
