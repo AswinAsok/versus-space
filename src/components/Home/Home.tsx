@@ -175,7 +175,7 @@ export function Home({ onNavigate }: HomeProps) {
                     allowFullScreen
                   />
                   <CircularText
-                    text="✦ MADE FOR FUN ✦ MADE WITH FUN "
+                    text="✦ MADE FOR FUN ✦ MADE FOR FUN "
                     spinDuration={12}
                     onHover="pause"
                     className={styles.circularTextBadge}
@@ -414,13 +414,12 @@ export function Home({ onNavigate }: HomeProps) {
                   <div
                     className={styles.chaiMeterFill}
                     style={{
-                      width: `${Math.min((proUserCount * 4 / TOTAL_CHAI) * 100, 100)}%`,
+                      width: `${Math.min(((proUserCount * 4) / TOTAL_CHAI) * 100, 100)}%`,
                     }}
                   />
                 </div>
                 <p className={styles.chaiMeterNote}>
-                  Every Pro upgrade = 4 chai paid back. Help me break even on my chai
-                  addiction!
+                  Every Pro upgrade = 4 chai paid back. Help me break even on my chai addiction!
                 </p>
               </div>
             </div>
@@ -607,10 +606,9 @@ export function Home({ onNavigate }: HomeProps) {
             <div className={styles.pricingNote}>
               <p className={styles.pricingNoteText}>
                 This is my first <span className={styles.pricingNoteWhite}>SOLO</span> project with
-                a payment model, and my only{' '}
-                <span className={styles.pricingNoteWhite}>AIM</span> is to get my{' '}
-                <span className={styles.pricingNoteHighlight}>FIRST PAYING CUSTOMER</span>. As you
-                can already see, there are{' '}
+                a payment model, and my only <span className={styles.pricingNoteWhite}>AIM</span> is
+                to get my <span className={styles.pricingNoteHighlight}>FIRST PAYING CUSTOMER</span>
+                . As you can already see, there are{' '}
                 <span className={styles.pricingNoteHighlight}>NO PLANS</span> to turn this into the
                 next <span className={styles.pricingNoteHighlight}>MILLION DOLLAR</span> idea.
               </p>
