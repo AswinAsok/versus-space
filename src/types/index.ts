@@ -23,7 +23,7 @@ export interface CreatePollData {
   access_key?: Poll['access_key'];
   ends_at?: Poll['ends_at'];
   max_votes_per_ip?: Poll['max_votes_per_ip'];
-  auto_vote_interval_seconds?: Poll['auto_vote_interval_seconds'];
+  auto_vote_interval_seconds?: Poll['auto_vote_interval_seconds']; // Stored in milliseconds for sub-second intervals
   options: Array<
     Pick<PollOption, 'title' | 'image_url' | 'position' | 'simulated_enabled' | 'simulated_target_votes'>
   >;
@@ -35,7 +35,7 @@ export interface UpdatePollData {
   access_key?: Poll['access_key'];
   ends_at?: Poll['ends_at'];
   max_votes_per_ip?: Poll['max_votes_per_ip'];
-  auto_vote_interval_seconds?: Poll['auto_vote_interval_seconds'];
+  auto_vote_interval_seconds?: Poll['auto_vote_interval_seconds']; // Stored in milliseconds for sub-second intervals
   options?: Array<{
     id?: string;
     title: string;

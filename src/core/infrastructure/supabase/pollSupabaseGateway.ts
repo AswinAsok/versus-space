@@ -5,6 +5,27 @@ import type { PollGateway } from '../../domain/polls';
 import { generateUniqueSlug } from '../../../utils/slug';
 import { FREE_PLAN_POLL_LIMIT } from '../../../config/plans';
 
+const AUTO_VOTE_INTERVAL_MIN_MS = 200;
+const AUTO_VOTE_INTERVAL_MAX_MS = 300000; // 5 minutes
+const AUTO_VOTE_INTERVAL_DEFAULT_MS = 30000; // 30 seconds
+
+function normalizeAutoVoteIntervalMs(value?: number | null) {
+  if (value === null || value === undefined) {
+    return AUTO_VOTE_INTERVAL_DEFAULT_MS;
+  }
+
+  // Legacy data may be stored as seconds. If it's below the min ms value, treat it as seconds and convert.
+  const valueAsMs = value < AUTO_VOTE_INTERVAL_MIN_MS ? value * 1000 : value;
+  if (!Number.isFinite(valueAsMs)) {
+    return AUTO_VOTE_INTERVAL_DEFAULT_MS;
+  }
+
+  return Math.min(
+    AUTO_VOTE_INTERVAL_MAX_MS,
+    Math.max(AUTO_VOTE_INTERVAL_MIN_MS, Math.round(valueAsMs))
+  );
+}
+
 export function createSupabasePollGateway(client: SupabaseClient<Database>): PollGateway {
   return {
     async createPoll(data, userId) {
@@ -18,6 +39,9 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
 
       const isSuperAdmin = profile?.role === 'superadmin';
       const isPro = isSuperAdmin || profile?.plan === 'pro';
+      const autoVoteIntervalMs = isPro
+        ? normalizeAutoVoteIntervalMs(data.auto_vote_interval_seconds)
+        : AUTO_VOTE_INTERVAL_DEFAULT_MS;
 
       if (!isPro) {
         const { count, error: countError } = await client
@@ -41,7 +65,7 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
         access_key: isPro ? data.access_key : null,
         ends_at: data.ends_at, // Free users get enforced 15-min timer from CreatePoll
         max_votes_per_ip: isPro ? data.max_votes_per_ip : null,
-        auto_vote_interval_seconds: isPro ? data.auto_vote_interval_seconds : 30,
+        auto_vote_interval_seconds: autoVoteIntervalMs,
         options: data.options.map((option) => ({
           ...option,
           simulated_enabled: isPro ? option.simulated_enabled : false,
@@ -62,7 +86,7 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
           access_key: safeData.is_public ? null : safeData.access_key || null,
           ends_at: safeData.ends_at ?? null,
           max_votes_per_ip: safeData.max_votes_per_ip ?? null,
-          auto_vote_interval_seconds: safeData.auto_vote_interval_seconds ?? 30,
+          auto_vote_interval_seconds: safeData.auto_vote_interval_seconds ?? AUTO_VOTE_INTERVAL_DEFAULT_MS,
         })
         .select()
         .single();
@@ -172,7 +196,7 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
       if (data.ends_at !== undefined) pollUpdate.ends_at = data.ends_at;
       if (data.max_votes_per_ip !== undefined) pollUpdate.max_votes_per_ip = data.max_votes_per_ip;
       if (data.auto_vote_interval_seconds !== undefined)
-        pollUpdate.auto_vote_interval_seconds = data.auto_vote_interval_seconds;
+        pollUpdate.auto_vote_interval_seconds = normalizeAutoVoteIntervalMs(data.auto_vote_interval_seconds);
 
       if (Object.keys(pollUpdate).length > 0) {
         const { error: pollError } = await client

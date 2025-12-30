@@ -23,6 +23,10 @@ interface OptionInput {
   image_url: string;
 }
 
+const AUTO_VOTE_INTERVAL_MIN_MS = 200;
+const AUTO_VOTE_INTERVAL_MAX_MS = 300000; // 5 minutes
+const AUTO_VOTE_INTERVAL_DEFAULT_MS = 30000; // 30 seconds
+
 export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const isEditMode = !!editPoll;
 
@@ -40,9 +44,9 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const loading = createPoll.isPending || updatePoll.isPending;
   const { data: profile, isLoading: profileLoading } = useUserProfile(user);
   const { data: pollCount = 0, isLoading: pollCountLoading } = useUserPollCount(user.id);
-  const [durationMinutes, setDurationMinutes] = useState<number | ''>(FREE_PLAN_POLL_DURATION_MINUTES);
+  const [durationMinutes, setDurationMinutes] = useState<number | ''>('');
   const [maxVotesPerIp, setMaxVotesPerIp] = useState<number | ''>('');
-  const [autoVoteIntervalSeconds, setAutoVoteIntervalSeconds] = useState<number>(30);
+  const [autoVoteIntervalMs, setAutoVoteIntervalMs] = useState<number>(AUTO_VOTE_INTERVAL_DEFAULT_MS);
   const [globalTargetVotes, setGlobalTargetVotes] = useState<number>(50);
   const [autoVotesEnabled, setAutoVotesEnabled] = useState(false);
   const [showFreeUserModal, setShowFreeUserModal] = useState(false);
@@ -50,6 +54,30 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const isSuperAdmin = profile?.role === 'superadmin';
   const isPro = isSuperAdmin || profile?.plan === 'pro';
   const isAtFreeLimit = !isPro && !isEditMode && pollCount >= FREE_PLAN_POLL_LIMIT;
+  const autoVoteIntervalSecondsDisplay = (autoVoteIntervalMs / 1000).toFixed(
+    autoVoteIntervalMs % 1000 === 0 ? 0 : 2
+  );
+
+  const clampAutoVoteIntervalMs = (value: number) => {
+    if (!Number.isFinite(value)) {
+      return AUTO_VOTE_INTERVAL_DEFAULT_MS;
+    }
+    return Math.min(
+      AUTO_VOTE_INTERVAL_MAX_MS,
+      Math.max(AUTO_VOTE_INTERVAL_MIN_MS, Math.round(value))
+    );
+  };
+
+  const normalizeAutoVoteIntervalMs = (value?: number | null) => {
+    if (value === null || value === undefined) {
+      return AUTO_VOTE_INTERVAL_DEFAULT_MS;
+    }
+
+    // Historical data may have been stored as seconds. Anything below the min ms threshold
+    // is treated as seconds and converted so the UI and DB stay in sync.
+    const valueAsMs = value < AUTO_VOTE_INTERVAL_MIN_MS ? value * 1000 : value;
+    return clampAutoVoteIntervalMs(valueAsMs);
+  };
 
   // Load existing poll data when editing
   useEffect(() => {
@@ -58,7 +86,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       setIsPublic(editPoll.is_public);
       setAccessKey(editPoll.access_key || '');
       setMaxVotesPerIp(editPoll.max_votes_per_ip ?? '');
-      setAutoVoteIntervalSeconds(editPoll.auto_vote_interval_seconds || 30);
+      setAutoVoteIntervalMs(normalizeAutoVoteIntervalMs(editPoll.auto_vote_interval_seconds));
 
       // Load options
       if (editPoll.options && editPoll.options.length > 0) {
@@ -163,7 +191,9 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       const effectiveAutoVotesEnabled = isPro ? autoVotesEnabled : false;
       const effectiveDuration = isPro ? durationMinutes : FREE_PLAN_POLL_DURATION_MINUTES;
       const effectiveMaxVotesPerIp = isPro ? maxVotesPerIp : '';
-      const effectiveInterval = isPro ? autoVoteIntervalSeconds : 30;
+      const effectiveIntervalMs = isPro
+        ? clampAutoVoteIntervalMs(autoVoteIntervalMs)
+        : AUTO_VOTE_INTERVAL_DEFAULT_MS;
 
       // Calculate per-option target votes (divide equally among options)
       const perOptionTarget = effectiveAutoVotesEnabled
@@ -179,7 +209,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
             is_public: isPublic,
             access_key: isPublic ? null : accessKey,
             max_votes_per_ip: effectiveMaxVotesPerIp === '' ? null : effectiveMaxVotesPerIp,
-            auto_vote_interval_seconds: effectiveInterval || 30,
+            auto_vote_interval_seconds: effectiveIntervalMs,
             options: options.map((opt, index) => ({
               id: opt.id,
               title: opt.title,
@@ -204,7 +234,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
           access_key: isPublic ? undefined : accessKey,
           ends_at: endsAt ? endsAt.toISOString() : undefined,
           max_votes_per_ip: effectiveMaxVotesPerIp === '' ? undefined : effectiveMaxVotesPerIp,
-          auto_vote_interval_seconds: effectiveInterval || 30,
+          auto_vote_interval_seconds: effectiveIntervalMs,
           options: options.map((opt, index) => ({
             title: opt.title,
             image_url: opt.image_url || null,
@@ -450,46 +480,51 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                   </div>
                   <div className={styles.sliderItem}>
                     <div className={styles.sliderHeader}>
-                      <label className={styles.controlLabel}>Vote interval</label>
+                      <label className={styles.controlLabel}>Vote interval (ms)</label>
                       <div className={styles.sliderValueWithUnit}>
                         <input
                           type="number"
-                          min={5}
-                          max={300}
-                          value={autoVoteIntervalSeconds}
+                          min={AUTO_VOTE_INTERVAL_MIN_MS}
+                          max={AUTO_VOTE_INTERVAL_MAX_MS}
+                          step={50}
+                          value={autoVoteIntervalMs}
                           onChange={(e) =>
-                            setAutoVoteIntervalSeconds(
-                              Math.min(300, Math.max(5, Number(e.target.value) || 5))
+                            setAutoVoteIntervalMs(
+                              clampAutoVoteIntervalMs(
+                                Number(e.target.value) || AUTO_VOTE_INTERVAL_MIN_MS
+                              )
                             )
                           }
                           className={styles.sliderValueInput}
                           disabled={loading || !isPro}
                         />
-                        <span className={styles.sliderUnit}>sec</span>
+                        <span className={styles.sliderUnit}>ms</span>
                       </div>
                     </div>
                     <div className={styles.sliderWrapper}>
                       <input
                         type="range"
-                        min={5}
-                        max={300}
-                        step={5}
-                        value={autoVoteIntervalSeconds}
-                        onChange={(e) => setAutoVoteIntervalSeconds(Number(e.target.value))}
+                        min={AUTO_VOTE_INTERVAL_MIN_MS}
+                        max={AUTO_VOTE_INTERVAL_MAX_MS}
+                        step={50}
+                        value={autoVoteIntervalMs}
+                        onChange={(e) =>
+                          setAutoVoteIntervalMs(clampAutoVoteIntervalMs(Number(e.target.value)))
+                        }
                         className={styles.slider}
                         disabled={loading || !isPro}
                       />
                       <div className={styles.sliderTicks}>
+                        <span>200ms</span>
+                        <span>1s</span>
                         <span>5s</span>
+                        <span>30s</span>
                         <span>1m</span>
-                        <span>2m</span>
-                        <span>3m</span>
-                        <span>4m</span>
                         <span>5m</span>
                       </div>
                     </div>
                     <p className={styles.controlHint}>
-                      Lower = faster simulation, higher = more natural pacing.
+                      Lower = faster simulation, higher = more natural pacing. (~{autoVoteIntervalSecondsDisplay}s)
                     </p>
                   </div>
                 </div>

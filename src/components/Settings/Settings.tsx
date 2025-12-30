@@ -194,6 +194,17 @@ export function Settings({ user }: SettingsProps) {
               <p className={styles.chaiNote}>
                 Every Pro upgrade = 4 chai paid back
               </p>
+              {isPro && (
+                <a
+                  href="https://buymeacoffee.com/aswinasok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.buyMeCoffeeButton}
+                >
+                  <HugeiconsIcon icon={Coffee01Icon} size={14} />
+                  Buy me a coffee
+                </a>
+              )}
             </div>
           </div>
         </section>

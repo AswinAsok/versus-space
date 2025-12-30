@@ -3,21 +3,32 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, webhook-id, webhook-signature, webhook-timestamp',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type, webhook-id, webhook-signature, webhook-timestamp',
 };
 
 interface DodoWebhookPayload {
   type: string;
-  data: {
+  // DodoPayments can have fields at root level or nested in data
+  payment_id?: string;
+  customer?: {
+    email: string;
+    customer_id?: string;
+    name?: string;
+  };
+  metadata?: Record<string, string>;
+  status?: string;
+  product_id?: string;
+  // Some events nest data
+  data?: {
     payment_id?: string;
     subscription_id?: string;
     customer?: {
       email: string;
       customer_id?: string;
+      name?: string;
     };
-    metadata?: {
-      userId?: string;
-    };
+    metadata?: Record<string, string>;
     status?: string;
     product_id?: string;
   };
@@ -30,56 +41,63 @@ serve(async (req) => {
   }
 
   try {
-    // Get webhook headers for verification
-    const webhookId = req.headers.get('webhook-id');
-    const webhookSignature = req.headers.get('webhook-signature');
-    const webhookTimestamp = req.headers.get('webhook-timestamp');
-
     // Get the raw body
     const body = await req.text();
     const payload: DodoWebhookPayload = JSON.parse(body);
 
+    // Log full payload for debugging
     console.log('Received webhook:', payload.type);
-
-    // Verify webhook signature (optional but recommended)
-    const webhookKey = Deno.env.get('DODO_WEBHOOK_KEY');
-    if (webhookKey && webhookSignature) {
-      // Standard Webhooks signature verification
-      // In production, implement proper signature verification
-      // See: https://docs.dodopayments.com/webhooks
-      console.log('Webhook signature present, verification should be implemented');
-    }
+    console.log('Full payload:', JSON.stringify(payload, null, 2));
 
     // Initialize Supabase client with service role key
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Extract data from either root level or nested data object (DodoPayments format varies)
+    const metadata = payload.metadata || payload.data?.metadata || {};
+    const customer = payload.customer || payload.data?.customer;
+
+    console.log('Extracted metadata:', JSON.stringify(metadata));
+    console.log('Extracted customer:', JSON.stringify(customer));
+
     // Handle different webhook events
-    // Note: This is a one-time lifetime payment model, so we only need to handle payment success
-    // No subscription cancellation/expiration handling needed - once Pro, always Pro
+    // Note: This is a one-time lifetime payment model
     switch (payload.type) {
       case 'payment.succeeded': {
-        // Extract user ID from metadata or lookup by email
-        let userId = payload.data.metadata?.userId;
+        // Extract user ID from metadata (DodoPayments uses userId key from metadata_userId param)
+        let userId = metadata.userId || metadata.user_id;
 
-        if (!userId && payload.data.customer?.email) {
+        console.log('userId from metadata:', userId);
+
+        if (!userId && customer?.email) {
+          console.log('Looking up user by email:', customer.email);
           // Lookup user by email
-          const { data: profile } = await supabase
+          const { data: profile, error: lookupError } = await supabase
             .from('user_profiles')
             .select('user_id')
-            .eq('email', payload.data.customer.email.toLowerCase())
+            .eq('email', customer.email.toLowerCase())
             .single();
 
+          if (lookupError) {
+            console.error('Email lookup error:', lookupError);
+          }
+
           userId = profile?.user_id;
+          console.log('userId from email lookup:', userId);
         }
 
         if (!userId) {
-          console.error('Could not identify user for upgrade');
-          return new Response(
-            JSON.stringify({ error: 'User not found' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          console.error(
+            'Could not identify user for upgrade. Metadata:',
+            metadata,
+            'Customer:',
+            customer
           );
+          return new Response(JSON.stringify({ error: 'User not found', metadata, customer }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
         }
 
         // Update user plan to pro (lifetime)
@@ -94,7 +112,7 @@ serve(async (req) => {
         if (updateError) {
           console.error('Failed to update user plan:', updateError);
           return new Response(
-            JSON.stringify({ error: 'Failed to update plan' }),
+            JSON.stringify({ error: 'Failed to update plan', details: updateError }),
             { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
@@ -107,15 +125,15 @@ serve(async (req) => {
         console.log(`Unhandled webhook type: ${payload.type}`);
     }
 
-    return new Response(
-      JSON.stringify({ received: true }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ received: true }), {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error('Webhook error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Webhook processing failed' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: 'Webhook processing failed' }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 });
