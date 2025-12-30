@@ -12,5 +12,5 @@ export const DODO_PAYMENTS_CONFIG = {
   cancelUrl: `${window.location.origin}/dashboard?upgrade=cancelled`,
 };
 
-// Pro plan pricing
-export const PRO_PLAN_PRICE = 15; // ~$0.18/month (₹15 INR)
+// Pro plan pricing - One-time lifetime payment
+export const PRO_PLAN_PRICE = 1; // $1 USD one-time lifetime payment

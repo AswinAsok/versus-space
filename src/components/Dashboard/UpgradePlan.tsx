@@ -78,7 +78,7 @@ export function UpgradePlan({ user, currentPollCount }: UpgradePlanProps) {
               <HugeiconsIcon icon={CrownIcon} size={10} />
               Pro
             </span>
-            <span className={styles.planColumnPrice}>$0.18<span>/mo</span></span>
+            <span className={styles.planColumnPrice}>$1<span> lifetime</span></span>
           </div>
           <ul className={styles.planFeatures}>
             <li>

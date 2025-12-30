@@ -34,10 +34,9 @@ interface HomeProps {
 }
 
 // Chai meter constants
-const TOTAL_HOURS_WORKED = 30;
-const HOURS_PER_WORK_DAY = 4;
-const CUPS_PER_DAY = 6;
-const TOTAL_CHAI_CONSUMED = Math.ceil((TOTAL_HOURS_WORKED / HOURS_PER_WORK_DAY) * CUPS_PER_DAY); // 45 cups
+const DAYS_OF_WORK = 6;
+const CHAI_PER_DAY = 5;
+const TOTAL_CHAI = DAYS_OF_WORK * CHAI_PER_DAY; // 30 chai total
 
 export function Home({ onNavigate }: HomeProps) {
   const { data: stats } = usePlatformStats();
@@ -404,29 +403,28 @@ export function Home({ onNavigate }: HomeProps) {
                 <div className={styles.chaiMeterText}>
                   <h3 className={styles.chaiMeterTitle}>The Chai Meter</h3>
                   <p className={styles.chaiMeterSubtitle}>
-                    This project took ~{TOTAL_HOURS_WORKED} hours to build. At {CUPS_PER_DAY} cups
-                    of chai per day across {HOURS_PER_WORK_DAY}-hour work sessions, that's{' '}
-                    {TOTAL_CHAI_CONSUMED} cups consumed.
+                    This project took {DAYS_OF_WORK} days to build. At {CHAI_PER_DAY} chai per day,
+                    that's {TOTAL_CHAI} cups consumed.
                   </p>
                 </div>
               </div>
               <div className={styles.chaiMeterProgress}>
                 <div className={styles.chaiMeterLabels}>
                   <span className={styles.chaiMeterCurrent}>
-                    {proUserCount} chai{proUserCount !== 1 ? 's' : ''} funded
+                    {proUserCount * 4} chai{proUserCount * 4 !== 1 ? 's' : ''} funded
                   </span>
-                  <span className={styles.chaiMeterGoal}>Goal: {TOTAL_CHAI_CONSUMED} chais</span>
+                  <span className={styles.chaiMeterGoal}>Goal: {TOTAL_CHAI} chais</span>
                 </div>
                 <div className={styles.chaiMeterBar}>
                   <div
                     className={styles.chaiMeterFill}
                     style={{
-                      width: `${Math.min((proUserCount / TOTAL_CHAI_CONSUMED) * 100, 100)}%`,
+                      width: `${Math.min((proUserCount * 4 / TOTAL_CHAI) * 100, 100)}%`,
                     }}
                   />
                 </div>
                 <p className={styles.chaiMeterNote}>
-                  Every Pro subscription = 1 chai paid back. Help me break even on my chai
+                  Every Pro upgrade = 4 chai paid back. Help me break even on my chai
                   addiction!
                 </p>
               </div>
@@ -441,10 +439,10 @@ export function Home({ onNavigate }: HomeProps) {
                 <span className={styles.srOnly}> - Simple and transparent</span>
               </span>
               <h2 id="pricing-title" className={styles.sectionTitle}>
-                Cheaper Than Chai
+                One Dollar, Forever Pro
               </h2>
               <p className={styles.sectionSubtitle}>
-                Support this project for the price of a cup of tea in Bangalore. That's it.
+                Pay once, use forever. No subscriptions, no renewals. Just $1.
               </p>
             </div>
             <div className={styles.pricingGrid}>
@@ -457,10 +455,10 @@ export function Home({ onNavigate }: HomeProps) {
                   <div className={styles.pricingPriceBlock}>
                     <span className={styles.pricingCurrency}>$</span>
                     <span className={styles.pricingAmount}>0</span>
-                    <span className={styles.pricingPeriod}>/mo</span>
+                    <span className={styles.pricingPeriod}> forever</span>
                   </div>
                   <p className={styles.pricingBillingAlt}>₹0 INR</p>
-                  <p className={styles.pricingBilling}>Free forever</p>
+                  <p className={styles.pricingBilling}>Free forever, no card needed</p>
 
                   <button onClick={() => onNavigate('/create')} className={styles.pricingButton}>
                     Get Started with Free
@@ -499,23 +497,23 @@ export function Home({ onNavigate }: HomeProps) {
                 </div>
                 <div className={styles.pricingCardInner}>
                   <h3 className={`${styles.pricingTierName} ${styles.pricingTierNamePro}`}>
-                    Pro + Chai
+                    Pro + Chai x4
                   </h3>
-                  <p className={styles.pricingTagline}>One chai = One month of Pro. Fair deal?</p>
+                  <p className={styles.pricingTagline}>Pro for you, Chai x4 for me. Fair deal?</p>
 
                   <div className={styles.pricingPriceBlock}>
                     <span className={styles.pricingCurrency}>$</span>
-                    <span className={styles.pricingAmount}>0.18</span>
-                    <span className={styles.pricingPeriod}>/mo</span>
+                    <span className={styles.pricingAmount}>1</span>
+                    <span className={styles.pricingPeriod}> once</span>
                   </div>
-                  <p className={styles.pricingBillingAlt}>~₹15 INR</p>
-                  <p className={styles.pricingBilling}>Less than a cutting chai</p>
+                  <p className={styles.pricingBillingAlt}>~₹85 INR</p>
+                  <p className={styles.pricingBilling}>One-time lifetime payment</p>
 
                   <button
                     onClick={() => onNavigate('/dashboard')}
                     className={`${styles.pricingButton} ${styles.pricingButtonPro}`}
                   >
-                    Buy Me a Chai
+                    Get Pro Forever
                   </button>
 
                   <div className={styles.pricingFeatureHighlight}>
@@ -614,7 +612,7 @@ export function Home({ onNavigate }: HomeProps) {
             <div className={styles.pricingNote}>
               <p className={styles.pricingNoteText}>
                 This is my first <span className={styles.pricingNoteWhite}>SOLO</span> project with
-                a subscription model, and my only{' '}
+                a payment model, and my only{' '}
                 <span className={styles.pricingNoteWhite}>AIM</span> is to get my{' '}
                 <span className={styles.pricingNoteHighlight}>FIRST PAYING CUSTOMER</span>. As you
                 can already see, there are{' '}

@@ -56,9 +56,10 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Handle different webhook events
+    // Note: This is a one-time lifetime payment model, so we only need to handle payment success
+    // No subscription cancellation/expiration handling needed - once Pro, always Pro
     switch (payload.type) {
-      case 'payment.succeeded':
-      case 'subscription.active': {
+      case 'payment.succeeded': {
         // Extract user ID from metadata or lookup by email
         let userId = payload.data.metadata?.userId;
 
@@ -81,7 +82,7 @@ serve(async (req) => {
           );
         }
 
-        // Update user plan to pro
+        // Update user plan to pro (lifetime)
         const { error: updateError } = await supabase
           .from('user_profiles')
           .update({
@@ -98,36 +99,7 @@ serve(async (req) => {
           );
         }
 
-        console.log(`Successfully upgraded user ${userId} to Pro`);
-        break;
-      }
-
-      case 'subscription.cancelled':
-      case 'subscription.expired': {
-        // Handle subscription cancellation - downgrade to free
-        let userId = payload.data.metadata?.userId;
-
-        if (!userId && payload.data.customer?.email) {
-          const { data: profile } = await supabase
-            .from('user_profiles')
-            .select('user_id')
-            .eq('email', payload.data.customer.email.toLowerCase())
-            .single();
-
-          userId = profile?.user_id;
-        }
-
-        if (userId) {
-          await supabase
-            .from('user_profiles')
-            .update({
-              plan: 'free',
-              updated_at: new Date().toISOString(),
-            })
-            .eq('user_id', userId);
-
-          console.log(`User ${userId} downgraded to Free`);
-        }
+        console.log(`Successfully upgraded user ${userId} to Pro (lifetime)`);
         break;
       }
 

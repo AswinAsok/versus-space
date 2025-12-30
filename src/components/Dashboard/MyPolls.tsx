@@ -148,7 +148,7 @@ export function MyPolls({ user }: MyPollsProps) {
             <HugeiconsIcon icon={ArrowUp01Icon} size={18} />
             <span className={styles.upgradeButtonText}>
               Upgrade to Pro
-              <span className={styles.upgradeButtonPrice}>$0.18/mo</span>
+              <span className={styles.upgradeButtonPrice}>$1 lifetime</span>
             </span>
           </button>
         ) : (

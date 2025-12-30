@@ -16,10 +16,9 @@ import { getProCheckoutUrl } from '../../utils/payment';
 import styles from './Settings.module.css';
 
 // Chai meter constants
-const TOTAL_HOURS_WORKED = 30;
-const HOURS_PER_WORK_DAY = 4;
-const CUPS_PER_DAY = 6;
-const TOTAL_CHAI_CONSUMED = Math.ceil((TOTAL_HOURS_WORKED / HOURS_PER_WORK_DAY) * CUPS_PER_DAY);
+const DAYS_OF_WORK = 6;
+const CHAI_PER_DAY = 5;
+const TOTAL_CHAI = DAYS_OF_WORK * CHAI_PER_DAY; // 30 chai total
 
 interface SettingsProps {
   user: User;
@@ -33,7 +32,8 @@ export function Settings({ user }: SettingsProps) {
   const isSuperAdmin = profile?.role === 'superadmin';
   const isPro = isSuperAdmin || profile?.plan === 'pro';
   const planLabel = isSuperAdmin ? 'Admin' : isPro ? 'Pro' : 'Free';
-  const chaiProgress = Math.min((proUserCount / TOTAL_CHAI_CONSUMED) * 100, 100);
+  const chaiFunded = proUserCount * 4; // 1 Pro = 4 chai
+  const chaiProgress = Math.min((chaiFunded / TOTAL_CHAI) * 100, 100);
 
   const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
   const userEmail = user.email || '';
@@ -52,7 +52,7 @@ export function Settings({ user }: SettingsProps) {
       <div className={styles.settingsInner}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Settings</h1>
-          <p className={styles.pageSubtitle}>Manage your account and subscription</p>
+          <p className={styles.pageSubtitle}>Manage your account and plan</p>
         </div>
 
         {/* Account Section */}
@@ -137,7 +137,7 @@ export function Settings({ user }: SettingsProps) {
                     <HugeiconsIcon icon={CrownIcon} size={10} />
                     Pro
                   </span>
-                  <span className={styles.planColumnPrice}>$0.18<span>/mo</span></span>
+                  <span className={styles.planColumnPrice}>$1<span> lifetime</span></span>
                 </div>
                 <ul className={styles.planFeatures}>
                   <li>
@@ -174,16 +174,16 @@ export function Settings({ user }: SettingsProps) {
               <div className={styles.chaiInfo}>
                 <h3 className={styles.chaiTitle}>Help fund the chai addiction</h3>
                 <p className={styles.chaiDescription}>
-                  This project took ~{TOTAL_HOURS_WORKED} hours to build. At {CUPS_PER_DAY} cups per day, that's {TOTAL_CHAI_CONSUMED} cups consumed.
+                  This project took {DAYS_OF_WORK} days to build. At {CHAI_PER_DAY} chai per day, that's {TOTAL_CHAI} cups consumed.
                 </p>
               </div>
             </div>
             <div className={styles.chaiProgress}>
               <div className={styles.chaiLabels}>
                 <span className={styles.chaiCurrent}>
-                  {proUserCount} chai{proUserCount !== 1 ? 's' : ''} funded
+                  {chaiFunded} chai{chaiFunded !== 1 ? 's' : ''} funded
                 </span>
-                <span className={styles.chaiGoal}>Goal: {TOTAL_CHAI_CONSUMED}</span>
+                <span className={styles.chaiGoal}>Goal: {TOTAL_CHAI}</span>
               </div>
               <div className={styles.chaiBar}>
                 <div
@@ -192,7 +192,7 @@ export function Settings({ user }: SettingsProps) {
                 />
               </div>
               <p className={styles.chaiNote}>
-                Every Pro subscription = 1 chai paid back
+                Every Pro upgrade = 4 chai paid back
               </p>
             </div>
           </div>

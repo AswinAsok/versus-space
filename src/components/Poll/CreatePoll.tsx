@@ -624,7 +624,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
               </button>
             </div>
             <a href="/dashboard/settings" className={styles.modalUpgradeLink}>
-              Upgrade to Pro for $0.18/mo — Unlimited polls & Real-time Analytics
+              Upgrade to Pro for $1 (lifetime) — Unlimited polls & Real-time Analytics
             </a>
           </div>
         </div>
