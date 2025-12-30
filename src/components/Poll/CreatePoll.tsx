@@ -577,22 +577,28 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       {showFreeUserModal && (
         <div className={styles.modalOverlay} onClick={() => setShowFreeUserModal(false)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <button
-              className={styles.modalClose}
-              onClick={() => setShowFreeUserModal(false)}
-            >
-              <HugeiconsIcon icon={Cancel01Icon} size={18} />
-            </button>
-            <div className={styles.modalIcon}>
-              <HugeiconsIcon icon={Clock01Icon} size={24} />
+            <div className={styles.modalHeader}>
+              <span className={styles.modalHeaderTitle}>Poll Settings</span>
+              <button
+                className={styles.modalClose}
+                onClick={() => setShowFreeUserModal(false)}
+                aria-label="Close modal"
+              >
+                <HugeiconsIcon icon={Cancel01Icon} size={14} />
+              </button>
             </div>
-            <h3 className={styles.modalTitle}>Auto-close Timer</h3>
-            <p className={styles.modalDescription}>
-              Your poll will automatically close in <strong>{FREE_PLAN_POLL_DURATION_MINUTES} minutes</strong>.
-            </p>
-            <p className={styles.modalSubtext}>
-              Upgrade to Pro for custom timer settings.
-            </p>
+            <div className={styles.modalBody}>
+              <div className={styles.modalIcon}>
+                <HugeiconsIcon icon={Clock01Icon} size={18} />
+              </div>
+              <h3 className={styles.modalTitle}>Auto-close Timer</h3>
+              <p className={styles.modalDescription}>
+                Your poll will automatically close in <strong>{FREE_PLAN_POLL_DURATION_MINUTES} minutes</strong>.
+              </p>
+              <p className={styles.modalSubtext}>
+                Upgrade to Pro for custom timer settings.
+              </p>
+            </div>
             <div className={styles.modalActions}>
               <button
                 className={styles.modalButtonSecondary}

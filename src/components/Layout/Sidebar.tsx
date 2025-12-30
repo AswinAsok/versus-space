@@ -186,11 +186,9 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
             <div className={styles.userInfo}>
               <div className={styles.avatarWrapper}>
                 <div className={styles.userAvatar}>{userInitial}</div>
-                {!isCollapsed && (
-                  <span className={`${styles.planBadge} ${isPro ? styles.planPro : styles.planFree}`}>
-                    {planLabel}
-                  </span>
-                )}
+                <span className={`${styles.planBadge} ${isPro ? styles.planPro : styles.planFree}`}>
+                  {planLabel}
+                </span>
               </div>
               <div className={`${styles.userDetails} ${isCollapsed ? styles.userDetailsHidden : ''}`}>
                 <span className={styles.userName}>{displayName}</span>

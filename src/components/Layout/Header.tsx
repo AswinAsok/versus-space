@@ -11,9 +11,11 @@ interface HeaderProps {
   user: User | null;
   onNavigate: (path: string) => void;
   showBackedBy?: boolean;
+  hideCreateButton?: boolean;
+  centerLogo?: boolean;
 }
 
-export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) {
+export function Header({ user, onNavigate, showBackedBy = false, hideCreateButton = false, centerLogo = false }: HeaderProps) {
   const [recentPoll, setRecentPoll] = useState<LeaderboardPoll | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -48,7 +50,7 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
     <div className={`${styles.headerWrapper} ${isScrolled ? styles.scrolled : ''}`}>
       <header className={styles.appHeader}>
         <div className={styles.headerContent}>
-          <nav className={styles.headerNav}>
+          <nav className={`${styles.headerNav} ${centerLogo ? styles.centerLogo : ''}`}>
             <div className={styles.navLeft}>
               <button onClick={() => onNavigate('/')} className={styles.logoButton}>
                 <img src="/vs.png" alt="versus.space" className={styles.logoImage} />
@@ -109,9 +111,11 @@ export function Header({ user, onNavigate, showBackedBy = false }: HeaderProps) 
                   </button>
                 </div>
               ) : (
-                <button onClick={() => onNavigate('/create')} className={styles.createButton}>
-                  Create Poll
-                </button>
+                !hideCreateButton && (
+                  <button onClick={() => onNavigate('/create')} className={styles.createButton}>
+                    Create Poll
+                  </button>
+                )
               )}
             </div>
           </nav>

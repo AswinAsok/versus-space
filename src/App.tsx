@@ -46,6 +46,7 @@ function RoutedApp() {
   const location = useLocation();
   const isPollView = location.pathname.startsWith('/poll/');
   const isDashboardView = location.pathname.startsWith('/dashboard');
+  const isAuthPage = location.pathname === '/auth';
 
   if (loading) {
     return (
@@ -93,7 +94,7 @@ function RoutedApp() {
           <div className={`${appStyles.geometricShape} ${appStyles.square}`}></div>
         </div>
       )}
-      <Header user={user} onNavigate={navigate} />
+      <Header user={user} onNavigate={navigate} hideCreateButton={isAuthPage} centerLogo={isAuthPage} />
 
       <main className={appStyles.appMain}>
         <Routes>

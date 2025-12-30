@@ -3,12 +3,23 @@ import { User } from '@supabase/supabase-js';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   Mail01Icon,
-  Key01Icon,
-  Link01Icon,
   AlertCircleIcon,
   Tick01Icon,
+  CrownIcon,
+  CheckmarkCircle02Icon,
+  ArrowUp01Icon,
+  Coffee01Icon,
 } from '@hugeicons/core-free-icons';
+import { useUserProfile } from '../../hooks/useUserProfile';
+import { useProUserCount } from '../../hooks/usePollQueries';
+import { getProCheckoutUrl } from '../../utils/payment';
 import styles from './Settings.module.css';
+
+// Chai meter constants
+const TOTAL_HOURS_WORKED = 30;
+const HOURS_PER_WORK_DAY = 4;
+const CUPS_PER_DAY = 6;
+const TOTAL_CHAI_CONSUMED = Math.ceil((TOTAL_HOURS_WORKED / HOURS_PER_WORK_DAY) * CUPS_PER_DAY);
 
 interface SettingsProps {
   user: User;
@@ -17,14 +28,31 @@ interface SettingsProps {
 export function Settings({ user }: SettingsProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const isGoogleUser = user.app_metadata?.provider === 'google';
+  const { data: profile } = useUserProfile(user);
+  const { data: proUserCount = 0 } = useProUserCount();
+  const isSuperAdmin = profile?.role === 'superadmin';
+  const isPro = isSuperAdmin || profile?.plan === 'pro';
+  const planLabel = isSuperAdmin ? 'Admin' : isPro ? 'Pro' : 'Free';
+  const chaiProgress = Math.min((proUserCount / TOTAL_CHAI_CONSUMED) * 100, 100);
+
+  const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  const userEmail = user.email || '';
+
+  const handleUpgradeClick = () => {
+    const checkoutUrl = getProCheckoutUrl({
+      email: userEmail,
+      userId: user.id,
+      customerName: displayName,
+    });
+    window.location.href = checkoutUrl;
+  };
 
   return (
     <div className={styles.settingsContainer}>
       <div className={styles.settingsInner}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Settings</h1>
-          <p className={styles.pageSubtitle}>Manage your account preferences and security</p>
+          <p className={styles.pageSubtitle}>Manage your account and subscription</p>
         </div>
 
         {/* Account Section */}
@@ -33,74 +61,139 @@ export function Settings({ user }: SettingsProps) {
 
           <div className={styles.settingCard}>
             <div className={styles.settingItem}>
-              <div className={styles.settingIcon}>
-                <HugeiconsIcon icon={Mail01Icon} size={20} />
+              <div className={`${styles.settingIcon} ${styles.activeIcon}`}>
+                <HugeiconsIcon icon={Mail01Icon} size={18} />
               </div>
               <div className={styles.settingContent}>
                 <h3 className={styles.settingLabel}>Email address</h3>
                 <p className={styles.settingValue}>{user.email}</p>
               </div>
               <span className={styles.verifiedBadge}>
-                <HugeiconsIcon icon={Tick01Icon} size={14} />
+                <HugeiconsIcon icon={Tick01Icon} size={10} />
                 Verified
               </span>
             </div>
-
-            {!isGoogleUser && (
-              <div className={styles.settingItem}>
-                <div className={styles.settingIcon}>
-                  <HugeiconsIcon icon={Key01Icon} size={20} />
-                </div>
-                <div className={styles.settingContent}>
-                  <h3 className={styles.settingLabel}>Password</h3>
-                  <p className={styles.settingDescription}>Change your account password</p>
-                </div>
-                <button className={styles.settingAction}>Change</button>
-              </div>
-            )}
           </div>
         </section>
 
-        {/* Connected Accounts Section */}
+        {/* Plan Section */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Connected Accounts</h2>
+          <h2 className={styles.sectionTitle}>Your Plan</h2>
 
-          <div className={styles.settingCard}>
-            <div className={styles.settingItem}>
-              <div className={styles.settingIcon}>
-                <svg className={styles.googleIcon} viewBox="0 0 24 24" width="20" height="20">
-                  <path
-                    fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  />
-                </svg>
+          <div className={styles.planCard}>
+            <div className={styles.currentPlan}>
+              <div className={styles.planHeader}>
+                <div className={styles.planInfo}>
+                  <span className={`${styles.planBadge} ${isPro ? styles.planBadgePro : styles.planBadgeFree}`}>
+                    {isPro && <HugeiconsIcon icon={CrownIcon} size={10} />}
+                    {planLabel}
+                  </span>
+                  <h3 className={styles.planName}>{isPro ? 'Pro + Chai' : 'Free Plan'}</h3>
+                  <p className={styles.planDescription}>
+                    {isPro
+                      ? 'Unlimited polls with all pro features'
+                      : '3 polls with basic features'}
+                  </p>
+                </div>
+                {!isPro && (
+                  <button onClick={handleUpgradeClick} className={styles.upgradeButton}>
+                    <HugeiconsIcon icon={ArrowUp01Icon} size={12} />
+                    Upgrade
+                  </button>
+                )}
               </div>
-              <div className={styles.settingContent}>
-                <h3 className={styles.settingLabel}>Google</h3>
-                <p className={styles.settingDescription}>
-                  {isGoogleUser ? 'Connected via Google OAuth' : 'Not connected'}
+            </div>
+
+            {/* Plan Comparison */}
+            <div className={styles.planComparison}>
+              <div className={`${styles.planColumn} ${!isPro ? styles.planColumnActive : ''}`}>
+                <div className={styles.planColumnHeader}>
+                  <span className={styles.planColumnName}>Free</span>
+                  <span className={styles.planColumnPrice}>$0</span>
+                </div>
+                <ul className={styles.planFeatures}>
+                  <li>
+                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} />
+                    <span>3 polls</span>
+                  </li>
+                  <li>
+                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} />
+                    <span>Unlimited votes</span>
+                  </li>
+                  <li>
+                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} />
+                    <span>15-min auto-close</span>
+                  </li>
+                  <li>
+                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} />
+                    <span>Public polls</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className={`${styles.planColumn} ${styles.planColumnPro} ${isPro ? styles.planColumnActive : ''}`}>
+                <div className={styles.planColumnHeader}>
+                  <span className={styles.planColumnName}>
+                    <HugeiconsIcon icon={CrownIcon} size={10} />
+                    Pro
+                  </span>
+                  <span className={styles.planColumnPrice}>$0.18<span>/mo</span></span>
+                </div>
+                <ul className={styles.planFeatures}>
+                  <li>
+                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} />
+                    <span>Unlimited polls</span>
+                  </li>
+                  <li>
+                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} />
+                    <span>Custom timers</span>
+                  </li>
+                  <li>
+                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} />
+                    <span>Private polls</span>
+                  </li>
+                  <li>
+                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={12} />
+                    <span>Pro analytics</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Chai Meter Section */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Chai Meter</h2>
+
+          <div className={styles.chaiCard}>
+            <div className={styles.chaiHeader}>
+              <div className={styles.chaiIcon}>
+                <HugeiconsIcon icon={Coffee01Icon} size={18} />
+              </div>
+              <div className={styles.chaiInfo}>
+                <h3 className={styles.chaiTitle}>Help fund the chai addiction</h3>
+                <p className={styles.chaiDescription}>
+                  This project took ~{TOTAL_HOURS_WORKED} hours to build. At {CUPS_PER_DAY} cups per day, that's {TOTAL_CHAI_CONSUMED} cups consumed.
                 </p>
               </div>
-              {isGoogleUser ? (
-                <span className={styles.connectedBadge}>
-                  <HugeiconsIcon icon={Link01Icon} size={14} />
-                  Connected
+            </div>
+            <div className={styles.chaiProgress}>
+              <div className={styles.chaiLabels}>
+                <span className={styles.chaiCurrent}>
+                  {proUserCount} chai{proUserCount !== 1 ? 's' : ''} funded
                 </span>
-              ) : (
-                <button className={styles.settingAction}>Connect</button>
-              )}
+                <span className={styles.chaiGoal}>Goal: {TOTAL_CHAI_CONSUMED}</span>
+              </div>
+              <div className={styles.chaiBar}>
+                <div
+                  className={styles.chaiFill}
+                  style={{ width: `${chaiProgress}%` }}
+                />
+              </div>
+              <p className={styles.chaiNote}>
+                Every Pro subscription = 1 chai paid back
+              </p>
             </div>
           </div>
         </section>
@@ -112,7 +205,7 @@ export function Settings({ user }: SettingsProps) {
           <div className={`${styles.settingCard} ${styles.dangerCard}`}>
             <div className={styles.settingItem}>
               <div className={`${styles.settingIcon} ${styles.dangerIcon}`}>
-                <HugeiconsIcon icon={AlertCircleIcon} size={20} />
+                <HugeiconsIcon icon={AlertCircleIcon} size={18} />
               </div>
               <div className={styles.settingContent}>
                 <h3 className={styles.settingLabel}>Delete Account</h3>
@@ -135,7 +228,7 @@ export function Settings({ user }: SettingsProps) {
           <div className={styles.modalOverlay} onClick={() => setShowDeleteConfirm(false)}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
               <div className={styles.modalIcon}>
-                <HugeiconsIcon icon={AlertCircleIcon} size={32} />
+                <HugeiconsIcon icon={AlertCircleIcon} size={24} />
               </div>
               <h3 className={styles.modalTitle}>Delete Account?</h3>
               <p className={styles.modalText}>

@@ -277,6 +277,8 @@
   font-weight: 500;
   border-radius: 999px;
   transition: all var(--transition-fast) var(--ease-out);
+  align-self: center;
+  height: fit-content;
 }
 
 .createButton:hover {
@@ -457,6 +459,18 @@
     gap: 0.25rem;
   }
 
+  .centerLogo {
+    justify-content: center;
+  }
+
+  .centerLogo .navLeft {
+    flex: none;
+  }
+
+  .centerLogo .navRight {
+    display: none;
+  }
+
   .navLink {
     padding: 0.5rem 0.75rem;
     min-width: 36px;
@@ -464,7 +478,7 @@
   }
 
   .createButton {
-    padding: 0.375rem 0.625rem;
+    padding: 0.2rem 0.75rem;
     font-size: 0.625rem;
   }
 

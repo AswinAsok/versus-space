@@ -15,9 +15,10 @@ interface LiveStatsBarProps {
   activePolls: number;
   pollIds: string[];
   showSampleNote?: boolean;
+  sampleNoteMessage?: string;
 }
 
-export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePolls, pollIds, showSampleNote }: LiveStatsBarProps) {
+export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePolls, pollIds, showSampleNote, sampleNoteMessage }: LiveStatsBarProps) {
   const [liveViewers, setLiveViewers] = useState(0);
   const [totalVotes, setTotalVotes] = useState(initialTotalVotes);
   const [votesToday, setVotesToday] = useState(0);
@@ -119,22 +120,41 @@ export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePoll
     };
   }, []);
 
-  // Load today's votes count
+  // Load today's votes count (only for user's polls)
   useEffect(() => {
     const loadTodayVotes = async () => {
+      if (pollIds.length === 0) {
+        setVotesToday(0);
+        return;
+      }
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+
+      // First get option IDs for user's polls
+      const { data: options } = await supabase
+        .from('poll_options')
+        .select('id')
+        .in('poll_id', pollIds);
+
+      if (!options || options.length === 0) {
+        setVotesToday(0);
+        return;
+      }
+
+      const optionIds = options.map(o => o.id);
 
       const { count } = await supabase
         .from('votes')
         .select('*', { count: 'exact', head: true })
+        .in('option_id', optionIds)
         .gte('created_at', today.toISOString());
 
       setVotesToday(count || 0);
     };
 
     loadTodayVotes();
-  }, []);
+  }, [pollIds]);
 
   // Update VPM counter every 5 seconds
   useEffect(() => {
@@ -151,7 +171,7 @@ export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePoll
     <div className={styles.statsBarWrapper}>
       {showSampleNote && (
         <div className={styles.sampleNote}>
-          Showing sample data — create your first poll to see real analytics
+          {sampleNoteMessage || 'Showing sample data — create your first poll to see real analytics'}
         </div>
       )}
       <div className={styles.statsBar}>

@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '@supabase/supabase-js';
-import { useUserPolls, useDeletePoll, useTogglePollStatus, useUserPollCount } from '../../hooks/usePollQueries';
+import {
+  useUserPolls,
+  useDeletePoll,
+  useTogglePollStatus,
+  useUserPollCount,
+} from '../../hooks/usePollQueries';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -16,6 +21,8 @@ import {
   Copy01Icon,
   Tick01Icon,
   PencilEdit01Icon,
+  Cancel01Icon,
+  Alert02Icon,
 } from '@hugeicons/core-free-icons';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import styles from './MyPolls.module.css';
@@ -25,8 +32,20 @@ interface MyPollsProps {
   user: User;
 }
 
+interface ModalState {
+  type: 'delete' | 'deactivate' | 'activate' | null;
+  pollId: string;
+  pollTitle: string;
+}
+
 export function MyPolls({ user }: MyPollsProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [modalState, setModalState] = useState<ModalState>({
+    type: null,
+    pollId: '',
+    pollTitle: '',
+  });
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
 
   const { data: polls = [], isLoading, error } = useUserPolls(user.id);
@@ -40,21 +59,44 @@ export function MyPolls({ user }: MyPollsProps) {
   const resolvedPollCount = pollCount ?? polls.length;
   const isAtFreeLimit = !isPro && resolvedPollCount >= FREE_PLAN_POLL_LIMIT;
 
-  const handleDelete = async (pollId: string) => {
-    if (!confirm('Are you sure you want to delete this poll?')) return;
+  const openDeleteModal = (pollId: string, pollTitle: string) => {
+    setModalState({ type: 'delete', pollId, pollTitle });
+  };
+
+  const openToggleModal = (pollId: string, pollTitle: string, isActive: boolean) => {
+    setModalState({ type: isActive ? 'deactivate' : 'activate', pollId, pollTitle });
+  };
+
+  const closeModal = () => {
+    setModalState({ type: null, pollId: '', pollTitle: '' });
+  };
+
+  const handleDelete = async () => {
+    if (!modalState.pollId) return;
+    setIsProcessing(true);
 
     try {
-      await deletePoll.mutateAsync(pollId);
+      await deletePoll.mutateAsync(modalState.pollId);
+      closeModal();
     } catch {
-      alert('Failed to delete poll');
+      // Keep modal open on error
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  const handleToggleStatus = async (pollId: string, isActive: boolean) => {
+  const handleToggleStatus = async () => {
+    if (!modalState.pollId) return;
+    setIsProcessing(true);
+
     try {
-      await toggleStatus.mutateAsync({ pollId, isActive: !isActive });
+      const isActivating = modalState.type === 'activate';
+      await toggleStatus.mutateAsync({ pollId: modalState.pollId, isActive: isActivating });
+      closeModal();
     } catch {
-      alert('Failed to update poll status');
+      // Keep modal open on error
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -100,7 +142,11 @@ export function MyPolls({ user }: MyPollsProps) {
         </div>
       )}
 
-      {error && <div className={sharedStyles.errorMessage}>{error instanceof Error ? error.message : 'Failed to load polls'}</div>}
+      {error && (
+        <div className={sharedStyles.errorMessage}>
+          {error instanceof Error ? error.message : 'Failed to load polls'}
+        </div>
+      )}
 
       {polls.length === 0 ? (
         <div className={styles.emptyState}>
@@ -118,10 +164,7 @@ export function MyPolls({ user }: MyPollsProps) {
               <HugeiconsIcon icon={Add01Icon} size={18} />
               {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Your First Poll'}
             </button>
-            <button
-              onClick={() => navigate('/explore')}
-              className={styles.emptyButtonSecondary}
-            >
+            <button onClick={() => navigate('/explore')} className={styles.emptyButtonSecondary}>
               <HugeiconsIcon icon={GlobeIcon} size={18} />
               Explore Public Polls
             </button>
@@ -179,7 +222,7 @@ export function MyPolls({ user }: MyPollsProps) {
                         <HugeiconsIcon icon={PencilEdit01Icon} size={16} />
                       </button>
                       <button
-                        onClick={() => handleDelete(poll.id)}
+                        onClick={() => openDeleteModal(poll.id, poll.title)}
                         className={`${styles.menuButton} ${styles.deleteButton}`}
                         title="Delete poll"
                       >
@@ -219,7 +262,7 @@ export function MyPolls({ user }: MyPollsProps) {
                       View Poll
                     </button>
                     <button
-                      onClick={() => handleToggleStatus(poll.id, poll.is_active)}
+                      onClick={() => openToggleModal(poll.id, poll.title, poll.is_active)}
                       className={`${styles.toggleButton} ${styles.toggleDeactivate}`}
                       title="Deactivate"
                     >
@@ -230,7 +273,7 @@ export function MyPolls({ user }: MyPollsProps) {
                 ) : (
                   <>
                     <button
-                      onClick={() => handleToggleStatus(poll.id, poll.is_active)}
+                      onClick={() => openToggleModal(poll.id, poll.title, poll.is_active)}
                       className={styles.activateButton}
                     >
                       <HugeiconsIcon icon={ToggleOnIcon} size={16} />
@@ -249,6 +292,113 @@ export function MyPolls({ user }: MyPollsProps) {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {modalState.type === 'delete' && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <span className={styles.modalHeaderTitle}>Delete Poll</span>
+              <button className={styles.modalClose} onClick={closeModal} aria-label="Close modal">
+                <HugeiconsIcon icon={Cancel01Icon} size={14} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className={`${styles.modalIcon} ${styles.modalIconDanger}`}>
+                <HugeiconsIcon icon={Delete01Icon} size={18} />
+              </div>
+              <h3 className={styles.modalTitle}>Delete this poll?</h3>
+              <p className={styles.modalDescription}>
+                This action cannot be undone. All votes and data will be permanently removed.
+              </p>
+            </div>
+            <div className={styles.modalActions}>
+              <button className={styles.modalButtonSecondary} onClick={closeModal}>
+                Cancel
+              </button>
+              <button
+                className={styles.modalButtonDanger}
+                onClick={handleDelete}
+                disabled={isProcessing}
+              >
+                {isProcessing ? 'Deleting...' : 'Delete Poll'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Deactivate Confirmation Modal */}
+      {modalState.type === 'deactivate' && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <span className={styles.modalHeaderTitle}>Deactivate Poll</span>
+              <button className={styles.modalClose} onClick={closeModal} aria-label="Close modal">
+                <HugeiconsIcon icon={Cancel01Icon} size={14} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className={`${styles.modalIcon} ${styles.modalIconWarning}`}>
+                <HugeiconsIcon icon={Alert02Icon} size={18} />
+              </div>
+              <h3 className={styles.modalTitle}>Deactivate this poll?</h3>
+              <p className={styles.modalDescription}>
+                Users won't be able to vote while this poll is inactive. You can reactivate it
+                anytime.
+              </p>
+            </div>
+            <div className={styles.modalActions}>
+              <button className={styles.modalButtonSecondary} onClick={closeModal}>
+                Cancel
+              </button>
+              <button
+                className={styles.modalButtonWarning}
+                onClick={handleToggleStatus}
+                disabled={isProcessing}
+              >
+                {isProcessing ? 'Deactivating...' : 'Deactivate'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Activate Confirmation Modal */}
+      {modalState.type === 'activate' && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <span className={styles.modalHeaderTitle}>Activate Poll</span>
+              <button className={styles.modalClose} onClick={closeModal} aria-label="Close modal">
+                <HugeiconsIcon icon={Cancel01Icon} size={14} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className={styles.modalIcon}>
+                <HugeiconsIcon icon={ToggleOnIcon} size={18} />
+              </div>
+              <h3 className={styles.modalTitle}>Activate this poll?</h3>
+              <p className={styles.modalDescription}>
+                This poll will become live and users will be able to vote on it.
+              </p>
+              <div className={styles.modalPollName}>{modalState.pollTitle}</div>
+            </div>
+            <div className={styles.modalActions}>
+              <button className={styles.modalButtonSecondary} onClick={closeModal}>
+                Cancel
+              </button>
+              <button
+                className={styles.modalButtonPrimary}
+                onClick={handleToggleStatus}
+                disabled={isProcessing}
+              >
+                {isProcessing ? 'Activating...' : 'Activate'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

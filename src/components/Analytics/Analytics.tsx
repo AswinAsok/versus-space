@@ -148,8 +148,10 @@ export function Analytics({ user }: AnalyticsProps) {
   const activePolls = polls.filter((p) => p.is_active).length;
   const pollIds = polls.map((p) => p.id);
 
-  // Check if we have no data (new account)
-  const hasNoData = polls.length === 0;
+  // Check if we should show dummy data
+  // Non-Pro users always see dummy data (Analytics is a Pro feature)
+  // Pro users with no polls also see dummy data
+  const useDummyData = !isPro || polls.length === 0;
 
   // Simulated real-time dummy data state
   const [dummyTotalVotesState, setDummyTotalVotesState] = useState(211);
@@ -164,7 +166,7 @@ export function Analytics({ user }: AnalyticsProps) {
 
   // Simulate real-time updates for dummy data
   useEffect(() => {
-    if (!hasNoData) return;
+    if (!useDummyData) return;
 
     const interval = setInterval(() => {
       // Random chance to add a vote (30% chance every 2 seconds)
@@ -187,10 +189,10 @@ export function Analytics({ user }: AnalyticsProps) {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [hasNoData]);
+  }, [useDummyData]);
 
-  // Dummy data for empty state
-  const dummyPolls: Poll[] = hasNoData ? [
+  // Dummy data for empty state or free tier
+  const dummyPolls: Poll[] = useDummyData ? [
     {
       id: 'demo-1',
       title: 'Sample Poll 1',
@@ -211,9 +213,9 @@ export function Analytics({ user }: AnalyticsProps) {
     },
   ] : polls;
 
-  const dummyVotesPerPoll: PollVoteSummary[] = hasNoData ? dummyVotesPerPollState : votesPerPoll;
+  const dummyVotesPerPoll: PollVoteSummary[] = useDummyData ? dummyVotesPerPollState : votesPerPoll;
 
-  const dummyVotesOverTime = hasNoData ? (() => {
+  const dummyVotesOverTime = useDummyData ? (() => {
     const map = new Map<string, VoteDailyCount[]>();
     const today = new Date();
     const data: VoteDailyCount[] = [];
@@ -228,14 +230,14 @@ export function Analytics({ user }: AnalyticsProps) {
     return map;
   })() : votesOverTime;
 
-  const dummyPollTitles = hasNoData ? new Map([
+  const dummyPollTitles = useDummyData ? new Map([
     ['demo-1', 'Sample Poll 1'],
     ['demo-2', 'Sample Poll 2'],
   ]) : pollTitles;
 
-  const dummyOptionData: OptionVoteData[] = hasNoData ? dummyOptionDataState : optionData;
+  const dummyOptionData: OptionVoteData[] = useDummyData ? dummyOptionDataState : optionData;
 
-  const dummyVoteTimestamps = hasNoData ? (() => {
+  const dummyVoteTimestamps = useDummyData ? (() => {
     const timestamps: Date[] = [];
     const now = Date.now();
     for (let i = 0; i < 50; i++) {
@@ -244,11 +246,11 @@ export function Analytics({ user }: AnalyticsProps) {
     return timestamps;
   })() : voteTimestamps;
 
-  const dummyTotalVotes = hasNoData ? dummyTotalVotesState : totalVotes;
-  const dummyActivePolls = hasNoData ? 1 : activePolls;
-  const dummyPollIds = hasNoData ? ['demo-1', 'demo-2'] : pollIds;
-  const dummyRealVotes = hasNoData ? dummyTotalVotesState : realVotes;
-  const dummySimulatedVotes = hasNoData ? 0 : simulatedVotes;
+  const dummyTotalVotes = useDummyData ? dummyTotalVotesState : totalVotes;
+  const dummyActivePolls = useDummyData ? 1 : activePolls;
+  const dummyPollIds = useDummyData ? ['demo-1', 'demo-2'] : pollIds;
+  const dummyRealVotes = useDummyData ? dummyTotalVotesState : realVotes;
+  const dummySimulatedVotes = useDummyData ? 0 : simulatedVotes;
 
   if (loading) {
     return (
@@ -277,7 +279,10 @@ export function Analytics({ user }: AnalyticsProps) {
           totalVotes={dummyTotalVotes}
           activePolls={dummyActivePolls}
           pollIds={dummyPollIds}
-          showSampleNote={hasNoData}
+          showSampleNote={useDummyData}
+          sampleNoteMessage={!isPro
+            ? 'Showing sample data — upgrade to Pro for real analytics'
+            : 'Showing sample data — create your first poll to see real analytics'}
         />
 
         {/* Real-time Section: Momentum + Option Race */}
@@ -295,8 +300,8 @@ export function Analytics({ user }: AnalyticsProps) {
             <div className={!isPro ? styles.proContent : ''}>
               <OptionRace
                 polls={dummyPolls}
-                selectedPollId={hasNoData ? 'demo-1' : selectedPollId}
-                onPollChange={hasNoData ? () => {} : setSelectedPollId}
+                selectedPollId={useDummyData ? 'demo-1' : selectedPollId}
+                onPollChange={useDummyData ? () => {} : setSelectedPollId}
                 showProBadge={!isPro}
                 proDescription={!isPro ? 'Watch options compete live' : undefined}
               />
@@ -305,7 +310,7 @@ export function Analytics({ user }: AnalyticsProps) {
         </div>
 
         {/* Vote Toast Notifications */}
-        {!hasNoData && isPro && <VoteToast pollIds={pollIds} pollTitles={pollTitles} />}
+        {!useDummyData && isPro && <VoteToast pollIds={pollIds} pollTitles={pollTitles} />}
 
         {/* Progress Section: Milestone + Personal Records */}
         <div className={styles.twoColumnGrid}>
@@ -313,7 +318,7 @@ export function Analytics({ user }: AnalyticsProps) {
             <div className={!isPro ? styles.proContent : ''}>
               <MilestoneProgress
                 totalVotes={dummyTotalVotes}
-                loading={chartsLoading && !hasNoData}
+                loading={chartsLoading && !useDummyData}
                 showProBadge={!isPro}
                 proDescription={!isPro ? 'Celebrate your voting milestones' : undefined}
               />
@@ -335,7 +340,7 @@ export function Analytics({ user }: AnalyticsProps) {
           <VotesOverTimeChart
             data={dummyVotesOverTime}
             pollTitles={dummyPollTitles}
-            loading={chartsLoading && !hasNoData}
+            loading={chartsLoading && !useDummyData}
             days={dateRange}
             showProBadge={!isPro}
             proDescription={!isPro ? 'Analyze voting trends over time' : undefined}
@@ -349,7 +354,7 @@ export function Analytics({ user }: AnalyticsProps) {
           <VotingHeatmap
             voteTimestamps={dummyVoteTimestamps}
             totalVotesAllPolls={dummyTotalVotes}
-            loading={chartsLoading && !hasNoData}
+            loading={chartsLoading && !useDummyData}
             showProBadge={!isPro}
             proDescription={!isPro ? 'Discover peak voting hours' : undefined}
           />
@@ -380,7 +385,7 @@ export function Analytics({ user }: AnalyticsProps) {
               <RealVsSimulatedChart
                 realVotes={dummyRealVotes}
                 simulatedVotes={dummySimulatedVotes}
-                loading={chartsLoading && !hasNoData}
+                loading={chartsLoading && !useDummyData}
                 showProBadge={!isPro}
                 proDescription={!isPro ? 'Verify vote authenticity' : undefined}
               />
@@ -390,11 +395,11 @@ export function Analytics({ user }: AnalyticsProps) {
             <div className={!isPro ? styles.proContent : ''}>
               <OptionBreakdownChart
                 data={dummyOptionData}
-                pollTitle={hasNoData ? 'Sample Poll 1' : selectedPollTitle}
-                loading={optionLoading && !hasNoData}
+                pollTitle={useDummyData ? 'Sample Poll 1' : selectedPollTitle}
+                loading={optionLoading && !useDummyData}
                 polls={dummyPolls}
-                selectedPollId={hasNoData ? 'demo-1' : selectedPollId}
-                onPollChange={hasNoData ? () => {} : setSelectedPollId}
+                selectedPollId={useDummyData ? 'demo-1' : selectedPollId}
+                onPollChange={useDummyData ? () => {} : setSelectedPollId}
                 showProBadge={!isPro}
                 proDescription={!isPro ? 'Deep dive into option stats' : undefined}
               />
@@ -406,7 +411,7 @@ export function Analytics({ user }: AnalyticsProps) {
         <div className={!isPro ? styles.proContent : ''}>
           <VotesPerPollChart
             data={dummyVotesPerPoll}
-            loading={chartsLoading && !hasNoData}
+            loading={chartsLoading && !useDummyData}
             showProBadge={!isPro}
             proDescription={!isPro ? 'Compare performance across polls' : undefined}
           />

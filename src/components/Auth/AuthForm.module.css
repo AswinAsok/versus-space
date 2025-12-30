@@ -488,6 +488,32 @@
   pointer-events: none;
 }
 
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: #f87171;
+}
+
+.errorIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: rgba(239, 68, 68, 0.15);
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #f87171;
+  flex-shrink: 0;
+}
+
 .passwordWrapper {
   position: relative;
   display: flex;
@@ -634,102 +660,125 @@
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1rem;
   z-index: 100;
-  animation: fadeIn 0.3s var(--ease-out);
+  animation: fadeIn 0.2s var(--ease-out);
 }
 
 .modal {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  width: min(420px, 100%);
-  box-shadow:
-    var(--glass-shadow),
-    0 0 40px rgba(62, 207, 142, 0.1);
-  text-align: center;
-  animation: modalSlideIn 0.4s var(--ease-out);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  width: min(340px, 100%);
+  animation: modalSlideIn 0.3s var(--ease-out);
+  overflow: hidden;
 }
 
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-.modalIcon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(62, 207, 142, 0.2) 0%, rgba(62, 207, 142, 0.05) 100%);
-  border: 1px solid rgba(62, 207, 142, 0.25);
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalHeaderTitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.modalClose {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.25rem;
-  color: var(--color-primary);
-  animation: iconPulse 2s ease-in-out infinite;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
-@keyframes iconPulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(62, 207, 142, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 0 12px rgba(62, 207, 142, 0);
-  }
+.modalClose:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text);
+}
+
+.modalBody {
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.modalIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.75rem;
+  color: var(--color-text-muted);
 }
 
 .modalTitle {
-  font-size: 1.375rem;
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 0.9375rem;
   font-weight: 600;
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.375rem;
   color: var(--color-text);
   letter-spacing: -0.01em;
 }
 
 .modalText {
-  color: var(--color-text-light);
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-bottom: 0;
 }
 
 .modalActions {
   display: flex;
-  justify-content: center;
+  padding: 0 1rem 1rem;
 }
 
 .modalButton {
-  padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, var(--color-primary) 0%, #34b27b 100%);
-  color: #000000;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: var(--color-primary);
+  color: #000;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: 0.8125rem;
   cursor: pointer;
-  transition: all var(--transition-normal) var(--ease-out);
-  box-shadow: 0 4px 14px rgba(62, 207, 142, 0.35);
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
 .modalButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(62, 207, 142, 0.45);
+  background: var(--color-primary-dark);
 }
 
 @keyframes spin {
@@ -897,21 +946,38 @@
     font-size: 0.8125rem;
   }
 
-  .modal {
-    padding: 1.5rem;
+  .modalHeader {
+    padding: 0.375rem 0.75rem;
+  }
+
+  .modalHeaderTitle {
+    font-size: 0.6875rem;
+  }
+
+  .modalClose {
+    width: 24px;
+    height: 24px;
+  }
+
+  .modalBody {
+    padding: 1rem;
   }
 
   .modalIcon {
-    width: 52px;
-    height: 52px;
+    width: 32px;
+    height: 32px;
   }
 
   .modalTitle {
-    font-size: 1.125rem;
+    font-size: 0.875rem;
   }
 
   .modalText {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
+  }
+
+  .modalActions {
+    padding: 0 0.875rem 0.875rem;
   }
 }
 
@@ -1017,27 +1083,43 @@
     font-size: 0.75rem;
   }
 
-  .modal {
-    padding: 1.25rem;
+  .modalHeader {
+    padding: 0.375rem 0.625rem;
+  }
+
+  .modalHeaderTitle {
+    font-size: 0.625rem;
+  }
+
+  .modalClose {
+    width: 20px;
+    height: 20px;
+  }
+
+  .modalBody {
+    padding: 0.875rem;
   }
 
   .modalIcon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 0.875rem;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 0.625rem;
   }
 
   .modalTitle {
-    font-size: 1rem;
+    font-size: 0.8125rem;
   }
 
   .modalText {
-    font-size: 0.75rem;
-    margin-bottom: 1rem;
+    font-size: 0.6875rem;
+  }
+
+  .modalActions {
+    padding: 0 0.75rem 0.75rem;
   }
 
   .modalButton {
-    padding: 0.625rem 1.25rem;
-    font-size: 0.8125rem;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.75rem;
   }
 }

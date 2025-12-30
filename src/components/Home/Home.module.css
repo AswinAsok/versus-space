@@ -1634,8 +1634,8 @@
   line-height: 0;
   position: relative;
   top: -0.35rem;
-  margin-left: -0.35rem;
-  margin-right: -0.35rem;
+  margin-left: -0.55rem;
+  margin-right: -0.55rem;
   color: var(--color-text-muted);
   transition: all var(--transition-fast) var(--ease-out);
 }
@@ -2050,15 +2050,7 @@
   }
 
   .circularTextBadge {
-    top: -50px;
-    right: 50%;
-    transform: translateX(50%);
-    width: 120px;
-    height: 120px;
-  }
-
-  .circularTextBadge span {
-    font-size: 10px !important;
+    display: none;
   }
 
   .demoNote {

@@ -1,60 +1,63 @@
 /* Settings Container */
 .settingsContainer {
   flex: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
   font-family: 'Google Sans', sans-serif;
 }
 
 .settingsInner {
   max-width: 720px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 /* Page Header */
 .pageHeader {
-  margin-bottom: 2rem;
   animation: fadeInDown 0.5s var(--ease-out);
 }
 
 .pageTitle {
   font-family: 'Parkinsans', sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-text);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   letter-spacing: -0.02em;
 }
 
 .pageSubtitle {
-  font-size: 0.9375rem;
+  font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
 
 /* Sections */
 .section {
-  margin-bottom: 2rem;
   animation: fadeInUp 0.5s var(--ease-out) both;
 }
 
-.section:nth-child(1) {
+.section:nth-child(2) {
   animation-delay: 0.1s;
 }
 
-.section:nth-child(2) {
+.section:nth-child(3) {
   animation-delay: 0.2s;
 }
 
-.section:nth-child(3) {
+.section:nth-child(4) {
   animation-delay: 0.3s;
 }
 
 .sectionTitle {
   font-family: 'Parkinsans', sans-serif;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-text);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
 }
 
 .dangerTitle {
@@ -63,59 +66,33 @@
 
 /* Setting Cards */
 .settingCard {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
-  position: relative;
   transition: all var(--transition-normal) var(--ease-out);
 }
 
-/* Subtle shimmer effect on hover */
-.settingCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
-  pointer-events: none;
-  z-index: 10;
-  border-radius: var(--radius-lg);
-  opacity: 0;
-  transform: translateX(0);
-  transition:
-    opacity 0.3s var(--ease-out),
-    transform 0.8s var(--ease-out);
-}
-
-.settingCard:hover::before {
-  opacity: 1;
-  transform: translateX(220%);
-}
-
 .settingCard:hover {
+  background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
 .dangerCard {
-  border-color: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.15);
 }
 
 .dangerCard:hover {
-  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.02);
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
 .settingItem {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.25rem;
-  transition: background var(--transition-fast) var(--ease-out);
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  transition: all var(--transition-fast) var(--ease-out);
 }
 
 .settingItem:not(:last-child) {
@@ -127,92 +104,91 @@
 }
 
 .settingIcon {
-  width: 40px;
-  height: 40px;
-  background: var(--color-primary-light);
-  border-radius: var(--radius-md);
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
+  color: var(--color-text-muted);
   flex-shrink: 0;
-  transition: all var(--transition-normal) var(--ease-out);
 }
 
-.settingItem:hover .settingIcon {
-  background: rgba(62, 207, 142, 0.15);
+.activeIcon {
+  color: var(--color-primary);
 }
 
 .dangerIcon {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.08);
   color: var(--color-danger);
 }
 
-.settingItem:hover .dangerIcon {
-  background: rgba(239, 68, 68, 0.15);
-}
-
 .googleIcon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .settingContent {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
 }
 
 .settingLabel {
-  font-size: 0.9375rem;
-  font-weight: 600;
+  font-size: 0.8125rem;
+  font-weight: 500;
   color: var(--color-text);
-  margin-bottom: 0.25rem;
 }
 
 .settingValue {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
 }
 
 .settingDescription {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
+  line-height: 1.4;
 }
 
 .settingAction {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  font-size: 0.8125rem;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-xs, 4px);
+  font-size: 0.6875rem;
   font-weight: 500;
-  color: var(--color-text);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all var(--transition-fast) var(--ease-out);
   flex-shrink: 0;
 }
 
 .settingAction:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text);
 }
 
 .dangerButton {
   background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.6875rem;
+  font-weight: 600;
   color: var(--color-danger);
   cursor: pointer;
   transition: all var(--transition-fast) var(--ease-out);
   flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .dangerButton:hover {
   background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.25);
 }
 
 /* Badges */
@@ -220,31 +196,302 @@
 .connectedBadge {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
+  gap: 0.25rem;
+  padding: 0.1875rem 0.5rem;
   border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.625rem;
+  font-weight: 600;
   flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .verifiedBadge {
-  background: rgba(62, 207, 142, 0.1);
+  background: rgba(62, 207, 142, 0.15);
   color: var(--color-primary);
 }
 
 .connectedBadge {
-  background: rgba(100, 116, 139, 0.1);
-  color: var(--color-text-light);
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--color-text-muted);
+}
+
+/* Plan Card */
+.planCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.planCard:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.currentPlan {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.planHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.planInfo {
+  flex: 1;
+}
+
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1875rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.375rem;
+}
+
+.planBadgeFree {
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--color-text-muted);
+}
+
+.planBadgePro {
+  background: rgba(62, 207, 142, 0.15);
+  color: var(--color-primary);
+}
+
+.planName {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.125rem;
+}
+
+.planDescription {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.upgradeButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.upgradeButton:hover {
+  background: var(--color-primary-dark);
+}
+
+/* Plan Comparison */
+.planComparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.planColumn {
+  padding: 0.875rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  opacity: 0.5;
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.planColumn:last-child {
+  border-right: none;
+}
+
+.planColumnActive {
+  opacity: 1;
+}
+
+.planColumnPro.planColumnActive {
+  background: rgba(62, 207, 142, 0.02);
+}
+
+.planColumnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.625rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.planColumnName {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.planColumnPro .planColumnName {
+  color: var(--color-primary);
+}
+
+.planColumnPrice {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.planColumnPrice span {
+  font-size: 0.5625rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.planFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.planFeatures li {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.planFeatures li svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+/* Chai Meter */
+.chaiCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.chaiCard:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.chaiHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.chaiIcon {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.chaiInfo {
+  flex: 1;
+}
+
+.chaiTitle {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
+.chaiDescription {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.chaiProgress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chaiLabels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chaiCurrent {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.chaiGoal {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.chaiBar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.chaiFill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border-radius: 3px;
+  transition: width 0.5s var(--ease-out);
+}
+
+.chaiNote {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0;
 }
 
 /* Modal */
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -263,97 +510,92 @@
 }
 
 .modal {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: rgba(17, 24, 28, 0.98);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-xl);
-  padding: 2rem;
-  max-width: 400px;
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  max-width: 360px;
   width: 100%;
   text-align: center;
-  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
   animation: modalSlideUp 0.3s var(--ease-out);
 }
 
 @keyframes modalSlideUp {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
 .modalIcon {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   background: rgba(239, 68, 68, 0.1);
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-danger);
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1rem;
 }
 
 .modalTitle {
   font-family: 'Parkinsans', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--color-text);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .modalText {
-  font-size: 0.9375rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
 }
 
 .modalActions {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .modalCancelButton {
   flex: 1;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
   font-weight: 500;
-  color: var(--color-text);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all var(--transition-fast) var(--ease-out);
 }
 
 .modalCancelButton:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text);
 }
 
 .modalDeleteButton {
   flex: 1;
-  background: var(--color-danger);
+  background: rgba(239, 68, 68, 0.15);
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-danger);
   cursor: pointer;
   transition: all var(--transition-fast) var(--ease-out);
-  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.1);
 }
 
 .modalDeleteButton:hover {
-  background: #dc2626;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
+  background: rgba(239, 68, 68, 0.2);
 }
 
 /* Animations */
@@ -382,11 +624,15 @@
 /* Responsive */
 @media (max-width: 768px) {
   .settingsContainer {
-    padding: 1.5rem;
+    padding: 1rem;
+  }
+
+  .settingsInner {
+    gap: 1rem;
   }
 
   .pageTitle {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .settingItem {
@@ -394,34 +640,102 @@
   }
 
   .settingContent {
-    flex-basis: calc(100% - 56px);
+    flex-basis: calc(100% - 48px);
   }
 
   .settingAction,
-  .dangerButton,
   .verifiedBadge,
   .connectedBadge {
-    margin-left: 56px;
+    margin-left: 48px;
+    margin-top: 0.5rem;
+  }
+
+  .dangerButton {
+    margin-left: 0;
     margin-top: 0.75rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .settingsContainer {
-    padding: 1rem;
+    padding: 0.75rem;
+  }
+
+  .settingsInner {
+    gap: 0.875rem;
   }
 
   .pageTitle {
-    font-size: 1.375rem;
+    font-size: 1.125rem;
+  }
+
+  .pageSubtitle {
+    font-size: 0.75rem;
+  }
+
+  .sectionTitle {
+    font-size: 0.9375rem;
   }
 
   .settingItem {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .settingIcon {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .planHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .upgradeButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .planComparison {
+    grid-template-columns: 1fr;
+  }
+
+  .planColumn {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .planColumn:last-child {
+    border-bottom: none;
+  }
+
+  .chaiCard {
+    padding: 0.875rem;
+  }
+
+  .chaiHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.625rem;
+  }
+
+  .chaiIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .chaiTitle {
+    font-size: 0.8125rem;
+  }
+
+  .chaiDescription {
+    font-size: 0.6875rem;
   }
 
   .modalActions {
