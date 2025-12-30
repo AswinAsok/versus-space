@@ -3,6 +3,7 @@ import { usePollBySlug, useValidateAccessKey } from '../../hooks/usePollQueries'
 import { supabase } from '../../lib/supabaseClient';
 import { VotingInterface } from './VotingInterface';
 import { PollSEO } from '../SEO/SEO';
+import { MouseLoader } from '../Loading/MouseLoader';
 import { Lock, Key, Code2, Eye, EyeOff } from 'lucide-react';
 import styles from './PollView.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -112,7 +113,7 @@ export function PollView({ slug }: PollViewProps) {
   };
 
   if (loading || checkingAccess) {
-    return <div className={sharedStyles.loading}>Loading poll...</div>;
+    return <MouseLoader message="Loading poll..." />;
   }
 
   if (error || !poll) {

@@ -7,7 +7,7 @@
 
 import { Link } from 'react-router-dom';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { CodeIcon, GithubIcon, BookOpen01Icon, Tap01Icon, UserGroupIcon, HelpCircleIcon } from '@hugeicons/core-free-icons';
+import { CodeIcon, GithubIcon, Tap01Icon, UserGroupIcon, HelpCircleIcon } from '@hugeicons/core-free-icons';
 import styles from './Footer.module.css';
 
 interface FooterProps {
@@ -99,12 +99,6 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
           <nav className={styles.footerNav} aria-label="Resources">
             <h3 className={styles.navTitle}>Resources</h3>
             <ul>
-              <li>
-                <Link to="/blog">
-                  <HugeiconsIcon icon={BookOpen01Icon} size={14} />
-                  Blog
-                </Link>
-              </li>
               <li>
                 <Link to="/#faq">
                   <HugeiconsIcon icon={HelpCircleIcon} size={14} />

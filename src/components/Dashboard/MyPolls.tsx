@@ -23,8 +23,10 @@ import {
   PencilEdit01Icon,
   Cancel01Icon,
   Alert02Icon,
+  ArrowUp01Icon,
 } from '@hugeicons/core-free-icons';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
+import { MouseLoader } from '../Loading/MouseLoader';
 import styles from './MyPolls.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -108,12 +110,7 @@ export function MyPolls({ user }: MyPollsProps) {
   };
 
   if (isLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}></div>
-        <p>Loading your polls...</p>
-      </div>
-    );
+    return <MouseLoader message="Loading your polls..." />;
   }
 
   return (
@@ -143,14 +140,27 @@ export function MyPolls({ user }: MyPollsProps) {
             {polls.length} {polls.length === 1 ? 'poll' : 'polls'} in your collection
           </p>
         </div>
-        <button
-          onClick={() => navigate('/dashboard/create')}
-          className={styles.createButton}
-          disabled={isAtFreeLimit || pollCountLoading}
-        >
-          <HugeiconsIcon icon={Add01Icon} size={18} />
-          {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Poll'}
-        </button>
+        {isAtFreeLimit ? (
+          <button
+            onClick={() => navigate('/dashboard/settings')}
+            className={styles.upgradeButton}
+          >
+            <HugeiconsIcon icon={ArrowUp01Icon} size={18} />
+            <span className={styles.upgradeButtonText}>
+              Upgrade to Pro
+              <span className={styles.upgradeButtonPrice}>$0.18/mo</span>
+            </span>
+          </button>
+        ) : (
+          <button
+            onClick={() => navigate('/dashboard/create')}
+            className={styles.createButton}
+            disabled={pollCountLoading}
+          >
+            <HugeiconsIcon icon={Add01Icon} size={18} />
+            Create Poll
+          </button>
+        )}
       </div>
 
       {error && (
@@ -194,24 +204,32 @@ export function MyPolls({ user }: MyPollsProps) {
         </div>
       ) : (
         <div className={styles.pollsGrid}>
-          {polls.map((poll, index) => (
+          {polls.map((poll, index) => {
+            const isExpired = poll.ends_at ? new Date(poll.ends_at) <= new Date() : false;
+
+            return (
             <div
               key={poll.id}
-              className={styles.pollCard}
+              className={`${styles.pollCard} ${isExpired ? styles.expiredPoll : ''}`}
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               <div className={styles.pollCardHeader}>
                 <div className={styles.pollBadges}>
-                  <span
-                    className={`${styles.visibilityBadge} ${poll.is_public ? styles.public : styles.private}`}
-                  >
-                    {poll.is_public ? (
-                      <HugeiconsIcon icon={GlobeIcon} size={12} />
-                    ) : (
-                      <HugeiconsIcon icon={LockIcon} size={12} />
+                  <div className={styles.badgeGroup}>
+                    <span
+                      className={`${styles.visibilityBadge} ${poll.is_public ? styles.public : styles.private}`}
+                    >
+                      {poll.is_public ? (
+                        <HugeiconsIcon icon={GlobeIcon} size={12} />
+                      ) : (
+                        <HugeiconsIcon icon={LockIcon} size={12} />
+                      )}
+                      {poll.is_public ? 'Public' : 'Private'}
+                    </span>
+                    {isExpired && (
+                      <span className={styles.expiredBadge}>Expired</span>
                     )}
-                    {poll.is_public ? 'Public' : 'Private'}
-                  </span>
+                  </div>
                   <div className={styles.pollRight}>
                     <div className={styles.pollMenu}>
                       <button
@@ -225,22 +243,28 @@ export function MyPolls({ user }: MyPollsProps) {
                           <HugeiconsIcon icon={Copy01Icon} size={16} />
                         )}
                       </button>
-                      <button
-                        onClick={() => navigate(`/dashboard/edit/${poll.id}`)}
-                        className={styles.menuButton}
-                        title="Edit poll"
-                      >
-                        <HugeiconsIcon icon={PencilEdit01Icon} size={16} />
-                      </button>
-                      <button
-                        onClick={() => openDeleteModal(poll.id, poll.title)}
-                        className={`${styles.menuButton} ${styles.deleteButton}`}
-                        title="Delete poll"
-                      >
-                        <HugeiconsIcon icon={Delete01Icon} size={16} />
-                      </button>
+                      {!isExpired && (
+                        <button
+                          onClick={() => navigate(`/dashboard/edit/${poll.id}`)}
+                          className={styles.menuButton}
+                          title="Edit poll"
+                        >
+                          <HugeiconsIcon icon={PencilEdit01Icon} size={16} />
+                        </button>
+                      )}
+                      {isPro && !isExpired && (
+                        <button
+                          onClick={() => openDeleteModal(poll.id, poll.title)}
+                          className={`${styles.menuButton} ${styles.deleteButton}`}
+                          title="Delete poll"
+                        >
+                          <HugeiconsIcon icon={Delete01Icon} size={16} />
+                        </button>
+                      )}
                     </div>
-                    {poll.is_active ? (
+                    {isExpired ? (
+                      <span className={`${styles.statusBadge} ${styles.expired}`}>Ended</span>
+                    ) : poll.is_active ? (
                       <span className={styles.activeDot} title="Active"></span>
                     ) : (
                       <span className={`${styles.statusBadge} ${styles.inactive}`}>Inactive</span>
@@ -263,7 +287,16 @@ export function MyPolls({ user }: MyPollsProps) {
               </div>
 
               <div className={styles.pollActions}>
-                {poll.is_active ? (
+                {isExpired ? (
+                  <button
+                    onClick={() => window.open(`/poll/${poll.slug}`, '_blank')}
+                    className={styles.viewButtonSecondary}
+                    style={{ width: '100%' }}
+                  >
+                    <HugeiconsIcon icon={SquareArrowUpRightIcon} size={16} />
+                    View Results
+                  </button>
+                ) : poll.is_active ? (
                   <>
                     <button
                       onClick={() => window.open(`/poll/${poll.slug}`, '_blank')}
@@ -302,7 +335,43 @@ export function MyPolls({ user }: MyPollsProps) {
                 )}
               </div>
             </div>
-          ))}
+          );
+          })}
+
+          {/* Placeholder cards for free users */}
+          {!isPro && polls.length < FREE_PLAN_POLL_LIMIT && (
+            <>
+              {Array.from({ length: FREE_PLAN_POLL_LIMIT - polls.length }).map((_, index) => (
+                <div
+                  key={`placeholder-${index}`}
+                  className={styles.placeholderCard}
+                  style={{ animationDelay: `${(polls.length + index) * 0.05}s` }}
+                  onClick={() => navigate('/dashboard/create')}
+                >
+                  <div className={styles.placeholderContent}>
+                    <HugeiconsIcon icon={Add01Icon} size={24} />
+                    <span>Create Poll</span>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          {/* Upgrade card for free users */}
+          {!isPro && (
+            <div
+              className={styles.upgradeCard}
+              onClick={() => navigate('/dashboard/settings')}
+              style={{ animationDelay: `${(polls.length + (FREE_PLAN_POLL_LIMIT - polls.length)) * 0.05}s` }}
+            >
+              <span className={styles.upgradeCardBadge}>Pro</span>
+              <div className={styles.upgradeCardContent}>
+                <HugeiconsIcon icon={ArrowUp01Icon} size={28} />
+                <span className={styles.upgradeCardTitle}>Upgrade to Pro</span>
+                <span className={styles.upgradeCardSubtitle}>Unlimited polls & Pro Analytics</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

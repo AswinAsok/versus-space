@@ -18,6 +18,7 @@ import {
   CheckmarkCircle02Icon,
 } from '@hugeicons/core-free-icons';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
+import { MouseLoader } from '../Loading/MouseLoader';
 import { UpgradePlan } from './UpgradePlan';
 import type { Poll } from '../../types';
 import styles from './DashboardHome.module.css';
@@ -91,12 +92,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
     .slice(0, 3);
 
   if (loading || profileLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}></div>
-        <p>Loading your dashboard...</p>
-      </div>
-    );
+    return <MouseLoader message="Loading your dashboard..." />;
   }
 
   return (
@@ -184,9 +180,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             </div>
           </div>
           <button
-            onClick={() => navigate('/dashboard/create')}
+            onClick={() => navigate(isAtFreeLimit ? '/dashboard/settings' : '/dashboard/create')}
             className={styles.createButton}
-            disabled={isAtFreeLimit}
           >
             <HugeiconsIcon icon={Add01Icon} size={18} />
             {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Poll'}
@@ -246,9 +241,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
               Create your first poll and start collecting feedback
             </p>
             <button
-              onClick={() => navigate('/dashboard/create')}
+              onClick={() => navigate(isAtFreeLimit ? '/dashboard/settings' : '/dashboard/create')}
               className={styles.emptyButton}
-              disabled={isAtFreeLimit}
             >
               <HugeiconsIcon icon={Add01Icon} size={18} />
               {isAtFreeLimit ? 'Upgrade to Pro' : 'Create Your First Poll'}

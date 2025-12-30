@@ -21,8 +21,6 @@ import { Profile } from './components/Profile/Profile';
 import { Analytics } from './components/Analytics/Analytics';
 import { CreatePoll } from './components/Poll/CreatePoll';
 import { PollView } from './components/Poll/PollView';
-import { Blog } from './components/Blog/Blog';
-import { BlogPostPage } from './components/Blog/BlogPost';
 import { MouseLoader } from './components/Loading/MouseLoader';
 import type { User } from '@supabase/supabase-js';
 import appStyles from './components/App.module.css';
@@ -123,9 +121,6 @@ function RoutedApp() {
           <Route path="/poll/:slug" element={<PollRoute />} />
           {/* Explore redirects to home with leaderboard */}
           <Route path="/explore" element={<Navigate to="/#leaderboard" replace />} />
-          {/* Blog routes for SEO content */}
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

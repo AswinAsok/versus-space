@@ -12,10 +12,8 @@ import {
   GraduationScrollIcon,
   Calendar01Icon,
   Comment01Icon,
-  BookOpen01Icon,
   Add01Icon,
   CheckmarkCircle02Icon,
-  SparklesIcon,
   CrownIcon,
   Coffee01Icon,
 } from '@hugeicons/core-free-icons';
@@ -615,9 +613,9 @@ export function Home({ onNavigate }: HomeProps) {
 
             <div className={styles.pricingNote}>
               <p className={styles.pricingNoteText}>
-                YESS, with this pricing this app won't survive — but this is my first project with a
-                subscription model, and my only <span className={styles.pricingNoteWhite}>AIM</span>{' '}
-                is to get my{' '}
+                This is my first <span className={styles.pricingNoteWhite}>SOLO</span> project with
+                a subscription model, and my only{' '}
+                <span className={styles.pricingNoteWhite}>AIM</span> is to get my{' '}
                 <span className={styles.pricingNoteHighlight}>FIRST PAYING CUSTOMER</span>. As you
                 can already see, there are{' '}
                 <span className={styles.pricingNoteHighlight}>NO PLANS</span> to turn this into the
@@ -693,10 +691,6 @@ export function Home({ onNavigate }: HomeProps) {
             <nav className={styles.footerNav} aria-label="Footer navigation">
               <Link to="/create" className={styles.footerNavLink}>
                 Create Poll
-              </Link>
-              <Link to="/blog" className={styles.footerNavLink}>
-                <HugeiconsIcon icon={BookOpen01Icon} size={14} />
-                Blog
               </Link>
               <a href="#how-it-works" className={styles.footerNavLink}>
                 How It Works

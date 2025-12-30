@@ -22,6 +22,7 @@ import {
   CodeIcon,
 } from '@hugeicons/core-free-icons';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
+import { MouseLoader } from '../Loading/MouseLoader';
 import type { Poll } from '../../types';
 import styles from './Dashboard.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -100,12 +101,7 @@ export function Dashboard({ user, onNavigate }: DashboardProps) {
   };
 
   if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}></div>
-        <p>Loading your dashboard...</p>
-      </div>
-    );
+    return <MouseLoader message="Loading your dashboard..." />;
   }
 
   return (

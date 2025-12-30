@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import ReactSpeedometer, { Transition } from 'react-d3-speedometer';
-import { track } from '@vercel/analytics';
-import { Copy, Check, X } from 'lucide-react';
+import { Copy, Check, X, QrCode } from 'lucide-react';
 import CountUp from '../ReactBits/CountUp/CountUp';
 import Counter from '../ReactBits/Counter/Counter';
 import { voteFacade } from '../../core/appServices';
@@ -70,6 +69,7 @@ export function VotingInterface({
   const [lineNudges, setLineNudges] = useState<Map<string, number>>(new Map());
   const [shareFeedback, setShareFeedback] = useState('');
   const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState<string | null>(null);
 
   const floatingIdRef = useRef(0);
   // Use ref instead of state for voting lock - ref updates are synchronous
@@ -221,6 +221,47 @@ export function VotingInterface({
       .then(setIpAddress)
       .catch(() => setIpAddress('unknown'));
   }, []);
+
+  // Countdown timer
+  useEffect(() => {
+    if (!endsAt || isExpired) {
+      setTimeRemaining(null);
+      return;
+    }
+
+    const calculateTimeRemaining = () => {
+      const now = new Date().getTime();
+      const endTime = new Date(endsAt).getTime();
+      const diff = endTime - now;
+
+      if (diff <= 0) {
+        setTimeRemaining(null);
+        // Auto refresh when timer ends
+        window.location.reload();
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      if (days > 0) {
+        setTimeRemaining(`${days}d ${hours}h ${minutes}m`);
+      } else if (hours > 0) {
+        setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
+      } else if (minutes > 0) {
+        setTimeRemaining(`${minutes}m ${seconds}s`);
+      } else {
+        setTimeRemaining(`${seconds}s`);
+      }
+    };
+
+    calculateTimeRemaining();
+    const interval = setInterval(calculateTimeRemaining, 1000);
+
+    return () => clearInterval(interval);
+  }, [endsAt, isExpired]);
 
   const pollLink = useMemo(() => {
     if (typeof window !== 'undefined') {
@@ -487,6 +528,15 @@ export function VotingInterface({
         </div>
       )}
 
+      {/* Countdown Timer - Top right toast */}
+      {timeRemaining && (
+        <div className={styles.countdownTimer}>
+          <div className={styles.timerDot} />
+          <span className={styles.timerLabel}>Ends in</span>
+          <span className={styles.timerValue}>{timeRemaining}</span>
+        </div>
+      )}
+
       {/* Combo indicator */}
       {combo > 1 && (
         <div className={styles.comboIndicator}>
@@ -513,30 +563,15 @@ export function VotingInterface({
         </div>
       ))}
 
+      {/* Share Button - Fixed position on mobile */}
+      <button className={styles.shareButton} onClick={openQrModal}>
+        <QrCode size={14} />
+        Share Poll
+      </button>
+
       {/* Poll Title */}
       <div className={styles.pollTitleContainer} style={{ left: `${firstOptionPercentage}vw` }}>
-        <button className={styles.shareButton} onClick={openQrModal}>
-          Share Poll
-        </button>
         <h1 className={styles.pollTitle}>{title}</h1>
-        <a
-          href="https://ente.io/?utm_source=versus.space"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.hackathonBadge}
-          onClick={(e) => {
-            e.stopPropagation();
-            track('ente_link_click', { location: 'voting_interface_hackathon_badge' });
-          }}
-        >
-          <span className={styles.hackathonText}>built at</span>
-          <img src="/ente-branding-green.png" alt="Ente" className={styles.hackathonLogo} />
-          <div className={styles.cursorTrail}>
-            <svg className={styles.cursor} viewBox="0 0 24 24" fill="currentColor">
-              <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L6.35 2.85a.5.5 0 0 0-.85.36Z" />
-            </svg>
-          </div>
-        </a>
       </div>
 
       {options.map((option, index) => {

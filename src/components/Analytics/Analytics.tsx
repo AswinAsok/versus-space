@@ -17,6 +17,7 @@ import {
   PollHealthScores,
 } from './charts';
 import { VoteToast } from './VoteToast';
+import { MouseLoader } from '../Loading/MouseLoader';
 import type { Poll, VoteDailyCount, PollVoteSummary, OptionVoteData } from '../../types';
 import styles from './Analytics.module.css';
 
@@ -253,16 +254,7 @@ export function Analytics({ user }: AnalyticsProps) {
   const dummySimulatedVotes = useDummyData ? 0 : simulatedVotes;
 
   if (loading) {
-    return (
-      <div className={styles.analyticsContainer}>
-        <div className={styles.analyticsInner}>
-          <div className={styles.loadingState}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading analytics...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <MouseLoader message="Loading analytics..." />;
   }
 
   return (

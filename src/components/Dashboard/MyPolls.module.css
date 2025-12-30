@@ -148,6 +148,47 @@
   box-shadow: 0 4px 14px rgba(62, 207, 142, 0.2);
 }
 
+.upgradeButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--color-text);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all var(--transition-normal) var(--ease-out);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.upgradeButton:hover {
+  background: linear-gradient(135deg, rgba(62, 207, 142, 0.15) 0%, rgba(62, 207, 142, 0.08) 100%);
+  border-color: rgba(62, 207, 142, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(62, 207, 142, 0.15);
+}
+
+.upgradeButton svg {
+  color: var(--color-primary);
+}
+
+.upgradeButtonText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.upgradeButtonPrice {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  opacity: 0.9;
+}
+
 /* Polls Grid */
 .pollsGrid {
   display: grid;
@@ -185,6 +226,110 @@
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Placeholder Card */
+.placeholderCard {
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal) var(--ease-out);
+  animation: fadeInUp 0.3s var(--ease-out) both;
+}
+
+.placeholderCard:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.placeholderCard:hover .placeholderContent {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.placeholderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.placeholderContent span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Upgrade Card - Premium */
+.upgradeCard {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1rem;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal) var(--ease-out);
+  animation: fadeInUp 0.3s var(--ease-out) both;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+}
+
+.upgradeCard:hover {
+  border-color: rgba(62, 207, 142, 0.3);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.upgradeCardContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-primary);
+}
+
+.upgradeCardContent svg {
+  filter: drop-shadow(0 0 8px rgba(62, 207, 142, 0.4));
+}
+
+.upgradeCardTitle {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #7ee8b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.upgradeCardSubtitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.upgradeCardBadge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-full);
+  background: rgba(62, 207, 142, 0.15);
+  color: var(--color-primary);
+  z-index: 1;
+}
+
 .pollCardHeader {
   display: flex;
   justify-content: space-between;
@@ -197,6 +342,12 @@
   justify-content: space-between;
   width: 100%;
   gap: 0.5rem;
+}
+
+.badgeGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
 }
 
 .visibilityBadge {
@@ -284,6 +435,33 @@
   color: var(--color-text-muted);
 }
 
+.statusBadge.expired {
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--color-text-muted);
+}
+
+/* Expired Poll Card */
+.expiredPoll {
+  opacity: 0.5;
+  pointer-events: auto;
+}
+
+.expiredPoll:hover {
+  opacity: 0.6;
+}
+
+.expiredBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-full);
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--color-text-muted);
+}
+
 .pollTitle {
   font-size: 0.9375rem;
   font-weight: 600;
@@ -362,9 +540,9 @@
 }
 
 .toggleDeactivate:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: var(--color-danger);
+  background: rgba(234, 179, 8, 0.15);
+  border-color: rgba(234, 179, 8, 0.3);
+  color: #eab308;
 }
 
 /* Empty State */

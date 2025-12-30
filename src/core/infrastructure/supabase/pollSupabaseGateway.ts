@@ -39,7 +39,7 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
         ...data,
         is_public: isPro ? data.is_public : true,
         access_key: isPro ? data.access_key : null,
-        ends_at: isPro ? data.ends_at : undefined,
+        ends_at: data.ends_at, // Free users get enforced 15-min timer from CreatePoll
         max_votes_per_ip: isPro ? data.max_votes_per_ip : null,
         auto_vote_interval_seconds: isPro ? data.auto_vote_interval_seconds : 30,
         options: data.options.map((option) => ({

@@ -1753,6 +1753,22 @@
   cursor: not-allowed;
 }
 
+.modalUpgradeLink {
+  display: block;
+  text-align: center;
+  padding: 0.5rem 1.5rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: all var(--transition-fast) var(--ease-out);
+  letter-spacing: 0.01em;
+}
+
+.modalUpgradeLink:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* Modal responsive */
 @media (max-width: 480px) {
   .modal {
