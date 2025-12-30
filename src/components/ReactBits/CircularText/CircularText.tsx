@@ -9,6 +9,8 @@ interface CircularTextProps {
   radius?: number;
   highlightWord?: string;
   highlightColor?: string;
+  centerImage?: string;
+  centerImageSize?: number;
 }
 
 export default function CircularText({
@@ -19,6 +21,8 @@ export default function CircularText({
   radius = 50,
   highlightWord = '',
   highlightColor = '#3ecf8e',
+  centerImage,
+  centerImageSize = 60,
 }: CircularTextProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -88,6 +92,17 @@ export default function CircularText({
           );
         })}
       </div>
+      {centerImage && (
+        <img
+          src={centerImage}
+          alt=""
+          className="circular-text-center-image"
+          style={{
+            width: centerImageSize,
+            height: centerImageSize,
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -114,21 +114,6 @@ export function Home({ onNavigate }: HomeProps) {
           <section id="hero" className={styles.hero} aria-labelledby="hero-title">
             <div className={styles.heroContent}>
               <div className={styles.heroText}>
-                <div className={styles.heroBadges}>
-                  <a
-                    href="https://www.producthunt.com/products/versus-space?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-versus-space"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.productHuntBadge}
-                  >
-                    <img
-                      src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1056182&theme=light&t=1767099459600"
-                      alt="Versus Space - Decision gamified with fun | Product Hunt"
-                      width="200"
-                      height="43"
-                    />
-                  </a>
-                </div>
                 <h1 id="hero-title" className={styles.heroTitle}>
                   Create{' '}
                   <span className={styles.gradientTextWrapper}>
@@ -158,6 +143,25 @@ export function Home({ onNavigate }: HomeProps) {
                   >
                     Create Free Poll <HugeiconsIcon icon={ArrowRight01Icon} size={18} />
                   </button>
+                  <a
+                    href="https://www.producthunt.com/products/versus-space?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-versus-space"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.productHuntBadge}
+                  >
+                    <img
+                      src="/pngkey.com-reddit-logo-png-10768.png"
+                      alt="Product Hunt"
+                      className={styles.productHuntKitty}
+                    />
+                    <div className={styles.productHuntText}>
+                      <span className={styles.productHuntLabel}>FIND US ON</span>
+                      <span className={styles.productHuntName}>Product Hunt</span>
+                    </div>
+                    <div className={styles.productHuntUpvote}>
+                      <span className={styles.productHuntArrow}>▲</span>
+                    </div>
+                  </a>
                 </div>
               </div>
 
@@ -173,10 +177,12 @@ export function Home({ onNavigate }: HomeProps) {
                   <CircularText
                     text="✦ MADE FOR FUN ✦ MADE WITH FUN "
                     spinDuration={12}
-                    onHover="speedUp"
+                    onHover="pause"
                     className={styles.circularTextBadge}
                     radius={70}
                     highlightWord="FUN"
+                    centerImage="/pngkey.com-reddit-logo-png-10768.png"
+                    centerImageSize={100}
                   />
                 </div>
               </div>

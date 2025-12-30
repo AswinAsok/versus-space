@@ -68,3 +68,47 @@
     opacity: 1;
   }
 }
+
+.circular-text-center-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 1;
+  animation: wiggle 2.5s ease-in-out infinite, flicker 4s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(-3deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(3deg);
+  }
+}
+
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  55% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.92;
+  }
+  75% {
+    opacity: 1;
+  }
+}
