@@ -176,7 +176,7 @@ export function Home({ onNavigate }: HomeProps) {
                 <div className={styles.iframeContainer}>
                   <iframe
                     className={styles.demoVideo}
-                    src="https://www.youtube.com/embed/lC7ViK-1DhI"
+                    src="https://www.youtube.com/embed/WhY-RmY92qU"
                     title="Versus Space Demo - See how real-time polling works"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
