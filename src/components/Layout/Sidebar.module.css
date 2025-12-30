@@ -578,7 +578,8 @@
     gap: 0.625rem;
   }
 
-  .sidebarCollapsed .navList {
+  .sidebarCollapsed .navList,
+  .sidebarCollapsed .bottomNav .navList {
     align-items: stretch;
   }
 

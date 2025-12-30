@@ -34,7 +34,7 @@ const defaults = {
   keywords:
     'real-time polling software, online voting platform, team decision making tool, corporate polling software, poll analytics dashboard, anonymous voting software, poll timer, live viewer tracking, vote authenticity, business voting app',
   baseUrl: 'https://versus.space',
-  ogImage: 'https://versus.space/meta/meta-preview-1.png',
+  ogImage: 'https://versus.space/meta/meta-preview-2.png',
   twitterHandle: '@versusspace',
   locale: 'en_US',
 };

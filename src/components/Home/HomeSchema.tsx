@@ -87,7 +87,7 @@ export function HomeSchema({ pollsCount, votesCount }: HomeSchemaProps) {
       'Mobile-responsive design',
       'Enterprise-ready security',
     ],
-    screenshot: `${baseUrl}/meta/meta-preview-1.png`,
+    screenshot: `${baseUrl}/meta/meta-preview-2.png`,
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '4.9',
