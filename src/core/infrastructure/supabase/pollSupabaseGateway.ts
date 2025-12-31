@@ -309,9 +309,11 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
     },
 
     async getMostRecentPoll() {
+      const now = new Date().toISOString();
       const { data, error } = await client
         .from('public_poll_leaderboard')
         .select('*')
+        .or(`ends_at.is.null,ends_at.gt.${now}`)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
