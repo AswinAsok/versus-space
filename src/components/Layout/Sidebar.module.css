@@ -290,10 +290,24 @@
 
 .upgradeButtonCollapsed {
   justify-content: center;
-  width: calc(100% - 0.75rem);
-  margin: 0.375rem;
-  padding: 0.625rem;
-  padding-left: 0.875rem;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0.5rem auto;
+  padding: 0;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+}
+
+.upgradeButtonCollapsed:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.upgradeButtonCollapsed::before {
+  display: none;
 }
 
 .upgradeIcon {
@@ -361,10 +375,24 @@
 
 .coffeeButtonCollapsed {
   justify-content: center;
-  width: calc(100% - 0.75rem);
-  margin: 0.375rem;
-  padding: 0.625rem;
-  padding-left: 0.875rem;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0.5rem auto;
+  padding: 0;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+}
+
+.coffeeButtonCollapsed:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.coffeeButtonCollapsed::before {
+  display: none;
 }
 
 .coffeeIcon {
@@ -410,7 +438,7 @@
 .userSectionCollapsed {
   justify-content: center;
   align-items: center;
-  padding: 0.625rem;
+  padding: 0.5rem;
 }
 
 .userInfo {
@@ -424,6 +452,9 @@
 .userSectionCollapsed .userInfo {
   flex: none;
   justify-content: center;
+  width: 40px;
+  margin: 0 auto;
+  gap: 0;
 }
 
 .avatarWrapper {
@@ -447,9 +478,9 @@
 }
 
 .userSectionCollapsed .userAvatar {
-  width: 32px;
-  height: 32px;
-  font-size: 0.8125rem;
+  width: 40px;
+  height: 40px;
+  font-size: 0.875rem;
 }
 
 .planBadge {
@@ -532,6 +563,8 @@
   .sidebar {
     transform: translateX(-100%);
     width: 260px;
+    top: 0;
+    z-index: 1001;
   }
 
   .sidebarCollapsed {
@@ -540,6 +573,10 @@
 
   .sidebarOpen {
     transform: translateX(0);
+  }
+
+  .overlay {
+    z-index: 1000;
   }
 
   .closeButton {
@@ -551,7 +588,7 @@
   }
 
   .sidebarHeader {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     justify-content: space-between;
   }
 

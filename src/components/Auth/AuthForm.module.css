@@ -850,7 +850,7 @@
 @media (max-width: 768px) {
   .authPage {
     padding: 1rem;
-    padding-top: 120px;
+    padding-top: 60px;
     gap: 1.5rem;
     justify-content: center;
   }
