@@ -16,7 +16,12 @@
   padding: 0.5rem 0.875rem;
   border-radius: 100px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.06) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
   color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
   font-size: 0.8125rem;
@@ -43,7 +48,12 @@
 }
 
 .shareButton:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.08) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
   border-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -591,47 +601,57 @@
   }
 }
 
-/* COMBO INDICATOR - subtle */
+/* COMBO INDICATOR - matching watching pill style */
 .comboIndicator {
   position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 24px;
+  right: 24px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  z-index: 1000;
-  padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
+  gap: 0.5rem;
+  z-index: 200;
+  padding: 0.5rem 0.875rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.06) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 100px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  animation: comboFadeIn 0.2s ease-out;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  animation: comboFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.comboIndicator:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.08) 100%);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 @keyframes comboFadeIn {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(-10px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }
 
 .comboNumber {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .comboLabel {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 0.8125rem;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .wsStatus {
@@ -1508,16 +1528,18 @@
   }
 
   .comboIndicator {
-    top: 60px;
-    padding: 6px 12px;
+    bottom: 20px;
+    right: 20px;
+    padding: 0.35rem 0.75rem;
+    gap: 0.4rem;
   }
 
   .comboNumber {
-    font-size: 1rem;
+    font-size: 0.75rem;
   }
 
   .comboLabel {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
   }
 
   .floatingNumber {
@@ -1665,17 +1687,18 @@
   }
 
   .comboIndicator {
-    top: 52px;
-    padding: 5px 10px;
-    gap: 6px;
+    bottom: 16px;
+    right: 16px;
+    padding: 0.35rem 0.625rem;
+    gap: 0.35rem;
   }
 
   .comboNumber {
-    font-size: 0.875rem;
+    font-size: 0.6875rem;
   }
 
   .comboLabel {
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
   }
 
   .floatingNumber {
@@ -1999,7 +2022,10 @@
 
   .comboIndicator {
     position: absolute;
-    top: 10px;
+    bottom: 16px;
+    right: 16px;
+    padding: 0.35rem 0.625rem;
+    gap: 0.35rem;
   }
 
   .confettiContainer {
@@ -2013,7 +2039,9 @@
   }
 
   .comboIndicator {
-    top: 8px;
+    bottom: 12px;
+    right: 12px;
+    padding: 0.3rem 0.5rem;
   }
 
   .voteCount {

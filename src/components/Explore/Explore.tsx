@@ -1,11 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { HugeiconsIcon } from '@hugeicons/react';
-import {
-  ChampionIcon,
-  ArrowRight01Icon,
-  ChartIncreaseIcon,
-  UserGroupIcon,
-} from '@hugeicons/core-free-icons';
+import { ArrowRight01Icon, ChartIncreaseIcon, UserGroupIcon } from '@hugeicons/core-free-icons';
 import { useLeaderboard } from '../../hooks/usePollQueries';
 import { MouseLoader } from '../Loading/MouseLoader';
 import styles from './Explore.module.css';

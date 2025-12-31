@@ -101,7 +101,11 @@ export function Settings({ user }: SettingsProps) {
                   </p>
                 </div>
                 {!isPro && (
-                  <button onClick={handleUpgradeClick} className={styles.upgradeButton}>
+                  <button
+                    type="button"
+                    onClick={handleUpgradeClick}
+                    className={styles.upgradeButton}
+                  >
                     <HugeiconsIcon icon={ArrowUp01Icon} size={12} />
                     Upgrade
                   </button>
