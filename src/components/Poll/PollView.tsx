@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { usePollBySlug, useValidateAccessKey } from '../../hooks/usePollQueries';
-import { supabase } from '../../lib/supabaseClient';
 import { VotingInterface } from './VotingInterface';
 import { PollSEO } from '../SEO/SEO';
 import { MouseLoader } from '../Loading/MouseLoader';
@@ -32,33 +31,6 @@ export function PollView({ slug }: PollViewProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Track presence for analytics (show who's viewing this poll)
-  useEffect(() => {
-    if (!poll?.id) return;
-
-    const channel = supabase.channel(`poll-presence:${poll.id}`, {
-      config: { presence: { key: 'viewers' } },
-    });
-
-    channel
-      .on('presence', { event: 'sync' }, () => {
-        // Presence sync - we just need to be subscribed
-      })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          // Track this viewer's presence
-          await channel.track({
-            viewerId: crypto.randomUUID(),
-            joinedAt: new Date().toISOString(),
-          });
-        }
-      });
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [poll?.id]);
 
   useEffect(() => {
     const checkAccess = async () => {

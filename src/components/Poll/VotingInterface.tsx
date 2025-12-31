@@ -4,6 +4,7 @@ import ReactSpeedometer, { Transition } from 'react-d3-speedometer';
 import { Copy, Check, X, QrCode } from 'lucide-react';
 import CountUp from '../ReactBits/CountUp/CountUp';
 import Counter from '../ReactBits/Counter/Counter';
+import { LiveViewers } from './LiveViewers';
 import { voteFacade } from '../../core/appServices';
 import { getSessionId } from '../../utils/sessionId';
 import { getClientIp } from '../../utils/ipAddress';
@@ -500,6 +501,9 @@ export function VotingInterface({
         <title>{title} | Versus</title>
       </Helmet>
 
+      {/* Live Viewers - Shows real-time viewer count */}
+      <LiveViewers pollId={pollId} />
+
       {/* Poll Closed Banner */}
       {isExpired && (
         <div className={styles.closedBanner}>
@@ -565,7 +569,7 @@ export function VotingInterface({
 
       {/* Share Button - Fixed position on mobile */}
       <button className={styles.shareButton} onClick={openQrModal}>
-        <QrCode size={14} />
+        <QrCode size={14} className={styles.shareQrIcon} />
         Share Poll
       </button>
 
