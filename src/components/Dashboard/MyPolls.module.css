@@ -192,8 +192,65 @@
 /* Polls Grid */
 .pollsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+/* Section Styles */
+.pollSection {
+  margin-bottom: 2rem;
+}
+
+.pollSection:last-child {
+  margin-bottom: 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sectionTitle {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sectionCount {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full);
+}
+
+.sectionIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sectionIndicator.live {
+  background: var(--color-primary);
+  box-shadow: 0 0 8px var(--color-primary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.sectionIndicator.inactive {
+  background: rgba(100, 116, 139, 0.5);
+}
+
+.sectionIndicator.expired {
+  background: rgba(100, 116, 139, 0.3);
 }
 
 /* Poll Card */
@@ -656,7 +713,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .myPollsContainer {
-    padding: 1.5rem;
+    padding: 1rem 1.75rem;
   }
 
   .pageHeader {
@@ -696,7 +753,7 @@
 
 @media (max-width: 480px) {
   .myPollsContainer {
-    padding: 1rem;
+    padding: 1rem 1.75rem;
   }
 
   .pageTitle {

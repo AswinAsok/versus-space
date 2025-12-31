@@ -1,15 +1,14 @@
 /* Settings Container */
 .settingsContainer {
   flex: 1;
-  padding: 1.5rem;
+  padding: 2rem 2.5rem;
   overflow-y: auto;
   overflow-x: hidden;
   font-family: 'Google Sans', sans-serif;
 }
 
 .settingsInner {
-  max-width: 720px;
-  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -17,6 +16,7 @@
 
 /* Page Header */
 .pageHeader {
+  margin-bottom: 0.5rem;
   animation: fadeInDown 0.5s var(--ease-out);
 }
 
@@ -30,7 +30,7 @@
 }
 
 .pageSubtitle {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
 }
 
@@ -53,7 +53,7 @@
 
 .sectionTitle {
   font-family: 'Parkinsans', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 0.75rem;
@@ -68,14 +68,14 @@
 .settingCard {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   transition: all var(--transition-normal) var(--ease-out);
 }
 
 .settingCard:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .dangerCard {
@@ -90,8 +90,8 @@
 .settingItem {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
   transition: all var(--transition-fast) var(--ease-out);
 }
 
@@ -220,18 +220,18 @@
 .planCard {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   transition: all var(--transition-normal) var(--ease-out);
 }
 
 .planCard:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .currentPlan {
-  padding: 1rem;
+  padding: 1.25rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -393,14 +393,14 @@
 .chaiCard {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  padding: 1rem;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
   transition: all var(--transition-normal) var(--ease-out);
 }
 
 .chaiCard:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .chaiHeader {
@@ -649,11 +649,11 @@
 /* Responsive */
 @media (max-width: 768px) {
   .settingsContainer {
-    padding: 1rem;
+    padding: 1rem 1.75rem;
   }
 
   .settingsInner {
-    gap: 1rem;
+    gap: 1.25rem;
   }
 
   .pageTitle {
@@ -687,7 +687,7 @@
 
 @media (max-width: 480px) {
   .settingsContainer {
-    padding: 0.75rem;
+    padding: 0.75rem 1.75rem;
   }
 
   .settingsInner {

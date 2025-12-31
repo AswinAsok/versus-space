@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import styles from './MouseLoader.module.css';
 
 interface MouseLoaderProps {
@@ -6,22 +5,6 @@ interface MouseLoaderProps {
 }
 
 export function MouseLoader({ message = "Teaching our mouse to click faster..." }: MouseLoaderProps) {
-  const [displayedText, setDisplayedText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    if (currentIndex < message.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText(message.slice(0, currentIndex + 1));
-        setCurrentIndex(currentIndex + 1);
-      }, 80);
-      return () => clearTimeout(timeout);
-    }
-  }, [currentIndex, message]);
-
-  const textWithoutLast = displayedText.slice(0, -1);
-  const lastChar = displayedText.slice(-1);
-
   return (
     <div className={styles.container}>
       <div className={styles.loaderArea}>
@@ -42,8 +25,7 @@ export function MouseLoader({ message = "Teaching our mouse to click faster..." 
         </div>
       </div>
       <p className={styles.message}>
-        {textWithoutLast}
-        <span className={styles.lastChar}>{lastChar}</span>
+        {message}
         <span className={styles.caret} />
       </p>
     </div>

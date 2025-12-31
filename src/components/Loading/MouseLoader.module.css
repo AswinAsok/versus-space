@@ -79,7 +79,7 @@
   align-items: center;
   justify-content: center;
   min-height: 1.5em;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Google Sans', sans-serif;
 }
 
 .lastChar {
@@ -92,12 +92,39 @@
   height: 1.2em;
   background: var(--color-primary);
   margin-left: 1px;
-  animation: blink 0.8s step-end infinite;
+  animation: flicker 1.5s ease-in-out infinite;
 }
 
-@keyframes blink {
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.4;
+  }
+  40% {
+    opacity: 1;
+  }
   50% {
     opacity: 0;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  70% {
+    opacity: 0.3;
+  }
+  80% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.5;
   }
 }
 

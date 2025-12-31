@@ -597,7 +597,7 @@
 
 @media (max-width: 768px) {
   .dashboardContainer {
-    padding: 1.5rem;
+    padding: 1rem 1.75rem;
   }
 
   .welcomeTitle {
@@ -620,6 +620,10 @@
     border-radius: var(--radius-md);
   }
 
+  .statLabel {
+    font-size: 0.625rem;
+  }
+
   .actionsGrid {
     grid-template-columns: 1fr;
   }
@@ -631,7 +635,7 @@
 
 @media (max-width: 480px) {
   .dashboardContainer {
-    padding: 1rem;
+    padding: 1rem 1.75rem;
   }
 
   .welcomeTitle {
@@ -643,7 +647,7 @@
   }
 
   .statsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
 
