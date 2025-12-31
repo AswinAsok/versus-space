@@ -215,7 +215,7 @@ export function useTogglePollStatus() {
       const previousPolls = queryClient.getQueriesData({ queryKey: pollKeys.lists() });
 
       // Optimistically update the cache
-      queryClient.setQueriesData<Poll[]>({ queryKey: pollKeys.lists() }, (old) => {
+      queryClient.setQueriesData<PollWithOptions[]>({ queryKey: pollKeys.lists() }, (old) => {
         if (!old) return old;
         return old.map((p) => (p.id === pollId ? { ...p, is_active: isActive } : p));
       });

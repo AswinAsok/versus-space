@@ -16,7 +16,7 @@ export interface PollFacade {
   createPoll(data: CreatePollData, userId: string): Promise<PollWithOptions>;
   getPoll(pollId: string): Promise<PollWithOptions | null>;
   getPollBySlug(slug: string): Promise<PollWithOptions | null>;
-  getUserPolls(userId: string): Promise<Poll[]>;
+  getUserPolls(userId: string): Promise<PollWithOptions[]>;
   getUserPollCount(userId: string): Promise<number>;
   updatePoll(pollId: string, data: UpdatePollData): Promise<PollWithOptions>;
   updatePollStatus(pollId: string, isActive: boolean): Promise<void>;

@@ -12,6 +12,7 @@ import {
   SidebarRight01Icon,
   ArrowUp01Icon,
   Coffee01Icon,
+  Globe02Icon,
 } from '@hugeicons/core-free-icons';
 import { track } from '@vercel/analytics';
 import { getProCheckoutUrl } from '../../utils/payment';
@@ -34,6 +35,7 @@ const mainNavItems = [
   { icon: BarChartIcon, label: 'My Polls', path: '/dashboard/polls' },
   { icon: Add01Icon, label: 'Create Poll', path: '/dashboard/create' },
   { icon: ChartLineData01Icon, label: 'Analytics', path: '/dashboard/analytics' },
+  { icon: Globe02Icon, label: 'Explore', path: '/dashboard/explore' },
 ];
 
 const bottomNavItems = [

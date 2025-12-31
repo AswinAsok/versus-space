@@ -21,6 +21,7 @@ import { Profile } from './components/Profile/Profile';
 import { Analytics } from './components/Analytics/Analytics';
 import { CreatePoll } from './components/Poll/CreatePoll';
 import { PollView } from './components/Poll/PollView';
+import { Explore } from './components/Explore/Explore';
 import { MouseLoader } from './components/Loading/MouseLoader';
 import { ProductHuntBanner } from './components/ProductHuntBanner/ProductHuntBanner';
 import type { User } from '@supabase/supabase-js';
@@ -78,6 +79,7 @@ function RoutedApp() {
             <Route path="settings" element={<Settings user={user!} />} />
             <Route path="profile" element={<Profile user={user!} />} />
             <Route path="analytics" element={<Analytics user={user!} />} />
+            <Route path="explore" element={<Explore />} />
           </Route>
         </Routes>
       </div>
@@ -122,8 +124,8 @@ function RoutedApp() {
             }
           />
           <Route path="/poll/:slug" element={<PollRoute />} />
-          {/* Explore redirects to home with leaderboard */}
-          <Route path="/explore" element={<Navigate to="/#leaderboard" replace />} />
+          {/* Explore redirects to dashboard explore */}
+          <Route path="/explore" element={<Navigate to="/dashboard/explore" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

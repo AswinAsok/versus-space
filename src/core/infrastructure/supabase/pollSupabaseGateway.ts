@@ -167,14 +167,37 @@ export function createSupabasePollGateway(client: SupabaseClient<Database>): Pol
     },
 
     async getUserPolls(userId) {
-      const { data, error } = await client
+      const { data: polls, error: pollsError } = await client
         .from('polls')
         .select('*')
         .eq('creator_id', userId)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      return data || [];
+      if (pollsError) throw pollsError;
+      if (!polls || polls.length === 0) return [];
+
+      // Fetch all options for these polls in a single query
+      const pollIds = polls.map((p) => p.id);
+      const { data: options, error: optionsError } = await client
+        .from('poll_options')
+        .select('*')
+        .in('poll_id', pollIds)
+        .order('position');
+
+      if (optionsError) throw optionsError;
+
+      // Group options by poll_id
+      const optionsByPollId = (options || []).reduce((acc, opt) => {
+        if (!acc[opt.poll_id]) acc[opt.poll_id] = [];
+        acc[opt.poll_id].push(opt);
+        return acc;
+      }, {} as Record<string, typeof options>);
+
+      // Combine polls with their options
+      return polls.map((poll) => ({
+        ...poll,
+        options: optionsByPollId[poll.id] || [],
+      }));
     },
 
     async getUserPollCount(userId) {

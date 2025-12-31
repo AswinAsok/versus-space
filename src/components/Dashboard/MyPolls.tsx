@@ -24,6 +24,8 @@ import {
   Cancel01Icon,
   Alert02Icon,
   ArrowUp01Icon,
+  ChartLineData01Icon,
+  Time01Icon,
 } from '@hugeicons/core-free-icons';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import { MouseLoader } from '../Loading/MouseLoader';
@@ -287,14 +289,26 @@ export function MyPolls({ user }: MyPollsProps) {
                 <h3 className={styles.pollTitle}>{poll.title}</h3>
 
                 <div className={styles.pollMeta}>
+                  <span className={styles.pollVotes}>
+                    <HugeiconsIcon icon={ChartLineData01Icon} size={14} />
+                    {poll.options.reduce((sum, opt) => sum + opt.vote_count, 0).toLocaleString()} votes
+                  </span>
                   <span className={styles.pollDate}>
                     <HugeiconsIcon icon={Calendar01Icon} size={14} />
                     {new Date(poll.created_at).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
-                      year: 'numeric',
                     })}
                   </span>
+                  {poll.ends_at && !isExpired && (
+                    <span className={styles.pollEndsAt}>
+                      <HugeiconsIcon icon={Time01Icon} size={14} />
+                      Ends {new Date(poll.ends_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </span>
+                  )}
                 </div>
 
                 <div className={styles.pollActions}>

@@ -256,7 +256,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             </div>
             <HugeiconsIcon icon={ArrowRight01Icon} size={20} className={styles.actionArrow} />
           </button>
-          <button onClick={() => navigate('/explore')} className={styles.actionCard}>
+          <button onClick={() => navigate('/dashboard/explore')} className={styles.actionCard}>
             <div className={styles.actionIconWrapper}>
               <HugeiconsIcon icon={ChartIncreaseIcon} size={24} />
             </div>
