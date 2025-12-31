@@ -1,0 +1,77 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10rem 2rem 4rem;
+}
+
+.monologue {
+  max-width: 420px;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+.monologue p {
+  margin-bottom: 0.25rem;
+}
+
+.monologue strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.monologue em {
+  color: var(--color-primary);
+  font-style: normal;
+}
+
+.link {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.dim {
+  opacity: 0.5;
+}
+
+.highlight {
+  color: var(--color-primary);
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+.fin {
+  margin-top: 1.5rem;
+  font-style: italic;
+  opacity: 0.4;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.back:hover {
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 5rem 1.5rem 3rem;
+  }
+
+  .monologue {
+    font-size: 0.8125rem;
+  }
+}

@@ -185,6 +185,9 @@ export function Home({ onNavigate }: HomeProps) {
                     centerImageSize={100}
                   />
                 </div>
+                <Link to="/story" className={styles.storyLink}>
+                  read the story behind this project
+                </Link>
               </div>
             </div>
           </section>
