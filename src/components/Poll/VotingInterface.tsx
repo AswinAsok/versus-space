@@ -56,6 +56,8 @@ export function VotingInterface({
   const sessionId = getSessionId();
   const [ipAddress, setIpAddress] = useState<string>('unknown');
   const [voteError, setVoteError] = useState<string>('');
+  const [toastVisible, setToastVisible] = useState(false);
+  const [serverLimitReached, setServerLimitReached] = useState(false);
 
   // Gamification state
   const [combo, setCombo] = useState(0);
@@ -71,6 +73,8 @@ export function VotingInterface({
   const [shareFeedback, setShareFeedback] = useState('');
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState<string | null>(null);
+  const [titleModalOpen, setTitleModalOpen] = useState(false);
+  const [isTitleTruncated, setIsTitleTruncated] = useState(false);
 
   const floatingIdRef = useRef(0);
   // Use ref instead of state for voting lock - ref updates are synchronous
@@ -80,6 +84,7 @@ export function VotingInterface({
   const initialCountAnimationDoneRef = useRef(false);
   const lineNudgeTimeoutsRef = useRef<Map<string, NodeJS.Timeout[]>>(new Map());
   const previousVoteCountsRef = useRef<Map<string, number>>(new Map());
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   const persistUserVotes = useCallback(
@@ -223,6 +228,33 @@ export function VotingInterface({
       .catch(() => setIpAddress('unknown'));
   }, []);
 
+  // Check if title is truncated
+  useEffect(() => {
+    const checkTruncation = () => {
+      if (titleRef.current) {
+        const isTruncated = titleRef.current.scrollWidth > titleRef.current.clientWidth;
+        setIsTitleTruncated(isTruncated);
+      }
+    };
+
+    checkTruncation();
+    window.addEventListener('resize', checkTruncation);
+    return () => window.removeEventListener('resize', checkTruncation);
+  }, [title]);
+
+  // Toast auto-dismiss effect
+  useEffect(() => {
+    if (voteError) {
+      setToastVisible(true);
+      const timer = setTimeout(() => {
+        setToastVisible(false);
+        // Clear the error after fade-out animation completes
+        setTimeout(() => setVoteError(''), 300);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [voteError]);
+
   // Countdown timer
   useEffect(() => {
     if (!endsAt || isExpired) {
@@ -364,6 +396,12 @@ export function VotingInterface({
       return;
     }
 
+    // Check server limit before proceeding
+    if (serverLimitReached) {
+      isVotingRef.current = false;
+      return;
+    }
+
     let ipToUse = ipAddress;
     if (!ipToUse) {
       ipToUse = await getClientIp();
@@ -382,71 +420,64 @@ export function VotingInterface({
 
     const voteValue = 1;
 
-    // Update combo
-    if (comboTimer) clearTimeout(comboTimer);
-    setCombo((prev) => prev + 1);
-    const newTimer = setTimeout(() => {
-      setCombo(0);
-    }, 1000);
-    setComboTimer(newTimer);
-
-    // Increase heat level
-    setHeatLevels((prev) => {
-      const newMap = new Map(prev);
-      newMap.set(optionId, Math.min(10, (newMap.get(optionId) || 0) + 1));
-      return newMap;
-    });
-
-    // Spawn floating number
-    const floatId = floatingIdRef.current++;
-    setFloatingNumbers((prev) => [...prev, { id: floatId, value: '+1', x, y, optionId }]);
-    setTimeout(() => {
-      setFloatingNumbers((prev) => prev.filter((f) => f.id !== floatId));
-    }, 1000);
-
-    // Track total votes for effects
-    totalUserVotesRef.current += voteValue;
-    const totalVotes = totalUserVotesRef.current;
-
-    // Shift the dividing line a bit even when we're pinned by min-width.
-    if (options.length > 1) {
-      const boundaryOptionId = optionIndex === 0 ? options[0].id : options[optionIndex - 1].id;
-      const direction = optionIndex === 0 ? 1 : -1;
-      nudgeBoundaryLine(boundaryOptionId, 14 * direction);
-    }
-
-    if (totalVotes === 50) {
-      spawnConfetti(event.clientX, event.clientY);
-    }
-    if (totalVotes === 100) {
-      spawnConfetti(event.clientX, event.clientY);
-      triggerScreenShake();
-    }
-
-    // Screen shake on high combos
-    if (combo > 0 && combo % 10 === 0) {
-      triggerScreenShake();
-    }
-
-    // Update previousVoteCountsRef BEFORE the API call (optimistically)
-    // This prevents the real-time subscription's useEffect from double-counting
-    const currentOptionCount = options[optionIndex]?.vote_count ?? 0;
-    const optimisticBase = previousVoteCountsRef.current.get(optionId) ?? currentOptionCount;
-    previousVoteCountsRef.current.set(optionId, optimisticBase + voteValue);
-
-    // Add to rate calculator optimistically for responsive UI
-    rateCalculatorRef.current.addVote(optionId);
-
     try {
-      // Cast the vote (single vote, no loop needed)
-      console.log(
-        '[VotingInterface] Casting vote for option:',
-        optionId,
-        'at:',
-        new Date().toISOString()
-      );
+      // Cast the vote FIRST before any visual effects
       await voteFacade.castVote(pollId, optionId, null, ipToUse || 'unknown');
-      console.log('[VotingInterface] Vote cast completed');
+
+      // Only trigger visual effects AFTER successful vote
+      // Update combo
+      if (comboTimer) clearTimeout(comboTimer);
+      setCombo((prev) => prev + 1);
+      const newTimer = setTimeout(() => {
+        setCombo(0);
+      }, 1000);
+      setComboTimer(newTimer);
+
+      // Increase heat level
+      setHeatLevels((prev) => {
+        const newMap = new Map(prev);
+        newMap.set(optionId, Math.min(10, (newMap.get(optionId) || 0) + 1));
+        return newMap;
+      });
+
+      // Spawn floating number
+      const floatId = floatingIdRef.current++;
+      setFloatingNumbers((prev) => [...prev, { id: floatId, value: '+1', x, y, optionId }]);
+      setTimeout(() => {
+        setFloatingNumbers((prev) => prev.filter((f) => f.id !== floatId));
+      }, 1000);
+
+      // Track total votes for effects
+      totalUserVotesRef.current += voteValue;
+      const totalVotesForEffects = totalUserVotesRef.current;
+
+      // Shift the dividing line a bit even when we're pinned by min-width.
+      if (options.length > 1) {
+        const boundaryOptionId = optionIndex === 0 ? options[0].id : options[optionIndex - 1].id;
+        const direction = optionIndex === 0 ? 1 : -1;
+        nudgeBoundaryLine(boundaryOptionId, 14 * direction);
+      }
+
+      if (totalVotesForEffects === 50) {
+        spawnConfetti(event.clientX, event.clientY);
+      }
+      if (totalVotesForEffects === 100) {
+        spawnConfetti(event.clientX, event.clientY);
+        triggerScreenShake();
+      }
+
+      // Screen shake on high combos
+      if (combo > 0 && combo % 10 === 0) {
+        triggerScreenShake();
+      }
+
+      // Update previousVoteCountsRef after successful vote
+      const currentOptionCount = options[optionIndex]?.vote_count ?? 0;
+      const optimisticBase = previousVoteCountsRef.current.get(optionId) ?? currentOptionCount;
+      previousVoteCountsRef.current.set(optionId, optimisticBase + voteValue);
+
+      // Add to rate calculator
+      rateCalculatorRef.current.addVote(optionId);
 
       // Track what the current user has contributed for contextual feedback.
       setUserVotes((prev) => {
@@ -458,19 +489,39 @@ export function VotingInterface({
 
       await voteFacade.updateUserSession(sessionId, pollId);
       setVoteError('');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to cast vote:', error);
-      const message =
-        error instanceof Error && error.message
-          ? error.message
-          : 'Unable to cast vote. Please try again.';
-      if (message.includes('vote_limit_reached')) {
-        setVoteError('Vote limit reached for this IP.');
-      } else if (message.includes('poll_expired') || message.includes('poll_closed')) {
-        setVoteError('This poll is closed.');
-      } else {
-        setVoteError(message);
+
+      // Extract error message from various error formats
+      let message = 'Unable to cast vote. Please try again.';
+
+      if (error && typeof error === 'object') {
+        // Supabase PostgrestError format
+        const err = error as { message?: string; details?: string; hint?: string };
+        if (err.message) {
+          message = err.message;
+        } else if (err.details) {
+          message = err.details;
+        }
+      } else if (error instanceof Error) {
+        message = error.message;
       }
+
+      // Format known error codes to user-friendly messages
+      const errorMessages: Record<string, string> = {
+        'vote_limit_reached': 'You\'ve reached the vote limit for this poll',
+        'poll_expired': 'This poll has ended',
+        'poll_closed': 'This poll is closed',
+        'invalid_option': 'Invalid voting option',
+      };
+
+      // If server says limit reached, disable voting permanently
+      if (message === 'vote_limit_reached') {
+        setServerLimitReached(true);
+      }
+
+      const formattedMessage = errorMessages[message] || message;
+      setVoteError(formattedMessage);
     } finally {
       // Reset voting flag after a short delay to allow rapid but controlled voting
       setTimeout(() => {
@@ -485,6 +536,11 @@ export function VotingInterface({
 
   const totalVotes = options.reduce((sum, opt) => sum + opt.vote_count, 0);
   const leadingOption = options.reduce((a, b) => (a.vote_count > b.vote_count ? a : b));
+
+  // Check if vote limit is reached
+  const totalUserVotes = Array.from(userVotes.values()).reduce((sum, val) => sum + val, 0);
+  const voteLimitReached = maxVotesPerIp ? totalUserVotes >= maxVotesPerIp : false;
+  const isVotingDisabled = isExpired || voteLimitReached || serverLimitReached;
 
   // Cap percentages between 30% and 70% to prevent UI breaking
   const getClampedPercentage = (voteCount: number) => {
@@ -519,16 +575,19 @@ export function VotingInterface({
         </div>
       )}
 
-      {/* Status pill for vote limit and errors */}
-      {!isExpired && (maxVotesPerIp || voteError) && (
+      {/* Status pill for vote limit info - persistent */}
+      {!isExpired && maxVotesPerIp && !voteError && (
         <div className={styles.statusPill}>
-          {voteError && <span className={styles.statusError}>{voteError}</span>}
-          {maxVotesPerIp && (
-            <span className={styles.statusInfo}>
-              {Array.from(userVotes.values()).reduce((sum, val) => sum + val, 0)}/{maxVotesPerIp}{' '}
-              votes
-            </span>
-          )}
+          <span className={styles.statusInfo}>
+            Limit: {maxVotesPerIp} vote{maxVotesPerIp > 1 ? 's' : ''} per person
+          </span>
+        </div>
+      )}
+
+      {/* Error toast - auto-dismisses */}
+      {voteError && (
+        <div className={`${styles.errorToast} ${toastVisible ? styles.toastVisible : styles.toastHidden}`}>
+          <span className={styles.toastMessage}>{voteError}</span>
         </div>
       )}
 
@@ -542,10 +601,17 @@ export function VotingInterface({
       )}
 
       {/* Combo indicator */}
-      {combo > 1 && (
+      {combo > 1 && !isVotingDisabled && (
         <div className={styles.comboIndicator}>
           <span className={styles.comboNumber}>{combo}x</span>
           <span className={styles.comboLabel}>COMBO</span>
+        </div>
+      )}
+
+      {/* Limit reached indicator */}
+      {isVotingDisabled && !isExpired && (
+        <div className={styles.limitReachedIndicator}>
+          <span className={styles.limitReachedText}>Limit reached</span>
         </div>
       )}
 
@@ -575,7 +641,18 @@ export function VotingInterface({
 
       {/* Poll Title */}
       <div className={styles.pollTitleContainer} style={{ left: `${firstOptionPercentage}vw` }}>
-        <h1 className={styles.pollTitle}>{title}</h1>
+        <h1
+          ref={titleRef}
+          className={styles.pollTitle}
+          onClick={() => setTitleModalOpen(true)}
+        >
+          {title}
+        </h1>
+        {isTitleTruncated && (
+          <span className={styles.titleHint} onClick={() => setTitleModalOpen(true)}>
+            click to view full question
+          </span>
+        )}
       </div>
 
       {options.map((option, index) => {
@@ -592,22 +669,22 @@ export function VotingInterface({
         return (
           <div
             key={option.id}
-            className={`${styles.votingOption} ${variantClass} ${heat > 5 ? styles.onFire : ''} ${isLeading ? styles.leading : ''} ${isExpired ? styles.disabledOption : ''}`}
+            className={`${styles.votingOption} ${variantClass} ${heat > 5 ? styles.onFire : ''} ${isLeading ? styles.leading : ''} ${isVotingDisabled ? styles.disabledOption : ''}`}
             style={
               {
                 width: `${percentage}vw`,
                 '--heat-intensity': heat / 10,
                 '--content-scale': contentScale,
                 '--line-nudge': `${lineNudge}px`,
-                cursor: isExpired ? 'not-allowed' : 'pointer',
-                filter: isExpired ? 'grayscale(0.8)' : undefined,
+                cursor: isVotingDisabled ? 'not-allowed' : 'pointer',
+                filter: isVotingDisabled ? 'grayscale(0.5)' : undefined,
               } as React.CSSProperties
             }
             onClick={(e) => {
-              if (isExpired) return;
+              if (isVotingDisabled) return;
               handleVote(option.id, index, e);
             }}
-            aria-disabled={isExpired}
+            aria-disabled={isVotingDisabled}
           >
             {/* Background count number */}
             <div className={styles.backgroundCount}>{option.vote_count.toLocaleString()}</div>
@@ -767,6 +844,19 @@ export function VotingInterface({
               {shareFeedback ? <Check size={16} /> : <Copy size={16} />}
               {shareFeedback || 'Copy link'}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Title Modal */}
+      {titleModalOpen && (
+        <div
+          className={styles.titleModalOverlay}
+          onClick={() => setTitleModalOpen(false)}
+        >
+          <div className={styles.titleModal} onClick={(e) => e.stopPropagation()}>
+            <p className={styles.titleModalText}>{title}</p>
+            <p className={styles.titleModalHint}>tap anywhere to close</p>
           </div>
         </div>
       )}

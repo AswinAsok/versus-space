@@ -12,7 +12,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { useProUserCount } from '../../hooks/usePollQueries';
-import { getProCheckoutUrl, isDodoPaymentsConfigured } from '../../utils/payment';
+import { getProCheckoutUrl } from '../../utils/payment';
 import styles from './Settings.module.css';
 
 // Chai meter constants

@@ -622,6 +622,30 @@
   overflow: hidden;
 }
 
+/* LIMIT REACHED INDICATOR */
+.limitReachedIndicator {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  z-index: 200;
+  padding: 0.5rem 0.875rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.06) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  animation: comboFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.limitReachedText {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .comboIndicator:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.08) 100%);
   border-color: rgba(255, 255, 255, 0.15);
@@ -752,27 +776,104 @@
   overflow: hidden;
   text-overflow: ellipsis;
   animation: fadeInUp 0.5s var(--ease-out);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+}
+
+.pollTitle:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.titleHint {
+  font-size: 0.625rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 0.375rem;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color 0.2s ease;
+}
+
+.titleHint:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Title Modal */
+.titleModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.titleModal {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 1.5rem 2rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  animation: modalSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.titleModalText {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.titleModalHint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 1rem;
 }
 
 .countdownTimer {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 200;
+  top: 5.5rem;
+  right: 1.5rem;
+  z-index: 250;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  min-width: 180px;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.06) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
   animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -1542,6 +1643,16 @@
     font-size: 0.75rem;
   }
 
+  .limitReachedIndicator {
+    bottom: 20px;
+    right: 20px;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .limitReachedText {
+    font-size: 0.75rem;
+  }
+
   .floatingNumber {
     font-size: 1.25rem;
   }
@@ -1563,7 +1674,6 @@
     font-size: 0.75rem;
     padding: 0.5rem 1rem;
     max-width: 50vw;
-    text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1698,6 +1808,16 @@
   }
 
   .comboLabel {
+    font-size: 0.6875rem;
+  }
+
+  .limitReachedIndicator {
+    bottom: 16px;
+    right: 16px;
+    padding: 0.35rem 0.625rem;
+  }
+
+  .limitReachedText {
     font-size: 0.6875rem;
   }
 
@@ -1951,30 +2071,92 @@
   }
 }
 
+/* Error Toast - slides in from bottom, auto-dismisses */
+.errorToast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.toastVisible {
+  animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toastHidden {
+  animation: toastSlideOut 0.3s ease-out forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+.toastMessage {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.06) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
 .statusInfo,
 .statusError {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
   border-radius: 100px;
-  font-size: 0.7rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .statusInfo {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.6);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .statusError {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  color: rgba(239, 68, 68, 0.9);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 @media (max-width: 768px) {
@@ -1985,8 +2167,52 @@
 
   .statusInfo,
   .statusError {
-    font-size: 0.65rem;
-    padding: 5px 10px;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .errorToast {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    transform: none;
+  }
+
+  .toastVisible {
+    animation: toastSlideInMobile 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .toastHidden {
+    animation: toastSlideOutMobile 0.3s ease-out forwards;
+  }
+
+  @keyframes toastSlideInMobile {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes toastSlideOutMobile {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  .toastMessage {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -1998,8 +2224,19 @@
 
   .statusInfo,
   .statusError {
-    font-size: 0.6rem;
-    padding: 4px 8px;
+    font-size: 0.6875rem;
+    padding: 0.35rem 0.625rem;
+  }
+
+  .errorToast {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .toastMessage {
+    font-size: 0.6875rem;
+    padding: 0.35rem 0.625rem;
   }
 }
 
