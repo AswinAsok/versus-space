@@ -292,9 +292,136 @@ export function Home({ onNavigate }: HomeProps) {
                 Simple steps to launch real-time polls. Perfect for any situation.
               </p>
             </div>
+            {/* Steps Row - Auto scrolling on mobile */}
+            <div className={styles.bentoStepsRow}>
+              <div className={styles.bentoStepsTrack}>
+                <div className={`${styles.bentoCard} ${styles.bentoStepCard}`}>
+                  <div className={styles.stepNumber}>1</div>
+                  <h3 className={styles.bentoTitleSmall}>Create Your Poll</h3>
+                  <p className={styles.bentoDescriptionSmall}>
+                    Enter your question and add voting options.
+                  </p>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoStepCard}`}>
+                  <div className={styles.stepNumber}>2</div>
+                  <h3 className={styles.bentoTitleSmall}>Share the Link</h3>
+                  <p className={styles.bentoDescriptionSmall}>
+                    Distribute via email, chat, or social media.
+                  </p>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoStepCard}`}>
+                  <div className={styles.stepNumber}>3</div>
+                  <h3 className={styles.bentoTitleSmall}>Watch Live Results</h3>
+                  <p className={styles.bentoDescriptionSmall}>
+                    View real-time votes as they stream in.
+                  </p>
+                </div>
+                {/* Duplicate for seamless loop */}
+                <div className={`${styles.bentoCard} ${styles.bentoStepCard}`}>
+                  <div className={styles.stepNumber}>1</div>
+                  <h3 className={styles.bentoTitleSmall}>Create Your Poll</h3>
+                  <p className={styles.bentoDescriptionSmall}>
+                    Enter your question and add voting options.
+                  </p>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoStepCard}`}>
+                  <div className={styles.stepNumber}>2</div>
+                  <h3 className={styles.bentoTitleSmall}>Share the Link</h3>
+                  <p className={styles.bentoDescriptionSmall}>
+                    Distribute via email, chat, or social media.
+                  </p>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoStepCard}`}>
+                  <div className={styles.stepNumber}>3</div>
+                  <h3 className={styles.bentoTitleSmall}>Watch Live Results</h3>
+                  <p className={styles.bentoDescriptionSmall}>
+                    View real-time votes as they stream in.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Use Cases Row - Auto scrolling on mobile (opposite direction) */}
+            <div className={styles.bentoUseCasesRow}>
+              <div className={styles.bentoUseCasesTrack}>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={Presentation01Icon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Live Presentations</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={GraduationScrollIcon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Classroom Activities</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={UserGroupIcon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Team Decisions</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={Calendar01Icon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Events & Conferences</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={Comment01Icon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Social Engagement</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={Tap01Icon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Quick Feedback</h3>
+                </div>
+                {/* Duplicate for seamless loop */}
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={Presentation01Icon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Live Presentations</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={GraduationScrollIcon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Classroom Activities</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={UserGroupIcon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Team Decisions</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={Calendar01Icon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Events & Conferences</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={Comment01Icon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Social Engagement</h3>
+                </div>
+                <div className={`${styles.bentoCard} ${styles.bentoUseCaseCard}`}>
+                  <div className={styles.bentoIconSmall}>
+                    <HugeiconsIcon icon={Tap01Icon} size={56} />
+                  </div>
+                  <h3 className={styles.bentoTitleSmall}>Quick Feedback</h3>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Grid - Hidden on mobile */}
             <div className={styles.bentoGrid}>
-              {/* Row 1: Steps */}
-              {/* Step 1 - Wide */}
               <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
                 <div className={styles.stepNumber}>1</div>
                 <h3 className={styles.bentoTitleSmall}>Create Your Poll</h3>
@@ -302,8 +429,6 @@ export function Home({ onNavigate }: HomeProps) {
                   Enter your question and add voting options.
                 </p>
               </div>
-
-              {/* Step 2 */}
               <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
                 <div className={styles.stepNumber}>2</div>
                 <h3 className={styles.bentoTitleSmall}>Share the Link</h3>
@@ -311,8 +436,6 @@ export function Home({ onNavigate }: HomeProps) {
                   Distribute via email, chat, or social media.
                 </p>
               </div>
-
-              {/* Step 3 */}
               <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
                 <div className={styles.stepNumber}>3</div>
                 <h3 className={styles.bentoTitleSmall}>Watch Live Results</h3>
@@ -320,9 +443,6 @@ export function Home({ onNavigate }: HomeProps) {
                   View real-time votes as they stream in.
                 </p>
               </div>
-
-              {/* Row 2: Use Cases */}
-              {/* Use Case - Presentations */}
               <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
                 <div className={styles.bentoIconSmall}>
                   <HugeiconsIcon icon={Presentation01Icon} size={56} />
@@ -332,8 +452,6 @@ export function Home({ onNavigate }: HomeProps) {
                   Engage audiences during talks and meetings.
                 </p>
               </div>
-
-              {/* Use Case - Classroom */}
               <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
                 <div className={styles.bentoIconSmall}>
                   <HugeiconsIcon icon={GraduationScrollIcon} size={56} />
@@ -343,8 +461,6 @@ export function Home({ onNavigate }: HomeProps) {
                   Check student understanding in real-time.
                 </p>
               </div>
-
-              {/* Use Case - Team - Wide */}
               <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
                 <div className={styles.bentoIconSmall}>
                   <HugeiconsIcon icon={UserGroupIcon} size={56} />
@@ -354,9 +470,6 @@ export function Home({ onNavigate }: HomeProps) {
                   Make group choices with transparent voting.
                 </p>
               </div>
-
-              {/* Row 3: More Use Cases */}
-              {/* Use Case - Events - Wide */}
               <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
                 <div className={styles.bentoIconSmall}>
                   <HugeiconsIcon icon={Calendar01Icon} size={56} />
@@ -366,8 +479,6 @@ export function Home({ onNavigate }: HomeProps) {
                   Run interactive Q&A and polls at scale.
                 </p>
               </div>
-
-              {/* Use Case - Social */}
               <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
                 <div className={styles.bentoIconSmall}>
                   <HugeiconsIcon icon={Comment01Icon} size={56} />
@@ -377,8 +488,6 @@ export function Home({ onNavigate }: HomeProps) {
                   Create shareable "this vs that" content.
                 </p>
               </div>
-
-              {/* Use Case - Feedback */}
               <div className={`${styles.bentoCard} ${styles.bentoSmall}`}>
                 <div className={styles.bentoIconSmall}>
                   <HugeiconsIcon icon={Tap01Icon} size={56} />
