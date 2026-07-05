@@ -3,7 +3,7 @@
  * @param title - The title to convert to a slug
  * @returns A URL-friendly slug
  */
-export function generateSlug(title: string): string {
+function generateSlug(title: string): string {
   return title
     .toLowerCase()
     .trim()

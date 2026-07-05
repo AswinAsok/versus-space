@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { pollFacade } from '../core/appServices';
-import type { CreatePollData, UpdatePollData, Poll, PollWithOptions } from '../types';
+import type { CreatePollData, UpdatePollData, PollWithOptions, PlatformStats } from '../types';
 
 // Query keys for cache management
-export const pollKeys = {
+const pollKeys = {
   all: ['polls'] as const,
   lists: () => [...pollKeys.all, 'list'] as const,
   list: (userId: string) => [...pollKeys.lists(), userId] as const,
@@ -14,7 +14,6 @@ export const pollKeys = {
   bySlug: (slug: string) => [...pollKeys.all, 'slug', slug] as const,
   leaderboard: (limit?: number) => [...pollKeys.all, 'leaderboard', limit] as const,
   platformStats: () => [...pollKeys.all, 'platformStats'] as const,
-  mostRecent: () => [...pollKeys.all, 'mostRecent'] as const,
   proUserCount: () => [...pollKeys.all, 'proUserCount'] as const,
 };
 
@@ -94,16 +93,6 @@ export function useLeaderboard(limit?: number) {
 }
 
 /**
- * Fetch most recent poll with caching
- */
-export function useMostRecentPoll() {
-  return useQuery({
-    queryKey: pollKeys.mostRecent(),
-    queryFn: () => pollFacade.getMostRecentPoll(),
-  });
-}
-
-/**
  * Fetch platform stats with caching and real-time subscription
  */
 export function usePlatformStats() {
@@ -120,7 +109,7 @@ export function usePlatformStats() {
 
     const unsubscribe = pollFacade.subscribeToPlatformStats(
       (update) => {
-        queryClient.setQueryData(pollKeys.platformStats(), (prev) => {
+        queryClient.setQueryData<PlatformStats>(pollKeys.platformStats(), (prev) => {
           if (!prev) return prev;
           return update(prev);
         });
@@ -244,17 +233,6 @@ export function useValidateAccessKey() {
   return useMutation({
     mutationFn: ({ pollId, accessKey }: { pollId: string; accessKey: string }) =>
       pollFacade.validateAccessKey(pollId, accessKey),
-  });
-}
-
-/**
- * Check if poll is public
- */
-export function usePollPublicStatus(pollId: string | undefined) {
-  return useQuery({
-    queryKey: [...pollKeys.detail(pollId ?? ''), 'public'],
-    queryFn: () => pollFacade.isPollPublic(pollId!),
-    enabled: !!pollId,
   });
 }
 

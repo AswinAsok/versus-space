@@ -4,7 +4,7 @@ import type { AuthGateway } from '../../domain/auth';
 /**
  * Use-case layer for authentication. Keeps presentation hooked to an interface instead of Supabase.
  */
-export interface AuthFacade {
+interface AuthFacade {
   signUp(email: string, password: string): Promise<void>;
   signIn(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;

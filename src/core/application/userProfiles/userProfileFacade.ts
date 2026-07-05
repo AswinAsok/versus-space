@@ -1,7 +1,7 @@
 import type { UserProfile } from '../../../types';
 import type { UserProfileGateway } from '../../domain/userProfiles';
 
-export interface UserProfileFacade {
+interface UserProfileFacade {
   getOrCreateProfile(userId: string, email?: string | null): Promise<UserProfile>;
 }
 

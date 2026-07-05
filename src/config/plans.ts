@@ -23,6 +23,3 @@ export const DODO_PAYMENTS_CONFIG = {
   successUrl: `${window.location.origin}/dashboard?upgrade=success`,
   cancelUrl: `${window.location.origin}/dashboard?upgrade=cancelled`,
 };
-
-// Pro plan pricing - One-time lifetime payment
-export const PRO_PLAN_PRICE = 1; // $1 USD one-time lifetime payment

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ChampionIcon } from '@hugeicons/core-free-icons';
 import { supabase } from '../../../lib/supabaseClient';
-import type { Poll, PollOption } from '../../../types';
+import type { Poll } from '../../../types';
 import styles from './OptionRace.module.css';
 
 interface OptionRaceProps {

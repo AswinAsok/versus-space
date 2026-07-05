@@ -2,7 +2,7 @@
 .sidebar {
   position: fixed;
   left: 0;
-  top: 56px; /* Offset for ProductHunt banner */
+  top: 0;
   bottom: 0;
   width: 220px;
   background: rgba(17, 24, 28, 0.95);

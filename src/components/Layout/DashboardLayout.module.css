@@ -10,7 +10,7 @@
   flex: 1;
   margin-left: 220px;
   min-height: 100vh;
-  padding-top: 56px; /* Offset for ProductHunt banner */
+  padding-top: 0;
   display: flex;
   flex-direction: column;
   transition: margin-left var(--transition-normal) var(--ease-out);
@@ -84,7 +84,7 @@
 @media (max-width: 768px) {
   .mainContent {
     margin-left: 0;
-    padding-top: 110px; /* Mobile header + ProductHunt banner */
+    padding-top: 56px;
   }
 
   .sidebarIsCollapsed .mainContent {
@@ -93,6 +93,6 @@
 
   .mobileHeader {
     display: flex;
-    top: 50px; /* Offset for ProductHunt banner */
+    top: 0;
   }
 }

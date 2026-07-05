@@ -10,7 +10,6 @@ import { supabase } from '../../../lib/supabaseClient';
 import styles from './LiveStatsBar.module.css';
 
 interface LiveStatsBarProps {
-  userId: string;
   totalVotes: number;
   activePolls: number;
   pollIds: string[];
@@ -18,7 +17,7 @@ interface LiveStatsBarProps {
   sampleNoteMessage?: string;
 }
 
-export function LiveStatsBar({ userId, totalVotes: initialTotalVotes, activePolls, pollIds, showSampleNote, sampleNoteMessage }: LiveStatsBarProps) {
+export function LiveStatsBar({ totalVotes: initialTotalVotes, activePolls, pollIds, showSampleNote, sampleNoteMessage }: LiveStatsBarProps) {
   const [liveViewers, setLiveViewers] = useState(0);
   const [totalVotes, setTotalVotes] = useState(initialTotalVotes);
   const [votesToday, setVotesToday] = useState(0);

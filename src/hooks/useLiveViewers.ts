@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
-export interface Viewer {
+interface Viewer {
   id: string;
   color: string;
   joinedAt: string;

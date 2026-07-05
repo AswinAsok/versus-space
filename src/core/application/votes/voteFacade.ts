@@ -1,7 +1,7 @@
 import type { UserSession, Vote, VoteDailyCount, PollVoteSummary } from '../../../types';
 import type { VoteGateway, VoteAuthenticityStats } from '../../domain/votes';
 
-export interface VoteFacade {
+interface VoteFacade {
   castVote(pollId: string, optionId: string, userId: string | null, ipAddress: string): Promise<void>;
   updateUserSession(userId: string, pollId: string): Promise<void>;
   getUserSession(userId: string, pollId: string): Promise<UserSession | null>;

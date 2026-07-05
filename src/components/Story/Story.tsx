@@ -31,7 +31,7 @@ export function Story() {
 
         <p>down the lane, usage dropped.</p>
 
-        <p>but i still wanted to launch on PH. and maybe reach <a href="https://neal.fun" target="_blank" rel="noopener noreferrer" className={styles.link}>neal</a> as well, who knows.</p>
+        <p>but i still wanted to launch it publicly. and maybe reach <a href="https://neal.fun" target="_blank" rel="noopener noreferrer" className={styles.link}>neal</a> as well, who knows.</p>
 
         <p>the current version has a paid plan ($1), IP restriction, timer, and much more.</p>
 

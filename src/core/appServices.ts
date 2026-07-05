@@ -17,10 +17,3 @@ export const authFacade = createAuthFacade(authGateway);
 export const pollFacade = createPollFacade(pollGateway);
 export const voteFacade = createVoteFacade(voteGateway);
 export const userProfileFacade = createUserProfileFacade(userProfileGateway);
-
-export const appServices = {
-  auth: authFacade,
-  polls: pollFacade,
-  votes: voteFacade,
-  userProfiles: userProfileFacade,
-};

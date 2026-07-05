@@ -1,5 +1,4 @@
 import type {
-  Poll,
   PollOption,
   PollWithOptions,
   CreatePollData,
@@ -12,7 +11,7 @@ import type { PollGateway } from '../../domain/polls';
 /**
  * Application/service layer for polls. Wraps gateway calls so UI is decoupled from persistence.
  */
-export interface PollFacade {
+interface PollFacade {
   createPoll(data: CreatePollData, userId: string): Promise<PollWithOptions>;
   getPoll(pollId: string): Promise<PollWithOptions | null>;
   getPollBySlug(slug: string): Promise<PollWithOptions | null>;

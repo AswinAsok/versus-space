@@ -144,7 +144,6 @@ export function Analytics({ user }: AnalyticsProps) {
     loadOptionData();
   }, [selectedPollId]);
 
-  const selectedPollTitle = polls.find((p) => p.id === selectedPollId)?.title || '';
   const totalVotes = votesPerPoll.reduce((sum, p) => sum + p.totalVotes, 0);
   // Count active polls - considering both is_active flag and ends_at expiration
   const activePolls = polls.filter((p) => {
@@ -272,7 +271,6 @@ export function Analytics({ user }: AnalyticsProps) {
 
         {/* Live Stats Bar - Always visible */}
         <LiveStatsBar
-          userId={user.id}
           totalVotes={dummyTotalVotes}
           activePolls={dummyActivePolls}
           pollIds={dummyPollIds}
@@ -351,7 +349,6 @@ export function Analytics({ user }: AnalyticsProps) {
         <div className={!isPro ? styles.proContent : ''}>
           <VotingHeatmap
             voteTimestamps={dummyVoteTimestamps}
-            totalVotesAllPolls={dummyTotalVotes}
             loading={chartsLoading && !useDummyData}
             showProBadge={!isPro}
             proDescription={!isPro ? 'Discover peak voting hours' : undefined}
@@ -393,7 +390,6 @@ export function Analytics({ user }: AnalyticsProps) {
             <div className={!isPro ? styles.proContent : ''}>
               <OptionBreakdownChart
                 data={dummyOptionData}
-                pollTitle={useDummyData ? 'Sample Poll 1' : selectedPollTitle}
                 loading={optionLoading && !useDummyData}
                 polls={dummyPolls}
                 selectedPollId={useDummyData ? 'demo-1' : selectedPollId}

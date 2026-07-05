@@ -7,7 +7,6 @@ import optionStyles from './OptionBreakdownChart.module.css';
 
 interface OptionBreakdownChartProps {
   data: OptionVoteData[];
-  pollTitle: string;
   loading?: boolean;
   polls: Poll[];
   selectedPollId: string;
@@ -24,7 +23,6 @@ const CHART_COLORS = [
 
 export function OptionBreakdownChart({
   data,
-  pollTitle,
   loading,
   polls,
   selectedPollId,

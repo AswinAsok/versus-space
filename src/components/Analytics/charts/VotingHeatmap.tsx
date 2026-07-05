@@ -5,7 +5,6 @@ import styles from './VotingHeatmap.module.css';
 
 interface VotingHeatmapProps {
   voteTimestamps: Date[];
-  totalVotesAllPolls: number; // Total votes including simulated
   loading?: boolean;
   showProBadge?: boolean;
   proDescription?: string;
@@ -17,7 +16,7 @@ interface DayData {
   level: number;
 }
 
-export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, showProBadge, proDescription }: VotingHeatmapProps) {
+export function VotingHeatmap({ voteTimestamps, loading, showProBadge, proDescription }: VotingHeatmapProps) {
   const trackedVoteCount = voteTimestamps.length;
 
   const { days, weeks, months } = useMemo(() => {

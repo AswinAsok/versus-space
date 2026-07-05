@@ -39,7 +39,7 @@ const defaults = {
   locale: 'en_US',
 };
 
-export function SEO({
+function SEO({
   title,
   description,
   keywords,
@@ -241,24 +241,3 @@ export function PollSEO({
     />
   );
 }
-
-// Use Case Landing Page SEO
-interface UseCaseSEOProps {
-  slug: string;
-  title: string;
-  description: string;
-  keywords: string;
-}
-
-export function UseCaseSEO({ slug, title, description, keywords }: UseCaseSEOProps) {
-  return (
-    <SEO
-      title={title}
-      description={description}
-      keywords={keywords}
-      canonicalUrl={`https://versus.space/use-cases/${slug}`}
-    />
-  );
-}
-
-export default SEO;

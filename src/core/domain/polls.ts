@@ -1,5 +1,4 @@
 import type {
-  Poll,
   PollOption,
   PollWithOptions,
   CreatePollData,

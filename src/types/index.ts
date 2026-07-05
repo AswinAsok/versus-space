@@ -5,8 +5,6 @@ export type PollOption = Database['public']['Tables']['poll_options']['Row'];
 export type Vote = Database['public']['Tables']['votes']['Row'];
 export type UserSession = Database['public']['Tables']['user_sessions']['Row'];
 export type UserProfile = Database['public']['Tables']['user_profiles']['Row'];
-export type PlanTier = 'free' | 'pro';
-export type UserRole = 'user' | 'superadmin';
 
 export interface PollWithOptions extends Poll {
   options: PollOption[];
@@ -54,12 +52,6 @@ export interface VoteDailyCount {
   count: number;
 }
 
-export interface PollVoteTimeSeries {
-  pollId: string;
-  pollTitle: string;
-  data: VoteDailyCount[];
-}
-
 export interface PollVoteSummary {
   pollId: string;
   pollTitle: string;
@@ -70,57 +62,6 @@ export interface OptionVoteData {
   optionId: string;
   optionTitle: string;
   voteCount: number;
-}
-
-export interface AnalyticsStats {
-  totalPolls: number;
-  activePolls: number;
-  publicPolls: number;
-  totalVotes: number;
-  avgVotesPerPoll: number;
-}
-
-// New analytics types
-export interface VoteMomentum {
-  currentHourVotes: number;
-  averageHourlyVotes: number;
-  isHot: boolean;
-  trend: 'up' | 'down' | 'stable';
-}
-
-export interface PersonalRecord {
-  type: 'most_voted' | 'fastest_growing' | 'closest_race' | 'most_recent';
-  pollId: string;
-  pollTitle: string;
-  value: number;
-  label: string;
-}
-
-export interface OptionRaceData {
-  pollId: string;
-  pollTitle: string;
-  options: {
-    id: string;
-    title: string;
-    votes: number;
-    percentage: number;
-    isLeading: boolean;
-  }[];
-  totalVotes: number;
-}
-
-export interface HourlyVotePattern {
-  dayOfWeek: number; // 0-6 (Sunday-Saturday)
-  hour: number; // 0-23
-  voteCount: number;
-}
-
-export interface MilestoneProgress {
-  currentTotal: number;
-  nextMilestone: number;
-  previousMilestone: number;
-  progress: number; // 0-100
-  votesToNext: number;
 }
 
 export interface PollHealthScore {

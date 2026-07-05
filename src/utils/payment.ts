@@ -7,13 +7,6 @@ interface CheckoutParams {
 }
 
 /**
- * Check if DodoPayments is properly configured
- */
-export function isDodoPaymentsConfigured(): boolean {
-  return DODO_PAYMENTS_CONFIG.isConfigured;
-}
-
-/**
  * Generates a DodoPayments checkout URL for the Pro plan
  * Uses static payment link with pre-filled customer info
  *
@@ -61,12 +54,4 @@ export function getProCheckoutUrl({ email, userId, customerName }: CheckoutParam
   }
 
   return `${checkoutBaseUrl}/${proProductId}?${params.toString()}`;
-}
-
-/**
- * Redirects user to DodoPayments checkout
- */
-export function redirectToCheckout(params: CheckoutParams): void {
-  const checkoutUrl = getProCheckoutUrl(params);
-  window.location.href = checkoutUrl;
 }

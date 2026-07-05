@@ -57,11 +57,6 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
     return pollsWithVotes;
   }, [data]);
 
-  // Visible poll IDs (not hidden)
-  const visiblePollIds = useMemo(() => {
-    return allPollIds.filter(id => !hiddenPolls.has(id));
-  }, [allPollIds, hiddenPolls]);
-
   // Toggle poll visibility
   const handleLegendClick = useCallback((pollId: string) => {
     setHiddenPolls(prev => {
