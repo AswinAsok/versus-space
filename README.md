@@ -58,5 +58,4 @@ npm run preview
 - `src/core/application`: facades/use-cases that sit between UI and data sources.
 - `src/core/infrastructure/supabase`: adapters implementing the domain gateways.
 - `src/core/appServices.ts`: composition root wiring the facades to Supabase.
-- Legacy `services/*` now point at the facades to keep imports backward compatible.
 - Meta assets live under `public/meta` to keep the public root clean.
