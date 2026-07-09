@@ -6,9 +6,7 @@ live tug-of-war for opinions. create a poll with two options, drop a link, and w
 
 ## demo
 
-[![Watch the demo](https://img.youtube.com/vi/lC7ViK-1DhI/maxresdefault.jpg)](https://youtu.be/lC7ViK-1DhI)
-
-_Demo video was recorded in the last hour of submission. Demo v2 coming soon!_
+[![Watch the demo](https://img.youtube.com/vi/WhY-RmY92qU/maxresdefault.jpg)](https://youtu.be/WhY-RmY92qU)
 
 ## what it's for
 
@@ -54,8 +52,6 @@ npm run preview
 
 ## architecture
 
-- `src/core/domain`: contracts and entities for auth, polls, and votes (SOLID-friendly boundaries).
-- `src/core/application`: facades/use-cases that sit between UI and data sources.
-- `src/core/infrastructure/supabase`: adapters implementing the domain gateways.
-- `src/core/appServices.ts`: composition root wiring the facades to Supabase.
+- `src/core/infrastructure/supabase`: Supabase-backed auth, poll, profile, and vote services.
+- `src/core/appServices.ts`: composition root wiring the app to Supabase gateways.
 - Meta assets live under `public/meta` to keep the public root clean.

@@ -3,6 +3,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Activity01Icon, CheckmarkCircle02Icon, AlertCircleIcon } from '@hugeicons/core-free-icons';
 import { supabase } from '../../../lib/supabaseClient';
 import type { Poll, PollHealthScore } from '../../../types';
+import chartStyles from './Charts.module.css';
 import styles from './PollHealthScores.module.css';
 
 interface PollHealthScoresProps {
@@ -129,7 +130,7 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Poll Health Scores</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.loading}>
@@ -146,7 +147,7 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Poll Health Scores</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.empty}>
@@ -163,7 +164,7 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Poll Health Scores</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <span className={styles.subtitle}>Based on engagement, balance & velocity</span>

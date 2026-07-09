@@ -59,159 +59,9 @@
   box-shadow: 0 1px 4px rgba(62, 207, 142, 0.15);
 }
 
-/* Supabase-styled Secondary Button */
-.btnSecondary {
-  background: transparent;
-  color: var(--color-text);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  font-size: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: all var(--transition-fast) var(--ease-out);
-  text-decoration: none;
-}
-
-.btnSecondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.btnDanger {
-  background: var(--color-danger);
-  color: white;
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  font-size: 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all var(--transition-fast) var(--ease-out);
-}
-
-.btnDanger:hover:not(:disabled) {
-  background: #dc2626;
-  box-shadow: var(--shadow-md);
-}
-
-.btnIcon {
-  background: none;
-  color: var(--color-text-light);
-  padding: 0.5rem;
-  border-radius: var(--radius-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast) var(--ease-out);
-}
-
-.btnIcon:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--color-text);
-}
-
-.btnIconSmall {
-  background: none;
-  color: var(--color-text-light);
-  padding: 0.25rem;
-  border-radius: var(--radius-sm);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast) var(--ease-out);
-}
-
-.btnIconSmall:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--color-danger);
-}
-
-.btnLink {
-  background: none;
-  color: var(--color-primary);
-  padding: 0.5rem;
-  font-size: 0.875rem;
-  text-decoration: none;
-  transition: color var(--transition-fast) var(--ease-out);
-}
-
-.btnLink:hover:not(:disabled) {
-  color: var(--color-primary-dark);
-  text-decoration: underline;
-}
-
 .btnLarge {
   padding: 12px 24px;
   font-size: 1rem;
-}
-
-.btnShare {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  padding: 0.75rem;
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-normal) var(--ease-out);
-}
-
-.btnShare:hover:not(:disabled) {
-  background: var(--color-bg-elevated);
-  border-color: var(--color-border-hover);
-  transform: scale(1.05);
-}
-
-/* Form Group */
-.formGroup {
-  margin-bottom: 1.5rem;
-}
-
-.formGroup label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--color-text);
-}
-
-.formGroup input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  transition: all var(--transition-fast) var(--ease-out);
-  font-family: inherit;
-  background: rgba(0, 0, 0, 0.2);
-  color: var(--color-text);
-}
-
-.formGroup input::placeholder {
-  color: var(--color-text-muted);
-}
-
-.formGroup input:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.formGroup input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-glow);
-}
-
-.formGroup input:disabled {
-  background: var(--color-bg-alt);
-  cursor: not-allowed;
-  opacity: 0.6;
 }
 
 /* Error Message */
@@ -223,36 +73,6 @@
   margin-bottom: 1rem;
   font-size: 0.875rem;
   border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-/* Loading State */
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100dvh;
-  color: var(--color-text-light);
-  font-size: 1.125rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--color-bg);
-  z-index: 1000;
-  gap: 1.5rem;
-}
-
-.loading::after {
-  content: '';
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--color-bg-elevated);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
 }
 
 /* Error Container */
@@ -277,17 +97,9 @@
   font-size: 1.125rem;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .btnPrimary,
-  .btnSecondary,
-  .btnDanger {
+  .btnPrimary {
     padding: 0.75rem 1.25rem;
     font-size: 0.9375rem;
     min-height: 44px;
@@ -298,46 +110,9 @@
     font-size: 1rem;
   }
 
-  .btnIcon {
-    padding: 0.625rem;
-    min-width: 44px;
-    min-height: 44px;
-  }
-
-  .btnShare {
-    padding: 0.875rem;
-    min-width: 44px;
-    min-height: 44px;
-  }
-
-  .formGroup {
-    margin-bottom: 1.25rem;
-  }
-
-  .formGroup label {
-    font-size: 0.8125rem;
-    margin-bottom: 0.375rem;
-  }
-
-  .formGroup input {
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    min-height: 44px;
-  }
-
   .errorMessage {
     padding: 0.625rem;
     font-size: 0.8125rem;
-  }
-
-  .loading {
-    font-size: 1rem;
-    gap: 1.25rem;
-  }
-
-  .loading::after {
-    width: 32px;
-    height: 32px;
   }
 
   .errorContainer,
@@ -349,9 +124,7 @@
 }
 
 @media (max-width: 480px) {
-  .btnPrimary,
-  .btnSecondary,
-  .btnDanger {
+  .btnPrimary {
     padding: 0.625rem 1rem;
     font-size: 0.875rem;
     min-height: 40px;
@@ -362,44 +135,10 @@
     font-size: 0.9375rem;
   }
 
-  .btnIcon {
-    padding: 0.5rem;
-    min-width: 40px;
-    min-height: 40px;
-  }
-
-  .btnIconSmall {
-    padding: 0.375rem;
-  }
-
-  .formGroup {
-    margin-bottom: 1rem;
-  }
-
-  .formGroup label {
-    font-size: 0.75rem;
-  }
-
-  .formGroup input {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.9375rem;
-    min-height: 40px;
-  }
-
   .errorMessage {
     padding: 0.5rem;
     font-size: 0.75rem;
     margin-bottom: 0.75rem;
-  }
-
-  .loading {
-    font-size: 0.9375rem;
-    gap: 1rem;
-  }
-
-  .loading::after {
-    width: 28px;
-    height: 28px;
   }
 
   .errorContainer,

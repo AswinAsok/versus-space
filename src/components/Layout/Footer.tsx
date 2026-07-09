@@ -189,5 +189,3 @@ export function Footer({ variant = 'minimal' }: FooterProps) {
     </footer>
   );
 }
-
-export default Footer;

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import chartStyles from './Charts.module.css';
 import styles from './VotingHeatmap.module.css';
 
 interface VotingHeatmapProps {
@@ -146,7 +147,7 @@ export function VotingHeatmap({ voteTimestamps, loading, showProBadge, proDescri
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Vote Activity</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <span className={styles.subtitle}>

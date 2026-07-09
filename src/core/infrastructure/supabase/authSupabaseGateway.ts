@@ -1,57 +1,51 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '../../../types/database';
-import type { AuthGateway } from '../../domain/auth';
+import type { User } from '@supabase/supabase-js';
+import { supabase } from '../../../lib/supabaseClient';
 
-/**
- * Supabase-backed implementation of the AuthGateway contract.
- */
-export function createSupabaseAuthGateway(client: SupabaseClient<Database>): AuthGateway {
-  return {
-    async signUp(email, password) {
-      const { error } = await client.auth.signUp({ email, password });
-      if (error) throw error;
-    },
+export const authFacade = {
+  async signUp(email: string, password: string) {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
+  },
 
-    async signIn(email, password) {
-      const { error } = await client.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-    },
+  async signIn(email: string, password: string) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  },
 
-    async signOut() {
-      const { error } = await client.auth.signOut();
-      if (error) throw error;
-    },
+  async signOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  },
 
-    async signInWithGoogle() {
-      const { error } = await client.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/dashboard`,
-          scopes: 'email profile',
-        },
-      });
+  async signInWithGoogle() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+        scopes: 'email profile',
+      },
+    });
 
-      if (error) throw error;
-    },
+    if (error) throw error;
+  },
 
-    async getCurrentUser() {
-      const {
-        data: { user },
-        error,
-      } = await client.auth.getUser();
+  async getCurrentUser() {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
 
-      if (error) throw error;
-      return user ?? null;
-    },
+    if (error) throw error;
+    return user ?? null;
+  },
 
-    onAuthStateChange(callback) {
-      const {
-        data: { subscription },
-      } = client.auth.onAuthStateChange((_event, session) => {
-        callback(session?.user ?? null);
-      });
+  onAuthStateChange(callback: (user: User | null) => void) {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      callback(session?.user ?? null);
+    });
 
-      return () => subscription.unsubscribe();
-    },
-  };
-}
+    return () => subscription.unsubscribe();
+  },
+};

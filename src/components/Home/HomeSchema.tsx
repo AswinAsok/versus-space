@@ -48,6 +48,32 @@ export function HomeSchema({ pollsCount, votesCount }: HomeSchemaProps) {
     ],
   };
 
+  const webSiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Versus Space',
+    url: baseUrl,
+    description: 'Real-time polling software for business teams and corporate decision-making',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${baseUrl}/poll/{poll_id}`,
+      },
+      'query-input': 'required name=poll_id',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Versus Space',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/meta/icons/android-icon-192x192.png`,
+        width: 192,
+        height: 192,
+      },
+    },
+  };
+
   // WebApplication Schema - Enhanced for Enterprise
   const webApplicationSchema = {
     '@context': 'https://schema.org',
@@ -88,14 +114,6 @@ export function HomeSchema({ pollsCount, votesCount }: HomeSchemaProps) {
       'Enterprise-ready security',
     ],
     screenshot: `${baseUrl}/meta/meta-preview-2.png`,
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      ratingCount: Math.max(pollsCount, 100).toString(),
-      bestRating: '5',
-      worstRating: '1',
-      reviewCount: Math.floor(Math.max(pollsCount, 100) * 0.3).toString(),
-    },
     interactionStatistic: [
       {
         '@type': 'InteractionCounter',
@@ -340,6 +358,10 @@ export function HomeSchema({ pollsCount, votesCount }: HomeSchemaProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
       />
       <script
         type="application/ld+json"

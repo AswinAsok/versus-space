@@ -40,7 +40,7 @@ export function OptionBreakdownChart({
           <div className={optionStyles.headerLeft}>
             <div className={optionStyles.titleRow}>
               <h3 className={styles.chartTitle}>Option Breakdown</h3>
-              {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           <select
@@ -74,7 +74,7 @@ export function OptionBreakdownChart({
         <div className={optionStyles.headerLeft}>
           <div className={optionStyles.titleRow}>
             <h3 className={styles.chartTitle}>Option Breakdown</h3>
-            {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.chartEmpty}>
@@ -92,7 +92,7 @@ export function OptionBreakdownChart({
           <div className={optionStyles.headerLeft}>
             <div className={optionStyles.titleRow}>
               <h3 className={styles.chartTitle}>Option Breakdown</h3>
-              {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           <select
@@ -121,7 +121,7 @@ export function OptionBreakdownChart({
         <div className={optionStyles.headerLeft}>
           <div className={optionStyles.titleRow}>
             <h3 className={styles.chartTitle}>Option Breakdown</h3>
-            {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <select

@@ -4,6 +4,7 @@ import { Fire02Icon, ArrowUp01Icon, ArrowDown01Icon } from '@hugeicons/core-free
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { supabase } from '../../../lib/supabaseClient';
+import chartStyles from './Charts.module.css';
 import styles from './VoteMomentumGauge.module.css';
 
 interface VoteMomentumGaugeProps {
@@ -180,7 +181,7 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription, useDu
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Vote Momentum</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         {isHot && (

@@ -59,7 +59,7 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
         <div className={localStyles.headerLeft}>
           <div className={localStyles.titleRow}>
             <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
-            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.skeletonWrapper}>
@@ -81,7 +81,7 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
         <div className={localStyles.headerLeft}>
           <div className={localStyles.titleRow}>
             <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
-            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.chartEmpty}>
@@ -97,7 +97,7 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
       <div className={localStyles.headerLeft}>
         <div className={localStyles.titleRow}>
           <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
-          {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+          {showProBadge && <span className={styles.proBadge}>Pro</span>}
         </div>
       </div>
       <div className={styles.chartWrapper}>

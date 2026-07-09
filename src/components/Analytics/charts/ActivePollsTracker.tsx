@@ -3,6 +3,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { UserMultiple02Icon, ViewIcon } from '@hugeicons/core-free-icons';
 import { supabase } from '../../../lib/supabaseClient';
 import type { Poll } from '../../../types';
+import chartStyles from './Charts.module.css';
 import styles from './ActivePollsTracker.module.css';
 
 interface PollPresence {
@@ -100,7 +101,7 @@ export function ActivePollsTracker({ polls, showProBadge, proDescription }: Acti
           <div className={styles.titleRow}>
             <span className={`${styles.statusDot} ${isConnected ? styles.connected : ''}`} />
             <h3 className={styles.trackerTitle}>Live Poll Activity</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.totalViewers}>

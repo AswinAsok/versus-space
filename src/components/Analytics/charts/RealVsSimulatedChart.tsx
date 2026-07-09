@@ -29,7 +29,7 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showP
         <div className={localStyles.headerLeft}>
           <div className={localStyles.titleRow}>
             <h3 className={styles.chartTitle}>Vote Authenticity</h3>
-            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.skeletonCircle}>
@@ -50,7 +50,7 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showP
         <div className={localStyles.headerLeft}>
           <div className={localStyles.titleRow}>
             <h3 className={styles.chartTitle}>Vote Authenticity</h3>
-            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.chartEmpty}>
@@ -66,7 +66,7 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showP
       <div className={localStyles.headerLeft}>
         <div className={localStyles.titleRow}>
           <h3 className={styles.chartTitle}>Vote Authenticity</h3>
-          {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+          {showProBadge && <span className={styles.proBadge}>Pro</span>}
         </div>
       </div>
       <div className={styles.chartWrapper}>

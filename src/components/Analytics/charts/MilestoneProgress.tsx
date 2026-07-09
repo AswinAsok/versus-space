@@ -3,6 +3,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { StarIcon, ChartIncreaseIcon } from '@hugeicons/core-free-icons';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import chartStyles from './Charts.module.css';
 import styles from './MilestoneProgress.module.css';
 
 interface MilestoneProgressProps {
@@ -101,7 +102,7 @@ export function MilestoneProgress({ totalVotes, loading, showProBadge, proDescri
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Milestone Progress</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.badge}>

@@ -35,139 +35,6 @@
   color: var(--color-text-muted);
 }
 
-/* Stats Grid */
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  animation: fadeInUp 0.5s var(--ease-out) 0.1s both;
-}
-
-.statCard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  padding: 0.875rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  position: relative;
-  overflow: hidden;
-  transition: all var(--transition-normal) var(--ease-out);
-}
-
-.statCard:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.statIcon {
-  width: 36px;
-  height: 36px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-}
-
-.activeIcon {
-  color: var(--color-primary);
-}
-
-.publicIcon {
-  color: var(--color-text-muted);
-}
-
-.growthIcon {
-  color: var(--color-text-muted);
-}
-
-.votesIcon {
-  color: var(--color-text-muted);
-}
-
-.statContent {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  min-width: 0;
-}
-
-.statValue {
-  font-family: 'Parkinsans', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.statLabel {
-  font-size: 0.6875rem;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-/* Section - No margin, gap is handled by parent */
-.section {
-  animation: fadeInUp 0.5s var(--ease-out) 0.2s both;
-}
-
-.sectionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-  gap: 0.75rem;
-}
-
-.sectionTitle {
-  font-family: 'Parkinsans', sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0;
-  letter-spacing: -0.01em;
-}
-
-.section > .sectionTitle {
-  margin-bottom: 0.75rem;
-}
-
-/* Date Range Selector */
-.dateRangeSelector {
-  display: flex;
-  gap: 0.125rem;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.1875rem;
-  border-radius: var(--radius-sm);
-}
-
-.dateRangeButton {
-  background: transparent;
-  border: none;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  border-radius: var(--radius-xs, 4px);
-  cursor: pointer;
-  transition: all var(--transition-fast) var(--ease-out);
-}
-
-.dateRangeButton:hover {
-  color: var(--color-text);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.dateRangeActive {
-  background: var(--color-primary) !important;
-  color: #000 !important;
-}
-
 /* Grid Layouts - Consistent gap */
 .threeColumnGrid {
   display: grid;
@@ -188,169 +55,6 @@
 
 .twoColumnGrid > * {
   min-height: 220px;
-}
-
-/* Activity List */
-.activityList {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  transition: all var(--transition-normal) var(--ease-out);
-}
-
-.activityList:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.activityItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  transition: all var(--transition-fast) var(--ease-out);
-}
-
-.activityItem:not(:last-child) {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.activityItem:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.activityDot {
-  width: 6px;
-  height: 6px;
-  background: var(--color-primary);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.activityContent {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  min-width: 0;
-}
-
-.activityTitle {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--color-text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.activityMeta {
-  font-size: 0.6875rem;
-  color: var(--color-text-muted);
-}
-
-.activityStatus {
-  font-size: 0.625rem;
-  font-weight: 600;
-  padding: 0.1875rem 0.5rem;
-  border-radius: var(--radius-full);
-  flex-shrink: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.activityStatus.active {
-  background: rgba(62, 207, 142, 0.15);
-  color: var(--color-primary);
-}
-
-.activityStatus.inactive {
-  background: rgba(100, 116, 139, 0.15);
-  color: var(--color-text-muted);
-}
-
-/* Loading State */
-.loadingState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-}
-
-.loadingSpinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-bottom: 0.5rem;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Empty State */
-.emptyState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  text-align: center;
-  animation: fadeInUp 0.5s var(--ease-out) 0.1s both;
-}
-
-.emptyStateIcon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.6;
-}
-
-.emptyStateTitle {
-  font-family: 'Parkinsans', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.5rem;
-}
-
-.emptyStateDescription {
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-  max-width: 360px;
-  line-height: 1.5;
-}
-
-/* Demo Banner */
-.demoBanner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
-  border: 1px solid rgba(251, 191, 36, 0.2);
-  border-radius: var(--radius-md);
-  font-size: 0.8125rem;
-  color: rgba(251, 191, 36, 0.9);
-  animation: fadeInDown 0.5s var(--ease-out);
-}
-
-.demoBannerIcon {
-  font-size: 1rem;
 }
 
 /* Pro Section */
@@ -380,50 +84,6 @@
   height: 100%;
 }
 
-/* Coming Soon */
-.comingSoon {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  position: relative;
-  overflow: hidden;
-  transition: all var(--transition-normal) var(--ease-out);
-}
-
-.comingSoon:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.comingSoonIcon {
-  width: 20px;
-  height: 20px;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-}
-
-.comingSoonContent {
-  flex: 1;
-}
-
-.comingSoonTitle {
-  font-family: 'Parkinsans', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.125rem;
-}
-
-.comingSoonText {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  line-height: 1.4;
-}
-
 /* Animations */
 @keyframes fadeInDown {
   from {
@@ -451,10 +111,6 @@
 @media (max-width: 1024px) {
   .analyticsInner {
     gap: 1.25rem;
-  }
-
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
   }
 
   .threeColumnGrid {
@@ -503,29 +159,6 @@
     font-size: 1.25rem;
   }
 
-  .statCard {
-    padding: 0.75rem;
-  }
-
-  .statIcon {
-    width: 32px;
-    height: 32px;
-  }
-
-  .statValue {
-    font-size: 1.125rem;
-  }
-
-  .sectionHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .dateRangeSelector {
-    width: 100%;
-    justify-content: center;
-  }
 }
 
 @media (max-width: 480px) {
@@ -545,11 +178,6 @@
     font-size: 0.75rem;
   }
 
-  .statsGrid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
   .twoColumnGrid {
     gap: 0.875rem;
   }
@@ -566,22 +194,4 @@
     min-height: 180px;
   }
 
-  .sectionTitle {
-    font-size: 0.9375rem;
-  }
-
-  .dateRangeButton {
-    padding: 0.375rem 0.625rem;
-    font-size: 0.625rem;
-  }
-
-  .activityItem {
-    padding: 0.625rem 0.75rem;
-  }
-
-  .comingSoon {
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-  }
 }

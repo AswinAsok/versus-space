@@ -3,6 +3,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { ChampionIcon } from '@hugeicons/core-free-icons';
 import { supabase } from '../../../lib/supabaseClient';
 import type { Poll } from '../../../types';
+import chartStyles from './Charts.module.css';
 import styles from './OptionRace.module.css';
 
 interface OptionRaceProps {
@@ -128,7 +129,7 @@ export function OptionRace({ polls, selectedPollId, onPollChange, showProBadge, 
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Option Race</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
           {leadChange && (
             <div className={styles.leadChange}>

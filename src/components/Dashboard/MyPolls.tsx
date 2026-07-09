@@ -29,6 +29,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import { MouseLoader } from '../Loading/MouseLoader';
+import { FreeLimitUpgradeBanner } from './FreeLimitUpgradeBanner';
 import styles from './MyPolls.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 
@@ -117,22 +118,7 @@ export function MyPolls({ user }: MyPollsProps) {
 
   return (
     <div className={styles.myPollsContainer}>
-      {/* Upgrade Banner - shown at top when at free limit */}
-      {isAtFreeLimit && (
-        <div className={styles.upgradeBanner}>
-          <div className={styles.upgradeBannerContent}>
-            <span className={styles.upgradeBannerText}>
-              Congratulations! You are eligible for an upgrade
-            </span>
-            <button
-              onClick={() => navigate('/dashboard/settings')}
-              className={styles.upgradeBannerButton}
-            >
-              Upgrade to Pro
-            </button>
-          </div>
-        </div>
-      )}
+      {isAtFreeLimit && <FreeLimitUpgradeBanner onUpgrade={() => navigate('/dashboard/settings')} />}
 
       {/* Page Header */}
       <div className={styles.pageHeader}>

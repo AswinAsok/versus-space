@@ -161,7 +161,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
           <div className={chartStyles.headerLeft}>
             <div className={chartStyles.titleRow}>
               <h3 className={styles.chartTitle}>Votes Over Time</h3>
-              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           {onDateRangeChange && (
@@ -197,7 +197,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
           <div className={chartStyles.headerLeft}>
             <div className={chartStyles.titleRow}>
               <h3 className={styles.chartTitle}>Votes Over Time</h3>
-              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           {onDateRangeChange && (
@@ -230,7 +230,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
           <div className={chartStyles.headerLeft}>
             <div className={chartStyles.titleRow}>
               <h3 className={styles.chartTitle}>Votes Over Time</h3>
-              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           {onDateRangeChange && (
@@ -270,7 +270,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
         <div className={chartStyles.headerLeft}>
           <div className={chartStyles.titleRow}>
             <h3 className={styles.chartTitle}>Votes Over Time</h3>
-            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         {onDateRangeChange && (

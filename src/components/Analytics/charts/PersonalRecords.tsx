@@ -8,6 +8,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { supabase } from '../../../lib/supabaseClient';
 import type { Poll } from '../../../types';
+import chartStyles from './Charts.module.css';
 import styles from './PersonalRecords.module.css';
 
 interface PersonalRecordsProps {
@@ -194,7 +195,7 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Personal Records</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.loading}>
@@ -211,7 +212,7 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Personal Records</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.empty}>
@@ -227,7 +228,7 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
       <div className={styles.headerLeft}>
         <div className={styles.titleRow}>
           <h3 className={styles.title}>Personal Records</h3>
-          {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
         </div>
       </div>
       <div className={styles.recordsGrid}>
