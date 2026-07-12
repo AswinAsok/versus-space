@@ -1,11 +1,11 @@
-import type { PollOption, RealtimeViewer, RealtimeVoteEvent } from '../../../types';
+import type { PollOption, RealtimeVoteEvent } from '../../../types';
 import { apiWebSocketUrl, getAuthToken } from '../../../lib/apiClient';
 
 interface SubscribeOptions {
   role: 'viewer' | 'observer';
   viewerId: string;
   onConnected?: (connected: boolean) => void;
-  onPresence?: (pollId: string, viewers: RealtimeViewer[]) => void;
+  onPresence?: (pollId: string, viewerCount: number) => void;
   onVote?: (vote: RealtimeVoteEvent) => void;
   onOption?: (pollId: string, option: PollOption) => void;
 }
@@ -13,7 +13,7 @@ interface SubscribeOptions {
 interface RealtimeMessage {
   type: 'presence' | 'vote' | 'refresh' | 'deleted';
   pollId: string;
-  viewers?: RealtimeViewer[];
+  viewerCount?: number;
   vote?: RealtimeVoteEvent;
   option?: PollOption;
 }
@@ -51,8 +51,8 @@ export const cloudflareRealtimeFacade = {
       socket.addEventListener('message', (event) => {
         try {
           const message = JSON.parse(String(event.data)) as RealtimeMessage;
-          if (message.type === 'presence' && message.viewers) {
-            options.onPresence?.(message.pollId, message.viewers);
+          if (message.type === 'presence' && typeof message.viewerCount === 'number') {
+            options.onPresence?.(message.pollId, message.viewerCount);
           } else if (message.type === 'vote' && message.vote && message.option) {
             options.onVote?.(message.vote);
             options.onOption?.(message.pollId, message.option);

@@ -79,11 +79,6 @@ export interface PollHealthScore {
   isActive: boolean;
 }
 
-export interface RealtimeViewer {
-  id: string;
-  joinedAt: string;
-}
-
 export interface RealtimeVoteEvent {
   pollId: string;
   optionId: string;

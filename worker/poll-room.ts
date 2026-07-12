@@ -1,10 +1,12 @@
 import { DurableObject } from 'cloudflare:workers';
+import { hasRealtimeCapacity } from './realtime-security';
 
 interface ConnectionState {
   role: 'viewer' | 'observer';
-  viewerId: string;
-  joinedAt: string;
+  clientIp: string;
 }
+
+const PRESENCE_DEBOUNCE_MS = 250;
 
 interface PollOptionRow {
   id: string;
@@ -52,6 +54,8 @@ async function automaticVoteId(key: string) {
 }
 
 export class PollRoom extends DurableObject<Env> {
+  private presenceTimer: ReturnType<typeof setTimeout> | null = null;
+
   fetch(request: Request) {
     if (request.headers.get('upgrade')?.toLowerCase() !== 'websocket') {
       return new Response('WebSocket upgrade required', { status: 426 });
@@ -59,16 +63,25 @@ export class PollRoom extends DurableObject<Env> {
 
     const url = new URL(request.url);
     const role = url.searchParams.get('role') === 'viewer' ? 'viewer' : 'observer';
-    const viewerId = (url.searchParams.get('viewerId') || crypto.randomUUID()).slice(0, 100);
+    const clientIp = request.headers.get('x-versus-client-ip') ?? 'unknown';
+    const connections = this.ctx.getWebSockets();
+    const clientIps = connections.map(
+      (socket) => (socket.deserializeAttachment() as ConnectionState | null)?.clientIp ?? null
+    );
+    if (!hasRealtimeCapacity(clientIps, clientIp)) {
+      return new Response('Too many realtime connections', {
+        status: 429,
+        headers: { 'Retry-After': '30' },
+      });
+    }
     const pair = new WebSocketPair();
     const [client, server] = Object.values(pair);
     this.ctx.acceptWebSocket(server);
     server.serializeAttachment({
       role,
-      viewerId,
-      joinedAt: new Date().toISOString(),
+      clientIp,
     } satisfies ConnectionState);
-    this.broadcastPresence();
+    this.schedulePresenceBroadcast();
     const requestedProtocols = request.headers.get('sec-websocket-protocol');
     return new Response(null, {
       status: 101,
@@ -174,20 +187,27 @@ export class PollRoom extends DurableObject<Env> {
   }
 
   webSocketClose() {
-    this.broadcastPresence();
+    this.schedulePresenceBroadcast();
   }
 
   webSocketError() {
-    this.broadcastPresence();
+    this.schedulePresenceBroadcast();
+  }
+
+  private schedulePresenceBroadcast() {
+    if (this.presenceTimer !== null) return;
+    this.presenceTimer = setTimeout(() => {
+      this.presenceTimer = null;
+      this.broadcastPresence();
+    }, PRESENCE_DEBOUNCE_MS);
   }
 
   private broadcastPresence() {
-    const viewers = this.ctx
+    const viewerCount = this.ctx
       .getWebSockets()
       .map((socket) => socket.deserializeAttachment() as ConnectionState | null)
-      .filter((state): state is ConnectionState => state?.role === 'viewer')
-      .map((state) => ({ id: state.viewerId, joinedAt: state.joinedAt }));
-    this.send(JSON.stringify({ type: 'presence', pollId: this.ctx.id.name ?? '', viewers }));
+      .filter((state) => state?.role === 'viewer').length;
+    this.send(JSON.stringify({ type: 'presence', pollId: this.ctx.id.name ?? '', viewerCount }));
   }
 
   private send(message: string) {

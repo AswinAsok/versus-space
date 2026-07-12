@@ -68,8 +68,8 @@ export function LiveStatsBar({
     const unsubscribe = realtimeFacade.subscribeToPolls(pollIds, {
       role: 'observer',
       viewerId: `stats-${crypto.randomUUID()}`,
-      onPresence: (pollId, viewers) => {
-        pollPresenceRef.current.set(pollId, viewers.length);
+      onPresence: (pollId, viewerCount) => {
+        pollPresenceRef.current.set(pollId, viewerCount);
         updateTotalViewers();
       },
       onVote: () => {

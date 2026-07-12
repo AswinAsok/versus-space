@@ -38,10 +38,10 @@ export function ActivePollsTracker({
         role: 'observer',
         viewerId: `admin-${crypto.randomUUID()}`,
         onConnected: setIsConnected,
-        onPresence: (pollId, viewers) => {
+        onPresence: (pollId, viewerCount) => {
           setPollPresence((prev) => {
             const next = new Map(prev);
-            next.set(pollId, viewers.length);
+            next.set(pollId, viewerCount);
             return next;
           });
         },

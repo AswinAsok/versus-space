@@ -1,4 +1,5 @@
 import { handleDodoWebhook } from './dodo-webhook';
+import { isAllowedWebSocketOrigin } from './realtime-security';
 
 interface AuthUser {
   id: string;
@@ -739,6 +740,10 @@ async function realtimePoll(request: Request, env: Env, pollId: string) {
   if (request.headers.get('upgrade')?.toLowerCase() !== 'websocket') {
     throw new ApiError(426, 'WebSocket upgrade required');
   }
+  const requestUrl = new URL(request.url);
+  if (!isAllowedWebSocketOrigin(requestUrl, request.headers.get('origin'))) {
+    throw new ApiError(403, 'WebSocket origin is not allowed');
+  }
   const poll = await env.DB.prepare(
     'SELECT id, creator_id, is_public, access_key FROM polls WHERE id = ?'
   )
@@ -769,7 +774,9 @@ async function realtimePoll(request: Request, env: Env, pollId: string) {
     }
     if (!authorized) throw new ApiError(403, 'Poll access key or owner authentication required');
   }
-  return env.POLL_ROOMS.getByName(pollId).fetch(request);
+  const headers = new Headers(request.headers);
+  headers.set('x-versus-client-ip', request.headers.get('cf-connecting-ip') ?? 'unknown');
+  return env.POLL_ROOMS.getByName(pollId).fetch(new Request(request, { headers }));
 }
 
 async function castVote(request: Request, env: Env, ctx: ExecutionContext, pollId: string) {
