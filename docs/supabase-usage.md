@@ -7,7 +7,6 @@ Supabase is retained for authentication and as the frozen rollback source. Produ
 Supabase Auth still handles:
 
 - Email and password signup and sign-in
-- Google OAuth
 - Sign-out
 - Session persistence and token refresh
 - Restoring the current user when the app starts
@@ -45,13 +44,10 @@ The following Supabase application-data objects are retained but are no longer t
 - `get_vote_counts_by_date`
 - `perform_auto_votes`
 
-Writes to the migrated tables remain blocked by the cutover freeze triggers. The Supabase gateways and database functions stay in the repository only to support a reviewed rollback; they must not be re-enabled without first replaying and reconciling post-cutover D1 writes.
+Writes to the migrated tables remain blocked by the cutover freeze triggers. The obsolete Supabase data gateways have been removed; a rollback must be implemented from the frozen database only after replaying and reconciling post-cutover D1 writes.
 
 Rollback-related code:
 
-- `src/core/infrastructure/supabase/pollSupabaseGateway.ts`
-- `src/core/infrastructure/supabase/voteSupabaseGateway.ts`
-- `src/core/infrastructure/supabase/realtimeSupabaseGateway.ts`
 - `supabase/cutover/enable_write_freeze.sql`
 - `supabase/cutover/disable_write_freeze.sql`
 
@@ -61,9 +57,9 @@ Rollback-related code:
 - Durable Objects coordinate poll realtime broadcasts.
 - Worker Cron runs automatic simulated voting once per minute.
 - `POST /api/webhooks/dodo` verifies and processes Dodo payment webhooks.
-- The frontend selects the Cloudflare data gateways in the production build.
+- The frontend always uses the Cloudflare data gateways.
 
-The Dodo signing key and Supabase service credentials are Worker secrets. They must never be placed in `VITE_*` variables or committed files.
+The Dodo signing key and Supabase anonymous key are Worker secrets. They must never be placed in `VITE_*` variables or committed files.
 
 ## Runtime configuration
 
@@ -72,7 +68,7 @@ The browser still requires:
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
 
-These values support authentication. Application-data requests use the same-origin `/api` Worker routes when built with `VITE_DATA_BACKEND=cloudflare`.
+These values support authentication. Application-data requests use the same-origin `/api` Worker routes.
 
 ## Supabase features not used
 

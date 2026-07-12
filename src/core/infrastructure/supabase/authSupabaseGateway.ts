@@ -17,18 +17,6 @@ export const authFacade = {
     if (error) throw error;
   },
 
-  async signInWithGoogle() {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-        scopes: 'email profile',
-      },
-    });
-
-    if (error) throw error;
-  },
-
   async getCurrentUser() {
     const {
       data: { user },
