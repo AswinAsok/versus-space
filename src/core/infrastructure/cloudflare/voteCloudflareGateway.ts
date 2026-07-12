@@ -33,24 +33,12 @@ function bucketKeys(days: number) {
 }
 
 export const cloudflareVoteFacade = {
-  async castVote(
-    pollId: string,
-    optionId: string,
-    _userId: string | null,
-    _ipAddress: string,
-    sessionId?: string
-  ) {
+  async castVote(pollId: string, optionId: string, sessionId?: string) {
     await api(`/api/polls/${encodeURIComponent(pollId)}/votes`, {
       method: 'POST',
       headers: accessHeaders(pollId),
       body: JSON.stringify({ optionId, sessionId }),
     });
-  },
-
-  async updateUserSession(_userId: string, _pollId: string) {
-    void _userId;
-    void _pollId;
-    // The Worker includes this update in the atomic vote batch.
   },
 
   async getVotesOverTime(pollIds: string[], days: number) {

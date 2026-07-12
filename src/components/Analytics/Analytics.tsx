@@ -50,7 +50,7 @@ export function Analytics({ user }: AnalyticsProps) {
 
   const loadPolls = useCallback(async () => {
     try {
-      const data = await pollFacade.getUserPolls(user.id);
+      const data = await pollFacade.getUserPolls();
       setPolls(data);
       setSelectedPollId((current) => current || data[0]?.id || '');
     } catch (err) {
@@ -58,7 +58,7 @@ export function Analytics({ user }: AnalyticsProps) {
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, []);
 
   const loadChartData = useCallback(async () => {
     if (polls.length === 0) {

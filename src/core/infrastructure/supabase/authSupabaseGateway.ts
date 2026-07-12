@@ -23,6 +23,7 @@ export const authFacade = {
       error,
     } = await supabase.auth.getUser();
 
+    if (error?.name === 'AuthSessionMissingError') return null;
     if (error) throw error;
     return user ?? null;
   },

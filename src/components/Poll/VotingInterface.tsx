@@ -7,7 +7,6 @@ import Counter from '../ReactBits/Counter/Counter';
 import { LiveViewers } from './LiveViewers';
 import { voteFacade } from '../../core/appServices';
 import { getSessionId } from '../../utils/sessionId';
-import { getClientIp } from '../../utils/ipAddress';
 import { RateCalculator } from '../../utils/rateCalculator';
 import sharedStyles from '../../styles/Shared.module.css';
 import type { PollOption } from '../../types';
@@ -54,7 +53,6 @@ export function VotingInterface({
   const [votingRates, setVotingRates] = useState<Map<string, number>>(new Map());
   const rateCalculatorRef = useRef(new RateCalculator());
   const sessionId = getSessionId();
-  const [ipAddress, setIpAddress] = useState<string>('unknown');
   const [voteError, setVoteError] = useState<string>('');
   const [toastVisible, setToastVisible] = useState(false);
   const [serverLimitReached, setServerLimitReached] = useState(false);
@@ -220,12 +218,6 @@ export function VotingInterface({
     updateIsMobile();
     mediaQuery.addEventListener('change', updateIsMobile);
     return () => mediaQuery.removeEventListener('change', updateIsMobile);
-  }, []);
-
-  useEffect(() => {
-    getClientIp()
-      .then(setIpAddress)
-      .catch(() => setIpAddress('unknown'));
   }, []);
 
   // Check if title is truncated
@@ -402,12 +394,6 @@ export function VotingInterface({
       return;
     }
 
-    let ipToUse = ipAddress;
-    if (!ipToUse) {
-      ipToUse = await getClientIp();
-      setIpAddress(ipToUse);
-    }
-
     const target = event.currentTarget as HTMLElement;
 
     // Get the voting option container
@@ -422,7 +408,7 @@ export function VotingInterface({
 
     try {
       // Cast the vote FIRST before any visual effects
-      await voteFacade.castVote(pollId, optionId, null, ipToUse || 'unknown', sessionId);
+      await voteFacade.castVote(pollId, optionId, sessionId);
 
       // Only trigger visual effects AFTER successful vote
       // Update combo
@@ -487,25 +473,12 @@ export function VotingInterface({
         return newMap;
       });
 
-      await voteFacade.updateUserSession(sessionId, pollId);
       setVoteError('');
     } catch (error: unknown) {
       console.error('Failed to cast vote:', error);
 
-      // Extract error message from various error formats
-      let message = 'Unable to cast vote. Please try again.';
-
-      if (error && typeof error === 'object') {
-        // Supabase PostgrestError format
-        const err = error as { message?: string; details?: string; hint?: string };
-        if (err.message) {
-          message = err.message;
-        } else if (err.details) {
-          message = err.details;
-        }
-      } else if (error instanceof Error) {
-        message = error.message;
-      }
+      const message =
+        error instanceof Error ? error.message : 'Unable to cast vote. Please try again.';
 
       // Format known error codes to user-friendly messages
       const errorMessages: Record<string, string> = {

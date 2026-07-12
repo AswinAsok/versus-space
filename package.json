@@ -20,7 +20,7 @@
     "test:security": "tsx --test worker/realtime-security.test.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^3.1.1",

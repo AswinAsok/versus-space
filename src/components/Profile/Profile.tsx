@@ -20,14 +20,14 @@ export function Profile({ user }: ProfileProps) {
 
   const loadStats = useCallback(async () => {
     try {
-      const polls = await pollFacade.getUserPolls(user.id);
+      const polls = await pollFacade.getUserPolls();
       setPollCount(polls.length);
     } catch (err) {
       console.error('Failed to load stats:', err);
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, []);
 
   useEffect(() => {
     loadStats();

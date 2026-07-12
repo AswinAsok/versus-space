@@ -22,6 +22,6 @@ dist-ssr
 *.sw?
 .env
 
-# Sensitive database exports used during migration rehearsals
+# Prevent sensitive migration exports from being committed if regenerated.
 .migration-artifacts/
 .wrangler/

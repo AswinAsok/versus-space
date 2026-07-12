@@ -25,7 +25,7 @@ const maintenanceHtml = `<!doctype html>
   <body>
     <main>
       <h1>We'll be right back.</h1>
-      <p>Versus.Space is temporarily read-only while we safely move the latest votes. Please try again in a few minutes.</p>
+      <p>Versus.Space is temporarily unavailable for maintenance. Please try again in a few minutes.</p>
       <small>No votes or polls are being deleted.</small>
     </main>
   </body>
@@ -39,7 +39,7 @@ function maintenanceResponse(request: Request) {
   };
   if (new URL(request.url).pathname.startsWith('/api/')) {
     return Response.json(
-      { error: 'Versus.Space is temporarily read-only for migration' },
+      { error: 'Versus.Space is temporarily unavailable for maintenance' },
       { status: 503, headers }
     );
   }

@@ -23,7 +23,7 @@ const pollKeys = {
 export function useUserPolls(userId: string | undefined) {
   return useQuery({
     queryKey: pollKeys.list(userId ?? ''),
-    queryFn: () => pollFacade.getUserPolls(userId!),
+    queryFn: () => pollFacade.getUserPolls(),
     enabled: !!userId,
   });
 }
@@ -34,7 +34,7 @@ export function useUserPolls(userId: string | undefined) {
 export function useUserPollCount(userId: string | undefined) {
   return useQuery({
     queryKey: pollKeys.count(userId ?? ''),
-    queryFn: () => pollFacade.getUserPollCount(userId!),
+    queryFn: () => pollFacade.getUserPollCount(),
     enabled: !!userId,
   });
 }
@@ -133,8 +133,7 @@ export function useCreatePoll() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ data, userId }: { data: CreatePollData; userId: string }) =>
-      pollFacade.createPoll(data, userId),
+    mutationFn: ({ data }: { data: CreatePollData; userId: string }) => pollFacade.createPoll(data),
     onSuccess: (newPoll, { userId }) => {
       // Invalidate user polls list to include the new poll
       queryClient.invalidateQueries({ queryKey: pollKeys.list(userId) });

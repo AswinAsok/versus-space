@@ -27,8 +27,7 @@ async function pollRequest(path: string) {
 }
 
 export const cloudflarePollFacade = {
-  createPoll(data: CreatePollData, _userId: string) {
-    void _userId;
+  createPoll(data: CreatePollData) {
     return api<PollWithOptions>('/api/polls', { method: 'POST', body: JSON.stringify(data) });
   },
 
@@ -40,13 +39,12 @@ export const cloudflarePollFacade = {
     return pollRequest(`/api/polls/slug/${encodeURIComponent(slug)}`);
   },
 
-  getUserPolls(_userId: string) {
-    void _userId;
+  getUserPolls() {
     return api<PollWithOptions[]>('/api/polls');
   },
 
-  async getUserPollCount(userId: string) {
-    return (await cloudflarePollFacade.getUserPolls(userId)).length;
+  async getUserPollCount() {
+    return (await cloudflarePollFacade.getUserPolls()).length;
   },
 
   updatePoll(pollId: string, data: UpdatePollData) {

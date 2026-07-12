@@ -1,10 +1,39 @@
-import type { Database } from './database';
+export interface Poll {
+  id: string;
+  title: string;
+  slug: string;
+  creator_id: string;
+  is_active: boolean;
+  is_public: boolean;
+  access_key: string | null;
+  created_at: string;
+  updated_at: string;
+  ends_at: string | null;
+  max_votes_per_ip: number | null;
+  auto_vote_interval_seconds: number;
+}
 
-export type Poll = Database['public']['Tables']['polls']['Row'];
-export type PollOption = Database['public']['Tables']['poll_options']['Row'];
-export type Vote = Database['public']['Tables']['votes']['Row'];
-export type UserSession = Database['public']['Tables']['user_sessions']['Row'];
-export type UserProfile = Database['public']['Tables']['user_profiles']['Row'];
+export interface PollOption {
+  id: string;
+  poll_id: string;
+  title: string;
+  image_url: string | null;
+  vote_count: number;
+  position: number;
+  created_at: string;
+  simulated_enabled: boolean;
+  simulated_target_votes: number | null;
+  simulated_votes_added: number;
+}
+
+export interface UserProfile {
+  user_id: string;
+  email: string | null;
+  plan: 'free' | 'pro';
+  role: 'user' | 'superadmin';
+  created_at: string;
+  updated_at: string;
+}
 
 export interface PollWithOptions extends Poll {
   options: PollOption[];
@@ -48,7 +77,10 @@ export interface UpdatePollData {
   }>;
 }
 
-export type LeaderboardPoll = Database['public']['Views']['public_poll_leaderboard']['Row'];
+export interface LeaderboardPoll extends Poll {
+  total_votes: number;
+  options: Array<Pick<PollOption, 'id' | 'title' | 'vote_count' | 'position'>>;
+}
 
 // Analytics types
 export interface VoteDailyCount {

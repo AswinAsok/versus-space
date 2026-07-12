@@ -59,14 +59,14 @@ export function DashboardHome({ user }: DashboardHomeProps) {
 
   const loadPolls = useCallback(async () => {
     try {
-      const data = await pollFacade.getUserPolls(user.id);
+      const data = await pollFacade.getUserPolls();
       setPolls(data);
     } catch (err) {
       console.error('Failed to load polls:', err);
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, []);
 
   useEffect(() => {
     loadPolls();
