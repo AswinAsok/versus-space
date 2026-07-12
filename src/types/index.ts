@@ -8,6 +8,7 @@ export type UserProfile = Database['public']['Tables']['user_profiles']['Row'];
 
 export interface PollWithOptions extends Poll {
   options: PollOption[];
+  requires_access?: boolean;
 }
 
 export interface PlatformStats {
@@ -23,7 +24,10 @@ export interface CreatePollData {
   max_votes_per_ip?: Poll['max_votes_per_ip'];
   auto_vote_interval_seconds?: Poll['auto_vote_interval_seconds']; // Stored in milliseconds for sub-second intervals
   options: Array<
-    Pick<PollOption, 'title' | 'image_url' | 'position' | 'simulated_enabled' | 'simulated_target_votes'>
+    Pick<
+      PollOption,
+      'title' | 'image_url' | 'position' | 'simulated_enabled' | 'simulated_target_votes'
+    >
   >;
 }
 
@@ -59,6 +63,7 @@ export interface PollVoteSummary {
 }
 
 export interface OptionVoteData {
+  [key: string]: string | number;
   optionId: string;
   optionTitle: string;
   voteCount: number;
@@ -72,4 +77,16 @@ export interface PollHealthScore {
   balance: 'poor' | 'good' | 'perfect';
   velocity: number; // votes per day
   isActive: boolean;
+}
+
+export interface RealtimeViewer {
+  id: string;
+  joinedAt: string;
+}
+
+export interface RealtimeVoteEvent {
+  pollId: string;
+  optionId: string;
+  optionTitle: string;
+  isSimulated: boolean;
 }

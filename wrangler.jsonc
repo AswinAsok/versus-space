@@ -1,0 +1,73 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "versus-space",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-07-11",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": true,
+  },
+  "routes": [
+    { "pattern": "versus.space/*", "zone_name": "versus.space" },
+    { "pattern": "www.versus.space/*", "zone_name": "versus.space" },
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "versus-space-compact-production",
+      "database_id": "1e4728f0-9a0e-497b-90ad-cadf7abfbfe5",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "POLL_ROOMS", "class_name": "PollRoom" }],
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["PollRoom"] }],
+  "triggers": {
+    "crons": ["* * * * *"],
+  },
+  "vars": {
+    "DODO_PRO_PRODUCT_ID": "pdt_0NV8Drnkm6tgkmShyY2HR",
+    "MAINTENANCE_MODE": "false",
+    "SUPABASE_URL": "https://bdkchzemifwtjlgqgfwg.supabase.co",
+    "SUPERADMIN_EMAILS": "aswinasokofficial@gmail.com",
+  },
+  "secrets": {
+    "required": ["SUPABASE_ANON_KEY", "DODO_WEBHOOK_KEY"],
+  },
+  "observability": {
+    "enabled": true,
+  },
+  "env": {
+    "staging": {
+      "name": "versus-space-staging",
+      "routes": [],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "versus-space-staging",
+          "database_id": "16dae5dd-7e6c-4d54-b85f-79c2bb7243b0",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "durable_objects": {
+        "bindings": [{ "name": "POLL_ROOMS", "class_name": "PollRoom" }],
+      },
+      "triggers": {
+        "crons": [],
+      },
+      "vars": {
+        "DODO_PRO_PRODUCT_ID": "pdt_0NV8Drnkm6tgkmShyY2HR",
+        "MAINTENANCE_MODE": "false",
+        "SUPABASE_URL": "https://bdkchzemifwtjlgqgfwg.supabase.co",
+        "SUPERADMIN_EMAILS": "aswinasokofficial@gmail.com",
+      },
+      "secrets": {
+        "required": ["SUPABASE_ANON_KEY", "DODO_WEBHOOK_KEY"],
+      },
+    },
+  },
+}

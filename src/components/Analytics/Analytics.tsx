@@ -18,7 +18,7 @@ import {
 } from './charts';
 import { VoteToast } from './VoteToast';
 import { MouseLoader } from '../Loading/MouseLoader';
-import type { Poll, VoteDailyCount, PollVoteSummary, OptionVoteData } from '../../types';
+import type { PollWithOptions, VoteDailyCount, PollVoteSummary, OptionVoteData } from '../../types';
 import styles from './Analytics.module.css';
 
 interface AnalyticsProps {
@@ -28,7 +28,7 @@ interface AnalyticsProps {
 type DateRange = 1 | 3 | 7 | 30 | 90;
 
 export function Analytics({ user }: AnalyticsProps) {
-  const [polls, setPolls] = useState<Poll[]>([]);
+  const [polls, setPolls] = useState<PollWithOptions[]>([]);
   const [loading, setLoading] = useState(true);
   const [chartsLoading, setChartsLoading] = useState(true);
 
@@ -52,15 +52,13 @@ export function Analytics({ user }: AnalyticsProps) {
     try {
       const data = await pollFacade.getUserPolls(user.id);
       setPolls(data);
-      if (data.length > 0 && !selectedPollId) {
-        setSelectedPollId(data[0].id);
-      }
+      setSelectedPollId((current) => current || data[0]?.id || '');
     } catch (err) {
       console.error('Failed to load polls:', err);
     } finally {
       setLoading(false);
     }
-  }, [user.id, selectedPollId]);
+  }, [user.id]);
 
   const loadChartData = useCallback(async () => {
     if (polls.length === 0) {
@@ -151,7 +149,7 @@ export function Analytics({ user }: AnalyticsProps) {
     if (p.ends_at) return new Date(p.ends_at) > new Date();
     return true;
   }).length;
-  const pollIds = polls.map((p) => p.id);
+  const pollIds = useMemo(() => polls.map((poll) => poll.id), [polls]);
 
   // Check if we should show dummy data
   // Non-Pro users always see dummy data (Analytics is a Pro feature)
@@ -177,19 +175,23 @@ export function Analytics({ user }: AnalyticsProps) {
       // Random chance to add a vote (30% chance every 2 seconds)
       if (Math.random() < 0.3) {
         // Increment total votes
-        setDummyTotalVotesState(prev => prev + 1);
+        setDummyTotalVotesState((prev) => prev + 1);
 
         // Randomly pick which option gets the vote
         const optionIndex = Math.random() < 0.55 ? 0 : 1;
-        setDummyOptionDataState(prev => prev.map((opt, idx) =>
-          idx === optionIndex ? { ...opt, voteCount: opt.voteCount + 1 } : opt
-        ));
+        setDummyOptionDataState((prev) =>
+          prev.map((opt, idx) =>
+            idx === optionIndex ? { ...opt, voteCount: opt.voteCount + 1 } : opt
+          )
+        );
 
         // Randomly pick which poll gets the vote
         const pollIndex = Math.random() < 0.6 ? 0 : 1;
-        setDummyVotesPerPollState(prev => prev.map((poll, idx) =>
-          idx === pollIndex ? { ...poll, totalVotes: poll.totalVotes + 1 } : poll
-        ));
+        setDummyVotesPerPollState((prev) =>
+          prev.map((poll, idx) =>
+            idx === pollIndex ? { ...poll, totalVotes: poll.totalVotes + 1 } : poll
+          )
+        );
       }
     }, 2000);
 
@@ -197,63 +199,95 @@ export function Analytics({ user }: AnalyticsProps) {
   }, [useDummyData]);
 
   // Dummy data for empty state or free tier
-  const dummyPolls: Poll[] = useDummyData ? [
-    {
-      id: 'demo-1',
-      title: 'Sample Poll 1',
-      slug: 'sample-poll-1',
+  const dummyPolls = useMemo<PollWithOptions[]>(() => {
+    if (!useDummyData) return polls;
+    const now = new Date().toISOString();
+    const options = dummyOptionDataState.map((option, position) => ({
+      id: option.optionId,
+      poll_id: 'demo-1',
+      title: option.optionTitle,
+      image_url: null,
+      vote_count: option.voteCount,
+      position,
+      created_at: now,
+      simulated_enabled: false,
+      simulated_target_votes: null,
+      simulated_votes_added: 0,
+    }));
+    const poll = (id: string, title: string, isActive: boolean, pollOptions = options) => ({
+      id,
+      title,
+      slug: id,
+      creator_id: user.id,
+      is_active: isActive,
       is_public: true,
-      is_active: true,
-      created_at: new Date().toISOString(),
-      user_id: user.id,
-    },
-    {
-      id: 'demo-2',
-      title: 'Sample Poll 2',
-      slug: 'sample-poll-2',
-      is_public: true,
-      is_active: false,
-      created_at: new Date(Date.now() - 86400000).toISOString(),
-      user_id: user.id,
-    },
-  ] : polls;
+      access_key: null,
+      created_at: now,
+      updated_at: now,
+      ends_at: null,
+      max_votes_per_ip: null,
+      auto_vote_interval_seconds: 30_000,
+      options: pollOptions,
+    });
+    return [
+      poll('demo-1', 'Sample Poll 1', true),
+      poll(
+        'demo-2',
+        'Sample Poll 2',
+        false,
+        options.map((option) => ({ ...option, id: `${option.id}-2`, poll_id: 'demo-2' }))
+      ),
+    ];
+  }, [dummyOptionDataState, polls, useDummyData, user.id]);
 
   const dummyVotesPerPoll: PollVoteSummary[] = useDummyData ? dummyVotesPerPollState : votesPerPoll;
 
-  const dummyVotesOverTime = useDummyData ? (() => {
-    const map = new Map<string, VoteDailyCount[]>();
-    const today = new Date();
-    const data: VoteDailyCount[] = [];
-    for (let i = dateRange - 1; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-      data.push({ date: dateStr, count: Math.floor(Math.random() * 20) + 5 });
-    }
-    map.set('demo-1', data);
-    map.set('demo-2', data.map(d => ({ ...d, count: Math.floor(d.count * 0.7) })));
-    return map;
-  })() : votesOverTime;
+  const dummyVotesOverTime = useDummyData
+    ? (() => {
+        const map = new Map<string, VoteDailyCount[]>();
+        const today = new Date();
+        const data: VoteDailyCount[] = [];
+        for (let i = dateRange - 1; i >= 0; i--) {
+          const date = new Date(today);
+          date.setDate(date.getDate() - i);
+          const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+          data.push({ date: dateStr, count: Math.floor(Math.random() * 20) + 5 });
+        }
+        map.set('demo-1', data);
+        map.set(
+          'demo-2',
+          data.map((d) => ({ ...d, count: Math.floor(d.count * 0.7) }))
+        );
+        return map;
+      })()
+    : votesOverTime;
 
-  const dummyPollTitles = useDummyData ? new Map([
-    ['demo-1', 'Sample Poll 1'],
-    ['demo-2', 'Sample Poll 2'],
-  ]) : pollTitles;
+  const dummyPollTitles = useDummyData
+    ? new Map([
+        ['demo-1', 'Sample Poll 1'],
+        ['demo-2', 'Sample Poll 2'],
+      ])
+    : pollTitles;
 
   const dummyOptionData: OptionVoteData[] = useDummyData ? dummyOptionDataState : optionData;
 
-  const dummyVoteTimestamps = useDummyData ? (() => {
-    const timestamps: Date[] = [];
-    const now = Date.now();
-    for (let i = 0; i < 50; i++) {
-      timestamps.push(new Date(now - Math.random() * 30 * 24 * 60 * 60 * 1000));
-    }
-    return timestamps;
-  })() : voteTimestamps;
+  const dummyVoteTimestamps = useDummyData
+    ? (() => {
+        const timestamps: Date[] = [];
+        const now = Date.now();
+        for (let i = 0; i < 50; i++) {
+          timestamps.push(new Date(now - Math.random() * 30 * 24 * 60 * 60 * 1000));
+        }
+        return timestamps;
+      })()
+    : voteTimestamps;
 
   const dummyTotalVotes = useDummyData ? dummyTotalVotesState : totalVotes;
   const dummyActivePolls = useDummyData ? 1 : activePolls;
-  const dummyPollIds = useDummyData ? ['demo-1', 'demo-2'] : pollIds;
+  const dummyPollIds = useMemo(
+    () => (useDummyData ? ['demo-1', 'demo-2'] : pollIds),
+    [pollIds, useDummyData]
+  );
   const dummyRealVotes = useDummyData ? dummyTotalVotesState : realVotes;
   const dummySimulatedVotes = useDummyData ? 0 : simulatedVotes;
 
@@ -275,9 +309,11 @@ export function Analytics({ user }: AnalyticsProps) {
           activePolls={dummyActivePolls}
           pollIds={dummyPollIds}
           showSampleNote={useDummyData}
-          sampleNoteMessage={!isPro
-            ? 'Showing sample data — upgrade to Pro for real analytics'
-            : 'Showing sample data — create your first poll to see real analytics'}
+          sampleNoteMessage={
+            !isPro
+              ? 'Showing sample data — upgrade to Pro for real analytics'
+              : 'Showing sample data — create your first poll to see real analytics'
+          }
         />
 
         {/* Real-time Section: Momentum + Option Race */}
@@ -296,6 +332,7 @@ export function Analytics({ user }: AnalyticsProps) {
             <div className={!isPro ? styles.proContent : ''}>
               <OptionRace
                 polls={dummyPolls}
+                useDummyData={useDummyData}
                 selectedPollId={useDummyData ? 'demo-1' : selectedPollId}
                 onPollChange={useDummyData ? () => {} : setSelectedPollId}
                 showProBadge={!isPro}
@@ -324,6 +361,7 @@ export function Analytics({ user }: AnalyticsProps) {
             <div className={!isPro ? styles.proContent : ''}>
               <PersonalRecords
                 polls={dummyPolls}
+                useDummyData={useDummyData}
                 showProBadge={!isPro}
                 proDescription={!isPro ? 'See your best performing polls' : undefined}
               />
@@ -359,6 +397,7 @@ export function Analytics({ user }: AnalyticsProps) {
         <div className={!isPro ? styles.proContent : ''}>
           <PollHealthScores
             polls={dummyPolls}
+            useDummyData={useDummyData}
             showProBadge={!isPro}
             proDescription={!isPro ? 'Monitor poll engagement health' : undefined}
           />
@@ -370,6 +409,7 @@ export function Analytics({ user }: AnalyticsProps) {
             <div className={!isPro ? styles.proContent : ''}>
               <ActivePollsTracker
                 polls={dummyPolls}
+                useDummyData={useDummyData}
                 showProBadge={!isPro}
                 proDescription={!isPro ? 'Track all your active polls' : undefined}
               />

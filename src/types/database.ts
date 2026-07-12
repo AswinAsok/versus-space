@@ -216,6 +216,29 @@ export interface Database {
         Args: Record<PropertyKey, never>;
         Returns: void;
       };
+      get_votes_over_time: {
+        Args: {
+          p_poll_ids: string[];
+          p_start_date: string;
+          p_group_by_hour: boolean;
+          p_tz_offset_minutes: number;
+        };
+        Returns: Array<{
+          poll_id: string;
+          time_bucket: string;
+          vote_count: number;
+        }>;
+      };
+      get_vote_counts_by_date: {
+        Args: {
+          p_poll_ids: string[];
+          p_start_date: string;
+        };
+        Returns: Array<{
+          vote_date: string;
+          vote_count: number;
+        }>;
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

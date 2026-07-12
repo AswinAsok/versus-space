@@ -422,7 +422,7 @@ export function VotingInterface({
 
     try {
       // Cast the vote FIRST before any visual effects
-      await voteFacade.castVote(pollId, optionId, null, ipToUse || 'unknown');
+      await voteFacade.castVote(pollId, optionId, null, ipToUse || 'unknown', sessionId);
 
       // Only trigger visual effects AFTER successful vote
       // Update combo
@@ -509,10 +509,10 @@ export function VotingInterface({
 
       // Format known error codes to user-friendly messages
       const errorMessages: Record<string, string> = {
-        'vote_limit_reached': 'You\'ve reached the vote limit for this poll',
-        'poll_expired': 'This poll has ended',
-        'poll_closed': 'This poll is closed',
-        'invalid_option': 'Invalid voting option',
+        vote_limit_reached: "You've reached the vote limit for this poll",
+        poll_expired: 'This poll has ended',
+        poll_closed: 'This poll is closed',
+        invalid_option: 'Invalid voting option',
       };
 
       // If server says limit reached, disable voting permanently
@@ -586,7 +586,9 @@ export function VotingInterface({
 
       {/* Error toast - auto-dismisses */}
       {voteError && (
-        <div className={`${styles.errorToast} ${toastVisible ? styles.toastVisible : styles.toastHidden}`}>
+        <div
+          className={`${styles.errorToast} ${toastVisible ? styles.toastVisible : styles.toastHidden}`}
+        >
           <span className={styles.toastMessage}>{voteError}</span>
         </div>
       )}
@@ -641,11 +643,7 @@ export function VotingInterface({
 
       {/* Poll Title */}
       <div className={styles.pollTitleContainer} style={{ left: `${firstOptionPercentage}vw` }}>
-        <h1
-          ref={titleRef}
-          className={styles.pollTitle}
-          onClick={() => setTitleModalOpen(true)}
-        >
+        <h1 ref={titleRef} className={styles.pollTitle} onClick={() => setTitleModalOpen(true)}>
           {title}
         </h1>
         {isTitleTruncated && (
@@ -850,10 +848,7 @@ export function VotingInterface({
 
       {/* Title Modal */}
       {titleModalOpen && (
-        <div
-          className={styles.titleModalOverlay}
-          onClick={() => setTitleModalOpen(false)}
-        >
+        <div className={styles.titleModalOverlay} onClick={() => setTitleModalOpen(false)}>
           <div className={styles.titleModal} onClick={(e) => e.stopPropagation()}>
             <p className={styles.titleModalText}>{title}</p>
             <p className={styles.titleModalHint}>tap anywhere to close</p>

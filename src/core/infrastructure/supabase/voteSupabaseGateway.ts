@@ -7,7 +7,14 @@ interface VoteAuthenticityStats {
 }
 
 export const voteFacade = {
-  async castVote(pollId: string, optionId: string, userId: string | null, ipAddress: string) {
+  async castVote(
+    pollId: string,
+    optionId: string,
+    userId: string | null,
+    ipAddress: string,
+    _sessionId?: string
+  ) {
+    void _sessionId;
     // Call RPC for validation + vote insert. poll_options.vote_count is incremented by the
     // on_vote_created trigger, so the RPC must not bump it to avoid double-counting.
     const { error } = await supabase.rpc('cast_vote_with_limits', {
@@ -231,5 +238,52 @@ export const voteFacade = {
       realVotes: Math.max(0, realVotes),
       simulatedVotes,
     } satisfies VoteAuthenticityStats;
+  },
+
+  async getVoteCountsSince(pollIds: string[], since: Date) {
+    if (pollIds.length === 0) return new Map<string, number>();
+    const { data, error } = await supabase
+      .from('votes')
+      .select('poll_id')
+      .in('poll_id', pollIds)
+      .gte('created_at', since.toISOString());
+    if (error) throw error;
+    const counts = new Map<string, number>();
+    data?.forEach((vote) => counts.set(vote.poll_id, (counts.get(vote.poll_id) ?? 0) + 1));
+    return counts;
+  },
+
+  async getMomentumStats(pollIds: string[]) {
+    if (pollIds.length === 0) return { currentHour: 0, previousHour: 0, averageHourly: 0 };
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+    const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const [current, previous, week] = await Promise.all([
+      supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true })
+        .in('poll_id', pollIds)
+        .gte('created_at', oneHourAgo.toISOString()),
+      supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true })
+        .in('poll_id', pollIds)
+        .gte('created_at', twoHoursAgo.toISOString())
+        .lt('created_at', oneHourAgo.toISOString()),
+      supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true })
+        .in('poll_id', pollIds)
+        .gte('created_at', sevenDaysAgo.toISOString()),
+    ]);
+    if (current.error) throw current.error;
+    if (previous.error) throw previous.error;
+    if (week.error) throw week.error;
+    return {
+      currentHour: current.count ?? 0,
+      previousHour: previous.count ?? 0,
+      averageHourly: Math.round((week.count ?? 0) / (7 * 24)),
+    };
   },
 };

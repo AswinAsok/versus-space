@@ -3,7 +3,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Fire02Icon, ArrowUp01Icon, ArrowDown01Icon } from '@hugeicons/core-free-icons';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { supabase } from '../../../lib/supabaseClient';
+import { realtimeFacade, voteFacade } from '../../../core/appServices';
 import chartStyles from './Charts.module.css';
 import styles from './VoteMomentumGauge.module.css';
 
@@ -14,7 +14,12 @@ interface VoteMomentumGaugeProps {
   useDummyData?: boolean;
 }
 
-export function VoteMomentumGauge({ pollIds, showProBadge, proDescription, useDummyData = false }: VoteMomentumGaugeProps) {
+export function VoteMomentumGauge({
+  pollIds,
+  showProBadge,
+  proDescription,
+  useDummyData = false,
+}: VoteMomentumGaugeProps) {
   const [currentHourVotes, setCurrentHourVotes] = useState(0);
   const [averageHourlyVotes, setAverageHourlyVotes] = useState(0);
   const [lastHourVotes, setLastHourVotes] = useState(0);
@@ -50,40 +55,11 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription, useDu
     }
 
     const fetchMomentum = async () => {
-      const now = new Date();
-      const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
-      const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
-      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-
       try {
-        // Get votes in current hour
-        const { count: currentCount } = await supabase
-          .from('votes')
-          .select('*', { count: 'exact', head: true })
-          .in('poll_id', pollIds)
-          .gte('created_at', oneHourAgo.toISOString());
-
-        // Get votes in previous hour (for trend)
-        const { count: lastCount } = await supabase
-          .from('votes')
-          .select('*', { count: 'exact', head: true })
-          .in('poll_id', pollIds)
-          .gte('created_at', twoHoursAgo.toISOString())
-          .lt('created_at', oneHourAgo.toISOString());
-
-        // Get average hourly votes over last 7 days
-        const { count: weekCount } = await supabase
-          .from('votes')
-          .select('*', { count: 'exact', head: true })
-          .in('poll_id', pollIds)
-          .gte('created_at', sevenDaysAgo.toISOString());
-
-        const hoursInWeek = 7 * 24;
-        const avgHourly = weekCount ? Math.round(weekCount / hoursInWeek) : 0;
-
-        setCurrentHourVotes(currentCount || 0);
-        setLastHourVotes(lastCount || 0);
-        setAverageHourlyVotes(avgHourly);
+        const momentum = await voteFacade.getMomentumStats(pollIds);
+        setCurrentHourVotes(momentum.currentHour);
+        setLastHourVotes(momentum.previousHour);
+        setAverageHourlyVotes(momentum.averageHourly);
       } catch (err) {
         console.error('Failed to fetch momentum:', err);
       } finally {
@@ -102,22 +78,11 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription, useDu
   useEffect(() => {
     if (useDummyData || pollIds.length === 0) return;
 
-    const channel = supabase
-      .channel('momentum-votes')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'votes' },
-        (payload) => {
-          if (pollIds.includes(payload.new.poll_id)) {
-            setCurrentHourVotes((prev) => prev + 1);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return realtimeFacade.subscribeToPolls(pollIds, {
+      role: 'observer',
+      viewerId: `momentum-${crypto.randomUUID()}`,
+      onVote: () => setCurrentHourVotes((prev) => prev + 1),
+    });
   }, [pollIds, useDummyData]);
 
   // Animate the display value
@@ -145,8 +110,10 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription, useDu
   }, [currentHourVotes]);
 
   const isHot = currentHourVotes > averageHourlyVotes * 1.5;
-  const trend = currentHourVotes > lastHourVotes ? 'up' : currentHourVotes < lastHourVotes ? 'down' : 'stable';
-  const multiplier = averageHourlyVotes > 0 ? (currentHourVotes / averageHourlyVotes).toFixed(1) : '0';
+  const trend =
+    currentHourVotes > lastHourVotes ? 'up' : currentHourVotes < lastHourVotes ? 'down' : 'stable';
+  const multiplier =
+    averageHourlyVotes > 0 ? (currentHourVotes / averageHourlyVotes).toFixed(1) : '0';
 
   // Calculate gauge percentage (0-100)
   const maxVotes = Math.max(averageHourlyVotes * 5, 50);
@@ -159,16 +126,47 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription, useDu
           <h3 className={styles.title}>Vote Momentum</h3>
         </div>
         <div className={styles.skeletonContent}>
-          <Skeleton width={80} height={48} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
-          <Skeleton width={60} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" style={{ marginTop: 8 }} />
+          <Skeleton
+            width={80}
+            height={48}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
+          <Skeleton
+            width={60}
+            height={14}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+            style={{ marginTop: 8 }}
+          />
         </div>
         <div className={styles.skeletonGauge}>
-          <Skeleton height={8} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={4} />
+          <Skeleton
+            height={8}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+            borderRadius={4}
+          />
         </div>
         <div className={styles.skeletonStats}>
-          <Skeleton width={60} height={32} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
-          <Skeleton width={60} height={32} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
-          <Skeleton width={60} height={32} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton
+            width={60}
+            height={32}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
+          <Skeleton
+            width={60}
+            height={32}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
+          <Skeleton
+            width={60}
+            height={32}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
         </div>
       </div>
     );
@@ -201,14 +199,8 @@ export function VoteMomentumGauge({ pollIds, showProBadge, proDescription, useDu
       {/* Progress Bar Gauge */}
       <div className={styles.gaugeSection}>
         <div className={styles.gaugeTrack}>
-          <div
-            className={styles.gaugeFill}
-            style={{ width: `${gaugePercent}%` }}
-          />
-          <div
-            className={styles.gaugeGlow}
-            style={{ left: `${gaugePercent}%` }}
-          />
+          <div className={styles.gaugeFill} style={{ width: `${gaugePercent}%` }} />
+          <div className={styles.gaugeGlow} style={{ left: `${gaugePercent}%` }} />
         </div>
         <div className={styles.gaugeLabels}>
           <span>0</span>

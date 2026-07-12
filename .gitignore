@@ -21,3 +21,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Sensitive database exports used during migration rehearsals
+.migration-artifacts/
+.wrangler/

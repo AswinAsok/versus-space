@@ -64,7 +64,7 @@ export function usePollBySlug(slug: string | undefined) {
 
   // Subscribe to real-time updates once we have the poll
   useEffect(() => {
-    if (!query.data?.id) return;
+    if (!query.data?.id || query.data.requires_access) return;
 
     const unsubscribe = pollFacade.subscribeToPollOptions(query.data.id, (update) => {
       queryClient.setQueryData<PollWithOptions | null>(pollKeys.bySlug(slug!), (prev) => {
@@ -77,7 +77,7 @@ export function usePollBySlug(slug: string | undefined) {
     });
 
     return () => unsubscribe();
-  }, [query.data?.id, slug, queryClient]);
+  }, [query.data?.id, query.data?.requires_access, slug, queryClient]);
 
   return query;
 }

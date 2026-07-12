@@ -1,18 +1,24 @@
 import { useState, useEffect } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Activity01Icon, CheckmarkCircle02Icon, AlertCircleIcon } from '@hugeicons/core-free-icons';
-import { supabase } from '../../../lib/supabaseClient';
-import type { Poll, PollHealthScore } from '../../../types';
+import { voteFacade } from '../../../core/appServices';
+import type { PollHealthScore, PollWithOptions } from '../../../types';
 import chartStyles from './Charts.module.css';
 import styles from './PollHealthScores.module.css';
 
 interface PollHealthScoresProps {
-  polls: Poll[];
+  polls: PollWithOptions[];
   showProBadge?: boolean;
   proDescription?: string;
+  useDummyData?: boolean;
 }
 
-export function PollHealthScores({ polls, showProBadge, proDescription }: PollHealthScoresProps) {
+export function PollHealthScores({
+  polls,
+  showProBadge,
+  proDescription,
+  useDummyData = false,
+}: PollHealthScoresProps) {
   const [scores, setScores] = useState<PollHealthScore[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,37 +32,16 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
       try {
         const pollIds = polls.map((p) => p.id);
 
-        // Fetch all options for vote counts
-        const { data: allOptions } = await supabase
-          .from('poll_options')
-          .select('poll_id, vote_count')
-          .in('poll_id', pollIds);
-
-        // Fetch recent votes for velocity calculation (last 7 days)
-        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-        const { data: recentVotes } = await supabase
-          .from('votes')
-          .select('poll_id, created_at')
-          .in('poll_id', pollIds)
-          .gte('created_at', sevenDaysAgo);
-
-        // Group data by poll
-        const pollOptionsMap = new Map<string, number[]>();
-        allOptions?.forEach((opt) => {
-          if (!pollOptionsMap.has(opt.poll_id)) {
-            pollOptionsMap.set(opt.poll_id, []);
-          }
-          pollOptionsMap.get(opt.poll_id)!.push(opt.vote_count);
-        });
-
-        const pollVelocityMap = new Map<string, number>();
-        recentVotes?.forEach((vote) => {
-          pollVelocityMap.set(vote.poll_id, (pollVelocityMap.get(vote.poll_id) || 0) + 1);
-        });
+        const pollVelocityMap = useDummyData
+          ? new Map<string, number>()
+          : await voteFacade.getVoteCountsSince(
+              pollIds,
+              new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+            );
 
         // Calculate health scores
         const healthScores: PollHealthScore[] = polls.map((poll) => {
-          const optionVotes = pollOptionsMap.get(poll.id) || [];
+          const optionVotes = poll.options.map((option) => option.vote_count);
           const totalVotes = optionVotes.reduce((sum, v) => sum + v, 0);
           const recentVoteCount = pollVelocityMap.get(poll.id) || 0;
           const velocity = recentVoteCount / 7; // votes per day
@@ -109,7 +94,7 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
     };
 
     calculateScores();
-  }, [polls]);
+  }, [polls, useDummyData]);
 
   const getScoreColor = (score: number): string => {
     if (score >= 70) return '#3ecf8e';
@@ -178,10 +163,7 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
             style={{ animationDelay: `${index * 0.05}s` }}
           >
             <div className={styles.scoreLeft}>
-              <div
-                className={styles.scoreIcon}
-                style={{ color: getScoreColor(poll.score) }}
-              >
+              <div className={styles.scoreIcon} style={{ color: getScoreColor(poll.score) }}>
                 <HugeiconsIcon icon={getScoreIcon(poll.score)} size={14} />
               </div>
               <div className={styles.scoreInfo}>
@@ -191,13 +173,9 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
                     {poll.engagement}
                   </span>
                   <span className={styles.metricDot}>·</span>
-                  <span className={`${styles.metric} ${styles[poll.balance]}`}>
-                    {poll.balance}
-                  </span>
+                  <span className={`${styles.metric} ${styles[poll.balance]}`}>{poll.balance}</span>
                   <span className={styles.metricDot}>·</span>
-                  <span className={styles.metric}>
-                    {poll.velocity.toFixed(1)}/day
-                  </span>
+                  <span className={styles.metric}>{poll.velocity.toFixed(1)}/day</span>
                 </div>
               </div>
             </div>
@@ -212,10 +190,7 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
                   }}
                 />
               </div>
-              <span
-                className={styles.scoreValue}
-                style={{ color: getScoreColor(poll.score) }}
-              >
+              <span className={styles.scoreValue} style={{ color: getScoreColor(poll.score) }}>
                 {poll.score}
               </span>
             </div>
@@ -223,11 +198,7 @@ export function PollHealthScores({ polls, showProBadge, proDescription }: PollHe
         ))}
       </div>
 
-      {scores.length > 5 && (
-        <p className={styles.moreCount}>
-          +{scores.length - 5} more polls
-        </p>
-      )}
+      {scores.length > 5 && <p className={styles.moreCount}>+{scores.length - 5} more polls</p>}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import type {
   UpdatePollData,
   LeaderboardPoll,
   PlatformStats,
+  PollWithOptions,
 } from '../../../types';
 import { supabase } from '../../../lib/supabaseClient';
 import { generateUniqueSlug } from '../../../utils/slug';
@@ -148,7 +149,7 @@ export const pollFacade = {
     };
   },
 
-  async getPollBySlug(slug: string) {
+  async getPollBySlug(slug: string): Promise<PollWithOptions | null> {
     const { data: poll, error: pollError } = await supabase
       .from('polls')
       .select('*')

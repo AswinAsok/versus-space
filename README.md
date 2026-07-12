@@ -34,6 +34,9 @@ npm install
 # create .env with:
 # VITE_SUPABASE_URL=your_url
 # VITE_SUPABASE_ANON_KEY=your_key
+# Cloudflare data/API is the default. For an intentional rollback build only:
+# VITE_DATA_BACKEND=supabase
+# Optional when the Worker API is on another origin: VITE_API_BASE_URL=http://127.0.0.1:8787
 
 # run dev server
 npm run dev
@@ -46,12 +49,15 @@ npm run preview
 ## tech stack
 
 - **frontend:** React + Vite + TypeScript, CSS modules
-- **realtime + auth:** Supabase (email/password flow)
+- **backend:** Cloudflare Workers, D1, and Durable Objects
+- **auth:** Supabase Auth (email/password flow), intentionally retained after the data cutover
 - **structure:** polls in `src/components/Poll/`, auth in `src/components/Auth/`
 - **visuals:** custom CSS, `react-d3-speedometer` for gauges, CountUp for animationss
 
 ## architecture
 
-- `src/core/infrastructure/supabase`: Supabase-backed auth, poll, profile, and vote services.
-- `src/core/appServices.ts`: composition root wiring the app to Supabase gateways.
+- `worker/`: Cloudflare Worker API, payment webhook, Cron handler, and poll-room Durable Object.
+- `src/core/infrastructure/cloudflare`: the default poll, profile, vote, and realtime services.
+- `src/core/infrastructure/supabase`: retained auth and explicit rollback data services.
+- `src/core/appServices.ts`: composition root; Cloudflare is the default data backend.
 - Meta assets live under `public/meta` to keep the public root clean.
