@@ -40,7 +40,7 @@ export default function CurvedLoop({
   const curvePath = `M -200,${viewBoxHeight * 0.35} Q ${viewBoxWidth / 2},${viewBoxHeight * 0.35 + curveDepth} ${viewBoxWidth + 200},${viewBoxHeight * 0.35}`;
 
   // Build the full text from segments
-  const fullText = segments.map(s => s.text).join('');
+  const fullText = segments.map((s) => s.text).join('');
 
   // Repeat enough times to fill the screen continuously
   const repeatCount = 10;

@@ -175,13 +175,13 @@
 }
 
 /* Hide number input spinners */
-.controlInput[type="number"]::-webkit-outer-spin-button,
-.controlInput[type="number"]::-webkit-inner-spin-button {
+.controlInput[type='number']::-webkit-outer-spin-button,
+.controlInput[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-.controlInput[type="number"] {
+.controlInput[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
@@ -521,7 +521,7 @@
   user-select: none;
 }
 
-.toggleLabel input[type="checkbox"] {
+.toggleLabel input[type='checkbox'] {
   position: absolute;
   opacity: 0;
   width: 0;
@@ -553,12 +553,12 @@
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.toggleLabel input[type="checkbox"]:checked + .toggleSwitch {
+.toggleLabel input[type='checkbox']:checked + .toggleSwitch {
   background: rgba(62, 207, 142, 0.2);
   border-color: rgba(62, 207, 142, 0.4);
 }
 
-.toggleLabel input[type="checkbox"]:checked + .toggleSwitch::after {
+.toggleLabel input[type='checkbox']:checked + .toggleSwitch::after {
   transform: translateX(16px);
   background: var(--color-primary);
   box-shadow: 0 0 8px rgba(62, 207, 142, 0.4);
@@ -568,12 +568,12 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.toggleLabel input[type="checkbox"]:focus-visible + .toggleSwitch {
+.toggleLabel input[type='checkbox']:focus-visible + .toggleSwitch {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-.toggleLabel input[type="checkbox"]:disabled + .toggleSwitch {
+.toggleLabel input[type='checkbox']:disabled + .toggleSwitch {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -859,7 +859,7 @@
     height: 14px;
   }
 
-  .toggleLabel input[type="checkbox"]:checked + .toggleSwitch::after {
+  .toggleLabel input[type='checkbox']:checked + .toggleSwitch::after {
     transform: translateX(16px);
   }
 
@@ -902,7 +902,6 @@
     font-size: 0.875rem;
     min-height: 44px;
   }
-
 }
 
 /* Small mobile breakpoint */
@@ -993,7 +992,7 @@
     height: 12px;
   }
 
-  .toggleLabel input[type="checkbox"]:checked + .toggleSwitch::after {
+  .toggleLabel input[type='checkbox']:checked + .toggleSwitch::after {
     transform: translateX(14px);
   }
 
@@ -1048,7 +1047,6 @@
     font-size: 0.8125rem;
     min-height: 40px;
   }
-
 }
 
 /* Free User Timer Modal */

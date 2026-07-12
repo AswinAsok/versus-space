@@ -71,6 +71,8 @@ export function VoteToast({ pollIds, pollTitles }: VoteToastProps) {
   useEffect(() => {
     if (pollIds.length === 0) return;
 
+    const timeouts = timeoutRefs.current;
+
     const unsubscribe = realtimeFacade.subscribeToPolls(pollIds, {
       role: 'observer',
       viewerId: `vote-toasts-${crypto.randomUUID()}`,
@@ -81,8 +83,8 @@ export function VoteToast({ pollIds, pollTitles }: VoteToastProps) {
     return () => {
       unsubscribe();
       // Clear all timeouts
-      timeoutRefs.current.forEach((timeout) => clearTimeout(timeout));
-      timeoutRefs.current.clear();
+      timeouts.forEach((timeout) => clearTimeout(timeout));
+      timeouts.clear();
     };
   }, [pollIds, pollTitles, addToast]);
 

@@ -83,6 +83,7 @@ export function useLiveViewers({
       return;
     }
 
+    const recentJoinTimeouts = recentJoinTimeoutsRef.current;
     const unsubscribe = realtimeFacade.subscribeToPolls([pollId], {
       role: 'viewer',
       viewerId: viewerIdRef.current,
@@ -103,8 +104,8 @@ export function useLiveViewers({
 
     return () => {
       // Clean up recent join timeouts
-      recentJoinTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
-      recentJoinTimeoutsRef.current.clear();
+      recentJoinTimeouts.forEach((timeout) => clearTimeout(timeout));
+      recentJoinTimeouts.clear();
 
       unsubscribe();
       previousViewerIdsRef.current.clear();

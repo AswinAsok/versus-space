@@ -31,8 +31,9 @@
   opacity: 0;
   visibility: hidden;
   z-index: 99;
-  transition: opacity var(--transition-normal) var(--ease-out),
-              visibility var(--transition-normal);
+  transition:
+    opacity var(--transition-normal) var(--ease-out),
+    visibility var(--transition-normal);
 }
 
 .overlayVisible {
@@ -221,8 +222,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: opacity var(--transition-fast) var(--ease-out),
-              width var(--transition-fast) var(--ease-out);
+  transition:
+    opacity var(--transition-fast) var(--ease-out),
+    width var(--transition-fast) var(--ease-out);
 }
 
 .navLabelHidden {
@@ -327,8 +329,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: opacity var(--transition-fast) var(--ease-out),
-              width var(--transition-fast) var(--ease-out);
+  transition:
+    opacity var(--transition-fast) var(--ease-out),
+    width var(--transition-fast) var(--ease-out);
 }
 
 .upgradeLabelHidden {
@@ -412,8 +415,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: opacity var(--transition-fast) var(--ease-out),
-              width var(--transition-fast) var(--ease-out);
+  transition:
+    opacity var(--transition-fast) var(--ease-out),
+    width var(--transition-fast) var(--ease-out);
 }
 
 .coffeeLabelHidden {
@@ -522,8 +526,9 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  transition: opacity var(--transition-fast) var(--ease-out),
-              width var(--transition-fast) var(--ease-out);
+  transition:
+    opacity var(--transition-fast) var(--ease-out),
+    width var(--transition-fast) var(--ease-out);
 }
 
 .userDetailsHidden {

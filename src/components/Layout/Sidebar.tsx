@@ -14,7 +14,6 @@ import {
   Coffee01Icon,
   Globe02Icon,
 } from '@hugeicons/core-free-icons';
-import { track } from '@vercel/analytics';
 import { getProCheckoutUrl } from '../../utils/payment';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import styles from './Sidebar.module.css';
@@ -215,7 +214,6 @@ export function Sidebar({
             rel="noopener noreferrer"
             className={`${styles.coffeeButton} ${isCollapsed ? styles.coffeeButtonCollapsed : ''}`}
             title={isCollapsed ? 'Buy me a chai' : undefined}
-            onClick={() => track('buymeacoffee_click', { location: 'sidebar' })}
           >
             <span className={styles.coffeeIcon}>
               <HugeiconsIcon icon={Coffee01Icon} size={isCollapsed ? 18 : 16} />

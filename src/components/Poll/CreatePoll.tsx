@@ -34,6 +34,20 @@ const AUTO_VOTE_INTERVAL_MIN_MS = 200;
 const AUTO_VOTE_INTERVAL_MAX_MS = 300000; // 5 minutes
 const AUTO_VOTE_INTERVAL_DEFAULT_MS = 30000; // 30 seconds
 
+const clampAutoVoteIntervalMs = (value: number) => {
+  if (!Number.isFinite(value)) return AUTO_VOTE_INTERVAL_DEFAULT_MS;
+  return Math.min(
+    AUTO_VOTE_INTERVAL_MAX_MS,
+    Math.max(AUTO_VOTE_INTERVAL_MIN_MS, Math.round(value))
+  );
+};
+
+const normalizeAutoVoteIntervalMs = (value?: number | null) => {
+  if (value === null || value === undefined) return AUTO_VOTE_INTERVAL_DEFAULT_MS;
+  const valueAsMs = value < AUTO_VOTE_INTERVAL_MIN_MS ? value * 1000 : value;
+  return clampAutoVoteIntervalMs(valueAsMs);
+};
+
 export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const isEditMode = !!editPoll;
 
@@ -66,27 +80,6 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const autoVoteIntervalSecondsDisplay = (autoVoteIntervalMs / 1000).toFixed(
     autoVoteIntervalMs % 1000 === 0 ? 0 : 2
   );
-
-  const clampAutoVoteIntervalMs = (value: number) => {
-    if (!Number.isFinite(value)) {
-      return AUTO_VOTE_INTERVAL_DEFAULT_MS;
-    }
-    return Math.min(
-      AUTO_VOTE_INTERVAL_MAX_MS,
-      Math.max(AUTO_VOTE_INTERVAL_MIN_MS, Math.round(value))
-    );
-  };
-
-  const normalizeAutoVoteIntervalMs = (value?: number | null) => {
-    if (value === null || value === undefined) {
-      return AUTO_VOTE_INTERVAL_DEFAULT_MS;
-    }
-
-    // Historical data may have been stored as seconds. Anything below the min ms threshold
-    // is treated as seconds and converted so the UI and DB stay in sync.
-    const valueAsMs = value < AUTO_VOTE_INTERVAL_MIN_MS ? value * 1000 : value;
-    return clampAutoVoteIntervalMs(valueAsMs);
-  };
 
   // Load existing poll data when editing
   useEffect(() => {

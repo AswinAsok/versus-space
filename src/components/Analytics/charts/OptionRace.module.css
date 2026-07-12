@@ -80,7 +80,8 @@
 }
 
 @keyframes shimmer {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
   }
   50% {
@@ -89,7 +90,8 @@
 }
 
 @keyframes textShimmer {
-  0%, 100% {
+  0%,
+  100% {
     color: rgba(255, 255, 255, 1);
     text-shadow: 0 0 0px rgba(255, 255, 255, 0);
   }

@@ -27,13 +27,19 @@
 
 @keyframes shimmer {
   0% {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.08), inset 0 0 10px rgba(255, 255, 255, 0);
+    box-shadow:
+      0 0 8px rgba(255, 255, 255, 0.08),
+      inset 0 0 10px rgba(255, 255, 255, 0);
   }
   50% {
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.05);
+    box-shadow:
+      0 0 12px rgba(255, 255, 255, 0.15),
+      inset 0 0 10px rgba(255, 255, 255, 0.05);
   }
   100% {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.08), inset 0 0 10px rgba(255, 255, 255, 0);
+    box-shadow:
+      0 0 8px rgba(255, 255, 255, 0.08),
+      inset 0 0 10px rgba(255, 255, 255, 0);
   }
 }
 

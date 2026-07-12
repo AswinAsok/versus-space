@@ -16,7 +16,6 @@ import {
   CrownIcon,
   Coffee01Icon,
 } from '@hugeicons/core-free-icons';
-import { track } from '@vercel/analytics';
 import { Leaderboard } from './Leaderboard';
 import { HomeSchema } from './HomeSchema';
 import { HomeSEO } from '../SEO/SEO';
@@ -38,6 +37,7 @@ const TOTAL_CHAI = DAYS_OF_WORK * CHAI_PER_DAY; // 30 chai total
 
 export function Home({ onNavigate }: HomeProps) {
   const { data: stats } = usePlatformStats();
+  const votesCount = stats?.votesCount ?? 0;
   const { data: proUserCount = 0 } = useProUserCount();
   const [clickBursts, setClickBursts] = useState<
     Array<{ id: number; x: number; y: number; rotation: number; scale: number }>
@@ -79,10 +79,10 @@ export function Home({ onNavigate }: HomeProps) {
   // Spawn click burst periodically for engagement effect (the real-time subscription is handled in usePlatformStats)
   useEffect(() => {
     // Check for new votes via stats changes
-    if (stats && stats.votesCount > 0) {
+    if (votesCount > 0) {
       spawnClickBurst();
     }
-  }, [stats?.votesCount, spawnClickBurst]);
+  }, [votesCount, spawnClickBurst]);
 
   return (
     <>
@@ -619,7 +619,6 @@ export function Home({ onNavigate }: HomeProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.pricingButtonSupport}
-                    onClick={() => track('buymeacoffee_click', { location: 'pricing' })}
                   >
                     <img
                       src="https://img.buymeacoffee.com/button-api/?text=Buy me a chai&emoji=☕&slug=aswinasok&button_colour=FFDD00&font_colour=000000&font_family=Lato&outline_colour=000000&coffee_colour=ffffff"

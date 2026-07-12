@@ -7,7 +7,13 @@
 
 import { Link } from 'react-router-dom';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { CodeIcon, GithubIcon, Tap01Icon, UserGroupIcon, HelpCircleIcon } from '@hugeicons/core-free-icons';
+import {
+  CodeIcon,
+  GithubIcon,
+  Tap01Icon,
+  UserGroupIcon,
+  HelpCircleIcon,
+} from '@hugeicons/core-free-icons';
 import styles from './Footer.module.css';
 
 interface FooterProps {

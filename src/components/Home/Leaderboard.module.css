@@ -22,7 +22,6 @@
   letter-spacing: 0.05em;
 }
 
-
 .leaderboardTitle {
   font-size: 2.5rem;
   font-weight: 600;
@@ -69,7 +68,7 @@
   pointer-events: auto;
 }
 
-.leaderboardList.stacked .leaderboardItem:nth-child(n+3) {
+.leaderboardList.stacked .leaderboardItem:nth-child(n + 3) {
   opacity: 0;
   visibility: hidden;
 }
@@ -91,7 +90,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.5;
   }
   50% {

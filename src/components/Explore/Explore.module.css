@@ -106,19 +106,19 @@
   flex-shrink: 0;
 }
 
-.pollRank[data-rank="1"] {
+.pollRank[data-rank='1'] {
   background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.08) 100%);
   border-color: rgba(255, 215, 0, 0.3);
   color: #ffd700;
 }
 
-.pollRank[data-rank="2"] {
+.pollRank[data-rank='2'] {
   background: linear-gradient(135deg, rgba(192, 192, 192, 0.15) 0%, rgba(192, 192, 192, 0.08) 100%);
   border-color: rgba(192, 192, 192, 0.3);
   color: #c0c0c0;
 }
 
-.pollRank[data-rank="3"] {
+.pollRank[data-rank='3'] {
   background: linear-gradient(135deg, rgba(205, 127, 50, 0.15) 0%, rgba(205, 127, 50, 0.08) 100%);
   border-color: rgba(205, 127, 50, 0.3);
   color: #cd7f32;

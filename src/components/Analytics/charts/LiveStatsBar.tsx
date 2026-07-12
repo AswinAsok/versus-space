@@ -57,9 +57,10 @@ export function LiveStatsBar({
       return;
     }
 
+    const pollPresence = pollPresenceRef.current;
     const updateTotalViewers = () => {
       let total = 0;
-      pollPresenceRef.current.forEach((count) => {
+      pollPresence.forEach((count) => {
         total += count;
       });
       setLiveViewers(total);
@@ -69,7 +70,7 @@ export function LiveStatsBar({
       role: 'observer',
       viewerId: `stats-${crypto.randomUUID()}`,
       onPresence: (pollId, viewers) => {
-        pollPresenceRef.current.set(pollId, viewers.length);
+        pollPresence.set(pollId, viewers.length);
         updateTotalViewers();
       },
       onVote: () => {
@@ -81,7 +82,7 @@ export function LiveStatsBar({
 
     return () => {
       unsubscribe();
-      pollPresenceRef.current.clear();
+      pollPresence.clear();
     };
   }, [pollIds, showSampleNote, trackVote]);
 

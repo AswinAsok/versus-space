@@ -19,7 +19,7 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Can I see poll results in real-time?',
     answer:
-      'Absolutely. Results update instantly with smooth animations as each vote comes in. You\'ll see vote counts tick up live, progress bars animate, and percentages recalculate in real-time. This makes Versus Space ideal for live presentations, interactive workshops, and audience Q&A sessions.',
+      "Absolutely. Results update instantly with smooth animations as each vote comes in. You'll see vote counts tick up live, progress bars animate, and percentages recalculate in real-time. This makes Versus Space ideal for live presentations, interactive workshops, and audience Q&A sessions.",
   },
   {
     question: 'How long do polls stay open?',
@@ -29,6 +29,6 @@ export const faqItems: FaqItem[] = [
   {
     question: 'How do I share a poll with my audience?',
     answer:
-      'After creating your poll, you\'ll get a unique, short URL. Copy it with one click and share via email, Slack, Discord, WhatsApp, or social media. For live events, display the link or QR code on screen so attendees can scan and vote from their phones instantly.',
+      "After creating your poll, you'll get a unique, short URL. Copy it with one click and share via email, Slack, Discord, WhatsApp, or social media. For live events, display the link or QR code on screen so attendees can scan and vote from their phones instantly.",
   },
 ];

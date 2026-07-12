@@ -158,7 +158,6 @@
   .pageTitle {
     font-size: 1.25rem;
   }
-
 }
 
 @media (max-width: 480px) {
@@ -193,5 +192,4 @@
   .threeColumnGrid > * {
     min-height: 180px;
   }
-
 }

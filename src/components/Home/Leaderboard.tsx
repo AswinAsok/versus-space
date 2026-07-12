@@ -1,13 +1,18 @@
 import { useMemo } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { ChampionIcon, UserGroupIcon, ArrowRight01Icon, ChartIncreaseIcon, PinIcon } from '@hugeicons/core-free-icons';
+import {
+  ChampionIcon,
+  UserGroupIcon,
+  ArrowRight01Icon,
+  ChartIncreaseIcon,
+  PinIcon,
+} from '@hugeicons/core-free-icons';
 import { useLeaderboard } from '../../hooks/usePollQueries';
 import styles from './Leaderboard.module.css';
 
 interface LeaderboardProps {
   onNavigate: (path: string) => void;
 }
-
 
 function getWinningInfo(
   options: { title: string; vote_count: number }[]
@@ -130,7 +135,7 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
                     ))}
                   </span>
                 )}
-                              </div>
+              </div>
             </div>
             <div className={styles.pollActions}>
               {poll.options &&
@@ -152,7 +157,6 @@ export function Leaderboard({ onNavigate }: LeaderboardProps) {
             </div>
           </button>
         ))}
-
       </div>
     </div>
   );

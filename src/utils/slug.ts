@@ -4,19 +4,21 @@
  * @returns A URL-friendly slug
  */
 function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .trim()
-    // Replace special characters with empty string
-    .replace(/[^a-z0-9\s-]/g, '')
-    // Replace spaces with hyphens
-    .replace(/\s+/g, '-')
-    // Remove consecutive hyphens
-    .replace(/-+/g, '-')
-    // Remove leading/trailing hyphens
-    .replace(/^-|-$/g, '')
-    // Limit length to 50 characters
-    .slice(0, 50);
+  return (
+    title
+      .toLowerCase()
+      .trim()
+      // Replace special characters with empty string
+      .replace(/[^a-z0-9\s-]/g, '')
+      // Replace spaces with hyphens
+      .replace(/\s+/g, '-')
+      // Remove consecutive hyphens
+      .replace(/-+/g, '-')
+      // Remove leading/trailing hyphens
+      .replace(/^-|-$/g, '')
+      // Limit length to 50 characters
+      .slice(0, 50)
+  );
 }
 
 /**

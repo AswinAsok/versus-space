@@ -43,6 +43,32 @@
     "enabled": true,
   },
   "env": {
+    "local": {
+      "name": "versus-space-local",
+      "routes": [],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "versus-space-compact-production",
+          "database_id": "1e4728f0-9a0e-497b-90ad-cadf7abfbfe5",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "durable_objects": {
+        "bindings": [{ "name": "POLL_ROOMS", "class_name": "PollRoom" }],
+      },
+      "triggers": { "crons": [] },
+      "vars": {
+        "AUTH_EMAIL_FROM": "auth@versus.space",
+        "BETTER_AUTH_URL": "http://localhost:8787",
+        "DODO_PRO_PRODUCT_ID": "pdt_0NV8Drnkm6tgkmShyY2HR",
+        "MAINTENANCE_MODE": "false",
+        "SUPERADMIN_EMAILS": "worker-admin@example.com",
+      },
+      "secrets": {
+        "required": ["BETTER_AUTH_SECRET", "DODO_WEBHOOK_KEY", "RESEND_API_KEY"],
+      },
+    },
     "staging": {
       "name": "versus-space-staging",
       "routes": [],

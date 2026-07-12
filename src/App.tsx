@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -11,21 +12,48 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuth } from './hooks/useAuth';
 import { usePollById } from './hooks/usePollQueries';
 import { Header } from './components/Layout/Header';
-import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { Home } from './components/Home/Home';
-import { AuthForm } from './components/Auth/AuthForm';
-import { DashboardHome } from './components/Dashboard/DashboardHome';
-import { MyPolls } from './components/Dashboard/MyPolls';
-import { Settings } from './components/Settings/Settings';
-import { Profile } from './components/Profile/Profile';
-import { Analytics } from './components/Analytics/Analytics';
-import { CreatePoll } from './components/Poll/CreatePoll';
-import { PollView } from './components/Poll/PollView';
-import { Explore } from './components/Explore/Explore';
-import { Story } from './components/Story/Story';
 import { MouseLoader } from './components/Loading/MouseLoader';
 import type { User } from './core/domain/auth';
 import appStyles from './components/App.module.css';
+
+const DashboardLayout = lazy(() =>
+  import('./components/Layout/DashboardLayout').then((module) => ({
+    default: module.DashboardLayout,
+  }))
+);
+const AuthForm = lazy(() =>
+  import('./components/Auth/AuthForm').then((module) => ({ default: module.AuthForm }))
+);
+const DashboardHome = lazy(() =>
+  import('./components/Dashboard/DashboardHome').then((module) => ({
+    default: module.DashboardHome,
+  }))
+);
+const MyPolls = lazy(() =>
+  import('./components/Dashboard/MyPolls').then((module) => ({ default: module.MyPolls }))
+);
+const Settings = lazy(() =>
+  import('./components/Settings/Settings').then((module) => ({ default: module.Settings }))
+);
+const Profile = lazy(() =>
+  import('./components/Profile/Profile').then((module) => ({ default: module.Profile }))
+);
+const CreatePoll = lazy(() =>
+  import('./components/Poll/CreatePoll').then((module) => ({ default: module.CreatePoll }))
+);
+const PollView = lazy(() =>
+  import('./components/Poll/PollView').then((module) => ({ default: module.PollView }))
+);
+const Explore = lazy(() =>
+  import('./components/Explore/Explore').then((module) => ({ default: module.Explore }))
+);
+const Story = lazy(() =>
+  import('./components/Story/Story').then((module) => ({ default: module.Story }))
+);
+const Analytics = lazy(() =>
+  import('./components/Analytics/Analytics').then((module) => ({ default: module.Analytics }))
+);
 
 // Create a client with default options
 const queryClient = new QueryClient({
@@ -180,7 +208,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <RoutedApp />
+        <Suspense fallback={<MouseLoader />}>
+          <RoutedApp />
+        </Suspense>
       </BrowserRouter>
     </QueryClientProvider>
   );

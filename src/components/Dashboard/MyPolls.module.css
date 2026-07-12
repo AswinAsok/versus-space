@@ -411,7 +411,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 4px var(--color-primary);
   }
   50% {

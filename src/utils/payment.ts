@@ -17,10 +17,13 @@ interface CheckoutParams {
  * @throws Error if DodoPayments is not configured
  */
 export function getProCheckoutUrl({ email, userId, customerName }: CheckoutParams): string {
-  const { proProductId, checkoutBaseUrl, successUrl, cancelUrl, isConfigured } = DODO_PAYMENTS_CONFIG;
+  const { proProductId, checkoutBaseUrl, successUrl, cancelUrl, isConfigured } =
+    DODO_PAYMENTS_CONFIG;
 
   if (!isConfigured) {
-    console.error('DodoPayments not configured. Set VITE_DODO_PRO_PRODUCT_ID environment variable.');
+    console.error(
+      'DodoPayments not configured. Set VITE_DODO_PRO_PRODUCT_ID environment variable.'
+    );
     throw new Error('Payment system not configured. Please contact support.');
   }
 

@@ -96,7 +96,8 @@
 }
 
 @keyframes flicker {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   10% {
@@ -130,7 +131,8 @@
 
 /* Cursor movement animation - moves to 3 click points */
 @keyframes moveCursor {
-  0%, 5% {
+  0%,
+  5% {
     top: 10px;
     left: 10px;
     transform: scale(1);
@@ -141,7 +143,8 @@
   15% {
     transform: scale(1);
   }
-  30%, 35% {
+  30%,
+  35% {
     top: 50px;
     left: 80px;
     transform: scale(1);
@@ -152,7 +155,8 @@
   45% {
     transform: scale(1);
   }
-  65%, 70% {
+  65%,
+  70% {
     top: 80px;
     left: 40px;
     transform: scale(1);
@@ -172,7 +176,8 @@
 
 /* +1 float up animation */
 @keyframes floatUp {
-  0%, 5% {
+  0%,
+  5% {
     opacity: 0;
     transform: translateY(0) scale(0.5);
   }

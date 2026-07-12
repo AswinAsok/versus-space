@@ -208,8 +208,9 @@ export function VotingInterface({
   }, []);
 
   useEffect(() => {
+    const lineNudgeTimeouts = lineNudgeTimeoutsRef.current;
     return () => {
-      lineNudgeTimeoutsRef.current.forEach((timeouts) => timeouts.forEach((t) => clearTimeout(t)));
+      lineNudgeTimeouts.forEach((timeouts) => timeouts.forEach((t) => clearTimeout(t)));
     };
   }, []);
 
