@@ -1,4 +1,5 @@
 import { handleApi } from './api';
+import { createAuth } from './auth';
 import { isAutomaticVoteDue } from './poll-room';
 export { PollRoom } from './poll-room';
 
@@ -55,8 +56,25 @@ function maintenanceResponse(request: Request) {
 
 export default {
   async fetch(request, env, ctx) {
-    if (String(env.MAINTENANCE_MODE) === 'true') return maintenanceResponse(request);
     const url = new URL(request.url);
+    if (url.hostname === 'www.versus.space') {
+      url.hostname = 'versus.space';
+      return Response.redirect(url, 308);
+    }
+    if (String(env.MAINTENANCE_MODE) === 'true') return maintenanceResponse(request);
+
+    if (url.pathname.startsWith('/api/auth/')) {
+      if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+        const origin = request.headers.get('Origin');
+        if (origin !== env.BETTER_AUTH_URL) {
+          return Response.json(
+            { error: 'Untrusted authentication request origin' },
+            { status: 403, headers: { 'Cache-Control': 'no-store' } }
+          );
+        }
+      }
+      return createAuth(env, ctx).handler(request);
+    }
 
     if (url.pathname.startsWith('/api/')) {
       return handleApi(request, env, ctx);

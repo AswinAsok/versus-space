@@ -1,5 +1,5 @@
 import type { PollOption, RealtimeViewer, RealtimeVoteEvent } from '../../../types';
-import { apiWebSocketUrl, getAuthToken } from '../../../lib/apiClient';
+import { apiWebSocketUrl } from '../../../lib/apiClient';
 
 interface SubscribeOptions {
   role: 'viewer' | 'observer';
@@ -26,12 +26,11 @@ export const cloudflareRealtimeFacade = {
     const reconnects = new Map<string, number>();
 
     const updateConnected = () => options.onConnected?.(connected.size > 0);
-    const connect = (pollId: string, accessToken: string | null, attempt = 0) => {
+    const connect = (pollId: string, attempt = 0) => {
       if (stopped) return;
       const query = new URLSearchParams({ role: options.role, viewerId: options.viewerId });
       const accessKey = sessionStorage.getItem(`poll_key_${pollId}`);
       const protocols = ['versus-space'];
-      if (accessToken) protocols.push(`auth.${accessToken}`);
       if (accessKey) {
         const encodedKey = [...new TextEncoder().encode(accessKey)]
           .map((byte) => byte.toString(16).padStart(2, '0'))
@@ -66,7 +65,7 @@ export const cloudflareRealtimeFacade = {
         updateConnected();
         if (!stopped) {
           const timeout = window.setTimeout(
-            () => connect(pollId, accessToken, Math.min(attempt + 1, 4)),
+            () => connect(pollId, Math.min(attempt + 1, 4)),
             Math.min(1_000 * 2 ** attempt, 10_000)
           );
           reconnects.set(pollId, timeout);
@@ -74,14 +73,7 @@ export const cloudflareRealtimeFacade = {
       });
     };
 
-    void getAuthToken()
-      .then((accessToken) => {
-        [...new Set(pollIds)].forEach((pollId) => connect(pollId, accessToken));
-      })
-      .catch((error) => {
-        console.warn('Failed to initialize realtime authentication', error);
-        options.onConnected?.(false);
-      });
+    [...new Set(pollIds)].forEach((pollId) => connect(pollId));
     return () => {
       stopped = true;
       reconnects.forEach((timeout) => window.clearTimeout(timeout));

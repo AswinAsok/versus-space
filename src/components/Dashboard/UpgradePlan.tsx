@@ -1,10 +1,6 @@
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { HugeiconsIcon } from '@hugeicons/react';
-import {
-  CrownIcon,
-  CheckmarkCircle02Icon,
-  ArrowUp01Icon,
-} from '@hugeicons/core-free-icons';
+import { CrownIcon, CheckmarkCircle02Icon, ArrowUp01Icon } from '@hugeicons/core-free-icons';
 import { getProCheckoutUrl } from '../../utils/payment';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import styles from './UpgradePlan.module.css';
@@ -15,7 +11,7 @@ interface UpgradePlanProps {
 }
 
 export function UpgradePlan({ user, currentPollCount }: UpgradePlanProps) {
-  const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  const displayName = user.name || user.email.split('@')[0] || 'User';
   const userEmail = user.email || '';
 
   const handleUpgradeClick = () => {
@@ -83,7 +79,9 @@ export function UpgradePlan({ user, currentPollCount }: UpgradePlanProps) {
               <HugeiconsIcon icon={CrownIcon} size={10} />
               Pro
             </span>
-            <span className={styles.planColumnPrice}>$1<span> lifetime</span></span>
+            <span className={styles.planColumnPrice}>
+              $1<span> lifetime</span>
+            </span>
           </div>
           <ul className={styles.planFeatures}>
             <li>

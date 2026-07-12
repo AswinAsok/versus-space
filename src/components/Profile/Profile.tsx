@@ -1,13 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { pollFacade } from '../../core/appServices';
 import { HugeiconsIcon } from '@hugeicons/react';
-import {
-  Calendar01Icon,
-  BarChartIcon,
-  UserIcon,
-  Mail01Icon,
-} from '@hugeicons/core-free-icons';
+import { Calendar01Icon, BarChartIcon, UserIcon, Mail01Icon } from '@hugeicons/core-free-icons';
 import styles from './Profile.module.css';
 
 interface ProfileProps {
@@ -33,10 +28,10 @@ export function Profile({ user }: ProfileProps) {
     loadStats();
   }, [loadStats]);
 
-  const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  const displayName = user.name || user.email.split('@')[0] || 'User';
   const userEmail = user.email || '';
   const userInitial = displayName.charAt(0).toUpperCase();
-  const memberSince = new Date(user.created_at).toLocaleDateString('en-US', {
+  const memberSince = new Date(user.createdAt).toLocaleDateString('en-US', {
     month: 'long',
     year: 'numeric',
   });
@@ -94,9 +89,7 @@ export function Profile({ user }: ProfileProps) {
                 <HugeiconsIcon icon={BarChartIcon} size={24} />
               </div>
               <div className={styles.statContent}>
-                <span className={styles.statValue}>
-                  {loading ? '-' : pollCount}
-                </span>
+                <span className={styles.statValue}>{loading ? '-' : pollCount}</span>
                 <span className={styles.statLabel}>Total Polls Created</span>
               </div>
             </div>

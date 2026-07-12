@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { useCreatePoll, useUpdatePoll, useUserPollCount } from '../../hooks/usePollQueries';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { CreatePollSEO } from '../SEO/SEO';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { GlobeIcon, LockIcon, Key01Icon, Clock01Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
+import {
+  GlobeIcon,
+  LockIcon,
+  Key01Icon,
+  Clock01Icon,
+  Cancel01Icon,
+} from '@hugeicons/core-free-icons';
 import type { CreatePollData, PollWithOptions } from '../../types';
 import { FREE_PLAN_POLL_LIMIT, FREE_PLAN_POLL_DURATION_MINUTES } from '../../config/plans';
 import { FreeLimitUpgradeBanner } from '../Dashboard/FreeLimitUpgradeBanner';
@@ -47,7 +53,9 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
   const { data: pollCount = 0, isLoading: pollCountLoading } = useUserPollCount(user.id);
   const [durationMinutes, setDurationMinutes] = useState<number | ''>('');
   const [maxVotesPerIp, setMaxVotesPerIp] = useState<number | ''>('');
-  const [autoVoteIntervalMs, setAutoVoteIntervalMs] = useState<number>(AUTO_VOTE_INTERVAL_DEFAULT_MS);
+  const [autoVoteIntervalMs, setAutoVoteIntervalMs] = useState<number>(
+    AUTO_VOTE_INTERVAL_DEFAULT_MS
+  );
   const [globalTargetVotes, setGlobalTargetVotes] = useState<number>(50);
   const [autoVotesEnabled, setAutoVotesEnabled] = useState(false);
   const [showFreeUserModal, setShowFreeUserModal] = useState(false);
@@ -513,7 +521,8 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
                       </div>
                     </div>
                     <p className={styles.controlHint}>
-                      Lower = faster simulation, higher = more natural pacing. (~{autoVoteIntervalSecondsDisplay}s)
+                      Lower = faster simulation, higher = more natural pacing. (~
+                      {autoVoteIntervalSecondsDisplay}s)
                     </p>
                   </div>
                 </div>
@@ -626,11 +635,10 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
               </div>
               <h3 className={styles.modalTitle}>Auto-close Timer</h3>
               <p className={styles.modalDescription}>
-                Your poll will automatically close in <strong>{FREE_PLAN_POLL_DURATION_MINUTES} minutes</strong>.
+                Your poll will automatically close in{' '}
+                <strong>{FREE_PLAN_POLL_DURATION_MINUTES} minutes</strong>.
               </p>
-              <p className={styles.modalSubtext}>
-                Upgrade to Pro for custom timer settings.
-              </p>
+              <p className={styles.modalSubtext}>Upgrade to Pro for custom timer settings.</p>
             </div>
             <div className={styles.modalActions}>
               <button
@@ -639,11 +647,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
               >
                 Cancel
               </button>
-              <button
-                className={styles.modalButtonPrimary}
-                onClick={submitPoll}
-                disabled={loading}
-              >
+              <button className={styles.modalButtonPrimary} onClick={submitPoll} disabled={loading}>
                 {loading ? 'Creating...' : 'Create Poll'}
               </button>
             </div>

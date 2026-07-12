@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { pollFacade, voteFacade } from '../../core/appServices';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import {

@@ -24,7 +24,7 @@ import { PollView } from './components/Poll/PollView';
 import { Explore } from './components/Explore/Explore';
 import { Story } from './components/Story/Story';
 import { MouseLoader } from './components/Loading/MouseLoader';
-import type { User } from '@supabase/supabase-js';
+import type { User } from './core/domain/auth';
 import appStyles from './components/App.module.css';
 
 // Create a client with default options
@@ -63,18 +63,20 @@ function RoutedApp() {
         <Routes>
           <Route
             path="/dashboard/*"
-            element={
-              user ? (
-                <DashboardLayout user={user} />
-              ) : (
-                <Navigate to="/auth" replace />
-              )
-            }
+            element={user ? <DashboardLayout user={user} /> : <Navigate to="/auth" replace />}
           >
             <Route index element={<DashboardHome user={user!} />} />
             <Route path="polls" element={<MyPolls user={user!} />} />
-            <Route path="create" element={<CreatePoll user={user!} onSuccess={(slug) => navigate(`/poll/${slug}`)} />} />
-            <Route path="edit/:pollId" element={<EditPollRoute user={user!} onSuccess={(slug) => navigate(`/poll/${slug}`)} />} />
+            <Route
+              path="create"
+              element={<CreatePoll user={user!} onSuccess={(slug) => navigate(`/poll/${slug}`)} />}
+            />
+            <Route
+              path="edit/:pollId"
+              element={
+                <EditPollRoute user={user!} onSuccess={(slug) => navigate(`/poll/${slug}`)} />
+              }
+            />
             <Route path="settings" element={<Settings user={user!} />} />
             <Route path="profile" element={<Profile user={user!} />} />
             <Route path="analytics" element={<Analytics user={user!} />} />
@@ -95,7 +97,12 @@ function RoutedApp() {
           <div className={`${appStyles.geometricShape} ${appStyles.square}`}></div>
         </div>
       )}
-      <Header user={user} onNavigate={navigate} hideCreateButton={isAuthPage} centerLogo={isAuthPage} />
+      <Header
+        user={user}
+        onNavigate={navigate}
+        hideCreateButton={isAuthPage}
+        centerLogo={isAuthPage}
+      />
 
       <main className={appStyles.appMain}>
         <Routes>
@@ -114,11 +121,7 @@ function RoutedApp() {
           <Route
             path="/create"
             element={
-              user ? (
-                <Navigate to="/dashboard/create" replace />
-              ) : (
-                <Navigate to="/auth" replace />
-              )
+              user ? <Navigate to="/dashboard/create" replace /> : <Navigate to="/auth" replace />
             }
           />
           <Route path="/poll/:slug" element={<PollRoute />} />

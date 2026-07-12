@@ -1,4 +1,5 @@
 import { handleDodoWebhook } from './dodo-webhook';
+import { authUser } from './auth';
 
 interface AuthUser {
   id: string;
@@ -259,19 +260,9 @@ async function requestJson(request: Request) {
 }
 
 async function authenticatedUser(request: Request, env: Env): Promise<AuthUser> {
-  const authorization = request.headers.get('authorization');
-  if (!authorization?.startsWith('Bearer ') || !env.SUPABASE_ANON_KEY) {
-    throw new ApiError(401, 'Authentication required');
-  }
-
-  const response = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
-    headers: { Authorization: authorization, apikey: env.SUPABASE_ANON_KEY },
-  });
-  if (!response.ok) throw new ApiError(401, 'Invalid or expired session');
-
-  const value = (await response.json()) as { id?: unknown; email?: unknown };
-  if (typeof value.id !== 'string') throw new ApiError(401, 'Invalid user response');
-  return { id: value.id, email: typeof value.email === 'string' ? value.email : null };
+  const user = await authUser(request, env);
+  if (!user) throw new ApiError(401, 'Authentication required');
+  return { id: user.id, email: user.email };
 }
 
 function normalizedEmail(email: string | null) {
@@ -284,7 +275,11 @@ function secretsMatch(left: string | null, right: string | null) {
   const leftBytes = encoder.encode(left);
   const rightBytes = encoder.encode(right);
   if (leftBytes.byteLength !== rightBytes.byteLength) return false;
-  return crypto.subtle.timingSafeEqual(leftBytes, rightBytes);
+  let difference = 0;
+  for (let index = 0; index < leftBytes.byteLength; index++) {
+    difference |= leftBytes[index] ^ rightBytes[index];
+  }
+  return difference === 0;
 }
 
 async function getOrCreateProfile(env: Env, user: AuthUser) {
@@ -756,12 +751,9 @@ async function realtimePoll(request: Request, env: Env, pollId: string) {
       : null;
     let authorized =
       expectedKey !== null && protocols.some((protocol) => secretsMatch(protocol, expectedKey));
-    const authProtocol = protocols.find((protocol) => protocol.startsWith('auth.'));
-    if (!authorized && authProtocol) {
+    if (!authorized) {
       try {
-        const headers = new Headers(request.headers);
-        headers.set('Authorization', `Bearer ${authProtocol.slice(5)}`);
-        const user = await authenticatedUser(new Request(request, { headers }), env);
+        const user = await authenticatedUser(request, env);
         authorized = user.id === poll.creator_id;
       } catch {
         authorized = false;

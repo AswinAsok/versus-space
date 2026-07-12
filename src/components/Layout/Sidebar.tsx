@@ -1,4 +1,4 @@
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   Home04Icon,
@@ -38,12 +38,19 @@ const mainNavItems = [
   { icon: Globe02Icon, label: 'Explore', path: '/dashboard/explore' },
 ];
 
-const bottomNavItems = [
-  { icon: Settings01Icon, label: 'Settings', path: '/dashboard/settings' },
-];
+const bottomNavItems = [{ icon: Settings01Icon, label: 'Settings', path: '/dashboard/settings' }];
 
-export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProps) {
-  const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+export function Sidebar({
+  user,
+  currentPath,
+  onNavigate,
+  onSignOut,
+  isOpen,
+  onClose,
+  isCollapsed,
+  onToggleCollapse,
+}: SidebarProps) {
+  const displayName = user.name || user.email.split('@')[0] || 'User';
   const userEmail = user.email || '';
   const userInitial = displayName.charAt(0).toUpperCase();
 
@@ -92,11 +99,17 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
       />
 
       {/* Sidebar */}
-      <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''} ${isCollapsed ? styles.sidebarCollapsed : ''}`}>
+      <aside
+        className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''} ${isCollapsed ? styles.sidebarCollapsed : ''}`}
+      >
         {/* Header */}
         <div className={styles.sidebarHeader}>
           <button onClick={() => handleNavClick('/')} className={styles.logoButton}>
-            <img src="/vs.png" alt="versus.space" className={`${styles.logoImage} ${isCollapsed ? styles.logoCollapsed : ''}`} />
+            <img
+              src="/vs.png"
+              alt="versus.space"
+              className={`${styles.logoImage} ${isCollapsed ? styles.logoCollapsed : ''}`}
+            />
           </button>
           <button className={styles.closeButton} onClick={onClose} aria-label="Close menu">
             <HugeiconsIcon icon={Cancel01Icon} size={20} />
@@ -124,7 +137,11 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
                   <span className={styles.navIcon}>
                     <HugeiconsIcon icon={item.icon} size={isCollapsed ? 20 : 18} />
                   </span>
-                  <span className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}>{item.label}</span>
+                  <span
+                    className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}
+                  >
+                    {item.label}
+                  </span>
                   {isActive(item.path) && <span className={styles.activeIndicator} />}
                 </button>
               </li>
@@ -146,7 +163,11 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
                     <span className={styles.navIcon}>
                       <HugeiconsIcon icon={item.icon} size={isCollapsed ? 20 : 18} />
                     </span>
-                    <span className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}>{item.label}</span>
+                    <span
+                      className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}
+                    >
+                      {item.label}
+                    </span>
                   </button>
                 </li>
               ))}
@@ -159,7 +180,11 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
                   <span className={styles.navIcon}>
                     <HugeiconsIcon icon={Logout01Icon} size={isCollapsed ? 20 : 18} />
                   </span>
-                  <span className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}>Logout</span>
+                  <span
+                    className={`${styles.navLabel} ${isCollapsed ? styles.navLabelHidden : ''}`}
+                  >
+                    Logout
+                  </span>
                 </button>
               </li>
             </ul>
@@ -175,7 +200,9 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
               <span className={styles.upgradeIcon}>
                 <HugeiconsIcon icon={ArrowUp01Icon} size={isCollapsed ? 18 : 16} />
               </span>
-              <span className={`${styles.upgradeLabel} ${isCollapsed ? styles.upgradeLabelHidden : ''}`}>
+              <span
+                className={`${styles.upgradeLabel} ${isCollapsed ? styles.upgradeLabelHidden : ''}`}
+              >
                 Upgrade to Pro
               </span>
             </button>
@@ -193,13 +220,17 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
             <span className={styles.coffeeIcon}>
               <HugeiconsIcon icon={Coffee01Icon} size={isCollapsed ? 18 : 16} />
             </span>
-            <span className={`${styles.coffeeLabel} ${isCollapsed ? styles.coffeeLabelHidden : ''}`}>
+            <span
+              className={`${styles.coffeeLabel} ${isCollapsed ? styles.coffeeLabelHidden : ''}`}
+            >
               Buy me a chai
             </span>
           </a>
 
           {/* User Profile Section */}
-          <div className={`${styles.userSection} ${isCollapsed ? styles.userSectionCollapsed : ''}`}>
+          <div
+            className={`${styles.userSection} ${isCollapsed ? styles.userSectionCollapsed : ''}`}
+          >
             <div className={styles.userInfo}>
               <div className={styles.avatarWrapper}>
                 <div className={styles.userAvatar}>{userInitial}</div>
@@ -207,7 +238,9 @@ export function Sidebar({ user, currentPath, onNavigate, onSignOut, isOpen, onCl
                   {planLabel}
                 </span>
               </div>
-              <div className={`${styles.userDetails} ${isCollapsed ? styles.userDetailsHidden : ''}`}>
+              <div
+                className={`${styles.userDetails} ${isCollapsed ? styles.userDetailsHidden : ''}`}
+              >
                 <span className={styles.userName}>{displayName}</span>
                 <span className={styles.userEmail}>{userEmail}</span>
               </div>

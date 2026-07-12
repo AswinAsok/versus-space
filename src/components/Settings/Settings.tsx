@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   Mail01Icon,
@@ -35,7 +35,7 @@ export function Settings({ user }: SettingsProps) {
   const chaiFunded = proUserCount * 4; // 1 Pro = 4 chai
   const chaiProgress = Math.min((chaiFunded / TOTAL_CHAI) * 100, 100);
 
-  const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  const displayName = user.name || user.email.split('@')[0] || 'User';
   const userEmail = user.email || '';
 
   const handleUpgradeClick = () => {
@@ -89,7 +89,9 @@ export function Settings({ user }: SettingsProps) {
             <div className={styles.currentPlan}>
               <div className={styles.planHeader}>
                 <div className={styles.planInfo}>
-                  <span className={`${styles.planBadge} ${isPro ? styles.planBadgePro : styles.planBadgeFree}`}>
+                  <span
+                    className={`${styles.planBadge} ${isPro ? styles.planBadgePro : styles.planBadgeFree}`}
+                  >
                     {isPro && <HugeiconsIcon icon={CrownIcon} size={10} />}
                     {planLabel}
                   </span>
@@ -140,13 +142,17 @@ export function Settings({ user }: SettingsProps) {
                 </ul>
               </div>
 
-              <div className={`${styles.planColumn} ${styles.planColumnPro} ${isPro ? styles.planColumnActive : ''}`}>
+              <div
+                className={`${styles.planColumn} ${styles.planColumnPro} ${isPro ? styles.planColumnActive : ''}`}
+              >
                 <div className={styles.planColumnHeader}>
                   <span className={styles.planColumnName}>
                     <HugeiconsIcon icon={CrownIcon} size={10} />
                     Pro
                   </span>
-                  <span className={styles.planColumnPrice}>$1<span> lifetime</span></span>
+                  <span className={styles.planColumnPrice}>
+                    $1<span> lifetime</span>
+                  </span>
                 </div>
                 <ul className={styles.planFeatures}>
                   <li>
@@ -183,7 +189,8 @@ export function Settings({ user }: SettingsProps) {
               <div className={styles.chaiInfo}>
                 <h3 className={styles.chaiTitle}>Help fund the chai addiction</h3>
                 <p className={styles.chaiDescription}>
-                  This project took {DAYS_OF_WORK} days to build. At {CHAI_PER_DAY} chai per day, that's {TOTAL_CHAI} cups consumed.
+                  This project took {DAYS_OF_WORK} days to build. At {CHAI_PER_DAY} chai per day,
+                  that's {TOTAL_CHAI} cups consumed.
                 </p>
               </div>
             </div>
@@ -195,14 +202,9 @@ export function Settings({ user }: SettingsProps) {
                 <span className={styles.chaiGoal}>Goal: {TOTAL_CHAI}</span>
               </div>
               <div className={styles.chaiBar}>
-                <div
-                  className={styles.chaiFill}
-                  style={{ width: `${chaiProgress}%` }}
-                />
+                <div className={styles.chaiFill} style={{ width: `${chaiProgress}%` }} />
               </div>
-              <p className={styles.chaiNote}>
-                Every Pro upgrade = 4 chai paid back
-              </p>
+              <p className={styles.chaiNote}>Every Pro upgrade = 4 chai paid back</p>
               {isPro && (
                 <a
                   href="https://buymeacoffee.com/aswinasok"
@@ -230,13 +232,11 @@ export function Settings({ user }: SettingsProps) {
               <div className={styles.settingContent}>
                 <h3 className={styles.settingLabel}>Delete Account</h3>
                 <p className={styles.settingDescription}>
-                  Permanently delete your account and all associated data. This action cannot be undone.
+                  Permanently delete your account and all associated data. This action cannot be
+                  undone.
                 </p>
               </div>
-              <button
-                className={styles.dangerButton}
-                onClick={() => setShowDeleteConfirm(true)}
-              >
+              <button className={styles.dangerButton} onClick={() => setShowDeleteConfirm(true)}>
                 Delete
               </button>
             </div>
@@ -252,8 +252,8 @@ export function Settings({ user }: SettingsProps) {
               </div>
               <h3 className={styles.modalTitle}>Delete Account?</h3>
               <p className={styles.modalText}>
-                This will permanently delete your account, all your polls, and associated data.
-                This action cannot be undone.
+                This will permanently delete your account, all your polls, and associated data. This
+                action cannot be undone.
               </p>
               <div className={styles.modalActions}>
                 <button
@@ -262,9 +262,7 @@ export function Settings({ user }: SettingsProps) {
                 >
                   Cancel
                 </button>
-                <button className={styles.modalDeleteButton}>
-                  Yes, delete my account
-                </button>
+                <button className={styles.modalDeleteButton}>Yes, delete my account</button>
               </div>
             </div>
           </div>

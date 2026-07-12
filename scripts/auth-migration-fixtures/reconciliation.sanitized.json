@@ -1,0 +1,54 @@
+{
+  "source": {
+    "users": [
+      {
+        "id": "11111111-1111-4111-8111-111111111111",
+        "email": "Verified@Example.Test",
+        "encrypted_password": "$2b$10$fixture",
+        "email_confirmed_at": "2025-01-02T03:04:05.000Z"
+      },
+      {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "email": "setup@example.test",
+        "encrypted_password": "",
+        "email_confirmed_at": null,
+        "migration_disposition": "password_setup"
+      }
+    ],
+    "exceptions": []
+  },
+  "target": {
+    "users": [
+      {
+        "id": "11111111-1111-4111-8111-111111111111",
+        "email": "verified@example.test",
+        "emailVerified": 1
+      },
+      {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "email": "setup@example.test",
+        "emailVerified": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": "credential:11111111-1111-4111-8111-111111111111",
+        "userId": "11111111-1111-4111-8111-111111111111",
+        "providerId": "credential"
+      }
+    ]
+  },
+  "application": {
+    "profiles": [
+      { "user_id": "11111111-1111-4111-8111-111111111111" },
+      { "user_id": "22222222-2222-4222-8222-222222222222" }
+    ],
+    "polls": [{ "creator_id": "11111111-1111-4111-8111-111111111111" }],
+    "votes": [
+      { "user_id": "11111111-1111-4111-8111-111111111111" },
+      { "user_id": "anonymous-session-fixture" }
+    ],
+    "userSessions": [{ "user_id": "22222222-2222-4222-8222-222222222222" }],
+    "webhookEvents": [{ "user_id": "11111111-1111-4111-8111-111111111111" }]
+  }
+}

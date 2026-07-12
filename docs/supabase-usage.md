@@ -1,48 +1,51 @@
 # Current Supabase Usage
 
-Supabase is retained for authentication and as the frozen rollback source. Production application data, realtime updates, scheduled voting, and payment webhooks now run on Cloudflare Workers, D1, Durable Objects, and Cron Triggers.
+Supabase has no active production runtime responsibility. It is retained temporarily as the frozen authentication and application-data rollback source while production runs on Cloudflare Workers, Better Auth, D1, Durable Objects, Cron Triggers, and Resend.
 
-## Active production usage
+The completed auth cutover is documented in the [Better Auth + Cloudflare migration plan](better-auth-cloudflare-migration-plan.md).
 
-Supabase Auth still handles:
+## Migrated authentication
 
-- Email and password signup and sign-in
-- Sign-out
-- Session persistence and token refresh
-- Restoring the current user when the app starts
-- Notifying the application when authentication state changes
+Supabase Auth responsibilities migrated on 2026-07-12:
 
-The Worker validates Supabase access tokens and continues using the existing Supabase user UUID as the application identity. This avoids password resets or identity remapping.
+- ~~Email and password signup and sign-in~~
+- ~~Sign-out~~
+- ~~Session persistence and token refresh~~
+- ~~Restoring the current user when the app starts~~
+- ~~Notifying the application when authentication state changes~~
 
-Relevant code:
+Better Auth now handles these flows in the Worker with D1-backed sessions and credentials. The migration preserved each Supabase user UUID, imported 31 compatible password hashes, classified 9 legacy/non-password accounts for password setup, and reconciled all 40 users without ownership failures. Relevant replacement code:
 
-- `src/core/infrastructure/supabase/authSupabaseGateway.ts`
+- `src/core/infrastructure/cloudflare/authCloudflareGateway.ts`
 - `src/core/infrastructure/cloudflare/userProfileCloudflareGateway.ts`
+- `worker/auth.ts`
+- `worker/email.ts`
 - `worker/api.ts`
+- `migrations/0008_better_auth.sql`
 
 ## Frozen rollback surface
 
-The following Supabase application-data objects are retained but are no longer the active production data path:
+The following Supabase application-data objects are retained but are no longer the active production data path. Struck-through objects have been migrated to Cloudflare:
 
 ### Tables
 
-- `polls`
-- `poll_options`
-- `votes`
-- `user_sessions`
-- `user_profiles`
+- ~~`polls`~~
+- ~~`poll_options`~~
+- ~~`votes`~~
+- ~~`user_sessions`~~
+- ~~`user_profiles`~~
 
 ### View
 
-- `public_poll_leaderboard`
+- ~~`public_poll_leaderboard`~~
 
 ### RPCs
 
-- `cast_vote_with_limits`
-- `increment_user_session_votes`
-- `get_votes_over_time`
-- `get_vote_counts_by_date`
-- `perform_auto_votes`
+- ~~`cast_vote_with_limits`~~
+- ~~`increment_user_session_votes`~~
+- ~~`get_votes_over_time`~~
+- ~~`get_vote_counts_by_date`~~
+- ~~`perform_auto_votes`~~
 
 Writes to the migrated tables remain blocked by the cutover freeze triggers. The obsolete Supabase data gateways have been removed; a rollback must be implemented from the frozen database only after replaying and reconciling post-cutover D1 writes.
 
@@ -53,22 +56,24 @@ Rollback-related code:
 
 ## Cloudflare replacements
 
-- D1 stores profiles, polls, options, sessions, current votes, and analytics aggregates.
+- D1 stores Better Auth users, credentials, sessions, verification records, durable rate limits, profiles, polls, options, current votes, and analytics aggregates.
 - Durable Objects coordinate poll realtime broadcasts.
 - Worker Cron runs automatic simulated voting once per minute.
 - `POST /api/webhooks/dodo` verifies and processes Dodo payment webhooks.
 - The frontend always uses the Cloudflare data gateways.
 
-The Dodo signing key and Supabase anonymous key are Worker secrets. They must never be placed in `VITE_*` variables or committed files.
+The Dodo signing key and Better Auth secret are Worker secrets. They must never be placed in `VITE_*` variables or committed files.
 
 ## Runtime configuration
 
-The browser still requires:
+The browser no longer requires Supabase environment variables. Authentication uses same-origin `/api/auth/*` routes with secure HTTP-only cookies.
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+The Worker requires:
 
-These values support authentication. Application-data requests use the same-origin `/api` Worker routes.
+- `BETTER_AUTH_URL`
+- `BETTER_AUTH_SECRET` (secret)
+- `AUTH_EMAIL_FROM`
+- `RESEND_API_KEY` (secret)
 
 ## Supabase features not used
 

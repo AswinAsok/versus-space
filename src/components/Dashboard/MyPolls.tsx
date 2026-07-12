@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import {
   useUserPolls,
   useDeletePoll,
@@ -118,7 +118,9 @@ export function MyPolls({ user }: MyPollsProps) {
 
   return (
     <div className={styles.myPollsContainer}>
-      {isAtFreeLimit && <FreeLimitUpgradeBanner onUpgrade={() => navigate('/dashboard/settings')} />}
+      {isAtFreeLimit && (
+        <FreeLimitUpgradeBanner onUpgrade={() => navigate('/dashboard/settings')} />
+      )}
 
       {/* Page Header */}
       <div className={styles.pageHeader}>
@@ -129,10 +131,7 @@ export function MyPolls({ user }: MyPollsProps) {
           </p>
         </div>
         {isAtFreeLimit ? (
-          <button
-            onClick={() => navigate('/dashboard/settings')}
-            className={styles.upgradeButton}
-          >
+          <button onClick={() => navigate('/dashboard/settings')} className={styles.upgradeButton}>
             <HugeiconsIcon icon={ArrowUp01Icon} size={18} />
             <span className={styles.upgradeButtonText}>
               Upgrade to Pro
@@ -194,19 +193,19 @@ export function MyPolls({ user }: MyPollsProps) {
         <>
           {/* Categorize polls */}
           {(() => {
-            const livePolls = polls.filter(poll => {
+            const livePolls = polls.filter((poll) => {
               const isExpired = poll.ends_at ? new Date(poll.ends_at) <= new Date() : false;
               return poll.is_active && !isExpired;
             });
-            const inactivePolls = polls.filter(poll => {
+            const inactivePolls = polls.filter((poll) => {
               const isExpired = poll.ends_at ? new Date(poll.ends_at) <= new Date() : false;
               return !poll.is_active && !isExpired;
             });
-            const expiredPolls = polls.filter(poll => {
+            const expiredPolls = polls.filter((poll) => {
               return poll.ends_at ? new Date(poll.ends_at) <= new Date() : false;
             });
 
-            const renderPollCard = (poll: typeof polls[0], index: number, isExpired: boolean) => (
+            const renderPollCard = (poll: (typeof polls)[0], index: number, isExpired: boolean) => (
               <div
                 key={poll.id}
                 className={`${styles.pollCard} ${isExpired ? styles.expiredPoll : ''}`}
@@ -225,9 +224,7 @@ export function MyPolls({ user }: MyPollsProps) {
                         )}
                         {poll.is_public ? 'Public' : 'Private'}
                       </span>
-                      {isExpired && (
-                        <span className={styles.expiredBadge}>Expired</span>
-                      )}
+                      {isExpired && <span className={styles.expiredBadge}>Expired</span>}
                     </div>
                     <div className={styles.pollRight}>
                       <div className={styles.pollMenu}>
@@ -277,7 +274,10 @@ export function MyPolls({ user }: MyPollsProps) {
                 <div className={styles.pollMeta}>
                   <span className={styles.pollVotes}>
                     <HugeiconsIcon icon={ChartLineData01Icon} size={14} />
-                    {poll.options.reduce((sum, opt) => sum + opt.vote_count, 0).toLocaleString()} votes
+                    {poll.options
+                      .reduce((sum, opt) => sum + opt.vote_count, 0)
+                      .toLocaleString()}{' '}
+                    votes
                   </span>
                   <span className={styles.pollDate}>
                     <HugeiconsIcon icon={Calendar01Icon} size={14} />
@@ -289,7 +289,8 @@ export function MyPolls({ user }: MyPollsProps) {
                   {poll.ends_at && !isExpired && (
                     <span className={styles.pollEndsAt}>
                       <HugeiconsIcon icon={Time01Icon} size={14} />
-                      Ends {new Date(poll.ends_at).toLocaleDateString('en-US', {
+                      Ends{' '}
+                      {new Date(poll.ends_at).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
                       })}
@@ -364,19 +365,21 @@ export function MyPolls({ user }: MyPollsProps) {
                       {/* Placeholder cards for free users - only in live section */}
                       {!isPro && polls.length < FREE_PLAN_POLL_LIMIT && (
                         <>
-                          {Array.from({ length: FREE_PLAN_POLL_LIMIT - polls.length }).map((_, index) => (
-                            <div
-                              key={`placeholder-${index}`}
-                              className={styles.placeholderCard}
-                              style={{ animationDelay: `${(livePolls.length + index) * 0.05}s` }}
-                              onClick={() => navigate('/dashboard/create')}
-                            >
-                              <div className={styles.placeholderContent}>
-                                <HugeiconsIcon icon={Add01Icon} size={24} />
-                                <span>Create Poll</span>
+                          {Array.from({ length: FREE_PLAN_POLL_LIMIT - polls.length }).map(
+                            (_, index) => (
+                              <div
+                                key={`placeholder-${index}`}
+                                className={styles.placeholderCard}
+                                style={{ animationDelay: `${(livePolls.length + index) * 0.05}s` }}
+                                onClick={() => navigate('/dashboard/create')}
+                              >
+                                <div className={styles.placeholderContent}>
+                                  <HugeiconsIcon icon={Add01Icon} size={24} />
+                                  <span>Create Poll</span>
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            )
+                          )}
                         </>
                       )}
 
@@ -385,13 +388,17 @@ export function MyPolls({ user }: MyPollsProps) {
                         <div
                           className={styles.upgradeCard}
                           onClick={() => navigate('/dashboard/settings')}
-                          style={{ animationDelay: `${(livePolls.length + (FREE_PLAN_POLL_LIMIT - polls.length)) * 0.05}s` }}
+                          style={{
+                            animationDelay: `${(livePolls.length + (FREE_PLAN_POLL_LIMIT - polls.length)) * 0.05}s`,
+                          }}
                         >
                           <span className={styles.upgradeCardBadge}>Pro</span>
                           <div className={styles.upgradeCardContent}>
                             <HugeiconsIcon icon={ArrowUp01Icon} size={28} />
                             <span className={styles.upgradeCardTitle}>Upgrade to Pro</span>
-                            <span className={styles.upgradeCardSubtitle}>Unlimited polls & Pro Analytics</span>
+                            <span className={styles.upgradeCardSubtitle}>
+                              Unlimited polls & Pro Analytics
+                            </span>
                           </div>
                         </div>
                       )}
@@ -408,29 +415,35 @@ export function MyPolls({ user }: MyPollsProps) {
                       <span className={styles.sectionCount}>0</span>
                     </div>
                     <div className={styles.pollsGrid}>
-                      {Array.from({ length: FREE_PLAN_POLL_LIMIT - polls.length }).map((_, index) => (
-                        <div
-                          key={`placeholder-${index}`}
-                          className={styles.placeholderCard}
-                          style={{ animationDelay: `${index * 0.05}s` }}
-                          onClick={() => navigate('/dashboard/create')}
-                        >
-                          <div className={styles.placeholderContent}>
-                            <HugeiconsIcon icon={Add01Icon} size={24} />
-                            <span>Create Poll</span>
+                      {Array.from({ length: FREE_PLAN_POLL_LIMIT - polls.length }).map(
+                        (_, index) => (
+                          <div
+                            key={`placeholder-${index}`}
+                            className={styles.placeholderCard}
+                            style={{ animationDelay: `${index * 0.05}s` }}
+                            onClick={() => navigate('/dashboard/create')}
+                          >
+                            <div className={styles.placeholderContent}>
+                              <HugeiconsIcon icon={Add01Icon} size={24} />
+                              <span>Create Poll</span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      )}
                       <div
                         className={styles.upgradeCard}
                         onClick={() => navigate('/dashboard/settings')}
-                        style={{ animationDelay: `${(FREE_PLAN_POLL_LIMIT - polls.length) * 0.05}s` }}
+                        style={{
+                          animationDelay: `${(FREE_PLAN_POLL_LIMIT - polls.length) * 0.05}s`,
+                        }}
                       >
                         <span className={styles.upgradeCardBadge}>Pro</span>
                         <div className={styles.upgradeCardContent}>
                           <HugeiconsIcon icon={ArrowUp01Icon} size={28} />
                           <span className={styles.upgradeCardTitle}>Upgrade to Pro</span>
-                          <span className={styles.upgradeCardSubtitle}>Unlimited polls & Pro Analytics</span>
+                          <span className={styles.upgradeCardSubtitle}>
+                            Unlimited polls & Pro Analytics
+                          </span>
                         </div>
                       </div>
                     </div>

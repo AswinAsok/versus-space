@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { User } from '@supabase/supabase-js';
+import type { User } from '../core/domain/auth';
 import { userProfileFacade } from '../core/appServices';
 import type { UserProfile } from '../types';
 

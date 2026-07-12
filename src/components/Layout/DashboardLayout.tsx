@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { authFacade } from '../../core/appServices';
 import { Sidebar } from './Sidebar';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -35,7 +35,9 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   };
 
   return (
-    <div className={`${styles.dashboardLayout} ${sidebarCollapsed ? styles.sidebarIsCollapsed : ''}`}>
+    <div
+      className={`${styles.dashboardLayout} ${sidebarCollapsed ? styles.sidebarIsCollapsed : ''}`}
+    >
       <Sidebar
         user={user}
         currentPath={location.pathname}
@@ -58,9 +60,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         </button>
         <img src="/vs.png" alt="versus.space" className={styles.mobileLogo} />
         <div className={styles.mobileAvatar}>
-          {user.user_metadata?.full_name?.charAt(0).toUpperCase() ||
-            user.email?.charAt(0).toUpperCase() ||
-            'U'}
+          {user.name?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase() || 'U'}
         </div>
       </div>
 

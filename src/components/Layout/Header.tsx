@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { authFacade, pollFacade } from '../../core/appServices';
 import type { LeaderboardPoll } from '../../types';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -13,7 +13,12 @@ interface HeaderProps {
   centerLogo?: boolean;
 }
 
-export function Header({ user, onNavigate, hideCreateButton = false, centerLogo = false }: HeaderProps) {
+export function Header({
+  user,
+  onNavigate,
+  hideCreateButton = false,
+  centerLogo = false,
+}: HeaderProps) {
   const [recentPoll, setRecentPoll] = useState<LeaderboardPoll | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 

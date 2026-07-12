@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { User } from '@supabase/supabase-js';
+import type { User } from '../../core/domain/auth';
 import { pollFacade } from '../../core/appServices';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { DashboardSEO } from '../SEO/SEO';
@@ -35,7 +35,11 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   const [isCheckingUpgrade, setIsCheckingUpgrade] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: profile, isLoading: profileLoading, refetch: refetchProfile } = useUserProfile(user);
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    refetch: refetchProfile,
+  } = useUserProfile(user);
 
   // Handle upgrade success/cancel from DodoPayments redirect
   useEffect(() => {
@@ -122,7 +126,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   }, [showUpgradeSuccess, isPro]);
 
   // Get display name from user metadata or email
-  const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'there';
+  const displayName = user.name || user.email.split('@')[0] || 'there';
   const firstName = displayName.split(' ')[0];
 
   // Get time-based greeting
@@ -161,7 +165,9 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </div>
       )}
 
-      {isAtFreeLimit && <FreeLimitUpgradeBanner onUpgrade={() => navigate('/dashboard/settings')} />}
+      {isAtFreeLimit && (
+        <FreeLimitUpgradeBanner onUpgrade={() => navigate('/dashboard/settings')} />
+      )}
 
       {/* Welcome Header */}
       <div className={styles.welcomeHeader}>
@@ -260,10 +266,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Recent Polls</h2>
           {polls.length > 3 && (
-            <button
-              onClick={() => navigate('/dashboard/polls')}
-              className={styles.viewAllButton}
-            >
+            <button onClick={() => navigate('/dashboard/polls')} className={styles.viewAllButton}>
               View All
               <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </button>

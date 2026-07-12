@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "versus-space",
   "main": "worker/index.ts",
-  "compatibility_date": "2026-07-11",
+  "compatibility_date": "2026-07-12",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./dist",
@@ -30,13 +30,14 @@
     "crons": ["* * * * *"],
   },
   "vars": {
+    "AUTH_EMAIL_FROM": "auth@versus.space",
+    "BETTER_AUTH_URL": "https://versus.space",
     "DODO_PRO_PRODUCT_ID": "pdt_0NV8Drnkm6tgkmShyY2HR",
     "MAINTENANCE_MODE": "false",
-    "SUPABASE_URL": "https://bdkchzemifwtjlgqgfwg.supabase.co",
     "SUPERADMIN_EMAILS": "aswinasokofficial@gmail.com",
   },
   "secrets": {
-    "required": ["SUPABASE_ANON_KEY", "DODO_WEBHOOK_KEY"],
+    "required": ["BETTER_AUTH_SECRET", "DODO_WEBHOOK_KEY", "RESEND_API_KEY"],
   },
   "observability": {
     "enabled": true,
@@ -60,13 +61,14 @@
         "crons": [],
       },
       "vars": {
+        "AUTH_EMAIL_FROM": "auth@versus.space",
+        "BETTER_AUTH_URL": "https://versus-space-staging.aswinasokofficial.workers.dev",
         "DODO_PRO_PRODUCT_ID": "pdt_0NV8Drnkm6tgkmShyY2HR",
         "MAINTENANCE_MODE": "false",
-        "SUPABASE_URL": "https://bdkchzemifwtjlgqgfwg.supabase.co",
         "SUPERADMIN_EMAILS": "aswinasokofficial@gmail.com",
       },
       "secrets": {
-        "required": ["SUPABASE_ANON_KEY", "DODO_WEBHOOK_KEY"],
+        "required": ["BETTER_AUTH_SECRET", "DODO_WEBHOOK_KEY", "RESEND_API_KEY"],
       },
     },
   },

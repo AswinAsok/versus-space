@@ -39,10 +39,18 @@ const features = [
 ];
 
 export function AuthForm({ onSuccess }: AuthFormProps) {
+  const searchParams = new URLSearchParams(window.location.search);
+  const resetToken = searchParams.get('token');
+  const callbackError = searchParams.get('error');
   const [isLogin, setIsLogin] = useState(true);
+  const [passwordMode, setPasswordMode] = useState<'auth' | 'forgot' | 'reset'>(
+    resetToken ? 'reset' : callbackError ? 'forgot' : 'auth'
+  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(
+    callbackError ? 'This authentication link is invalid or expired. Request a new one.' : ''
+  );
   const [loading, setLoading] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +61,16 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
     setLoading(true);
 
     try {
-      if (isLogin) {
+      if (passwordMode === 'forgot') {
+        await authFacade.requestPasswordReset(email);
+        setShowVerificationModal(true);
+      } else if (passwordMode === 'reset' && resetToken) {
+        await authFacade.resetPassword(password, resetToken);
+        window.history.replaceState({}, '', '/auth');
+        setPasswordMode('auth');
+        setIsLogin(true);
+        setError('Password updated. You can now sign in.');
+      } else if (isLogin) {
         await authFacade.signIn(email, password);
         onSuccess();
       } else {
@@ -115,76 +132,92 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
           <div className={styles.formWrapper}>
             <div className={styles.formHeader}>
               <h2 className={styles.formTitle}>
-                {isLogin ? 'Welcome back' : 'Create your account'}
+                {passwordMode === 'forgot'
+                  ? 'Reset your password'
+                  : passwordMode === 'reset'
+                    ? 'Choose a new password'
+                    : isLogin
+                      ? 'Welcome back'
+                      : 'Create your account'}
               </h2>
               <p className={styles.formSubtitle}>
-                {isLogin
-                  ? 'Sign in to continue to your dashboard'
-                  : 'Start creating polls in under a minute'}
+                {passwordMode === 'forgot'
+                  ? 'We will email you a secure reset link'
+                  : passwordMode === 'reset'
+                    ? 'Enter a new password for your account'
+                    : isLogin
+                      ? 'Sign in to continue to your dashboard'
+                      : 'Start creating polls in under a minute'}
               </p>
             </div>
 
-            <div className={styles.toggleContainer}>
-              <div className={`${styles.togglePill} ${!isLogin ? styles.togglePillRight : ''}`} />
-              <button
-                type="button"
-                className={`${styles.toggleButton} ${isLogin ? styles.toggleActive : ''}`}
-                onClick={() => setIsLogin(true)}
-                disabled={loading}
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                className={`${styles.toggleButton} ${!isLogin ? styles.toggleActive : ''}`}
-                onClick={() => setIsLogin(false)}
-                disabled={loading}
-              >
-                Sign Up
-              </button>
-            </div>
+            {passwordMode === 'auth' && (
+              <div className={styles.toggleContainer}>
+                <div className={`${styles.togglePill} ${!isLogin ? styles.togglePillRight : ''}`} />
+                <button
+                  type="button"
+                  className={`${styles.toggleButton} ${isLogin ? styles.toggleActive : ''}`}
+                  onClick={() => setIsLogin(true)}
+                  disabled={loading}
+                >
+                  Sign In
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.toggleButton} ${!isLogin ? styles.toggleActive : ''}`}
+                  onClick={() => setIsLogin(false)}
+                  disabled={loading}
+                >
+                  Sign Up
+                </button>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className={styles.form}>
-              <div className={styles.inputGroup}>
-                <label htmlFor="email">Email address</label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={loading}
-                  placeholder="you@example.com"
-                />
-              </div>
-
-              <div className={styles.inputGroup}>
-                <label htmlFor="password">Password</label>
-                <div className={styles.passwordWrapper}>
+              {passwordMode !== 'reset' && (
+                <div className={styles.inputGroup}>
+                  <label htmlFor="email">Email address</label>
                   <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                     disabled={loading}
-                    placeholder="Enter your password"
-                    minLength={6}
+                    placeholder="you@example.com"
                   />
-                  <button
-                    type="button"
-                    className={styles.passwordToggle}
-                    onClick={() => setShowPassword(!showPassword)}
-                    disabled={loading}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    <HugeiconsIcon icon={showPassword ? ViewOffIcon : ViewIcon} size={16} />
-                  </button>
                 </div>
-                <span className={`${styles.inputHint} ${isLogin ? styles.inputHintHidden : ''}`}>
-                  Must be at least 6 characters
-                </span>
-              </div>
+              )}
+
+              {passwordMode !== 'forgot' && (
+                <div className={styles.inputGroup}>
+                  <label htmlFor="password">Password</label>
+                  <div className={styles.passwordWrapper}>
+                    <input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      disabled={loading}
+                      placeholder="Enter your password"
+                      minLength={8}
+                    />
+                    <button
+                      type="button"
+                      className={styles.passwordToggle}
+                      onClick={() => setShowPassword(!showPassword)}
+                      disabled={loading}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      <HugeiconsIcon icon={showPassword ? ViewOffIcon : ViewIcon} size={16} />
+                    </button>
+                  </div>
+                  <span className={`${styles.inputHint} ${isLogin ? styles.inputHintHidden : ''}`}>
+                    Must be at least 8 characters
+                  </span>
+                </div>
+              )}
 
               {error && (
                 <div className={styles.errorMessage}>
@@ -198,23 +231,57 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                   <span className={styles.loadingSpinner}></span>
                 ) : (
                   <>
-                    {isLogin ? 'Sign In' : 'Create Account'}
+                    {passwordMode === 'forgot'
+                      ? 'Send reset link'
+                      : passwordMode === 'reset'
+                        ? 'Update password'
+                        : isLogin
+                          ? 'Sign In'
+                          : 'Create Account'}
                     <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
                   </>
                 )}
               </button>
             </form>
 
-            <div className={styles.formFooter}>
-              <p>
-                {isLogin ? "Don't have an account? " : 'Already have an account? '}
+            {passwordMode === 'auth' && isLogin && (
+              <div className={styles.formFooter}>
                 <button
                   type="button"
-                  onClick={() => setIsLogin(!isLogin)}
+                  onClick={() => {
+                    setError('');
+                    setPasswordMode('forgot');
+                  }}
                   className={styles.switchLink}
                   disabled={loading}
                 >
-                  {isLogin ? 'Sign up for free' : 'Sign in'}
+                  Forgot your password?
+                </button>
+              </div>
+            )}
+
+            <div className={styles.formFooter}>
+              <p>
+                {passwordMode !== 'auth'
+                  ? 'Remembered your password? '
+                  : isLogin
+                    ? "Don't have an account? "
+                    : 'Already have an account? '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setError('');
+                    if (passwordMode !== 'auth') {
+                      setPasswordMode('auth');
+                      setIsLogin(true);
+                    } else {
+                      setIsLogin(!isLogin);
+                    }
+                  }}
+                  className={styles.switchLink}
+                  disabled={loading}
+                >
+                  {passwordMode !== 'auth' ? 'Sign in' : isLogin ? 'Sign up for free' : 'Sign in'}
                 </button>
               </p>
             </div>
@@ -243,10 +310,13 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
               <div className={styles.modalIcon}>
                 <HugeiconsIcon icon={MailValidation01Icon} size={20} />
               </div>
-              <h3 className={styles.modalTitle}>Confirm your email</h3>
+              <h3 className={styles.modalTitle}>
+                {passwordMode === 'forgot' ? 'Check your email' : 'Confirm your email'}
+              </h3>
               <p className={styles.modalText}>
-                We sent a verification link to {email || 'your inbox'}. Please confirm your email to
-                finish setting up your account.
+                {passwordMode === 'forgot'
+                  ? `If an account exists for ${email || 'that address'}, we sent a password reset link.`
+                  : `We sent a verification link to ${email || 'your inbox'}. Please confirm your email to finish setting up your account.`}
               </p>
             </div>
             <div className={styles.modalActions}>
@@ -255,6 +325,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                 className={styles.modalButton}
                 onClick={() => {
                   setShowVerificationModal(false);
+                  setPasswordMode('auth');
                   setIsLogin(true);
                 }}
               >
