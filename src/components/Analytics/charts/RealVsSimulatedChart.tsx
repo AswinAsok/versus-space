@@ -12,15 +12,22 @@ interface RealVsSimulatedChartProps {
   proDescription?: string;
 }
 
-export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showProBadge, proDescription }: RealVsSimulatedChartProps) {
+export function RealVsSimulatedChart({
+  realVotes,
+  simulatedVotes,
+  loading,
+  showProBadge,
+  proDescription,
+}: RealVsSimulatedChartProps) {
   const totalVotes = realVotes + simulatedVotes;
   const realPercentage = totalVotes > 0 ? ((realVotes / totalVotes) * 100).toFixed(1) : '0';
-  const simulatedPercentage = totalVotes > 0 ? ((simulatedVotes / totalVotes) * 100).toFixed(1) : '0';
+  const simulatedPercentage =
+    totalVotes > 0 ? ((simulatedVotes / totalVotes) * 100).toFixed(1) : '0';
 
   const data = [
     { name: 'Real Votes', value: realVotes, color: '#3ecf8e' },
     { name: 'Simulated', value: simulatedVotes, color: '#94a3b8' },
-  ].filter(d => d.value > 0);
+  ].filter((d) => d.value > 0);
 
   if (loading) {
     return (
@@ -29,15 +36,31 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showP
         <div className={localStyles.headerLeft}>
           <div className={localStyles.titleRow}>
             <h3 className={styles.chartTitle}>Vote Authenticity</h3>
-            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.skeletonCircle}>
-          <Skeleton circle width={150} height={150} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton
+            circle
+            width={150}
+            height={150}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
         </div>
         <div className={styles.skeletonStats}>
-          <Skeleton width={100} height={16} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
-          <Skeleton width={100} height={16} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton
+            width={100}
+            height={16}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
+          <Skeleton
+            width={100}
+            height={16}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
         </div>
       </div>
     );
@@ -50,7 +73,7 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showP
         <div className={localStyles.headerLeft}>
           <div className={localStyles.titleRow}>
             <h3 className={styles.chartTitle}>Vote Authenticity</h3>
-            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.chartEmpty}>
@@ -66,7 +89,7 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showP
       <div className={localStyles.headerLeft}>
         <div className={localStyles.titleRow}>
           <h3 className={styles.chartTitle}>Vote Authenticity</h3>
-          {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+          {showProBadge && <span className={styles.proBadge}>Pro</span>}
         </div>
       </div>
       <div className={styles.chartWrapper}>
@@ -93,9 +116,9 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showP
                 borderRadius: '8px',
                 boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
               }}
-              formatter={(value: number, name: string) => [
-                `${value.toLocaleString()} votes`,
-                name,
+              formatter={(value: number | undefined, name: string | undefined) => [
+                `${(value ?? 0).toLocaleString()} votes`,
+                name ?? 'Votes',
               ]}
             />
           </PieChart>
@@ -117,7 +140,9 @@ export function RealVsSimulatedChart({ realVotes, simulatedVotes, loading, showP
         </div>
       </div>
 
-      <p className={styles.chartFootnote}>Breakdown of manually cast votes vs auto-generated simulated votes.</p>
+      <p className={styles.chartFootnote}>
+        Breakdown of manually cast votes vs auto-generated simulated votes.
+      </p>
     </div>
   );
 }

@@ -11,17 +11,34 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    authFacade.getCurrentUser().then((user) => {
-      setUser(user);
-      setLoading(false);
-    });
+    let isMounted = true;
+
+    authFacade
+      .getCurrentUser()
+      .then((user) => {
+        if (!isMounted) return;
+        setUser(user);
+      })
+      .catch((error) => {
+        console.warn('Failed to restore Supabase session', error);
+        if (!isMounted) return;
+        setUser(null);
+      })
+      .finally(() => {
+        if (!isMounted) return;
+        setLoading(false);
+      });
 
     const unsubscribe = authFacade.onAuthStateChange((user) => {
+      if (!isMounted) return;
       setUser(user);
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, []);
 
   return { user, loading };

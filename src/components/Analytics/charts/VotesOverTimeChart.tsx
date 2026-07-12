@@ -34,7 +34,16 @@ const CHART_COLORS = [
   '#78716c', // warm stone
 ];
 
-export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBadge, proDescription, onDateRangeChange, isPro = true }: VotesOverTimeChartProps) {
+export function VotesOverTimeChart({
+  data,
+  pollTitles,
+  loading,
+  days,
+  showProBadge,
+  proDescription,
+  onDateRangeChange,
+  isPro = true,
+}: VotesOverTimeChartProps) {
   const [hiddenPolls, setHiddenPolls] = useState<Set<string>>(new Set());
   const [isMobile, setIsMobile] = useState(false);
 
@@ -57,14 +66,9 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
     return pollsWithVotes;
   }, [data]);
 
-  // Visible poll IDs (not hidden)
-  const visiblePollIds = useMemo(() => {
-    return allPollIds.filter(id => !hiddenPolls.has(id));
-  }, [allPollIds, hiddenPolls]);
-
   // Toggle poll visibility
   const handleLegendClick = useCallback((pollId: string) => {
-    setHiddenPolls(prev => {
+    setHiddenPolls((prev) => {
       const next = new Set(prev);
       if (next.has(pollId)) {
         next.delete(pollId);
@@ -153,7 +157,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
   // Check if there are any real votes at all
   const hasAnyVotes = useMemo(() => {
     for (const votes of data.values()) {
-      if (votes.some(v => v.count > 0)) return true;
+      if (votes.some((v) => v.count > 0)) return true;
     }
     return false;
   }, [data]);
@@ -166,7 +170,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
           <div className={chartStyles.headerLeft}>
             <div className={chartStyles.titleRow}>
               <h3 className={styles.chartTitle}>Votes Over Time</h3>
-              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           {onDateRangeChange && (
@@ -184,10 +188,27 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
           )}
         </div>
         <div className={styles.skeletonLine}>
-          <Skeleton height={250} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={8} />
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '0.5rem' }}>
-            <Skeleton width={80} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
-            <Skeleton width={80} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton
+            height={250}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+            borderRadius={8}
+          />
+          <div
+            style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '0.5rem' }}
+          >
+            <Skeleton
+              width={80}
+              height={14}
+              baseColor="rgba(255,255,255,0.02)"
+              highlightColor="rgba(255,255,255,0.05)"
+            />
+            <Skeleton
+              width={80}
+              height={14}
+              baseColor="rgba(255,255,255,0.02)"
+              highlightColor="rgba(255,255,255,0.05)"
+            />
           </div>
         </div>
       </div>
@@ -202,7 +223,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
           <div className={chartStyles.headerLeft}>
             <div className={chartStyles.titleRow}>
               <h3 className={styles.chartTitle}>Votes Over Time</h3>
-              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           {onDateRangeChange && (
@@ -235,7 +256,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
           <div className={chartStyles.headerLeft}>
             <div className={chartStyles.titleRow}>
               <h3 className={styles.chartTitle}>Votes Over Time</h3>
-              {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           {onDateRangeChange && (
@@ -275,7 +296,7 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
         <div className={chartStyles.headerLeft}>
           <div className={chartStyles.titleRow}>
             <h3 className={styles.chartTitle}>Votes Over Time</h3>
-            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         {onDateRangeChange && (
@@ -295,12 +316,23 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
       </div>
       <div className={styles.chartWrapper}>
         <ResponsiveContainer width="100%" height={chartHeight}>
-          <AreaChart data={chartData} margin={{ top: 10, right: isMobile ? 5 : 10, left: isMobile ? -20 : -10, bottom: 0 }}>
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: isMobile ? 5 : 10, left: isMobile ? -20 : -10, bottom: 0 }}
+          >
             <defs>
               {allPollIds.map((pollId, index) => (
                 <linearGradient key={pollId} id={`gradient-${pollId}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={CHART_COLORS[index % CHART_COLORS.length]} stopOpacity={0.3} />
-                  <stop offset="95%" stopColor={CHART_COLORS[index % CHART_COLORS.length]} stopOpacity={0} />
+                  <stop
+                    offset="5%"
+                    stopColor={CHART_COLORS[index % CHART_COLORS.length]}
+                    stopOpacity={0.3}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={CHART_COLORS[index % CHART_COLORS.length]}
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               ))}
             </defs>
@@ -330,12 +362,12 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
               }}
               labelStyle={{ color: '#fff', fontWeight: 600, marginBottom: '4px' }}
               itemStyle={{ color: 'rgba(255,255,255,0.8)', fontSize: '13px' }}
-              formatter={(value: number, name: string) => [
-                value,
-                pollTitles.get(name) || name,
+              formatter={(value: number | undefined, name: string | undefined) => [
+                value ?? 0,
+                (name && pollTitles.get(name)) || name || 'Votes',
               ]}
               filterNull={false}
-              itemSorter={(item) => -(item.value as number || 0)}
+              itemSorter={(item) => -((item.value as number) || 0)}
             />
             <Legend
               wrapperStyle={{ paddingTop: '16px' }}
@@ -347,7 +379,10 @@ export function VotesOverTimeChart({ data, pollTitles, loading, days, showProBad
               formatter={(value) => {
                 const isHidden = hiddenPolls.has(value);
                 const title = pollTitles.get(value) || value;
-                const displayTitle = title.length > legendTitleLength ? title.slice(0, legendTitleLength) + '...' : title;
+                const displayTitle =
+                  title.length > legendTitleLength
+                    ? title.slice(0, legendTitleLength) + '...'
+                    : title;
                 return (
                   <span
                     className={chartStyles.legendItem}

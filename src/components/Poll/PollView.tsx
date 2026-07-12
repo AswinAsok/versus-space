@@ -13,7 +13,7 @@ interface PollViewProps {
 
 // Fetches poll data and renders the voting experience with sharing actions.
 export function PollView({ slug }: PollViewProps) {
-  const { data: poll, isLoading: loading, error } = usePollBySlug(slug);
+  const { data: poll, isLoading: loading, error, refetch } = usePollBySlug(slug);
   const [accessKey, setAccessKey] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [keyError, setKeyError] = useState('');
@@ -47,9 +47,13 @@ export function PollView({ slug }: PollViewProps) {
       const storedKey = sessionStorage.getItem(`poll_key_${poll.id}`);
       if (storedKey) {
         try {
-          const isValid = await validateAccessKey.mutateAsync({ pollId: poll.id, accessKey: storedKey });
+          const isValid = await validateAccessKey.mutateAsync({
+            pollId: poll.id,
+            accessKey: storedKey,
+          });
           if (isValid) {
             setIsUnlocked(true);
+            await refetch();
           }
         } catch (err) {
           console.error('Error validating stored key:', err);
@@ -59,7 +63,7 @@ export function PollView({ slug }: PollViewProps) {
     };
 
     checkAccess();
-  }, [poll, validateAccessKey]);
+  }, [poll, validateAccessKey, refetch]);
 
   const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,6 +79,7 @@ export function PollView({ slug }: PollViewProps) {
       if (isValid) {
         sessionStorage.setItem(`poll_key_${poll.id}`, accessKey);
         setIsUnlocked(true);
+        await refetch();
       } else {
         setKeyError('Invalid access key');
       }
@@ -102,13 +107,9 @@ export function PollView({ slug }: PollViewProps) {
           <div className={styles.closedPollContent}>
             <span className={styles.closedBadge}>Poll Closed</span>
             <h1 className={styles.closedTitle}>{poll.title}</h1>
-            <p className={styles.closedDescription}>
-              This poll is no longer accepting votes.
-            </p>
+            <p className={styles.closedDescription}>This poll is no longer accepting votes.</p>
             <div className={styles.closedDivider} />
-            <p className={styles.closedCta}>
-              Or create your own poll
-            </p>
+            <p className={styles.closedCta}>Or create your own poll</p>
             <a href="/dashboard/create" className={styles.createPollButton}>
               Create Poll
             </a>

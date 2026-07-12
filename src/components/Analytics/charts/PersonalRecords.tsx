@@ -6,26 +6,33 @@ import {
   ChartIncreaseIcon,
   Clock01Icon,
 } from '@hugeicons/core-free-icons';
-import { supabase } from '../../../lib/supabaseClient';
-import type { Poll } from '../../../types';
+import { voteFacade } from '../../../core/appServices';
+import type { PollWithOptions } from '../../../types';
+import chartStyles from './Charts.module.css';
 import styles from './PersonalRecords.module.css';
 
 interface PersonalRecordsProps {
-  polls: Poll[];
+  polls: PollWithOptions[];
   showProBadge?: boolean;
   proDescription?: string;
+  useDummyData?: boolean;
 }
 
 interface Record {
   type: string;
-  icon: React.ComponentType;
+  icon: typeof ChampionIcon;
   title: string;
   pollTitle: string;
   value: string;
   color: string;
 }
 
-export function PersonalRecords({ polls, showProBadge, proDescription }: PersonalRecordsProps) {
+export function PersonalRecords({
+  polls,
+  showProBadge,
+  proDescription,
+  useDummyData = false,
+}: PersonalRecordsProps) {
   const [records, setRecords] = useState<Record[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,25 +46,15 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
       try {
         const pollIds = polls.map((p) => p.id);
 
-        // Fetch all poll options for vote counts
-        const { data: allOptions } = await supabase
-          .from('poll_options')
-          .select('poll_id, title, vote_count')
-          .in('poll_id', pollIds);
-
-        if (!allOptions) {
-          setLoading(false);
-          return;
-        }
-
-        // Group options by poll
-        const pollOptions = new Map<string, { title: string; vote_count: number }[]>();
-        allOptions.forEach((opt) => {
-          if (!pollOptions.has(opt.poll_id)) {
-            pollOptions.set(opt.poll_id, []);
-          }
-          pollOptions.get(opt.poll_id)!.push(opt);
-        });
+        const pollOptions = new Map(
+          polls.map((poll) => [
+            poll.id,
+            poll.options.map((option) => ({
+              title: option.title,
+              vote_count: option.vote_count,
+            })),
+          ])
+        );
 
         // Calculate total votes per poll
         const pollVotes = new Map<string, number>();
@@ -67,49 +64,44 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
         });
 
         // 1. Most Voted Poll
-        let mostVotedPoll: Poll | null = null;
+        let mostVotedPoll: PollWithOptions | null = null;
         let maxVotes = 0;
-        polls.forEach((poll) => {
+        for (const poll of polls) {
           const votes = pollVotes.get(poll.id) || 0;
           if (votes > maxVotes) {
             maxVotes = votes;
             mostVotedPoll = poll;
           }
-        });
+        }
 
         // 2. Fastest Growing (votes in last 24h)
-        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-        const { data: recentVotes } = await supabase
-          .from('votes')
-          .select('poll_id')
-          .in('poll_id', pollIds)
-          .gte('created_at', oneDayAgo);
+        const last24hVotes = useDummyData
+          ? new Map<string, number>()
+          : await voteFacade.getVoteCountsSince(
+              pollIds,
+              new Date(Date.now() - 24 * 60 * 60 * 1000)
+            );
 
-        const last24hVotes = new Map<string, number>();
-        recentVotes?.forEach((vote) => {
-          last24hVotes.set(vote.poll_id, (last24hVotes.get(vote.poll_id) || 0) + 1);
-        });
-
-        let fastestGrowingPoll: Poll | null = null;
+        let fastestGrowingPoll: PollWithOptions | null = null;
         let maxGrowth = 0;
-        polls.forEach((poll) => {
+        for (const poll of polls) {
           const growth = last24hVotes.get(poll.id) || 0;
           if (growth > maxGrowth) {
             maxGrowth = growth;
             fastestGrowingPoll = poll;
           }
-        });
+        }
 
         // 3. Closest Race (smallest margin between top 2 options)
-        let closestRacePoll: Poll | null = null;
+        let closestRacePoll: PollWithOptions | null = null;
         let smallestMargin = Infinity;
         let marginPercent = 0;
 
-        pollOptions.forEach((options, pollId) => {
-          if (options.length < 2) return;
+        for (const [pollId, options] of pollOptions) {
+          if (options.length < 2) continue;
           const sorted = [...options].sort((a, b) => b.vote_count - a.vote_count);
           const total = sorted.reduce((sum, opt) => sum + opt.vote_count, 0);
-          if (total === 0) return;
+          if (total === 0) continue;
 
           const margin = sorted[0].vote_count - sorted[1].vote_count;
           const marginPct = (margin / total) * 100;
@@ -119,7 +111,7 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
             marginPercent = marginPct;
             closestRacePoll = polls.find((p) => p.id === pollId) || null;
           }
-        });
+        }
 
         // 4. Most Recent Active Poll
         const recentPoll = [...polls]
@@ -185,7 +177,7 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
     };
 
     calculateRecords();
-  }, [polls]);
+  }, [polls, useDummyData]);
 
   if (loading) {
     return (
@@ -194,7 +186,7 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Personal Records</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.loading}>
@@ -211,7 +203,7 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Personal Records</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.empty}>
@@ -227,7 +219,7 @@ export function PersonalRecords({ polls, showProBadge, proDescription }: Persona
       <div className={styles.headerLeft}>
         <div className={styles.titleRow}>
           <h3 className={styles.title}>Personal Records</h3>
-          {showProBadge && <span className={styles.proBadge}>Pro</span>}
+          {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
         </div>
       </div>
       <div className={styles.recordsGrid}>

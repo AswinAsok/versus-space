@@ -24,7 +24,6 @@ import { PollView } from './components/Poll/PollView';
 import { Explore } from './components/Explore/Explore';
 import { Story } from './components/Story/Story';
 import { MouseLoader } from './components/Loading/MouseLoader';
-import { ProductHuntBanner } from './components/ProductHuntBanner/ProductHuntBanner';
 import type { User } from '@supabase/supabase-js';
 import appStyles from './components/App.module.css';
 
@@ -61,7 +60,6 @@ function RoutedApp() {
   if (isDashboardView) {
     return (
       <div className={appStyles.app}>
-        <ProductHuntBanner />
         <Routes>
           <Route
             path="/dashboard/*"
@@ -89,7 +87,6 @@ function RoutedApp() {
 
   return (
     <div className={appStyles.app}>
-      <ProductHuntBanner />
       {!isPollView && (
         <div className={appStyles.decorativeBg}>
           <div className={appStyles.geometricShape}></div>

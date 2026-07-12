@@ -7,7 +7,6 @@ import optionStyles from './OptionBreakdownChart.module.css';
 
 interface OptionBreakdownChartProps {
   data: OptionVoteData[];
-  pollTitle: string;
   loading?: boolean;
   polls: Poll[];
   selectedPollId: string;
@@ -24,7 +23,6 @@ const CHART_COLORS = [
 
 export function OptionBreakdownChart({
   data,
-  pollTitle,
   loading,
   polls,
   selectedPollId,
@@ -42,7 +40,7 @@ export function OptionBreakdownChart({
           <div className={optionStyles.headerLeft}>
             <div className={optionStyles.titleRow}>
               <h3 className={styles.chartTitle}>Option Breakdown</h3>
-              {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           <select
@@ -59,11 +57,27 @@ export function OptionBreakdownChart({
           </select>
         </div>
         <div className={styles.skeletonCircle}>
-          <Skeleton circle width={150} height={150} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton
+            circle
+            width={150}
+            height={150}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
         </div>
         <div className={styles.skeletonStats}>
-          <Skeleton width={80} height={16} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
-          <Skeleton width={80} height={16} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton
+            width={80}
+            height={16}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
+          <Skeleton
+            width={80}
+            height={16}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
         </div>
       </div>
     );
@@ -76,7 +90,7 @@ export function OptionBreakdownChart({
         <div className={optionStyles.headerLeft}>
           <div className={optionStyles.titleRow}>
             <h3 className={styles.chartTitle}>Option Breakdown</h3>
-            {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.chartEmpty}>
@@ -94,7 +108,7 @@ export function OptionBreakdownChart({
           <div className={optionStyles.headerLeft}>
             <div className={optionStyles.titleRow}>
               <h3 className={styles.chartTitle}>Option Breakdown</h3>
-              {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+              {showProBadge && <span className={styles.proBadge}>Pro</span>}
             </div>
           </div>
           <select
@@ -123,7 +137,7 @@ export function OptionBreakdownChart({
         <div className={optionStyles.headerLeft}>
           <div className={optionStyles.titleRow}>
             <h3 className={styles.chartTitle}>Option Breakdown</h3>
-            {showProBadge && <span className={optionStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <select
@@ -168,9 +182,10 @@ export function OptionBreakdownChart({
               }}
               labelStyle={{ color: '#fff', fontWeight: 600, marginBottom: '4px' }}
               itemStyle={{ color: 'rgba(255,255,255,0.8)', fontSize: '13px' }}
-              formatter={(value: number, name: string) => {
+              formatter={(rawValue: number | undefined, name: string | undefined) => {
+                const value = rawValue ?? 0;
                 const percentage = ((value / totalVotes) * 100).toFixed(1);
-                return [`${value} votes (${percentage}%)`, name];
+                return [`${value} votes (${percentage}%)`, name ?? 'Votes'];
               }}
             />
           </PieChart>
@@ -182,15 +197,24 @@ export function OptionBreakdownChart({
           const percentage = ((item.voteCount / totalVotes) * 100).toFixed(1);
           return (
             <div key={item.optionId} className={styles.authStat}>
-              <span className={styles.authDot} style={{ background: CHART_COLORS[index % CHART_COLORS.length] }} />
-              <span className={styles.authLabel}>{item.optionTitle.length > 12 ? item.optionTitle.slice(0, 12) + '...' : item.optionTitle}</span>
+              <span
+                className={styles.authDot}
+                style={{ background: CHART_COLORS[index % CHART_COLORS.length] }}
+              />
+              <span className={styles.authLabel}>
+                {item.optionTitle.length > 12
+                  ? item.optionTitle.slice(0, 12) + '...'
+                  : item.optionTitle}
+              </span>
               <span className={styles.authValue}>{item.voteCount.toLocaleString()}</span>
               <span className={styles.authPercent}>{percentage}%</span>
             </div>
           );
         })}
       </div>
-      <p className={styles.chartFootnote}>Shows how votes are distributed among options for the selected poll.</p>
+      <p className={styles.chartFootnote}>
+        Shows how votes are distributed among options for the selected poll.
+      </p>
     </div>
   );
 }

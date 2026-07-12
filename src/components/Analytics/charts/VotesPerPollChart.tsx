@@ -28,7 +28,12 @@ const CHART_COLORS = [
   '#78716c', // warm stone
 ];
 
-export function VotesPerPollChart({ data, loading, showProBadge, proDescription }: VotesPerPollChartProps) {
+export function VotesPerPollChart({
+  data,
+  loading,
+  showProBadge,
+  proDescription,
+}: VotesPerPollChartProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -49,7 +54,10 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
     .slice(0, 8)
     .map((item) => ({
       ...item,
-      shortTitle: item.pollTitle.length > titleMaxLength ? item.pollTitle.slice(0, titleMaxLength) + '...' : item.pollTitle,
+      shortTitle:
+        item.pollTitle.length > titleMaxLength
+          ? item.pollTitle.slice(0, titleMaxLength) + '...'
+          : item.pollTitle,
     }));
 
   if (loading) {
@@ -59,14 +67,24 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
         <div className={localStyles.headerLeft}>
           <div className={localStyles.titleRow}>
             <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
-            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.skeletonWrapper}>
           {[...Array(5)].map((_, i) => (
             <div key={i} className={styles.skeletonRow}>
-              <Skeleton width={180} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
-              <Skeleton height={28} containerClassName={styles.skeletonBar} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+              <Skeleton
+                width={180}
+                height={14}
+                baseColor="rgba(255,255,255,0.02)"
+                highlightColor="rgba(255,255,255,0.05)"
+              />
+              <Skeleton
+                height={28}
+                containerClassName={styles.skeletonBar}
+                baseColor="rgba(255,255,255,0.02)"
+                highlightColor="rgba(255,255,255,0.05)"
+              />
             </div>
           ))}
         </div>
@@ -81,7 +99,7 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
         <div className={localStyles.headerLeft}>
           <div className={localStyles.titleRow}>
             <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
-            {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+            {showProBadge && <span className={styles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.chartEmpty}>
@@ -97,7 +115,7 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
       <div className={localStyles.headerLeft}>
         <div className={localStyles.titleRow}>
           <h3 className={styles.chartTitle}>Total Votes by Poll</h3>
-          {showProBadge && <span className={localStyles.proBadge}>Pro</span>}
+          {showProBadge && <span className={styles.proBadge}>Pro</span>}
         </div>
       </div>
       <div className={styles.chartWrapper}>
@@ -107,7 +125,11 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
             layout="vertical"
             margin={{ top: 10, right: 20, left: 10, bottom: 10 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" horizontal={false} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="rgba(255,255,255,0.06)"
+              horizontal={false}
+            />
             <XAxis
               type="number"
               stroke="rgba(255,255,255,0.5)"
@@ -137,7 +159,10 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
               }}
               labelStyle={{ color: '#fff', fontWeight: 600, marginBottom: '4px' }}
               itemStyle={{ color: 'rgba(255,255,255,0.8)', fontSize: '13px' }}
-              formatter={(value: number) => [value.toLocaleString(), 'Total Votes']}
+              formatter={(value: number | undefined) => [
+                (value ?? 0).toLocaleString(),
+                'Total Votes',
+              ]}
               labelFormatter={(_, payload) => payload[0]?.payload?.pollTitle || ''}
             />
             <Bar dataKey="totalVotes" radius={[0, 6, 6, 0]} maxBarSize={36}>
@@ -148,7 +173,9 @@ export function VotesPerPollChart({ data, loading, showProBadge, proDescription 
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className={styles.chartFootnote}>Compares total votes across your top polls. Includes both manual and simulated votes.</p>
+      <p className={styles.chartFootnote}>
+        Compares total votes across your top polls. Includes both manual and simulated votes.
+      </p>
     </div>
   );
 }

@@ -24,7 +24,6 @@ import styles from './Home.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
 import LightRays from '../ReactBits/LightRays';
 import CurvedLoop from '../ReactBits/CurvedLoop/CurvedLoop';
-import CircularText from '../ReactBits/CircularText/CircularText';
 import { usePlatformStats, useProUserCount } from '../../hooks/usePollQueries';
 import { faqItems } from './faqData';
 
@@ -143,25 +142,6 @@ export function Home({ onNavigate }: HomeProps) {
                   >
                     Create Free Poll <HugeiconsIcon icon={ArrowRight01Icon} size={18} />
                   </button>
-                  <a
-                    href="https://www.producthunt.com/products/versus-space?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-versus-space"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.productHuntBadge}
-                  >
-                    <img
-                      src="/pngkey.com-reddit-logo-png-10768.png"
-                      alt="Product Hunt"
-                      className={styles.productHuntKitty}
-                    />
-                    <div className={styles.productHuntText}>
-                      <span className={styles.productHuntLabel}>FIND US ON</span>
-                      <span className={styles.productHuntName}>Product Hunt</span>
-                    </div>
-                    <div className={styles.productHuntUpvote}>
-                      <span className={styles.productHuntArrow}>▲</span>
-                    </div>
-                  </a>
                 </div>
               </div>
 
@@ -173,16 +153,6 @@ export function Home({ onNavigate }: HomeProps) {
                     title="Versus Space Demo - See how real-time polling works"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
-                  />
-                  <CircularText
-                    text="✦ MADE FOR FUN ✦ MADE FOR FUN "
-                    spinDuration={12}
-                    onHover="pause"
-                    className={styles.circularTextBadge}
-                    radius={70}
-                    highlightWord="FUN"
-                    centerImage="/pngkey.com-reddit-logo-png-10768.png"
-                    centerImageSize={100}
                   />
                 </div>
                 <Link to="/story" className={styles.storyLink}>
@@ -244,38 +214,6 @@ export function Home({ onNavigate }: HomeProps) {
               <HugeiconsIcon icon={Add01Icon} size={18} />
               Create Your Own Poll
             </button>
-          </section>
-
-          {/* Built For Section */}
-          <section
-            id="built-for"
-            className={styles.trustedSection}
-            aria-labelledby="built-for-title"
-          >
-            <h2 id="built-for-title" className={styles.srOnly}>
-              Built For
-            </h2>
-            <p className={styles.trustedLabel}>BUILT FOR HACKATHON AT</p>
-            <div className={styles.trustedLogos}>
-              <a
-                href="https://ente.io/?utm_source=versus.space"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track('ente_link_click', { location: 'home_built_for' })}
-                className={styles.enteLogoWrapper}
-              >
-                <img
-                  src="/ente-branding-green.png"
-                  alt="Ente - Photo storage and sharing platform"
-                  className={styles.enteLogo}
-                />
-                <div className={styles.cursorTrail}>
-                  <svg className={styles.cursor} viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L6.35 2.85a.5.5 0 0 0-.85.36Z" />
-                  </svg>
-                </div>
-              </a>
-            </div>
           </section>
 
           {/* Bento Grid - How It Works & Use Cases Combined */}

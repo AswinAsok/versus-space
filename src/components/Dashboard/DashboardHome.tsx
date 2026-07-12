@@ -19,6 +19,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { FREE_PLAN_POLL_LIMIT } from '../../config/plans';
 import { MouseLoader } from '../Loading/MouseLoader';
+import { FreeLimitUpgradeBanner } from './FreeLimitUpgradeBanner';
 import { UpgradePlan } from './UpgradePlan';
 import type { Poll } from '../../types';
 import styles from './DashboardHome.module.css';
@@ -160,22 +161,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </div>
       )}
 
-      {/* Upgrade Banner - shown at top when at free limit */}
-      {isAtFreeLimit && (
-        <div className={styles.upgradeBanner}>
-          <div className={styles.upgradeBannerContent}>
-            <span className={styles.upgradeBannerText}>
-              Congratulations! You are eligible for an upgrade
-            </span>
-            <button
-              onClick={() => navigate('/dashboard/settings')}
-              className={styles.upgradeBannerButton}
-            >
-              Upgrade to Pro
-            </button>
-          </div>
-        </div>
-      )}
+      {isAtFreeLimit && <FreeLimitUpgradeBanner onUpgrade={() => navigate('/dashboard/settings')} />}
 
       {/* Welcome Header */}
       <div className={styles.welcomeHeader}>

@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import { realtimeFacade } from '../core/appServices';
 
-export interface Viewer {
+interface Viewer {
   id: string;
   color: string;
   joinedAt: string;
@@ -37,7 +36,7 @@ const getViewerColor = (id: string): string => {
   // Simple hash function to get consistent color per viewer
   let hash = 0;
   for (let i = 0; i < id.length; i++) {
-    hash = ((hash << 5) - hash) + id.charCodeAt(i);
+    hash = (hash << 5) - hash + id.charCodeAt(i);
     hash = hash & hash;
   }
 
@@ -57,18 +56,21 @@ const getOrCreateViewerId = (): string => {
   return viewerId;
 };
 
-export function useLiveViewers({ pollId, enabled = true }: UseLiveViewersOptions): UseLiveViewersReturn {
+export function useLiveViewers({
+  pollId,
+  enabled = true,
+}: UseLiveViewersOptions): UseLiveViewersReturn {
   const [viewers, setViewers] = useState<Viewer[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [recentJoins, setRecentJoins] = useState(0);
-  const channelRef = useRef<RealtimeChannel | null>(null);
   const viewerIdRef = useRef<string>(getOrCreateViewerId());
+  const previousViewerIdsRef = useRef<Set<string>>(new Set());
   const recentJoinTimeoutsRef = useRef<Set<NodeJS.Timeout>>(new Set());
 
   const trackRecentJoin = useCallback(() => {
-    setRecentJoins(prev => prev + 1);
+    setRecentJoins((prev) => prev + 1);
     const timeout = setTimeout(() => {
-      setRecentJoins(prev => Math.max(0, prev - 1));
+      setRecentJoins((prev) => Math.max(0, prev - 1));
       recentJoinTimeoutsRef.current.delete(timeout);
     }, 5000);
     recentJoinTimeoutsRef.current.add(timeout);
@@ -81,68 +83,31 @@ export function useLiveViewers({ pollId, enabled = true }: UseLiveViewersOptions
       return;
     }
 
-    const channelName = `live-viewers:${pollId}`;
-    const channel = supabase.channel(channelName, {
-      config: {
-        presence: {
-          key: viewerIdRef.current,
-        },
+    const unsubscribe = realtimeFacade.subscribeToPolls([pollId], {
+      role: 'viewer',
+      viewerId: viewerIdRef.current,
+      onConnected: setIsConnected,
+      onPresence: (_, nextViewers) => {
+        const nextIds = new Set(nextViewers.map((viewer) => viewer.id));
+        if (
+          [...nextIds].some(
+            (id) => id !== viewerIdRef.current && !previousViewerIdsRef.current.has(id)
+          )
+        ) {
+          trackRecentJoin();
+        }
+        previousViewerIdsRef.current = nextIds;
+        setViewers(nextViewers.map((viewer) => ({ ...viewer, color: getViewerColor(viewer.id) })));
       },
     });
 
-    channelRef.current = channel;
-
-    channel
-      .on('presence', { event: 'sync' }, () => {
-        const presenceState = channel.presenceState();
-        const viewerList: Viewer[] = [];
-
-        Object.entries(presenceState).forEach(([key, presences]) => {
-          if (presences && presences.length > 0) {
-            const presence = presences[0] as { viewerId?: string; joinedAt?: string };
-            viewerList.push({
-              id: presence.viewerId || key,
-              color: getViewerColor(presence.viewerId || key),
-              joinedAt: presence.joinedAt || new Date().toISOString(),
-            });
-          }
-        });
-
-        setViewers(viewerList);
-      })
-      .on('presence', { event: 'join' }, ({ newPresences }) => {
-        // Track new joins for the animation
-        if (newPresences && newPresences.length > 0) {
-          const newViewerId = (newPresences[0] as { viewerId?: string }).viewerId;
-          // Don't count our own join
-          if (newViewerId !== viewerIdRef.current) {
-            trackRecentJoin();
-          }
-        }
-      })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          setIsConnected(true);
-          // Track our presence
-          await channel.track({
-            viewerId: viewerIdRef.current,
-            joinedAt: new Date().toISOString(),
-          });
-        } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
-          setIsConnected(false);
-        }
-      });
-
     return () => {
       // Clean up recent join timeouts
-      recentJoinTimeoutsRef.current.forEach(timeout => clearTimeout(timeout));
+      recentJoinTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
       recentJoinTimeoutsRef.current.clear();
 
-      // Unsubscribe from channel
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-        channelRef.current = null;
-      }
+      unsubscribe();
+      previousViewerIdsRef.current.clear();
       setIsConnected(false);
     };
   }, [pollId, enabled, trackRecentJoin]);

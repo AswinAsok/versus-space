@@ -3,6 +3,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { StarIcon, ChartIncreaseIcon } from '@hugeicons/core-free-icons';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import chartStyles from './Charts.module.css';
 import styles from './MilestoneProgress.module.css';
 
 interface MilestoneProgressProps {
@@ -13,8 +14,8 @@ interface MilestoneProgressProps {
 }
 
 const MILESTONES = [
-  50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000,
-  100000, 250000, 500000, 750000, 1000000, 2500000, 5000000, 10000000
+  50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 750000, 1000000,
+  2500000, 5000000, 10000000,
 ];
 
 function formatNumber(num: number): string {
@@ -23,7 +24,12 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
-export function MilestoneProgress({ totalVotes, loading, showProBadge, proDescription }: MilestoneProgressProps) {
+export function MilestoneProgress({
+  totalVotes,
+  loading,
+  showProBadge,
+  proDescription,
+}: MilestoneProgressProps) {
   const [showCelebration, setShowCelebration] = useState(false);
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
@@ -78,17 +84,44 @@ export function MilestoneProgress({ totalVotes, loading, showProBadge, proDescri
       <div className={styles.card}>
         <div className={styles.header}>
           <h3 className={styles.title}>Milestone Progress</h3>
-          <Skeleton width={80} height={24} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={12} />
+          <Skeleton
+            width={80}
+            height={24}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+            borderRadius={12}
+          />
         </div>
         <div className={styles.skeletonContent}>
-          <Skeleton width={100} height={48} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
-          <Skeleton width={70} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" style={{ marginTop: 8 }} />
+          <Skeleton
+            width={100}
+            height={48}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
+          <Skeleton
+            width={70}
+            height={14}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+            style={{ marginTop: 8 }}
+          />
         </div>
         <div className={styles.skeletonProgress}>
-          <Skeleton height={8} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={4} />
+          <Skeleton
+            height={8}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+            borderRadius={4}
+          />
         </div>
         <div className={styles.skeletonFooter}>
-          <Skeleton width={120} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton
+            width={120}
+            height={14}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
         </div>
       </div>
     );
@@ -101,7 +134,7 @@ export function MilestoneProgress({ totalVotes, loading, showProBadge, proDescri
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Milestone Progress</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.badge}>
@@ -125,14 +158,8 @@ export function MilestoneProgress({ totalVotes, loading, showProBadge, proDescri
           <span className={styles.progressTo}>{formatNumber(milestone.next)}</span>
         </div>
         <div className={styles.progressTrack}>
-          <div
-            className={styles.progressFill}
-            style={{ width: `${animatedProgress}%` }}
-          />
-          <div
-            className={styles.progressGlow}
-            style={{ left: `${animatedProgress}%` }}
-          />
+          <div className={styles.progressFill} style={{ width: `${animatedProgress}%` }} />
+          <div className={styles.progressGlow} style={{ left: `${animatedProgress}%` }} />
         </div>
         <div className={styles.progressInfo}>
           <span className={styles.progressPercent}>{Math.round(milestone.progress)}%</span>

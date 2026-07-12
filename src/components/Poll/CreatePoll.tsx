@@ -7,6 +7,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { GlobeIcon, LockIcon, Key01Icon, Clock01Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
 import type { CreatePollData, PollWithOptions } from '../../types';
 import { FREE_PLAN_POLL_LIMIT, FREE_PLAN_POLL_DURATION_MINUTES } from '../../config/plans';
+import { FreeLimitUpgradeBanner } from '../Dashboard/FreeLimitUpgradeBanner';
 import { MouseLoader } from '../Loading/MouseLoader';
 import styles from './CreatePoll.module.css';
 import sharedStyles from '../../styles/Shared.module.css';
@@ -273,19 +274,7 @@ export function CreatePoll({ user, onSuccess, editPoll }: CreatePollProps) {
       {/* SEO meta tags for create poll page */}
       {!isEditMode && <CreatePollSEO />}
       <div className={styles.createPollInner}>
-        {/* Upgrade Banner - shown at top when at free limit */}
-        {isAtFreeLimit && (
-          <div className={styles.upgradeBanner}>
-            <div className={styles.upgradeBannerContent}>
-              <span className={styles.upgradeBannerText}>
-                Congratulations! You are eligible for an upgrade
-              </span>
-              <a href="/dashboard/settings" className={styles.upgradeBannerButton}>
-                Upgrade to Pro
-              </a>
-            </div>
-          </div>
-        )}
+        {isAtFreeLimit && <FreeLimitUpgradeBanner href="/dashboard/settings" />}
 
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>{isEditMode ? 'Edit poll' : 'Create a new poll'}</h1>

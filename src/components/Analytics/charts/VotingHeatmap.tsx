@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import chartStyles from './Charts.module.css';
 import styles from './VotingHeatmap.module.css';
 
 interface VotingHeatmapProps {
   voteTimestamps: Date[];
-  totalVotesAllPolls: number; // Total votes including simulated
   loading?: boolean;
   showProBadge?: boolean;
   proDescription?: string;
@@ -17,7 +17,12 @@ interface DayData {
   level: number;
 }
 
-export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, showProBadge, proDescription }: VotingHeatmapProps) {
+export function VotingHeatmap({
+  voteTimestamps,
+  loading,
+  showProBadge,
+  proDescription,
+}: VotingHeatmapProps) {
   const trackedVoteCount = voteTimestamps.length;
 
   const { days, weeks, months } = useMemo(() => {
@@ -67,7 +72,7 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, sho
         const week = Math.floor(cellIndex / 7);
         monthLabels.push({
           label: day.date.toLocaleDateString('en-US', { month: 'short' }),
-          week
+          week,
         });
         lastMonth = month;
       }
@@ -76,7 +81,7 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, sho
     return {
       days: daysArray,
       weeks: numWeeks,
-      months: monthLabels
+      months: monthLabels,
     };
   }, [voteTimestamps]);
 
@@ -98,7 +103,7 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, sho
       weekday: 'short',
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
     });
     return `${dateStr}: ${day.count.toLocaleString()} vote${day.count !== 1 ? 's' : ''}`;
   }
@@ -114,7 +119,7 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, sho
     }
 
     // Add all the days
-    days.forEach(day => {
+    days.forEach((day) => {
       cells.push(day);
     });
 
@@ -131,10 +136,20 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, sho
       <div className={styles.card}>
         <div className={styles.header}>
           <h3 className={styles.title}>Vote Activity</h3>
-          <Skeleton width={200} height={14} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" />
+          <Skeleton
+            width={200}
+            height={14}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+          />
         </div>
         <div className={styles.skeletonGrid}>
-          <Skeleton height={120} baseColor="rgba(255,255,255,0.02)" highlightColor="rgba(255,255,255,0.05)" borderRadius={4} />
+          <Skeleton
+            height={120}
+            baseColor="rgba(255,255,255,0.02)"
+            highlightColor="rgba(255,255,255,0.05)"
+            borderRadius={4}
+          />
         </div>
       </div>
     );
@@ -147,7 +162,7 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, sho
         <div className={styles.headerLeft}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>Vote Activity</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <span className={styles.subtitle}>
@@ -161,7 +176,7 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, sho
           <div className={styles.dayLabelSpacer} />
           <div className={styles.monthLabels}>
             {Array.from({ length: weeks }).map((_, weekIndex) => {
-              const monthLabel = months.find(m => m.week === weekIndex);
+              const monthLabel = months.find((m) => m.week === weekIndex);
               return (
                 <div key={weekIndex} className={styles.monthCell}>
                   {monthLabel?.label || ''}
@@ -189,7 +204,7 @@ export function VotingHeatmap({ voteTimestamps, totalVotesAllPolls, loading, sho
             className={styles.grid}
             style={{
               gridTemplateColumns: `repeat(${weeks}, 1fr)`,
-              gridTemplateRows: 'repeat(7, 1fr)'
+              gridTemplateRows: 'repeat(7, 1fr)',
             }}
           >
             {gridCells.map((cell, index) => (

@@ -4,8 +4,6 @@ import { ChampionIcon, UserGroupIcon, ArrowRight01Icon, ChartIncreaseIcon, PinIc
 import { useLeaderboard } from '../../hooks/usePollQueries';
 import styles from './Leaderboard.module.css';
 
-const TRENDING_POLL_ID = '70427c7e-9405-4b76-b062-087790c6f5ef';
-
 interface LeaderboardProps {
   onNavigate: (path: string) => void;
 }
@@ -26,17 +24,19 @@ function getWinningInfo(
   return { winner: winner.title, lead };
 }
 
+function hasRemovedBranding(poll: { title: string; options?: { title: string }[] | null }) {
+  const text = [poll.title, ...(poll.options ?? []).map((option) => option.title)].join(' ');
+  return /\bente\b|e2ee|non-e2ee/i.test(text);
+}
+
 export function Leaderboard({ onNavigate }: LeaderboardProps) {
   const { data: leaderboardData, isLoading: loading, error } = useLeaderboard(5);
 
-  // Prioritize the trending poll to be first
   const polls = useMemo(() => {
     if (!leaderboardData) return [];
-    return [...leaderboardData].sort((a, b) => {
-      if (a.id === TRENDING_POLL_ID) return -1;
-      if (b.id === TRENDING_POLL_ID) return 1;
-      return 0;
-    });
+    return leaderboardData
+      .filter((poll) => !hasRemovedBranding(poll))
+      .sort((a, b) => b.total_votes - a.total_votes);
   }, [leaderboardData]);
 
   if (loading) {

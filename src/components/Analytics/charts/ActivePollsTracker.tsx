@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { UserMultiple02Icon, ViewIcon } from '@hugeicons/core-free-icons';
-import { supabase } from '../../../lib/supabaseClient';
+import { realtimeFacade } from '../../../core/appServices';
 import type { Poll } from '../../../types';
+import chartStyles from './Charts.module.css';
 import styles from './ActivePollsTracker.module.css';
 
 interface PollPresence {
@@ -16,59 +17,43 @@ interface ActivePollsTrackerProps {
   polls: Poll[];
   showProBadge?: boolean;
   proDescription?: string;
+  useDummyData?: boolean;
 }
 
-export function ActivePollsTracker({ polls, showProBadge, proDescription }: ActivePollsTrackerProps) {
+export function ActivePollsTracker({
+  polls,
+  showProBadge,
+  proDescription,
+  useDummyData = false,
+}: ActivePollsTrackerProps) {
   const [pollPresence, setPollPresence] = useState<Map<string, number>>(new Map());
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    if (polls.length === 0) return;
+    if (polls.length === 0 || useDummyData) return;
 
-    // Subscribe to presence for each poll
-    const channels: ReturnType<typeof supabase.channel>[] = [];
-    const adminId = `admin-${crypto.randomUUID()}`;
-
-    polls.forEach((poll) => {
-      const channel = supabase.channel(`poll-presence:${poll.id}`, {
-        config: { presence: { key: 'viewers' } },
-      });
-
-      channel
-        .on('presence', { event: 'sync' }, () => {
-          const state = channel.presenceState();
-          // Count all presence entries, excluding the admin tracker
-          const allPresences = Object.values(state).flat() as Array<{ viewerId?: string }>;
-          const viewerCount = allPresences.filter(
-            (p) => !p.viewerId?.startsWith('admin-') && !p.viewerId?.startsWith('stats-')
-          ).length;
+    const unsubscribe = realtimeFacade.subscribeToPolls(
+      polls.map((poll) => poll.id),
+      {
+        role: 'observer',
+        viewerId: `admin-${crypto.randomUUID()}`,
+        onConnected: setIsConnected,
+        onPresence: (pollId, viewers) => {
           setPollPresence((prev) => {
             const next = new Map(prev);
-            next.set(poll.id, viewerCount);
+            next.set(pollId, viewers.length);
             return next;
           });
-        })
-        .subscribe(async (status) => {
-          if (status === 'SUBSCRIBED') {
-            setIsConnected(true);
-            // Track admin presence to establish channel connection
-            await channel.track({
-              viewerId: adminId,
-              isAdmin: true,
-              joinedAt: new Date().toISOString(),
-            });
-          }
-        });
-
-      channels.push(channel);
-    });
+        },
+      }
+    );
 
     return () => {
-      channels.forEach((channel) => {
-        supabase.removeChannel(channel);
-      });
+      unsubscribe();
+      setIsConnected(false);
+      setPollPresence(new Map());
     };
-  }, [polls]);
+  }, [polls, useDummyData]);
 
   // Helper to check if poll is truly active (not expired by timer)
   const isPollActive = (poll: Poll): boolean => {
@@ -100,7 +85,7 @@ export function ActivePollsTracker({ polls, showProBadge, proDescription }: Acti
           <div className={styles.titleRow}>
             <span className={`${styles.statusDot} ${isConnected ? styles.connected : ''}`} />
             <h3 className={styles.trackerTitle}>Live Poll Activity</h3>
-            {showProBadge && <span className={styles.proBadge}>Pro</span>}
+            {showProBadge && <span className={chartStyles.proBadge}>Pro</span>}
           </div>
         </div>
         <div className={styles.totalViewers}>
@@ -118,7 +103,9 @@ export function ActivePollsTracker({ polls, showProBadge, proDescription }: Acti
           <div className={styles.emptyState}>
             <HugeiconsIcon icon={ViewIcon} size={24} />
             <p>No active viewers right now</p>
-            <span className={styles.emptyHint}>Viewers will appear here when someone opens a poll</span>
+            <span className={styles.emptyHint}>
+              Viewers will appear here when someone opens a poll
+            </span>
           </div>
         ) : (
           <>
@@ -130,13 +117,13 @@ export function ActivePollsTracker({ polls, showProBadge, proDescription }: Acti
               >
                 <div className={styles.pollInfo}>
                   <div className={styles.pollStatus}>
-                    <span className={`${styles.activityDot} ${poll.viewerCount > 0 ? styles.hasViewers : ''}`} />
+                    <span
+                      className={`${styles.activityDot} ${poll.viewerCount > 0 ? styles.hasViewers : ''}`}
+                    />
                   </div>
                   <div className={styles.pollDetails}>
                     <span className={styles.pollTitle}>{poll.pollTitle}</span>
-                    <span className={styles.pollMeta}>
-                      {poll.isActive ? 'Active' : 'Ended'}
-                    </span>
+                    <span className={styles.pollMeta}>{poll.isActive ? 'Active' : 'Ended'}</span>
                   </div>
                 </div>
                 <div className={styles.viewerBadge}>
@@ -156,9 +143,7 @@ export function ActivePollsTracker({ polls, showProBadge, proDescription }: Acti
         )}
       </div>
 
-      <p className={styles.trackerFootnote}>
-        Real-time viewer count across all your polls
-      </p>
+      <p className={styles.trackerFootnote}>Real-time viewer count across all your polls</p>
     </div>
   );
 }
